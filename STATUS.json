@@ -1,19 +1,43 @@
 {
-  "builder": "Builder-SponsorRadar",
-  "project": "SponsorRadar (#2)",
+  "app": "sponsor-radar",
+  "idea_number": 2,
   "port": 4102,
-  "url": "http://127.0.0.1:4102",
-  "phase": "Phase 4 Complete: All Systems Verified & Live",
   "status": "completed",
+  "phase": "phase_2_persona_redesign_and_20_point_pre_launch_audit_verified",
   "progress_pct": 100,
-  "metrics": {
-    "brands_seeded": 42,
-    "shows_seeded": 46,
-    "verified_placements": 96,
-    "pseo_pages": 60,
-    "console_errors": 0,
-    "page_errors": 0,
-    "max_file_lines": 775
+  "design_persona": {
+    "archetype": "Passionfroot + Beehiiv + Ramp Editorial Media Intelligence",
+    "target_buyers": "DTC & B2B Brand Media Buyers (AG1, Eight Sleep, Ramp, Deel, Notion) & Creator Economy Publishers / Talent Agencies",
+    "palette": {
+      "canvas": "#FBF8F3",
+      "secondary_surface": "#F4EFE6",
+      "card": "#FFFFFF",
+      "border": "#E5DEC9",
+      "ink": "#181512",
+      "primary_accent": "#E84E36",
+      "roi_emerald": "#0F766E"
+    },
+    "typography": {
+      "display": "Newsreader (500/600 + Italic)",
+      "sans": "Plus Jakarta Sans (400/500/600/700)",
+      "mono": "JetBrains Mono (500/600/700, tabular-nums)"
+    },
+    "brand_logo": "Bespoke SVG Acoustic Broadcast Radar & Concentric Frequency Crest wrapped in <a href=\"/\"> across all pages + served at /favicon.svg"
   },
-  "updated_at": "2026-10-14T06:06:45Z"
+  "metrics": {
+    "sponsor_brands": 42,
+    "media_channels": 46,
+    "verified_ad_reads": 96,
+    "three_x_renewed_deals": 78,
+    "sample_transcripts": 5,
+    "pseo_pages": 60,
+    "routes_verified_200": 17,
+    "custom_404_verified": true,
+    "playwright_console_errors": 0,
+    "playwright_page_errors": 0,
+    "mobile_390x844_overflow": false,
+    "cookie_banner_overlap": false,
+    "max_file_lines": 814
+  },
+  "updated_at": "2026-10-14T07:54:00Z"
 }

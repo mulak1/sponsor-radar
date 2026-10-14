@@ -1,4 +1,4 @@
-const { escapeHtml, renderShell } = require('./views_home');
+const { escapeHtml, renderShell } = require('./views_shell');
 
 function renderDirectoryPage({ brands, shows, seoPages }) {
   const brandPages = seoPages.filter(p => p.page_type === 'brand_breakdown');
@@ -13,11 +13,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
   };
 
   const bodyHtml = `
-  <section style="padding:40px 0;">
+  <section style="padding:44px 0;">
     <div class="container">
-      <div style="margin-bottom:28px;">
-        <span class="pill-amber">INDEXED INTELLIGENCE VAULT (60+ pSEO PAGES)</span>
-        <h1 class="headline-xl">SponsorRadar Directory: 42 Brands, 46 Shows &amp; 60+ Verified Spend Reports</h1>
+      <div style="margin-bottom:30px;">
+        <span class="pill-vermilion">INDEXED INTELLIGENCE VAULT (60+ pSEO PAGES)</span>
+        <h1 class="headline-xl">SponsorRadar Directory: 42 Brands, 46 Shows &amp; <span class="serif-italic" style="color:var(--emerald-roi);">60+ Spend Reports</span></h1>
         <p class="subhead">
           Every report below is powered by our deterministic SQLite ad-spend ledger with verified promo codes, vanity URLs, and 3x-renewal velocity scores.
         </p>
@@ -29,11 +29,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">1. High-Intent Niche &amp; Category Sponsor Directories (${nichePages.length} Reports)</span>
           <span class="pill-emerald">3x+ RENEWED RANKINGS</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${nichePages.map(p => `
-            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:#090D15;">
-              <div class="mono" style="font-size:11px; color:var(--amber-gold); margin-bottom:4px;">${escapeHtml(p.category)} • Avg $${p.avg_cpm} CPM</div>
-              <div style="font-weight:700; font-size:14px;">${escapeHtml(p.title)}</div>
+            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
+              <div class="mono" style="font-size:11px; color:var(--amber-gold); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • Avg $${p.avg_cpm} CPM</div>
+              <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
         </div>
@@ -45,11 +45,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">2. Brand Sponsorship Spend &amp; 3x-Renewal Breakdowns (${brandPages.length} Reports)</span>
           <span class="pill-amber">BRAND SPEND LEDGERS</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${brandPages.map(p => `
-            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:#090D15;">
-              <div class="mono" style="font-size:11px; color:var(--emerald-roi); margin-bottom:4px;">$${(p.est_monthly_spend / 1000).toFixed(0)}K/mo Est. Spend • $${p.avg_cpm} CPM</div>
-              <div style="font-weight:700; font-size:14px;">${escapeHtml(p.title)}</div>
+            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
+              <div class="mono" style="font-size:11px; color:var(--emerald-roi); font-weight:700; margin-bottom:4px;">$${(p.est_monthly_spend / 1000).toFixed(0)}K/mo Est. Spend • $${p.avg_cpm} CPM</div>
+              <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
         </div>
@@ -61,25 +61,25 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">3. Creator Show Media-Kits, Ad Rates &amp; CPM Benchmarks (${showPages.length} Reports)</span>
           <span class="pill-slate">SHOW RATE CARDS</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${showPages.map(p => `
-            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:#090D15;">
-              <div class="mono" style="font-size:11px; color:var(--cyan-info); margin-bottom:4px;">${escapeHtml(p.category)} • $${p.avg_cpm} Base CPM</div>
-              <div style="font-weight:700; font-size:14px;">${escapeHtml(p.title)}</div>
+            <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
+              <div class="mono" style="font-size:11px; color:var(--cyan-info); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • $${p.avg_cpm} Base CPM</div>
+              <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
         </div>
       </div>
 
       <!-- Section 4: Full 42 Brands & 46 Shows Index -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div class="two-col-grid">
         <div class="panel">
           <div class="panel-header"><span style="font-weight:800;">All ${brands.length} Indexed Sponsor Brands</span></div>
           <div class="panel-body" style="max-height:380px; overflow-y:auto;">
             ${brands.map(b => `
-              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px;">
+              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px; gap:8px; flex-wrap:wrap;">
                 <span><strong>${escapeHtml(b.name)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(b.domain)})</span></span>
-                <span class="mono" style="color:var(--amber-gold);">$${(b.est_monthly_spend / 1000).toFixed(0)}K/mo • ${b.renewal_rate_pct}% 3x</span>
+                <span class="mono" style="color:var(--amber-gold); font-weight:700;">$${(b.est_monthly_spend / 1000).toFixed(0)}K/mo • ${b.renewal_rate_pct}% 3x</span>
               </div>
             `).join('')}
           </div>
@@ -88,9 +88,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div class="panel-header"><span style="font-weight:800;">All ${shows.length} Indexed Podcasts, Newsletters &amp; YouTube Shows</span></div>
           <div class="panel-body" style="max-height:380px; overflow-y:auto;">
             ${shows.map(s => `
-              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px;">
+              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px; gap:8px; flex-wrap:wrap;">
                 <span><strong>${escapeHtml(s.name)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(s.channel_type)})</span></span>
-                <span class="mono" style="color:var(--emerald-roi);">$${s.midroll_rate_usd.toLocaleString()} mid-roll • $${s.base_cpm} CPM</span>
+                <span class="mono" style="color:var(--emerald-roi); font-weight:700;">$${s.midroll_rate_usd.toLocaleString()} mid-roll • $${s.base_cpm} CPM</span>
               </div>
             `).join('')}
           </div>
@@ -106,7 +106,6 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
     canonicalPath: '/directory',
     ogSlug: 'directory',
     jsonLd,
-    hideTopNav: false,
     bodyHtml
   });
 }
@@ -160,13 +159,13 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
     <div class="container">
       <!-- Breadcrumbs -->
       <nav aria-label="Breadcrumb" class="mono" style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
-        <a href="/" style="color:var(--amber-gold);">SponsorRadar Terminal</a> /
-        <a href="/directory" style="color:var(--amber-gold);">60+ pSEO Reports</a> /
+        <a href="/" style="color:var(--vermilion); font-weight:600;">SponsorRadar Home</a> /
+        <a href="/directory" style="color:var(--vermilion); font-weight:600;">60+ pSEO Reports</a> /
         <span>${escapeHtml(page.slug)}</span>
       </nav>
 
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-        <span class="pill-amber">${escapeHtml(page.page_type.toUpperCase().replace('_', ' '))}</span>
+        <span class="pill-vermilion">${escapeHtml(page.page_type.toUpperCase().replace('_', ' '))}</span>
         <span class="pill-emerald">${escapeHtml(page.category)} • VERIFIED 2026 LEDGER</span>
       </div>
 
@@ -197,7 +196,10 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="panel" style="margin-bottom:28px;">
         <div class="panel-header">
           <span style="font-weight:800;">Verified Ad-Read Timestamps, Promo Codes &amp; 3x-Renewal Velocity</span>
-          <a href="/#radar-tool" class="btn btn-amber" style="padding:7px 14px; min-height:36px; font-size:12.5px;">Open in Live Terminal</a>
+          <a href="/#radar-tool" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:12.5px;">
+            <span>Open in Live Workbench</span>
+            <span class="btn-icon-circle" aria-hidden="true">↗</span>
+          </a>
         </div>
         <div class="table-wrap" style="border:none;">
           <table class="ledger-table">
@@ -265,9 +267,9 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend &amp; CPM Benchmark Reports</span></div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
           ${relatedPages.map(r => `
-            <a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:12px; background:#090D15;">
-              <div class="mono" style="font-size:11px; color:var(--amber-gold);">${escapeHtml(r.category)} • $${r.avg_cpm} CPM</div>
-              <div style="font-weight:700; font-size:13.5px; margin-top:4px;">${escapeHtml(r.title)}</div>
+            <a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
+              <div class="mono" style="font-size:11px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM</div>
+              <div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div>
             </a>
           `).join('')}
         </div>
@@ -282,7 +284,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
     canonicalPath: `/seo/${page.slug}`,
     ogSlug: page.slug,
     jsonLd,
-    hideTopNav: false,
     bodyHtml
   });
 }
@@ -304,7 +305,7 @@ function renderLegalPage(type) {
         ` : `
           <p><strong style="color:var(--text-primary);">1. Service Scope:</strong> SponsorRadar provides estimated CPM benchmarks, historical ad-read timestamps, promo-code tracking, and outbound pitch templates for informational and media-buying intelligence purposes.</p>
           <p><strong style="color:var(--text-primary);">2. Subscriptions &amp; 30-Day Refund Guarantee:</strong> Creator Pro ($49/mo) and Media Buyer &amp; Agency Feed ($199/mo) plans may be canceled at any time. All first-time subscribers are covered by our 30-day 100% money-back guarantee.</p>
-          <p><strong style="color:var(--text-primary);">3. Acceptable Use:</strong> Users agree to comply with CAN-SPAM and GDPR guidelines when sending outbound sponsorship pitches generated by the terminal.</p>
+          <p><strong style="color:var(--text-primary);">3. Acceptable Use:</strong> Users agree to comply with CAN-SPAM and GDPR guidelines when sending outbound sponsorship pitches generated by the platform.</p>
         `}
       </div>
     </div>
@@ -312,11 +313,10 @@ function renderLegalPage(type) {
   `;
   return renderShell({
     title,
-    description: `${title} for SponsorRadar Audio & Newsletter Ad-Spend Intelligence Terminal.`,
+    description: `${title} for SponsorRadar Audio & Newsletter Ad-Spend Intelligence Platform.`,
     canonicalPath: isPrivacy ? '/privacy' : '/terms',
     ogSlug: isPrivacy ? 'privacy' : 'terms',
     jsonLd: null,
-    hideTopNav: false,
     bodyHtml
   });
 }
@@ -325,25 +325,27 @@ function renderNotFoundPage(requestedPath) {
   const bodyHtml = `
   <section style="padding:72px 0; text-align:center;">
     <div class="container" style="max-width:640px;">
-      <span class="pill-amber">HTTP 404 • ROUTE NOT IN LEDGER</span>
+      <span class="pill-vermilion">HTTP 404 • ROUTE NOT IN LEDGER</span>
       <h1 class="headline-xl">Ad-Spend Route Not Found</h1>
       <p style="color:var(--text-secondary); margin-bottom:24px;">
-        The path <code class="mono" style="color:var(--amber-gold);">${escapeHtml(requestedPath)}</code> did not match an active brand or show slug. Jump back to the live terminal or browse all 60+ verified pSEO reports.
+        The path <code class="mono" style="color:var(--vermilion);">${escapeHtml(requestedPath)}</code> did not match an active brand or show slug. Jump back to the live workbench or browse all 60+ verified pSEO reports.
       </p>
-      <div style="display:flex; justify-content:center; gap:12px;">
-        <a href="/" class="btn btn-amber">Launch Live Terminal</a>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="/" class="btn btn-vermilion">
+          <span>Return to Live Workbench</span>
+          <span class="btn-icon-circle" aria-hidden="true">↗</span>
+        </a>
         <a href="/directory" class="btn btn-ghost">Browse 60+ Spend Reports</a>
       </div>
     </div>
   </section>
   `;
   return renderShell({
-    title: '404 Not Found | SponsorRadar Terminal',
-    description: 'Page not found on SponsorRadar Intelligence Terminal.',
+    title: '404 Not Found | SponsorRadar Media Intelligence',
+    description: 'Page not found on SponsorRadar Media Intelligence Platform.',
     canonicalPath: '/404',
     ogSlug: '404',
     jsonLd: null,
-    hideTopNav: false,
     bodyHtml
   });
 }

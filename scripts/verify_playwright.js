@@ -16,26 +16,32 @@ async function runVerification() {
     consoleErrors: [],
     pageErrors: [],
     httpChecks: {},
+    checklistAudits: {},
     interactions: {},
     screenshots: []
   };
 
-  // 1. Verify HTTP 200 on all required endpoints via fetch
+  // 1. Verify HTTP status codes on all required endpoints
   const endpoints = [
-    { path: '/', method: 'GET' },
-    { path: '/lp?utm_source=meta&utm_medium=paid_social&utm_campaign=3x_renewal_radar', method: 'GET' },
-    { path: '/directory', method: 'GET' },
-    { path: '/seo/ag1-podcast-sponsorship-spend-and-roi', method: 'GET' },
-    { path: '/seo/deel-newsletter-and-podcast-ad-spend', method: 'GET' },
-    { path: '/seo/acquired-podcast-sponsors-and-cpm-rates', method: 'GET' },
-    { path: '/seo/top-verified-b2b-saas-podcast-sponsors-2026', method: 'GET' },
-    { path: '/sitemap.xml', method: 'GET' },
-    { path: '/robots.txt', method: 'GET' },
-    { path: '/api/og?slug=ag1-podcast-sponsorship-spend-and-roi', method: 'GET' },
-    { path: '/api/meta-capi', method: 'POST', body: { event_name: 'ViewContent', page_url: `${BASE_URL}/lp`, utm_source: 'meta' } },
-    { path: '/api/checkout', method: 'POST', body: { plan_tier: 'creator_pro_49', amount_usd: 49, customer_email: 'qa@sponsorradar.io' } },
-    { path: '/api/analyze-sponsor', method: 'POST', body: { mode: 'lookup', query: 'Ramp' } },
-    { path: '/api/analyze-sponsor', method: 'POST', body: { mode: 'transcript', preset_id: 'lenny-deel-vanta' } }
+    { path: '/', method: 'GET', expect: 200 },
+    { path: '/lp?utm_source=meta&utm_medium=paid_social&utm_campaign=3x_renewal_radar', method: 'GET', expect: 200 },
+    { path: '/directory', method: 'GET', expect: 200 },
+    { path: '/seo/ag1-podcast-sponsorship-spend-and-roi', method: 'GET', expect: 200 },
+    { path: '/seo/deel-newsletter-and-podcast-ad-spend', method: 'GET', expect: 200 },
+    { path: '/seo/acquired-podcast-sponsors-and-cpm-rates', method: 'GET', expect: 200 },
+    { path: '/seo/top-verified-b2b-saas-podcast-sponsors-2026', method: 'GET', expect: 200 },
+    { path: '/privacy', method: 'GET', expect: 200 },
+    { path: '/terms', method: 'GET', expect: 200 },
+    { path: '/favicon.svg', method: 'GET', expect: 200 },
+    { path: '/manifest.webmanifest', method: 'GET', expect: 200 },
+    { path: '/sitemap.xml', method: 'GET', expect: 200 },
+    { path: '/robots.txt', method: 'GET', expect: 200 },
+    { path: '/api/og?slug=ag1-podcast-sponsorship-spend-and-roi', method: 'GET', expect: 200 },
+    { path: '/api/meta-capi', method: 'POST', body: { event_name: 'ViewContent', page_url: `${BASE_URL}/lp`, utm_source: 'meta' }, expect: 200 },
+    { path: '/api/checkout', method: 'POST', body: { plan_tier: 'creator_pro_49', amount_usd: 49, customer_email: 'qa@sponsorradar.io' }, expect: 200 },
+    { path: '/api/analyze-sponsor', method: 'POST', body: { mode: 'lookup', query: 'Ramp' }, expect: 200 },
+    { path: '/api/analyze-sponsor', method: 'POST', body: { mode: 'transcript', preset_id: 'lenny-deel-vanta' }, expect: 200 },
+    { path: '/nonexistent-404-audit', method: 'GET', expect: 404 }
   ];
 
   for (const ep of endpoints) {
@@ -46,8 +52,8 @@ async function runVerification() {
     });
     const key = `${ep.method} ${ep.path}`;
     results.httpChecks[key] = res.status;
-    if (res.status !== 200) {
-      throw new Error(`Expected HTTP 200 for ${key}, got ${res.status}`);
+    if (res.status !== ep.expect) {
+      throw new Error(`Expected HTTP ${ep.expect} for ${key}, got ${res.status}`);
     }
   }
 
@@ -68,6 +74,23 @@ async function runVerification() {
 
     // Navigate to /
     await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
+
+    // Audit hyperlinked SVG logo + header nav links
+    const logoAudit = await page.evaluate(() => {
+      const logoLink = document.querySelector('header a.brand-logo');
+      const svg = logoLink ? logoLink.querySelector('svg.brand-emblem-svg') : null;
+      const navHrefs = Array.from(document.querySelectorAll('header nav.nav-links a')).map(a => a.getAttribute('href'));
+      return {
+        logoHref: logoLink ? logoLink.getAttribute('href') : null,
+        hasSvgCrest: Boolean(svg),
+        navHrefs
+      };
+    });
+    if (logoAudit.logoHref !== '/' || !logoAudit.hasSvgCrest) {
+      throw new Error(`Logo hyperlink or SVG crest missing on /: ${JSON.stringify(logoAudit)}`);
+    }
+    results.checklistAudits.desktopHeaderAndLogo = logoAudit;
+
     const homeDesktopShot = path.join(SCREENSHOT_DIR, '01_home_desktop_1440x900.png');
     await page.screenshot({ path: homeDesktopShot, fullPage: false });
     results.screenshots.push(homeDesktopShot);
@@ -122,7 +145,7 @@ async function runVerification() {
 
     await desktopCtx.close();
 
-    // Mobile Viewport (390x844)
+    // Mobile Viewport (390x844) — Verify zero horizontal overflow & zero floating box overlap
     const mobileCtx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
     const mobilePage = await mobileCtx.newPage();
 
@@ -134,6 +157,25 @@ async function runVerification() {
     });
 
     await mobilePage.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
+    const mobileAudit = await mobilePage.evaluate(() => {
+      const scrollW = document.documentElement.scrollWidth;
+      const clientW = document.documentElement.clientWidth;
+      const cookieBar = document.getElementById('cookie-banner');
+      const cookiePosition = cookieBar ? window.getComputedStyle(cookieBar).position : 'none';
+      const logoHref = document.querySelector('header a.brand-logo')?.getAttribute('href');
+      return {
+        scrollWidth: scrollW,
+        clientWidth: clientW,
+        noHorizontalOverflow: scrollW <= clientW,
+        cookiePositionNotFixedOverlap: cookiePosition !== 'fixed',
+        logoHref
+      };
+    });
+    if (!mobileAudit.noHorizontalOverflow || !mobileAudit.cookiePositionNotFixedOverlap || mobileAudit.logoHref !== '/') {
+      throw new Error(`Mobile layout audit failed: ${JSON.stringify(mobileAudit)}`);
+    }
+    results.checklistAudits.mobileLayout = mobileAudit;
+
     const homeMobileShot = path.join(SCREENSHOT_DIR, '07_home_mobile_390x844.png');
     await mobilePage.screenshot({ path: homeMobileShot, fullPage: false });
     results.screenshots.push(homeMobileShot);

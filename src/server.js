@@ -2,7 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const { db, SAMPLE_TRANSCRIPTS } = require('./db');
 const { analyzeSponsorLookup, analyzeTranscriptAdRead, generateOutboundPitch } = require('./engine');
-const { escapeHtml, renderHomePage, renderLandingPage } = require('./views_home');
+const { escapeHtml, renderBrandLogoSvg, renderHomePage, renderLandingPage } = require('./views_home');
 const { renderDirectoryPage, renderSeoPage, renderLegalPage, renderNotFoundPage } = require('./views_pages');
 
 const app = express();
@@ -12,24 +12,56 @@ const HOST = process.env.HOST || '127.0.0.1';
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Security headers (Pre-Launch Checklist #4)
+// Pre-Launch Checklist #4 & #18: Force HTTPS in prod, Security Headers & Rate Limiting
+const rateBuckets = new Map();
 app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] === 'http') {
+    return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+  }
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+  if (req.method === 'POST') {
+    const ip = req.ip || '127.0.0.1';
+    const now = Date.now();
+    const bucket = rateBuckets.get(ip) || { count: 0, resetAt: now + 60000 };
+    if (now > bucket.resetAt) {
+      bucket.count = 0;
+      bucket.resetAt = now + 60000;
+    }
+    bucket.count += 1;
+    rateBuckets.set(ip, bucket);
+    if (bucket.count > 120) {
+      return res.status(429).json({ error: 'Rate limit exceeded. Please try again in a minute.' });
+    }
+  }
   next();
 });
 
-// Favicon SVG
+// High-Craft Acoustic Broadcast Radar Emblem at /favicon.svg (Pre-Launch Checklist #8)
 app.get('/favicon.svg', (req, res) => {
   res.setHeader('Content-Type', 'image/svg+xml');
-  res.send(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <rect width="64" height="64" rx="14" fill="#080B11" stroke="#F59E0B" stroke-width="3"/>
-    <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="#F59E0B" font-family="monospace" font-weight="bold" font-size="26">SR</text>
-  </svg>`);
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.send(renderBrandLogoSvg(64));
 });
 
-// robots.txt
+// Web App Manifest (Pre-Launch Checklist #8)
+app.get('/manifest.webmanifest', (req, res) => {
+  res.setHeader('Content-Type', 'application/manifest+json');
+  res.json({
+    name: 'SponsorRadar (#2) — 3x+ Renewal Media Intelligence',
+    short_name: 'SponsorRadar',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#FBF8F3',
+    theme_color: '#E84E36',
+    icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }]
+  });
+});
+
+// robots.txt (Pre-Launch Checklist #9)
 app.get('/robots.txt', (req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   res.send(`User-agent: *
@@ -43,7 +75,7 @@ Sitemap: http://127.0.0.1:${PORT}/sitemap.xml
 `);
 });
 
-// sitemap.xml
+// sitemap.xml (Pre-Launch Checklist #9)
 app.get('/sitemap.xml', (req, res) => {
   const seoPages = db.prepare('SELECT slug FROM seo_pages ORDER BY slug ASC').all();
   const baseUrl = `http://127.0.0.1:${PORT}`;
@@ -62,26 +94,26 @@ ${urlsXml}
 </urlset>`);
 });
 
-// Dynamic SVG OpenGraph Card Generator (/api/og?slug=...)
+// Dynamic SVG OpenGraph Card Generator (/api/og?slug=...) (Pre-Launch Checklist #7)
 app.get('/api/og', (req, res) => {
-  const slug = String(req.query.slug || 'sponsor-radar-terminal');
+  const slug = String(req.query.slug || 'sponsor-radar-editorial');
   const seoPage = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
   const headline = seoPage
-    ? seoPage.title.slice(0, 68)
-    : 'SponsorRadar (#2) — 3x-Renewal Audio & Newsletter Ad-Spend Ledger';
+    ? seoPage.title.slice(0, 66)
+    : 'SponsorRadar — 3x+ Renewal Audio & Newsletter Ad-Spend Ledger';
   const subline = seoPage
     ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Avg Effective CPM: $${seoPage.avg_cpm}`
     : '42+ Sponsor Brands • 46+ Podcasts, Newsletters & YouTube Shows • 1-Click Outbound Pitches';
 
   res.setHeader('Content-Type', 'image/svg+xml');
-  res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-    <rect width="1200" height="630" fill="#080B11" />
-    <rect x="36" y="36" width="1128" height="558" rx="18" fill="#0E131D" stroke="#1E293B" stroke-width="2" />
-    <rect x="76" y="84" width="290" height="38" rx="6" fill="#142921" stroke="#10B981" stroke-width="1.5" />
-    <text x="94" y="109" fill="#10B981" font-family="monospace" font-size="16" font-weight="bold">3x+ RENEWED ROI INTELLIGENCE</text>
-    <text x="76" y="220" fill="#F8FAFC" font-family="sans-serif" font-size="40" font-weight="bold">${escapeHtml(headline)}</text>
-    <text x="76" y="295" fill="#F59E0B" font-family="monospace" font-size="24" font-weight="bold">${escapeHtml(subline)}</text>
-    <text x="76" y="520" fill="#94A3B8" font-family="monospace" font-size="18">SPONSORRADAR TERMINAL • IAB 30-DAY VERIFIED • PORT 4102</text>
+  res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${escapeHtml(headline)}">
+    <rect width="1200" height="630" fill="#FBF8F3" />
+    <rect x="36" y="36" width="1128" height="558" rx="24" fill="#FFFFFF" stroke="#E5DEC9" stroke-width="2" />
+    <rect x="76" y="84" width="320" height="40" rx="8" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" />
+    <text x="96" y="110" fill="#0F766E" font-family="monospace" font-size="16" font-weight="bold">3x+ RENEWED ROI MEDIA LEDGER</text>
+    <text x="76" y="225" fill="#161412" font-family="Georgia, serif" font-size="42" font-weight="bold">${escapeHtml(headline)}</text>
+    <text x="76" y="305" fill="#E84E36" font-family="monospace" font-size="24" font-weight="bold">${escapeHtml(subline)}</text>
+    <text x="76" y="520" fill="#57524A" font-family="monospace" font-size="18">SPONSORRADAR EDITORIAL MEDIA INTELLIGENCE • IAB 30-DAY VERIFIED</text>
   </svg>`);
 });
 
@@ -180,6 +212,10 @@ app.get('/api/checkout', (req, res) => {
 
 app.post('/api/checkout', (req, res) => {
   const body = req.body || {};
+  // Pre-Launch Checklist #18: Honeypot Spam Protection
+  if (body.website_url_hp) {
+    return res.status(400).json({ error: 'Spam detected' });
+  }
   const planTier = body.plan_tier === 'agency_feed_199' ? 'agency_feed_199' : 'creator_pro_49';
   const amountUsd = planTier === 'agency_feed_199' ? 199 : 49;
   const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
@@ -205,7 +241,7 @@ app.post('/api/checkout', (req, res) => {
   });
 });
 
-// Main Terminal Homepage (/)
+// Main Editorial Homepage (/)
 app.get('/', (req, res) => {
   const brands = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC').all();
   const shows = db.prepare('SELECT * FROM shows ORDER BY audience_size DESC').all();
@@ -279,7 +315,6 @@ app.get('/seo/:slug', (req, res) => {
       brand = db.prepare('SELECT * FROM brands WHERE slug = ?').get(placements[0].brand_slug);
     }
   } else {
-    // Niche directory page
     placements = db.prepare(`
       SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
       FROM placements p
@@ -325,7 +360,7 @@ app.use((req, res) => {
 
 if (require.main === module) {
   app.listen(PORT, HOST, () => {
-    console.log(`SponsorRadar (#2) Terminal running at http://${HOST}:${PORT}`);
+    console.log(`SponsorRadar (#2) Editorial Intelligence running at http://${HOST}:${PORT}`);
   });
 }
 
