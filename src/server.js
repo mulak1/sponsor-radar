@@ -8,6 +8,7 @@ const { renderDirectoryPage, renderSeoPage, renderLegalPage, renderNotFoundPage 
 const app = express();
 const PORT = Number(process.env.PORT) || 4102;
 const HOST = process.env.HOST || '127.0.0.1';
+const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || `http://${HOST}:${PORT}`).replace(/\/$/, '');
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -71,14 +72,14 @@ Allow: /directory
 Allow: /lp
 Disallow: /admin/
 
-Sitemap: http://127.0.0.1:${PORT}/sitemap.xml
+Sitemap: ${PUBLIC_URL}/sitemap.xml
 `);
 });
 
 // sitemap.xml (Pre-Launch Checklist #9)
 app.get('/sitemap.xml', (req, res) => {
   const seoPages = db.prepare('SELECT slug FROM seo_pages ORDER BY slug ASC').all();
-  const baseUrl = `http://127.0.0.1:${PORT}`;
+  const baseUrl = PUBLIC_URL;
   const today = '2026-10-14';
   const staticPaths = ['/', '/directory', '/lp', '/privacy', '/terms'];
 
