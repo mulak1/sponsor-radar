@@ -5,6 +5,8 @@ const { analyzeSponsorLookup, analyzeTranscriptAdRead, generateOutboundPitch } =
 const { escapeHtml, renderBrandLogoSvg, renderHomePage, renderLandingPage } = require('./views_home');
 const { renderDirectoryPage, renderSeoPage, renderLegalPage, renderNotFoundPage } = require('./views_pages');
 
+const { attachExactBaselinePack } = require('./exact-baseline-api');
+
 const app = express();
 const PORT = Number(process.env.PORT) || 4102;
 const HOST = process.env.HOST || '0.0.0.0';
@@ -12,6 +14,7 @@ const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || `http://12
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
+attachExactBaselinePack(app, { verticalId: 'sponsor_radar' });
 
 // Pre-Launch Checklist #4 & #18: Force HTTPS in prod, Security Headers & Rate Limiting
 const rateBuckets = new Map();
