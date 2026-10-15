@@ -156,8 +156,9 @@ function buildTopExecutiveStripHtml(cfg) {
       <div class="eb-headline-btns">
         <button type="button" id="btn-calc" onclick="window.__ebTriggerHostCalc()">Run Instant Audit ↗</button>
         <button type="button" id="btn-headline-unlock" onclick="window.__ebCheckout('flash_pass')">Single-Audit Pass — $1.99</button>
+        <button type="button" id="btn-headline-micro" class="eb-action-btn" onclick="window.__ebCheckout('micro_pass')">99¢ Quick File Pass</button>
       </div>
-      <span style="font-size:10.5px;color:${t.safeColor};font-weight:700;">✓ $0 Free Email Unblur Available Below</span>
+      <a id="btn-top-sponsor-unlock" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebSponsorInstantUnlock('${esc(firstPartner.title)}', 'top_strip')" style="font-size:10.5px;color:${t.safeColor};font-weight:700;text-decoration:underline;">✓ Or Unblur Free via Sponsor (${esc(firstPartner.title)} • No Email) ↗</a>
     </div>
 
     <div id="free-metrics-grid" class="grid-metrics">
@@ -171,8 +172,8 @@ function buildTopExecutiveStripHtml(cfg) {
         <div id="inline-aisle-peek-drawer">
           <div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div>
           <div class="eb-peek-actions">
-            <button type="button" onclick="window.__ebFocusLeadEmail()" style="background:${t.safeSoftBg};color:${t.safeColor};border:1px solid ${t.safeBorder};border-radius:999px;padding:2px 8px;font-size:9.5px;font-weight:700;">Unblur Full Deliverable Free ($0)</button>
-            <a id="eb-inline-partner-cta" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'inline_peek' })" style="color:${t.brandPrimary};font-weight:700;text-decoration:underline;font-size:9.5px;">Partner: ${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a>
+            <button type="button" onclick="window.__ebFocusLeadEmail()" style="background:${t.safeSoftBg};color:${t.safeColor};border:1px solid ${t.safeBorder};border-radius:999px;padding:2px 8px;font-size:9.5px;font-weight:700;">Unblur via Email ($0)</button>
+            <a id="eb-inline-partner-cta" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebSponsorInstantUnlock('${esc(firstPartner.title)}', 'inline_peek')" style="color:${t.brandPrimary};font-weight:700;text-decoration:underline;font-size:9.5px;">Unblur via ${esc(firstPartner.title)} ($0 • No Email) ↗</a>
             <button type="button" id="eb-inline-unlock-cta" onclick="window.__ebCheckout('flash_pass')" style="background:${t.brandPrimary};color:#FFFFFF;border:none;border-radius:999px;padding:2px 8px;font-size:9.5px;font-weight:700;">1-Click Pass ($1.99) →</button>
           </div>
         </div>
@@ -335,23 +336,23 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 <!-- 5B. floating-ui/floating-ui (★ 32,753) Anchored Value-Gate & Price-Rescue Popover -->
 <div id="eb-floating-gate-popover" role="dialog" aria-label="Instant Deliverable Unlock Options">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-    <span style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">Unlock Deliverable ($0 Free or $1.99)</span>
+    <span style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">Unlock Deliverable ($0 Free, 99¢ or $1.99)</span>
     <button type="button" onclick="document.getElementById('eb-floating-gate-popover').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
   </div>
   <p id="eb-popover-desc" style="font-size:11.5px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">
-    Unblur &amp; copy ${esc(cfg.freeDeliverableName || 'this customized output')} on screen right now for <strong>$0 Free</strong>, or grab the <strong>Complete Pro Bundle for $1.99</strong> (save 96% vs $${esc(cfg.corePriceUsd)}):
+    Unblur &amp; copy ${esc(cfg.freeDeliverableName || 'this customized output')} right now via <strong>$0 Email</strong>, <strong>$0 Partner Sponsor (No Email)</strong>, or <strong>99¢ / $1.99 Pass</strong>:
   </p>
   <form onsubmit="return window.__ebUnlockViaEmail(event, 'floating_popover')" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
     <input type="email" id="eb-popover-email" placeholder="Your email address ($0)..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
     <button type="submit" id="btn-popover-free-unblur" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;font-size:11.5px;font-weight:700;border:none;white-space:nowrap;">Unblur $0</button>
   </form>
   <div style="display:grid;gap:6px;">
-    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:7px 10px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandText};border:1px solid ${t.accentBorder};font-weight:700;font-size:11px;text-align:center;">
-      Skip Email: Full Pro Bundle — $1.99 One-Time →
-    </button>
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:4px;border-top:1px solid ${t.border};font-size:10.5px;">
-      <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'floating_popover' })" style="color:${t.safeColor};font-weight:700;text-decoration:underline;">Partner: ${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a>
-      <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="background:none;border:none;color:${t.textMuted};text-decoration:underline;font-size:10px;">Full $${esc(cfg.corePriceUsd)} Plan</button>
+    <a id="btn-popover-sponsor-unlock" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebSponsorInstantUnlock('${esc(firstPartner.title)}', 'floating_popover')" style="display:block;width:100%;padding:7px 10px;border-radius:${t.radiusPill};background:${t.safeSoftBg};color:${t.safeColor};border:1px solid ${t.safeBorder};font-weight:700;font-size:11px;text-align:center;text-decoration:none;">
+      Unblur Free via Sponsor (${esc(firstPartner.title)} • No Email) ↗
+    </a>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <button type="button" onclick="window.__ebCheckout('micro_pass')" style="padding:6px 8px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:700;font-size:10.5px;">99¢ Quick File Pass</button>
+      <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="padding:6px 8px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandText};border:1px solid ${t.accentBorder};font-weight:700;font-size:10.5px;">$1.99 Full Pro Pass →</button>
     </div>
   </div>
 </div>
@@ -367,8 +368,8 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <button type="submit" style="padding:5px 9px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;font-size:11px;font-weight:700;border:none;">Unblur $0</button>
   </form>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;">
-    <button type="button" onclick="window.__ebCheckout('flash_pass')" style="padding:4px 9px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandText};border:1px solid ${t.accentBorder};font-weight:700;font-size:10.5px;">Single-Audit Pass ($1.99) →</button>
-    <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'sonner_toast' })" style="color:${t.safeColor};font-weight:700;text-decoration:underline;font-size:10.5px;">${esc(firstPartner.cpa)} ↗</a>
+    <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebSponsorInstantUnlock('${esc(firstPartner.title)}', 'sonner_toast')" style="color:${t.safeColor};font-weight:700;text-decoration:underline;font-size:10.5px;">Unblur via ${esc(firstPartner.title)} ($0 • No Email) ↗</a>
+    <button type="button" onclick="window.__ebCheckout('micro_pass')" style="padding:4px 9px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandText};border:1px solid ${t.accentBorder};font-weight:700;font-size:10.5px;">99¢ Pass →</button>
   </div>
 </div>
 
@@ -383,7 +384,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
       <button type="button" class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;" onclick="window.__ebCheckout('flash_pass')"><span>Unlock Single-Audit Pass (Unblur All Deliverables)</span><strong style="color:${t.brandPrimary};">$1.99 →</strong></button>
       <a href="/api/github-upgrade/export.csv" download class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;" onclick="window.__ebShowTripwire()"><span>Download SheetJS Executive .CSV Model</span><strong>.CSV ↗</strong></a>
       <a href="/api/github-upgrade/skin-cycling.ics" download class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;" onclick="window.__ebShowTripwire()"><span>Download Apple/Google .ICS Schedule</span><strong>.ICS ↗</strong></a>
-      <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'cmdk' })"><span>Verified Partner: ${esc(firstPartner.title)}</span><strong style="color:${t.safeColor};">${esc(firstPartner.cpa)} ↗</strong></a>
+      <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;" onclick="window.__ebSponsorInstantUnlock('${esc(firstPartner.title)}', 'cmdk')"><span>Unblur Free via Partner: ${esc(firstPartner.title)}</span><strong style="color:${t.safeColor};">$0 / No Email ↗</strong></a>
       <a href="/dossier/sample" class="eb-action-btn" style="justify-content:space-between;padding:8px 12px;border-radius:8px;"><span>View Sample Executive Dossier</span><strong>Open →</strong></a>
     </div>
   </div>
@@ -393,7 +394,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 <div id="sticky-mobile-bar" role="region" aria-label="Instant Access Conversion Dock">
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
     <span style="font-size:12px;font-weight:700;color:${t.textPrimary};">${esc(cfg.brandName)}</span>
-    <a href="#eb-deliverable-curtain" id="sticky-sub-benefit" style="font-size:11.5px;color:${t.brandPrimary};font-weight:600;text-decoration:underline;">Unblur Deliverable Free w/ Email ($0) or Single-Audit Pass ($1.99)</a>
+    <a href="#eb-deliverable-curtain" id="sticky-sub-benefit" style="font-size:11.5px;color:${t.brandPrimary};font-weight:600;text-decoration:underline;">Unblur Free ($0 Email / $0 Partner) or 99¢ / $1.99 Pass</a>
   </div>
   <div style="display:flex;gap:6px;">
     <button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;border:none;padding:6px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('flash_pass')">1-Click Pass: $1.99</button>
@@ -407,21 +408,14 @@ function buildClientRuntimeScript(cfg) {
   const pillMap = {};
   for (const p of cfg.coMarketingPills) pillMap[p.key] = p.rowText;
   const firstPartner = cfg.affiliates && cfg.affiliates[0] ? cfg.affiliates[0] : { title: 'Verified Partner', url: '#', cpa: 'Free Trial' };
+  const remDiff = cfg.remediationDiff || { beforeLine: '- [BEFORE] Legacy baseline', afterLine: '+ [AFTER] Optimized baseline', roiBadge: 'Verified Lift' };
 
   return `<script id="exact-baseline-client-runtime">
 (function() {
   var CFG = ${JSON.stringify({
-    moduleId: cfg.moduleId,
-    brandName: cfg.brandName,
-    domain: cfg.domain,
-    corePriceUsd: cfg.corePriceUsd,
-    freeDeliverableName: cfg.freeDeliverableName || 'Standard Deliverable',
-    deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
-    sliderLabel: cfg.sliderLabel || 'Scale',
-    theme: t,
-    firstPartner,
-    pillMap,
-    presetKpis: cfg.presetKpis || {}
+    moduleId: cfg.moduleId, brandName: cfg.brandName, domain: cfg.domain, corePriceUsd: cfg.corePriceUsd,
+    freeDeliverableName: cfg.freeDeliverableName || 'Standard Deliverable', deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
+    sliderLabel: cfg.sliderLabel || 'Scale', theme: t, firstPartner, remDiff, pillMap, presetKpis: cfg.presetKpis || {}
   })};
 
   var STORAGE_KEY = 'eb_unlocked_v5_' + CFG.moduleId;
@@ -435,15 +429,30 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebLogEvent = function(eventType, meta) {
     try {
-      fetch('/api/telemetry/event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: meta || {} })
-      }).catch(function(){});
+      fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: meta || {} }) }).catch(function(){});
     } catch (_) {}
   };
 
-  // Global delegated click listener for native host affiliate links
+  window.__ebSaveBundleFile = function() {
+    try {
+      var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
+      var bodyText = targetEl ? targetEl.textContent : (CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine);
+      var blob = new Blob([CFG.brandName + ' Verified Deliverable Bundle\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + bodyText], { type: 'text/plain;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = CFG.moduleId + '-deliverable-bundle.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (_) {}
+  };
+
+  window.__ebSponsorInstantUnlock = function(partnerTitle, placement) {
+    window.__ebLogEvent('affiliate_click', { partner: partnerTitle, placement: placement || 'sponsor_instant_unlock', unlocked_deliverable: true });
+    window.__ebApplyUnblurState();
+    window.__ebShowTripwire();
+  };
+
   document.addEventListener('click', function(e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href*="/api/affiliate"], a[rel*="sponsored"], a.affiliate-link-pill, a.affiliate-micro-link') : null;
     if (a && !a.hasAttribute('onclick')) {
@@ -451,16 +460,12 @@ function buildClientRuntimeScript(cfg) {
     }
   }, { passive: true });
 
-  // PrismJS (★ 13,051) + localForage (★ 25,802) Host Deliverable Value-Gate Curtain Mounter
   window.__ebMountDeliverableCurtain = function() {
     if (window.__ebIsUnlocked) {
       window.__ebApplyUnblurState();
       return;
     }
-    var targetEl = document.getElementById('compiler-code-output')
-      || document.getElementById('res-pitch-body')
-      || document.getElementById('out-sdk-snippet')
-      || document.getElementById('appleWalletCardPreview');
+    var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
 
     if (CFG.moduleId === 'sponsor_radar') {
       var dmEmail = document.getElementById('res-dm-email');
@@ -486,25 +491,27 @@ function buildClientRuntimeScript(cfg) {
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     if (existingCurtain) {
       var prevBox = document.getElementById('eb-prism-proof-preview');
-      if (prevBox && previewLines) prevBox.textContent = previewLines + '\\n/* Remaining lines ready — Unblur Free ($0) or $1.99 Pass below */';
+      if (prevBox && previewLines) prevBox.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + previewLines;
       return;
     }
 
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;">'
-      + '<span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.03em;">✦ ' + CFG.freeDeliverableName + ' Ready (Preview)</span>'
-      + '<span style="font-size:10.5px;color:' + CFG.theme.safeColor + ';font-weight:700;">$0 Free Email Unblur or $1.99 Pass</span>'
+      + '<span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.03em;">✦ ' + CFG.freeDeliverableName + ' + jsdiff Patch</span>'
+      + '<span style="font-size:10.5px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span>'
       + '</div>'
-      + '<pre id="eb-prism-proof-preview">' + (previewLines || '// Customized deterministic output ready') + '\\n/* Unblur full deliverable on screen for $0 Free (Email) or $1.99 Instant Pass */</pre>'
+      + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<form onsubmit="return window.__ebUnlockViaEmail(event, \\'deliverable_curtain\\')" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">'
       + '<input type="email" id="eb-curtain-email" placeholder="Enter email to unblur full deliverable on screen ($0 Free)..." required aria-label="Email to unblur deliverable free" style="padding:7px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="submit" id="btn-curtain-free-unblur" style="padding:7px 14px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;font-size:12px;font-weight:700;border:none;white-space:nowrap;">Unblur Free ($0)</button>'
       + '</form>'
-      + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-top:6px;border-top:1px solid ' + CFG.theme.border + ';font-size:11px;">'
-      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandText + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;">Skip Email: Full Pro Bundle + .CSV/.ICS ($1.99) →</button>'
-      + '<a id="btn-curtain-partner-cta" href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent(\\'affiliate_click\\', { partner: \\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', placement: \\'deliverable_curtain\\' })" style="color:' + CFG.theme.safeColor + ';font-weight:700;text-decoration:underline;">Recommended: ' + CFG.firstPartner.title + ' (' + CFG.firstPartner.cpa + ') ↗</a>'
-      + '</div>';
+      + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding-top:6px;border-top:1px solid ' + CFG.theme.border + ';font-size:11px;">'
+      + '<a id="btn-curtain-partner-cta" href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebSponsorInstantUnlock(\\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', \\'deliverable_curtain\\')" style="padding:5px 10px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700;text-decoration:none;">Unblur Free via ' + CFG.firstPartner.title + ' ($0 • No Email) ↗</a>'
+      + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;">'
+      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\'micro_pass\\')" style="padding:5px 10px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:700;font-size:11px;">99¢ File Pass</button>'
+      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandText + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;">Full Pro Pass ($1.99) →</button>'
+      + '</div></div>';
 
     if (targetEl.parentNode) {
       targetEl.parentNode.insertBefore(curtain, targetEl.nextSibling);
@@ -525,10 +532,11 @@ function buildClientRuntimeScript(cfg) {
       curtain.style.background = CFG.theme.safeSoftBg;
       curtain.style.borderColor = CFG.theme.safeBorder;
       curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">'
-        + '<span style="font-size:12px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Deliverable Unblurred! Want the Complete 50-Row .CSV/.ICS &amp; Pro Bundle?</span>'
-        + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
-        + '<button type="button" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;">Upgrade to Full Pro Pass ($1.99) →</button>'
-        + '<a href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent(\\'affiliate_click\\', { partner: \\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', placement: \\'unblurred_banner\\' })" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:11px;text-decoration:underline;">Explore ' + CFG.firstPartner.title + ' (' + CFG.firstPartner.cpa + ') ↗</a>'
+        + '<span style="font-size:12px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Deliverable Unblurred! Save Local Bundle or Grab Full 50-Row .CSV/.ICS:</span>'
+        + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">'
+        + '<button type="button" id="btn-filesaver-bundle" onclick="window.__ebSaveBundleFile()" style="padding:5px 10px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700;font-size:11px;">Download .TXT Bundle (FileSaver.js) ↓</button>'
+        + '<button type="button" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;">Full Pro Pass ($1.99) →</button>'
+        + '<a href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent(\\'affiliate_click\\', { partner: \\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', placement: \\'unblurred_banner\\' })" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:11px;text-decoration:underline;">' + CFG.firstPartner.title + ' (' + CFG.firstPartner.cpa + ') ↗</a>'
         + '</div></div>';
     }
     var pop = document.getElementById('eb-floating-gate-popover');
