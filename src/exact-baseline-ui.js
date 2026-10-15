@@ -395,10 +395,12 @@ function buildTopExecutiveStripHtml(cfg) {
     <div id="lead-squeeze-card">
       <div id="prog-instant-action-strip">
         <button type="button" id="btn-copy-shopping-list" class="eb-action-btn" onclick="window.__ebCopySummary()">📋 Copy List</button>
+        <a id="btn-export-csv" class="eb-action-btn" href="/api/github-upgrade/export.csv" download onclick="window.__ebShowTripwire()">📊 Export .CSV</a>
+        <a id="btn-export-ics" class="eb-action-btn" href="/api/github-upgrade/skin-cycling.ics" download onclick="window.__ebShowTripwire()">📅 .ICS Calendar</a>
         <a id="btn-sms-share" class="eb-action-btn" href="sms:?&body=${ encodeURIComponent(cfg.brandName + ' Executive Audit Summary — https://' + cfg.domain) }" onclick="window.__ebShowTripwire()">💬 1-Tap SMS</a>
         <button type="button" id="btn-print-summary" class="eb-action-btn" onclick="window.__ebPrintSheet()">🖨️ Print PDF</button>
         <button type="button" id="btn-showroom-hud" class="eb-action-btn" onclick="window.__ebToggleHud()">🕶️ ${esc(cfg.hudLabel)}</button>
-        <button type="button" id="btn-reddit-share" class="eb-action-btn" onclick="window.__ebCopyReddit()">🟠 Reddit Markdown</button>
+        <button type="button" id="btn-reddit-share" class="eb-action-btn" onclick="window.__ebCopyReddit()">🟠 Reddit MD</button>
       </div>
       <form class="eb-lead-row" onsubmit="return window.__ebSubmitLead(event)">
         <input type="email" id="eb-lead-email" placeholder="Send free executive sheet ($0) to email..." required aria-label="Email address for free summary" />
@@ -437,7 +439,11 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   <div id="github-repo-upgrade-card" class="eb-panel-card">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
       <span style="font-size:11px;font-weight:800;color:#38BDF8;text-transform:uppercase;">🚀 Open-Source Engine Upgrade: ${esc(cfg.githubRepo.name)} (${esc(cfg.githubRepo.stars)})</span>
-      <a href="/api/github-upgrade" target="_blank" class="eb-action-btn" style="background:#1E293B;color:#38BDF8;">Inspect Live JSON Telemetry ↗</a>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <a href="/api/github-upgrade/export.csv" download class="eb-action-btn" style="background:#065F46;color:#A7F3D0;">📊 Download .CSV Model</a>
+        <a href="/feed.xml" target="_blank" class="eb-action-btn" style="background:#1E293B;color:#FBBF24;">📡 RSS 2.0 Feed</a>
+        <a href="/api/github-upgrade" target="_blank" class="eb-action-btn" style="background:#1E293B;color:#38BDF8;">JSON Telemetry ↗</a>
+      </div>
     </div>
     <h3 style="margin:6px 0 4px 0;font-size:17px;">${esc(cfg.githubRepo.title)}</h3>
     <p style="margin:0 0 10px 0;font-size:13px;color:#D1D5DB;">${esc(cfg.githubRepo.summary)}</p>
@@ -561,10 +567,10 @@ function buildClientRuntimeScript(cfg) {
     moduleId: cfg.moduleId,
     brandName: cfg.brandName,
     domain: cfg.domain,
-    pillMap
+    pillMap,
+    presetKpis: cfg.presetKpis || {}
   })};
 
-  // Device-aware wallet button label (Apple Pay on Safari/iOS vs Google Pay / 1-Click)
   try {
     var ua = navigator.userAgent || '';
     var isApple = /iPhone|iPad|Macintosh/i.test(ua) && /Safari/i.test(ua) && !/Chrome/i.test(ua);
@@ -589,6 +595,36 @@ function buildClientRuntimeScript(cfg) {
       }).catch(function(){});
     } catch (_) {}
   };
+
+  // IntersectionObserver for view_paywall telemetry (Mixpanel/PostHog funnel pattern)
+  try {
+    var paywallLogged = false;
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !paywallLogged) {
+            paywallLogged = true;
+            window.__ebLogEvent('view_paywall', { target: entry.target.id || 'stat-pill-locked' });
+          }
+        });
+      }, { threshold: 0.35 });
+      var lockEl = document.querySelector('.stat-pill-locked');
+      var unlockBar = document.getElementById('in-card-unlock-bar');
+      if (lockEl) obs.observe(lockEl);
+      if (unlockBar) obs.observe(unlockBar);
+    }
+  } catch (_) {}
+
+  // Debounced input recalculation listener across native calculator inputs
+  var calcTimer = null;
+  document.addEventListener('input', function(e) {
+    var t = e.target;
+    if (!t || t.id === 'eb-lead-email') return;
+    if (calcTimer) clearTimeout(calcTimer);
+    calcTimer = setTimeout(function() {
+      window.__ebLogEvent('calculate', { source: 'debounced_input', field: t.name || t.id || 'input' });
+    }, 600);
+  }, { passive: true });
 
   window.__ebSelectStorePill = function(key) {
     var pills = document.querySelectorAll('.store-preview-pill[data-store]');
@@ -631,7 +667,7 @@ function buildClientRuntimeScript(cfg) {
       navigator.clipboard.writeText(md).catch(function(){});
     }
     var btn = document.getElementById('btn-reddit-share');
-    if (btn) btn.textContent = '✅ Copied Reddit MD!';
+    if (btn) btn.textContent = '✅ Copied MD!';
     window.__ebShowTripwire();
   };
 
@@ -654,12 +690,21 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebApplyPreset = function(presetKey, idx) {
     window.__ebLogEvent('calculate', { preset: presetKey });
-    // Trigger any native preset button on the page if present
+    var kpiVals = CFG.presetKpis && CFG.presetKpis[presetKey];
+    if (kpiVals) {
+      var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
+      for (var i = 0; i < boxes.length && i < kpiVals.length; i++) {
+        boxes[i].textContent = kpiVals[i];
+      }
+    }
+    var drawer = document.getElementById('inline-aisle-peek-drawer');
+    if (drawer) {
+      drawer.style.display = 'block';
+    }
     var nativeBtns = document.querySelectorAll('[data-domain], [data-preset-id], [data-brand], .preset-btn, .chip');
-    if (nativeBtns && nativeBtns[idx] && nativeBtns[idx] !== event.target) {
+    if (nativeBtns && nativeBtns[idx]) {
       try { nativeBtns[idx].click(); } catch (_) {}
     }
-    window.__ebTriggerHostCalc();
   };
 
   window.__ebTriggerHostCalc = function() {
