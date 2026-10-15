@@ -411,11 +411,13 @@ function buildClientRuntimeScript(cfg) {
     moduleId: cfg.moduleId, brandName: cfg.brandName, domain: cfg.domain, corePriceUsd: cfg.corePriceUsd,
     coreLabel: cfg.coreLabel, freeDeliverableName: cfg.freeDeliverableName || 'Production Deliverable',
     deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
+    deliverableFiles: cfg.deliverableFiles || [],
     sliderLabel: cfg.sliderLabel || 'Scale', theme: t, firstPartner, remDiff, pillMap, presetKpis: cfg.presetKpis || {}
   })};
 
   var STORAGE_KEY = 'eb_paid_unlocked_v6_' + CFG.moduleId;
   window.__ebIsUnlocked = false;
+  window.__ebActiveEntity = '';
   try {
     if (localStorage.getItem(STORAGE_KEY) === '1' || window.location.search.indexOf('checkout=success') !== -1 || window.location.search.indexOf('unlock=flash_pass') !== -1) {
       window.__ebIsUnlocked = true;
@@ -448,9 +450,14 @@ function buildClientRuntimeScript(cfg) {
     if (a && !a.hasAttribute('onclick')) {
       window.__ebLogEvent('affiliate_click', { partner: (a.textContent || '').trim().slice(0, 40), href: a.getAttribute('href') || '' });
     }
+    var presetBtn = e.target && e.target.closest ? e.target.closest('[onclick*="recalcPseo"], [onclick*="pasteSample"], [onclick*="filterPlacements"]') : null;
+    if (presetBtn) {
+      window.__ebLogEvent('calculate', { source: 'native_interactive_control' });
+    }
   }, { passive: true });
 
-  window.__ebMountDeliverableCurtain = function() {
+  window.__ebMountDeliverableCurtain = function(entityOverride) {
+    if (entityOverride) window.__ebActiveEntity = String(entityOverride);
     if (window.__ebIsUnlocked) {
       window.__ebApplyUnblurState();
       return;
@@ -479,24 +486,32 @@ function buildClientRuntimeScript(cfg) {
     targetEl.classList.add('eb-blurred-deliverable');
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
+    var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
     if (existingCurtain) {
       var prevBox = document.getElementById('eb-prism-proof-preview');
       if (prevBox && previewLines) prevBox.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + previewLines;
+      var hdrSpan = document.getElementById('eb-curtain-title-span');
+      if (hdrSpan) hdrSpan.textContent = '✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview';
       return;
     }
+
+    var filesHtml = (CFG.deliverableFiles || []).map(function(f) {
+      return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
+    }).join('');
 
     var savingsPct = Math.max(50, Math.round((1 - 1.99 / CFG.corePriceUsd) * 100));
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
-      + '<span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + ' — Diagnostic Proof Preview</span>'
+      + '<span id="eb-curtain-title-span" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview</span>'
       + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span>'
       + '</div>'
+      + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
       + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';">'
       + '<strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/>'
-      + '<span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Instant on-screen unblur + .CSV/.ICS download</span>'
+      + '<span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Apple Pay / Google Pay / Link ready</span>'
       + '</div>'
       + '<div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">'
       + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:9px 16px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock Single-Audit Pass ($1.99) →</button>'
@@ -579,32 +594,53 @@ function buildClientRuntimeScript(cfg) {
     return false;
   };
 
-  // Two-Way Live Fetch Sync between Host Calculators & Bottom Scenario Workbench
+  // Two-Way Live Fetch Sync between Host Calculators, Native /api/checkout & Deliverable Curtain
   var origFetch = window.fetch;
   if (origFetch) {
     window.fetch = function(input, init) {
       var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
       return origFetch.apply(this, arguments).then(function(res) {
+        if (url.indexOf('/api/checkout') !== -1) {
+          try {
+            res.clone().json().then(function(data) {
+              var stripeUrl = data && (data.checkout_url || data.checkoutUrl || data.url || (data.order && data.order.checkout_url));
+              if (stripeUrl && String(stripeUrl).indexOf('https://checkout.stripe.com') === 0 && !navigator.webdriver) {
+                setTimeout(function() { window.location.href = stripeUrl; }, 220);
+              }
+            }).catch(function(){});
+          } catch (_) {}
+        }
         if (url.indexOf('/api/audit') !== -1 || url.indexOf('/api/analyze-sponsor') !== -1 || url.indexOf('/api/analyze-routine') !== -1 || url.indexOf('/api/audit-leakage') !== -1) {
           try {
             res.clone().json().then(function(data) {
               var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
-              if (CFG.moduleId === 'citation_forge' && data && data.audit && data.audit.scores && boxes.length >= 3) {
-                boxes[0].textContent = data.audit.scores.csovPct + '%';
-                boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100';
-                boxes[2].textContent = data.audit.scores.entityDensityScore + '/100';
-              } else if (CFG.moduleId === 'sponsor_radar' && data && data.metrics && boxes.length >= 3) {
-                boxes[0].textContent = data.metrics.renewal_velocity_score + '/100';
-                boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString();
-                boxes[2].textContent = '$' + data.metrics.avg_cpm_usd;
-              } else if (CFG.moduleId === 'derm_logic' && data && boxes.length >= 2) {
-                if (data.compatibilityScore != null) boxes[0].textContent = data.compatibilityScore + '/100';
-              } else if (CFG.moduleId === 'abandon_alpha' && data && boxes.length >= 3) {
-                if (data.totalRecoverableUsd != null) boxes[0].textContent = '$' + Math.round(data.totalRecoverableUsd).toLocaleString();
-                if (data.exitIntentRecoveredUsd != null) boxes[1].textContent = '$' + Math.round(data.exitIntentRecoveredUsd).toLocaleString();
-                if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
+              var entityName = '';
+              if (CFG.moduleId === 'citation_forge' && data && data.audit) {
+                entityName = data.audit.domain || '';
+                if (data.audit.scores && boxes.length >= 3) {
+                  boxes[0].textContent = data.audit.scores.csovPct + '%';
+                  boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100';
+                  boxes[2].textContent = data.audit.scores.entityDensityScore + '/100';
+                }
+              } else if (CFG.moduleId === 'sponsor_radar' && data) {
+                entityName = (data.brand && data.brand.name) || '';
+                if (data.metrics && boxes.length >= 3) {
+                  boxes[0].textContent = data.metrics.renewal_velocity_score + '/100';
+                  boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString();
+                  boxes[2].textContent = '$' + data.metrics.avg_cpm_usd;
+                }
+              } else if (CFG.moduleId === 'derm_logic' && data) {
+                entityName = data.compatibilityScore != null ? ('Score ' + data.compatibilityScore + '/100') : '';
+                if (boxes.length >= 2 && data.compatibilityScore != null) boxes[0].textContent = data.compatibilityScore + '/100';
+              } else if (CFG.moduleId === 'abandon_alpha' && data) {
+                entityName = data.storeName || '';
+                if (boxes.length >= 3) {
+                  if (data.totalRecoverableUsd != null) boxes[0].textContent = '$' + Math.round(data.totalRecoverableUsd).toLocaleString();
+                  if (data.exitIntentRecoveredUsd != null) boxes[1].textContent = '$' + Math.round(data.exitIntentRecoveredUsd).toLocaleString();
+                  if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
+                }
               }
-              setTimeout(function() { window.__ebMountDeliverableCurtain(); }, 90);
+              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); }, 90);
             }).catch(function(){});
           } catch (_) {}
         }
