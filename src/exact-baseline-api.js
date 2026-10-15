@@ -23,6 +23,14 @@ const VERTICAL_CONFIGS = {
     brandName: 'CitationForge',
     domain: 'www.citationforge.io',
     accentColor: '#4F46E5',
+    theme: {
+      canvasBg: '#FAF9F5', cardBg: '#FFFFFF', subtleBg: '#F3F1EC', dockBg: 'rgba(250, 249, 245, 0.94)',
+      border: '#E4E2DD', accentBorder: '#C7D2FE', textPrimary: '#0F172A', textSecondary: '#475569', textMuted: '#64748B',
+      brandPrimary: '#4F46E5', brandSoftBg: '#EEF2FF', brandText: '#3730A3',
+      safeColor: '#059669', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
+      fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      radiusCard: '14px', radiusPill: '8px', shadow: '0 12px 32px -12px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.03)'
+    },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199',
     flashPriceDefault: 'price_1UQjMqIaoGnkXxS84yeYo8HG',
     corePriceEnv: 'STRIPE_PRICE_AUDIT_49',
@@ -35,14 +43,11 @@ const VERTICAL_CONFIGS = {
     deliverableName: 'Full /llms-full.txt + JSON-LD @graph + 25-Prompt Matrix',
     freeDeliverableName: 'Standard /llms.txt + Top 5 Citation Fixes',
     unlockBannerTitle: 'Unlock Full 50-Prompt GEO Citation Breakdown & Auto-llms.txt PR Patch',
-    explainerText: 'Unlocks exact competitor prompt citation ranks, /llms-full.txt corpus & JSON-LD entity patches',
+    explainerText: 'Instant benchmark across 25 buyer prompts, /llms-full.txt corpus & JSON-LD entity graph',
     hudLabel: 'GEO Crawl HUD',
     redditSub: 'SEO',
-    sliderLabel: 'Prompts',
-    sliderMin: 10,
-    sliderMax: 250,
-    sliderVal: 50,
-    searchPlaceholder: 'Type domain (e.g. figma.com)...',
+    sliderLabel: 'Prompts', sliderMin: 10, sliderMax: 250, sliderVal: 50,
+    searchPlaceholder: 'Filter domain (e.g. figma.com)...',
     kpis: [
       { label: 'Citation Share (cSoV)', val: '41.2%', sub: '25 Buyer Prompts' },
       { label: 'Agent Readability', val: '94/100', sub: 'llms.txt + Readability' },
@@ -57,16 +62,13 @@ const VERTICAL_CONFIGS = {
       'vercel.com': ['43.5%', '95/100', '93/100', '6/6 Bots']
     },
     presets: [
-      { key: 'linear.app', label: 'Linear' },
-      { key: 'stripe.com', label: 'Stripe' },
-      { key: 'supabase.com', label: 'Supabase' },
-      { key: 'notion.so', label: 'Notion' },
-      { key: 'vercel.com', label: 'Vercel' }
+      { key: 'linear.app', label: 'Linear' }, { key: 'stripe.com', label: 'Stripe' },
+      { key: 'supabase.com', label: 'Supabase' }, { key: 'notion.so', label: 'Notion' }, { key: 'vercel.com', label: 'Vercel' }
     ],
     coMarketingPills: [
-      { key: 'perplexity', label: 'Perplexity Pro', rowText: 'FREE ROW 1 (Perplexity Pro): Rank #1 Citation requires Answer-First 48-word H2 block + /llms-full.txt' },
-      { key: 'chatgpt', label: 'SearchGPT', rowText: 'FREE ROW 1 (SearchGPT): OAI-SearchBot requires explicit Allow: / in robots.txt + Organization sameAs JSON-LD' },
-      { key: 'gemini', label: 'Gemini Overviews', rowText: 'FREE ROW 1 (Gemini Overviews): Google-Extended index weight increases +34% with FAQPage @graph schema' }
+      { key: 'perplexity', label: 'Perplexity Pro', rowText: 'Perplexity Pro Insight: Rank #1 Citation requires Answer-First 48-word H2 block + /llms-full.txt' },
+      { key: 'chatgpt', label: 'SearchGPT', rowText: 'SearchGPT Insight: OAI-SearchBot requires explicit Allow: / in robots.txt + Organization sameAs JSON-LD' },
+      { key: 'gemini', label: 'Gemini Overviews', rowText: 'Gemini Overviews Insight: Google-Extended index weight increases +34% with FAQPage @graph schema' }
     ],
     affiliates: [
       { title: 'Semrush AI SEO & Citation Tracker', badge: 'Verified GEO Partner', cpa: 'Free 7-Day Trial', url: 'https://www.semrush.com/' },
@@ -75,11 +77,10 @@ const VERTICAL_CONFIGS = {
     ],
     githubRepo: {
       name: 'floating-ui/floating-ui (★ 32.8k) + localForage (★ 25.8k) + PrismJS (★ 13.1k) + krisk/Fuse (★ 20.5k)',
-      stars: '★ 92,108 Combined',
-      url: 'https://github.com/floating-ui/floating-ui',
+      stars: '★ 92,108 Combined', url: 'https://github.com/floating-ui/floating-ui',
       badge: 'Floating-UI Value Gate + localForage Unblur + PrismJS',
-      title: 'Holistic Deliverable Curtain (Lines 1-5 Free Preview + $0 Email Unblur vs $1.99 Single-Audit Pass)',
-      summary: 'Replaces 100% free code leakage with a PrismJS 5-line proof preview, localForage instant client-side $0 email unblur, and Floating-UI anchored price-rescue popovers.'
+      title: 'Deliverable Preview & Instant Unlock Architecture',
+      summary: 'Provides a 4-line deliverable preview with instant client-side $0 email unlock (localForage) and $1.99 Single-Audit Pass.'
     }
   },
   sponsor_radar: {
@@ -87,6 +88,14 @@ const VERTICAL_CONFIGS = {
     brandName: 'SponsorRadar',
     domain: 'www.sponsorradar.io',
     accentColor: '#E84E36',
+    theme: {
+      canvasBg: '#FBF8F3', cardBg: '#FFFFFF', subtleBg: '#F4EFE6', dockBg: 'rgba(251, 248, 243, 0.95)',
+      border: '#E5DEC9', accentBorder: '#F5C2B8', textPrimary: '#161412', textSecondary: '#57524A', textMuted: '#78716C',
+      brandPrimary: '#E84E36', brandSoftBg: '#FFF4F1', brandText: '#B9311C',
+      safeColor: '#0F766E', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
+      fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      radiusCard: '14px', radiusPill: '8px', shadow: '0 14px 34px -12px rgba(24, 20, 16, 0.07), 0 2px 6px rgba(24, 20, 16, 0.03)'
+    },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199',
     flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
     corePriceEnv: 'STRIPE_PRICE_CREATOR_49',
@@ -99,14 +108,11 @@ const VERTICAL_CONFIGS = {
     deliverableName: 'Verified Decision-Maker Email + 3-Flight Pitch Deck + All Placements',
     freeDeliverableName: 'Direct Media-Buyer Email + Outbound Pitch Template',
     unlockBannerTitle: 'Unlock Full 3x-Renewed Sponsor Decision-Maker Contacts & CPM Rate Card',
-    explainerText: 'Unlocks verified media-buyer emails, net CPM floor rates, and 3x-renewal flight calendars',
+    explainerText: 'Verified media-buyer emails, net CPM floor rates, and 3x-renewal flight calendars',
     hudLabel: 'Media Buyer HUD',
     redditSub: 'podcasting',
-    sliderLabel: 'Flights',
-    sliderMin: 1,
-    sliderMax: 30,
-    sliderVal: 14,
-    searchPlaceholder: 'Search sponsor (e.g. HubSpot)...',
+    sliderLabel: 'Flights', sliderMin: 1, sliderMax: 30, sliderVal: 14,
+    searchPlaceholder: 'Filter sponsor (e.g. HubSpot)...',
     kpis: [
       { label: '3x+ Renewal Score', val: '94/100', sub: 'Verified ROI Signal' },
       { label: 'Est. Monthly Spend', val: '$142,500', sub: 'Across 14 Flights' },
@@ -121,16 +127,13 @@ const VERTICAL_CONFIGS = {
       'eight-sleep': ['93/100', '$620,000', '$37.50', '1.41x']
     },
     presets: [
-      { key: 'ag1', label: 'AG1' },
-      { key: 'deel', label: 'Deel' },
-      { key: 'linear', label: 'Linear' },
-      { key: 'ramp', label: 'Ramp' },
-      { key: 'eight-sleep', label: '8Sleep' }
+      { key: 'ag1', label: 'AG1' }, { key: 'deel', label: 'Deel' },
+      { key: 'linear', label: 'Linear' }, { key: 'ramp', label: 'Ramp' }, { key: 'eight-sleep', label: '8Sleep' }
     ],
     coMarketingPills: [
-      { key: 'spotify', label: 'Spotify Ad Studio', rowText: 'FREE ROW 1 (Spotify Ad Studio): Host-Read Mid-Roll 60s clears $38.50 net CPM with 4.2x renewal rate' },
-      { key: 'youtube', label: 'YouTube BrandConnect', rowText: 'FREE ROW 1 (YouTube BrandConnect): 90s Native Integration w/ pinned comment vanity URL converts at 2.8% CTR' },
-      { key: 'beehiiv', label: 'Beehiiv Ad Network', rowText: 'FREE ROW 1 (Beehiiv Ad Network): Primary Top-Slot Newsletter Sponsor averages $42 CPC / $65 eCPM on B2B lists' }
+      { key: 'spotify', label: 'Spotify Ad Studio', rowText: 'Spotify Ad Studio: Host-Read Mid-Roll 60s clears $38.50 net CPM with 4.2x renewal rate' },
+      { key: 'youtube', label: 'YouTube BrandConnect', rowText: 'YouTube BrandConnect: 90s Native Integration w/ pinned comment vanity URL converts at 2.8% CTR' },
+      { key: 'beehiiv', label: 'Beehiiv Ad Network', rowText: 'Beehiiv Ad Network: Primary Top-Slot Newsletter Sponsor averages $42 CPC / $65 eCPM on B2B lists' }
     ],
     affiliates: [
       { title: 'Riverside.fm 4K Studio Ad-Read Recorder', badge: 'Creator Studio Standard', cpa: '15% Creator Discount', url: 'https://riverside.fm/' },
@@ -139,18 +142,25 @@ const VERTICAL_CONFIGS = {
     ],
     githubRepo: {
       name: 'floating-ui/floating-ui (★ 32.8k) + localForage (★ 25.8k) + noUiSlider (★ 5.8k) + Chart.js (★ 67.7k)',
-      stars: '★ 132,100 Combined',
-      url: 'https://github.com/floating-ui/floating-ui',
+      stars: '★ 132,100 Combined', url: 'https://github.com/floating-ui/floating-ui',
       badge: 'Floating-UI Pitch Gate + localForage + noUiSlider',
-      title: 'Decision-Maker Email & Outbound Pitch Value Curtain ($0 Email Reveal vs $1.99 Full Rate Card)',
-      summary: 'Masks direct media-buyer emails and outbound pitch bodies behind a 1-step $0 Email Reveal (persisted via localForage) or $1.99 Single-Lookup Pass instead of a cold $49/mo wall.'
+      title: 'Decision-Maker Contact & Outbound Pitch Unlock Suite',
+      summary: 'Reveals direct media-buyer emails and outbound pitch templates via instant $0 email unlock or $1.99 Single-Lookup Pass.'
     }
   },
   derm_logic: {
     moduleId: 'derm_logic',
     brandName: 'DermLogic',
     domain: 'www.dermlogic.io',
-    accentColor: '#0D9488',
+    accentColor: '#C85A68',
+    theme: {
+      canvasBg: '#FAF6F0', cardBg: '#FFFDFB', subtleBg: '#F4EDE4', dockBg: 'rgba(255, 253, 251, 0.95)',
+      border: '#E6DDD2', accentBorder: '#F3C8CE', textPrimary: '#1C1613', textSecondary: '#6E6259', textMuted: '#93857B',
+      brandPrimary: '#C85A68', brandSoftBg: '#FDF2F4', brandText: '#9E3B49',
+      safeColor: '#2D6A4F', safeSoftBg: '#EAF4EE', safeBorder: '#B7DFC7', warnColor: '#B4690E',
+      fontDisplay: "'Cormorant Garamond', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      radiusCard: '20px', radiusPill: '999px', shadow: '0 14px 36px -14px rgba(110, 98, 89, 0.12), 0 2px 8px rgba(110, 98, 89, 0.04)'
+    },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199',
     flashPriceDefault: 'price_1UQjMsIaoGnkXxS8ru7bwyQe',
     corePriceEnv: 'STRIPE_PRICE_VANITY_499',
@@ -162,15 +172,12 @@ const VERTICAL_CONFIGS = {
     lockedTitle: 'pH Wait-Time & Barrier Split',
     deliverableName: '4-Night Skin-Cycling Calendar + 9:16 Wallet Card + Safe Product Swaps',
     freeDeliverableName: 'Personalized AM/PM Conflict Split & Wait-Time Ritual',
-    unlockBannerTitle: 'Unlock Full 7-Night Skin-Cycling Calendar, Wait-Time Timer & Safe Substitutes',
-    explainerText: 'Unlocks exact minute-by-minute pH buffer wait times, 4-night skin-cycling calendar & barrier-safe swaps',
+    unlockBannerTitle: 'Save Your Personalized 4-Night Skin-Cycling Calendar & 9:16 Vanity Pass',
+    explainerText: 'Cosmetic-chemist ΔpH wait times, 4-night skin-cycling calendar & barrier-safe swaps',
     hudLabel: 'Vanity Shelf HUD',
     redditSub: 'SkincareAddiction',
-    sliderLabel: 'Actives',
-    sliderMin: 2,
-    sliderMax: 8,
-    sliderVal: 4,
-    searchPlaceholder: 'Type active (e.g. Azelaic Acid)...',
+    sliderLabel: 'Actives', sliderMin: 2, sliderMax: 8, sliderVal: 4,
+    searchPlaceholder: 'Search active (e.g. Azelaic Acid)...',
     kpis: [
       { label: 'Routine Safety Score', val: '62/100', sub: '1 Critical Conflict' },
       { label: 'Max pH Shock (ΔpH)', val: '2.4 pH', sub: 'Threshold > 1.8' },
@@ -185,16 +192,13 @@ const VERTICAL_CONFIGS = {
       'preset-glass-skin': ['94/100', '0.8 pH', '89% Pass', '0 Triggers']
     },
     presets: [
-      { key: 'preset-tiktok-destroyer', label: 'TikTok' },
-      { key: 'preset-copper-vitc-trap', label: 'VitC+Cu' },
-      { key: 'preset-acne-rx-bpo-tret', label: 'Tret+BPO' },
-      { key: 'preset-fungal-safe-barrier', label: 'Fungal' },
-      { key: 'preset-glass-skin', label: 'Barrier' }
+      { key: 'preset-tiktok-destroyer', label: 'TikTok' }, { key: 'preset-copper-vitc-trap', label: 'VitC+Cu' },
+      { key: 'preset-acne-rx-bpo-tret', label: 'Tret+BPO' }, { key: 'preset-fungal-safe-barrier', label: 'Fungal' }, { key: 'preset-glass-skin', label: 'Barrier' }
     ],
     coMarketingPills: [
-      { key: 'sephora', label: 'Sephora Clean', rowText: 'FREE ROW 1 (Sephora Clean): Move L-Ascorbic Acid (pH 3.2) to AM; keep Copper Peptides in PM to prevent Cu2+ oxidation' },
-      { key: 'dermstore', label: 'Dermstore Rx', rowText: 'FREE ROW 1 (Dermstore Rx): Wait 20 mins after 0.05% Tretinoin before applying Ceramide cream to prevent retinoid pooling' },
-      { key: 'ultrasun', label: 'Ultrasun / CosIng', rowText: 'FREE ROW 1 (Ultrasun / CosIng): Pair morning Vitamin C with Broad-Spectrum UVA1 filter (PA++++) for 4x photoprotection' }
+      { key: 'sephora', label: 'Sephora Clean', rowText: 'Sephora Clean Ritual: Move L-Ascorbic Acid (pH 3.2) to AM; keep Copper Peptides in PM to prevent Cu2+ oxidation' },
+      { key: 'dermstore', label: 'Dermstore Rx', rowText: 'Dermstore Clinical Ritual: Wait 20 mins after 0.05% Tretinoin before applying Ceramide cream to prevent retinoid pooling' },
+      { key: 'ultrasun', label: 'Ultrasun / CosIng', rowText: 'CosIng Photoprotection: Pair morning Vitamin C with Broad-Spectrum UVA1 filter (PA++++) for 4x photoprotection' }
     ],
     affiliates: [
       { title: 'SkinCeuticals C E Ferulic (Dermstore)', badge: 'Gold-Standard pH 3.2', cpa: 'Authorized Clinical', url: 'https://www.dermstore.com/p/skinceuticals-c-e-ferulic-with-15-l-ascorbic-acid-vitamin-c-serum-30ml/11289609/' },
@@ -203,18 +207,25 @@ const VERTICAL_CONFIGS = {
     ],
     githubRepo: {
       name: 'localForage/localForage (★ 25.8k) + floating-ui (★ 32.8k) + emilkowalski/sonner (★ 13.0k) + rdkit (★ 3.6k)',
-      stars: '★ 75,200 Combined',
-      url: 'https://github.com/localForage/localForage',
+      stars: '★ 75,200 Combined', url: 'https://github.com/localForage/localForage',
       badge: 'localForage Ritual Vault + Floating-UI + Sephora/Dermstore',
-      title: 'AM/PM Skin-Cycling Ritual Curtain ($0 Email Unlock vs $1.99 Wallet Pass vs Verified Barrier Swaps)',
-      summary: 'Shows Primary Conflict #1 free to prove ΔpH math, then gates the 4-Night PM Skin-Cycling Calendar and 9:16 Wallet Card behind a $0 Email Unblur, $1.99 Pass, or 1-click Sephora/Dermstore swap.'
+      title: 'Clinical AM/PM Skin-Cycling & 9:16 Vanity Pass Vault',
+      summary: 'Persists your personalized AM/PM conflict schedule on device via localForage with 1-click Sephora & Dermstore barrier-safe swaps.'
     }
   },
   abandon_alpha: {
     moduleId: 'abandon_alpha',
     brandName: 'AbandonAlpha',
     domain: 'www.abandonalpha.com',
-    accentColor: '#10B981',
+    accentColor: '#533AFD',
+    theme: {
+      canvasBg: '#F8FAFC', cardBg: '#FFFFFF', subtleBg: '#F1F5F9', dockBg: 'rgba(255, 255, 255, 0.95)',
+      border: '#E2E8F0', accentBorder: '#C7D2FE', textPrimary: '#0A2540', textSecondary: '#334155', textMuted: '#64748B',
+      brandPrimary: '#533AFD', brandSoftBg: '#EEF2FF', brandText: '#4338CA',
+      safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
+      fontDisplay: "'Playfair Display', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      radiusCard: '16px', radiusPill: '999px', shadow: '0 12px 32px -8px rgba(10, 37, 64, 0.06), 0 2px 6px rgba(10, 37, 64, 0.03)'
+    },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199',
     flashPriceDefault: 'price_1UQjMtIaoGnkXxS8fAEYjqnp',
     corePriceEnv: 'STRIPE_PRICE_STARTER_49',
@@ -226,15 +237,12 @@ const VERTICAL_CONFIGS = {
     lockedTitle: 'Stripe Decline-Code Retry Matrix',
     deliverableName: 'Production C1-C6 Bandit SDK + Stripe Webhook Worker + SMS Dunning Sequence',
     freeDeliverableName: 'Embeddable <script> SDK Tag & Decline-Code Retry Schedule',
-    unlockBannerTitle: 'Unlock Full C1–C6 Bandit SDK, Stripe Webhook Worker & SMS Dunning Playbook',
-    explainerText: 'Unlocks exact decline-code retry windows (insufficient_funds Friday 06:00 local), C1–C6 SDK & SMS templates',
+    unlockBannerTitle: 'Deploy the C1–C6 Exit-Intent Bandit SDK & Stripe Smart Dunning Worker',
+    explainerText: 'Decline-code retry windows (insufficient_funds Friday 06:00 local), C1–C6 SDK & SMS recovery flows',
     hudLabel: 'Checkout Ops HUD',
     redditSub: 'SaaS',
-    sliderLabel: 'GMV ($k)',
-    sliderMin: 15,
-    sliderMax: 500,
-    sliderVal: 85,
-    searchPlaceholder: 'Type decline code or store...',
+    sliderLabel: 'GMV ($k)', sliderMin: 15, sliderMax: 500, sliderVal: 85,
+    searchPlaceholder: 'Filter decline code or store...',
     kpis: [
       { label: 'Recoverable MRR/Mo', val: '$18,420', sub: '24.6% Net Lift' },
       { label: 'Exit-Intent Capture', val: '$11,280', sub: 'C1–C6 Bandit Arms' },
@@ -249,16 +257,13 @@ const VERTICAL_CONFIGS = {
       'enterprise_annual': ['$74,800', '$46,200', '$28,600', '< 14.0s']
     },
     presets: [
-      { key: 'shopify_dtc', label: 'Shopify' },
-      { key: 'b2b_saas', label: 'B2B SaaS' },
-      { key: 'creator_checkout', label: 'Creator' },
-      { key: 'subscription_app', label: 'Sub App' },
-      { key: 'enterprise_annual', label: 'Enterprise' }
+      { key: 'shopify_dtc', label: 'Shopify' }, { key: 'b2b_saas', label: 'B2B SaaS' },
+      { key: 'creator_checkout', label: 'Creator' }, { key: 'subscription_app', label: 'Sub App' }, { key: 'enterprise_annual', label: 'Enterprise' }
     ],
     coMarketingPills: [
-      { key: 'stripe', label: 'Stripe Billing', rowText: 'FREE ROW 1 (Stripe Billing): Delay insufficient_funds retry to Friday 06:00 AM local timezone (+31.4% card recovery)' },
-      { key: 'shopify', label: 'Shopify Plus', rowText: 'FREE ROW 1 (Shopify Plus): Trigger C1 Price-Objection 15% dynamic coupon only when cursor velocity vy < -0.65px/ms' },
-      { key: 'recharge', label: 'Recharge SMS', rowText: 'FREE ROW 1 (Recharge SMS): Dispatch 1-Tap Apple Pay card-update magic link via SMS 4 hours after do_not_honor decline' }
+      { key: 'stripe', label: 'Stripe Billing', rowText: 'Stripe Billing Schedule: Delay insufficient_funds retry to Friday 06:00 AM local timezone (+31.4% card recovery)' },
+      { key: 'shopify', label: 'Shopify Plus', rowText: 'Shopify Plus Bandit: Trigger C1 Price-Objection 15% dynamic coupon only when cursor velocity vy < -0.65px/ms' },
+      { key: 'recharge', label: 'Recharge SMS', rowText: 'Recharge SMS Dunning: Dispatch 1-Tap Apple Pay card-update magic link via SMS 4 hours after do_not_honor decline' }
     ],
     affiliates: [
       { title: 'Stripe Billing & Smart Retries Suite', badge: 'Official Payment Rail', cpa: 'Instant Webhook Sync', url: 'https://stripe.com/billing' },
@@ -267,11 +272,10 @@ const VERTICAL_CONFIGS = {
     ],
     githubRepo: {
       name: 'PrismJS/prism (★ 13.1k) + floating-ui (★ 32.8k) + localForage (★ 25.8k) + hammerjs (★ 24.3k)',
-      stars: '★ 95,983 Combined',
-      url: 'https://github.com/PrismJS/prism',
+      stars: '★ 95,983 Combined', url: 'https://github.com/PrismJS/prism',
       badge: 'PrismJS SDK Curtain + Floating-UI + localForage',
-      title: 'SDK Script & Stripe Dunning Curtain ($0 Email SDK Unblur vs $1.99 Worker Pass vs $49/mo)',
-      summary: 'Gates the production C1-C6 Bandit SDK attributes and multi-step Stripe dunning sequence behind an instant $0 Email Unblur or $1.99 One-Time Worker Pass.'
+      title: 'Autonomous Checkout SDK & Stripe Dunning Worker Suite',
+      summary: 'Generates your merchant-specific C1-C6 Bandit SDK tag and Cloudflare/Node Stripe dunning worker via $0 email unlock or $1.99 Pass.'
     }
   }
 };
