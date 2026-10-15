@@ -1,14 +1,10 @@
 /**
  * ExactBaseline (custom_automaton) Cumulative API, Telemetry, Monetization & GitHub Repo Upgrade Pack
- * Iteration #1 + Iteration #2 (03:00 PST) + Iteration #3 (06:00 PST) + Iteration #4 (09:00 PST):
- *  - Separates AI/Search Crawler hits (Googlebot, Bingbot, GPTBot, PerplexityBot) from Human visits (is_test=0)
- *  - Unified AI-Crawler-Permissive /robots.txt across all 4 sites (removes Disallow: /api/ blocks)
- *  - SheetJS/sheetjs (★ 36,344) 1-Click .CSV Executive Model Export (/api/github-upgrade/export.csv)
- *  - adamgibbons/ics (★ 787) RFC-5545 4-Night Skin-Cycling .ICS Calendar (/api/github-upgrade/skin-cycling.ics)
- *  - RSS-Bridge/rss-bridge (★ 9,285) RSS 2.0 (/feed.xml) & JSON Feed 1.1 (/feed.json) Syndication
- *  - mozilla/readability (★ 11,501) Clean LLM Markdown & JSON-LD Bundle (/api/github-upgrade/llms-bundle.txt)
- *  - krisk/Fuse (★ 20,503) Instant Fuzzy-Search Benchmark API (/api/github-upgrade/fuse-search)
- *  - leongersen/noUiSlider (★ 5,801) + emilkowalski/sonner (★ 13,046) + hammerjs/hammer.js (★ 24,327) Mobile Gesture & Slider CRO
+ * Iteration #5 Holistic Product, Deliverable Value-Gating & Price-Point Architecture:
+ *  - Fixes the "100% Free Deliverable Giveaway" flaw via PrismJS (★ 13,051) + localForage (★ 25,802) Deliverable Curtain
+ *  - Fixes price-point drop-off ($49-$199/mo sticker shock) via floating-ui/floating-ui (★ 32,753) Anchored Value-Gate Popover ($0 Email Unblur vs $1.99 Single-Audit Pass vs $0 Partner Tool)
+ *  - Captures native host /api/affiliate clicks & /lp lead submissions into unified human telemetry (is_test=0)
+ *  - Retains SheetJS (.CSV), adamgibbons/ics (.ICS), RSS-Bridge (/feed.xml), Readability (llms-bundle.txt), Fuse.js (fuse-search), noUiSlider, Sonner, Hammer.js, Ouibounce, Driver.js, and dip/cmdk.
  * Strictly < 1,000 lines per /code-craft rules.
  */
 
@@ -36,6 +32,8 @@ const VERTICAL_CONFIGS = {
     proPriceUsd: 99,
     proLabel: 'B2B Agency Continuous Radar ($99/mo)',
     lockedTitle: 'Competitor Prompt Steal Matrix',
+    deliverableName: 'Full /llms-full.txt + JSON-LD @graph + 25-Prompt Matrix',
+    freeDeliverableName: 'Standard /llms.txt + Top 5 Citation Fixes',
     unlockBannerTitle: 'Unlock Full 50-Prompt GEO Citation Breakdown & Auto-llms.txt PR Patch',
     explainerText: 'Unlocks exact competitor prompt citation ranks, /llms-full.txt corpus & JSON-LD entity patches',
     hudLabel: 'GEO Crawl HUD',
@@ -76,12 +74,12 @@ const VERTICAL_CONFIGS = {
       { title: 'Cloudflare AI Bot & Crawl Audit', badge: 'Edge Crawler Shield', cpa: 'Free Bot Telemetry', url: 'https://www.cloudflare.com/' }
     ],
     githubRepo: {
-      name: 'krisk/Fuse (★ 20.5k) + mozilla/readability (★ 11.5k) + modelcontextprotocol/servers (★ 91.2k)',
-      stars: '★ 144,710 Combined',
-      url: 'https://github.com/krisk/Fuse',
-      badge: 'Fuse.js Instant Search + Readability DOM + MCP',
-      title: 'Fuse.js Instant Domain Fuzzy-Scorer + Mozilla Readability & Auto-llms.txt Bundle',
-      summary: 'Combines Fuse.js Bitap fuzzy domain scoring on all 55+ pSEO pages with mozilla/readability DOM token-compression (92.5%), /.well-known/mcp.json, and 1-click llms-bundle.txt download.'
+      name: 'floating-ui/floating-ui (★ 32.8k) + localForage (★ 25.8k) + PrismJS (★ 13.1k) + krisk/Fuse (★ 20.5k)',
+      stars: '★ 92,108 Combined',
+      url: 'https://github.com/floating-ui/floating-ui',
+      badge: 'Floating-UI Value Gate + localForage Unblur + PrismJS',
+      title: 'Holistic Deliverable Curtain (Lines 1-5 Free Preview + $0 Email Unblur vs $1.99 Single-Audit Pass)',
+      summary: 'Replaces 100% free code leakage with a PrismJS 5-line proof preview, localForage instant client-side $0 email unblur, and Floating-UI anchored price-rescue popovers.'
     }
   },
   sponsor_radar: {
@@ -98,6 +96,8 @@ const VERTICAL_CONFIGS = {
     proPriceUsd: 199,
     proLabel: 'B2B Agency Media-Buyer Feed ($199/mo)',
     lockedTitle: 'Verified Sponsor Buyer Emails',
+    deliverableName: 'Verified Decision-Maker Email + 3-Flight Pitch Deck + All Placements',
+    freeDeliverableName: 'Direct Media-Buyer Email + Outbound Pitch Template',
     unlockBannerTitle: 'Unlock Full 3x-Renewed Sponsor Decision-Maker Contacts & CPM Rate Card',
     explainerText: 'Unlocks verified media-buyer emails, net CPM floor rates, and 3x-renewal flight calendars',
     hudLabel: 'Media Buyer HUD',
@@ -138,12 +138,12 @@ const VERTICAL_CONFIGS = {
       { title: 'Beehiiv Newsletter Ad Network', badge: 'Verified CPC Sponsors', cpa: '30-Day Pro Trial', url: 'https://www.beehiiv.com/' }
     ],
     githubRepo: {
-      name: 'leongersen/noUiSlider (★ 5.8k) + chartjs/Chart.js (★ 67.7k) + pyannote (★ 10.6k) + SheetJS (★ 36.3k)',
-      stars: '★ 120,535 Combined',
-      url: 'https://github.com/leongersen/noUiSlider',
-      badge: 'noUiSlider Flight Simulator + Chart.js + .CSV/.EML',
-      title: 'Interactive Ad-Flight CPM Range Simulator + Host Diarization & .EML/.CSV Rate Card',
-      summary: 'Adds a zero-reflow noUiSlider flight & eCPM range calculator above the fold, paired with Chart.js renewal curves, pyannote speaker diarization, and 1-click .eml + .csv exports.'
+      name: 'floating-ui/floating-ui (★ 32.8k) + localForage (★ 25.8k) + noUiSlider (★ 5.8k) + Chart.js (★ 67.7k)',
+      stars: '★ 132,100 Combined',
+      url: 'https://github.com/floating-ui/floating-ui',
+      badge: 'Floating-UI Pitch Gate + localForage + noUiSlider',
+      title: 'Decision-Maker Email & Outbound Pitch Value Curtain ($0 Email Reveal vs $1.99 Full Rate Card)',
+      summary: 'Masks direct media-buyer emails and outbound pitch bodies behind a 1-step $0 Email Reveal (persisted via localForage) or $1.99 Single-Lookup Pass instead of a cold $49/mo wall.'
     }
   },
   derm_logic: {
@@ -160,6 +160,8 @@ const VERTICAL_CONFIGS = {
     proPriceUsd: 19.99,
     proLabel: 'B2B Esthetician Unlimited Shelf ($19.99/yr)',
     lockedTitle: 'pH Wait-Time & Barrier Split',
+    deliverableName: '4-Night Skin-Cycling Calendar + 9:16 Wallet Card + Safe Product Swaps',
+    freeDeliverableName: 'Personalized AM/PM Conflict Split & Wait-Time Ritual',
     unlockBannerTitle: 'Unlock Full 7-Night Skin-Cycling Calendar, Wait-Time Timer & Safe Substitutes',
     explainerText: 'Unlocks exact minute-by-minute pH buffer wait times, 4-night skin-cycling calendar & barrier-safe swaps',
     hudLabel: 'Vanity Shelf HUD',
@@ -200,12 +202,12 @@ const VERTICAL_CONFIGS = {
       { title: 'La Roche-Posay Cicaplast Baume B5+', badge: 'Barrier Rescue Seal', cpa: 'Dermatologist Pick', url: 'https://www.ulta.com/p/cicaplast-baume-b5-soothing-therapeutic-multi-purpose-cream-pimprod2018267' }
     ],
     githubRepo: {
-      name: 'emilkowalski/sonner (★ 13.0k) + nilbuild/driver.js (★ 26.9k) + rdkit/rdkit (★ 3.6k)',
-      stars: '★ 44,366 Combined',
-      url: 'https://github.com/emilkowalski/sonner',
-      badge: 'Sonner Micro-Toast + Driver.js Spotlight + 500-Dalton',
-      title: 'Tactile INCI Conflict Slider + Sonner Stacked Rescue Toast & 500-Dalton Sorter',
-      summary: 'Integrates an instant INCI active-count slider and Fuse.js ingredient matcher with Sonner-style stacked conflict rescue toasts, Driver.js spotlighting, and .ics skin-cycling calendar export.'
+      name: 'localForage/localForage (★ 25.8k) + floating-ui (★ 32.8k) + emilkowalski/sonner (★ 13.0k) + rdkit (★ 3.6k)',
+      stars: '★ 75,200 Combined',
+      url: 'https://github.com/localForage/localForage',
+      badge: 'localForage Ritual Vault + Floating-UI + Sephora/Dermstore',
+      title: 'AM/PM Skin-Cycling Ritual Curtain ($0 Email Unlock vs $1.99 Wallet Pass vs Verified Barrier Swaps)',
+      summary: 'Shows Primary Conflict #1 free to prove ΔpH math, then gates the 4-Night PM Skin-Cycling Calendar and 9:16 Wallet Card behind a $0 Email Unblur, $1.99 Pass, or 1-click Sephora/Dermstore swap.'
     }
   },
   abandon_alpha: {
@@ -222,6 +224,8 @@ const VERTICAL_CONFIGS = {
     proPriceUsd: 149,
     proLabel: 'B2B Growth Autonomous Dunning ($149/mo)',
     lockedTitle: 'Stripe Decline-Code Retry Matrix',
+    deliverableName: 'Production C1-C6 Bandit SDK + Stripe Webhook Worker + SMS Dunning Sequence',
+    freeDeliverableName: 'Embeddable <script> SDK Tag & Decline-Code Retry Schedule',
     unlockBannerTitle: 'Unlock Full C1–C6 Bandit SDK, Stripe Webhook Worker & SMS Dunning Playbook',
     explainerText: 'Unlocks exact decline-code retry windows (insufficient_funds Friday 06:00 local), C1–C6 SDK & SMS templates',
     hudLabel: 'Checkout Ops HUD',
@@ -262,12 +266,12 @@ const VERTICAL_CONFIGS = {
       { title: 'Klaviyo Checkout Abandonment Flows', badge: 'SMS + Email Dunning', cpa: 'Free 60-Day Trial', url: 'https://www.klaviyo.com/' }
     ],
     githubRepo: {
-      name: 'hammerjs/hammer.js (★ 24.3k) + carlsednaoui/ouibounce (★ 2.3k) + dip/cmdk (★ 13.0k) + PostHog (★ 40.2k)',
-      stars: '★ 116,197 Combined',
-      url: 'https://github.com/hammerjs/hammer.js',
-      badge: 'Hammer.js Mobile Swipe/Scroll Exit + Ouibounce + ⌘K',
-      title: 'Mobile Scroll-Up Velocity & Tab-Blur Exit Rescue + ⌘K Palette & Stripe Dunning Worker',
-      summary: 'Captures the >50% mobile traffic share by detecting mobile scroll-up flick gestures (Hammer.js velocity vector) and tab-visibility shifts alongside desktop Ouibounce exit-intent.'
+      name: 'PrismJS/prism (★ 13.1k) + floating-ui (★ 32.8k) + localForage (★ 25.8k) + hammerjs (★ 24.3k)',
+      stars: '★ 95,983 Combined',
+      url: 'https://github.com/PrismJS/prism',
+      badge: 'PrismJS SDK Curtain + Floating-UI + localForage',
+      title: 'SDK Script & Stripe Dunning Curtain ($0 Email SDK Unblur vs $1.99 Worker Pass vs $49/mo)',
+      summary: 'Gates the production C1-C6 Bandit SDK attributes and multi-step Stripe dunning sequence behind an instant $0 Email Unblur or $1.99 One-Time Worker Pass.'
     }
   }
 };
@@ -410,7 +414,7 @@ function attachExactBaselinePack(app, options = {}) {
   const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
   const store = createTelemetryStore(dataDir, cfg.moduleId);
 
-  // 0. Unified AI-Search & Crawler-Permissive /robots.txt across all 4 studio sites
+  // 0. Unified AI-Search & Crawler-Permissive /robots.txt
   app.get('/robots.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_robots', pageUrl: '/robots.txt', isTest, isCrawler });
@@ -525,7 +529,7 @@ function attachExactBaselinePack(app, options = {}) {
     res.status(200).type('text/plain; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-llms-readability-bundle.txt"`).send(bundle);
   });
 
-  // 4C. Iteration #4 GitHub Repo Upgrade: krisk/Fuse (★ 20,503) Instant Fuzzy-Search & Custom Scenario Scorer
+  // 4C. krisk/Fuse (★ 20,503) Instant Fuzzy-Search & Custom Scenario Scorer
   app.get('/api/github-upgrade/fuse-search', (req, res) => {
     const q = String(req.query.q || cfg.presets[0].key).trim();
     const { isTest, isCrawler } = classifyTrafficRequest(req);
@@ -552,6 +556,25 @@ function attachExactBaselinePack(app, options = {}) {
     });
   });
 
+  // 4D. Iteration #5 GitHub Repo Upgrade: PrismJS (★ 13,051) + localForage (★ 25,802) + floating-ui (★ 32,753) Value-Gate Architecture API
+  app.get('/api/github-upgrade/unlock-preview', (req, res) => {
+    res.json({
+      ok: true,
+      module_id: cfg.moduleId,
+      engines: [
+        'floating-ui/floating-ui (★ 32,753 Collision-Aware Value-Gate Popover)',
+        'localForage/localForage (★ 25,802 Client-Side Instant Unblur Persistence)',
+        'PrismJS/prism (★ 13,051 5-Line Deliverable Proof Preview)'
+      ],
+      value_ladder: {
+        free_proof: 'Headline Scores + Row 1 + Lines 1-5 Unblurred',
+        path_a_email_free: { price_usd: 0, unlock: cfg.freeDeliverableName, persistence: 'localForage:eb_unlocked_v5' },
+        path_b_flash_pass: { price_usd: 1.99, anchor_price_usd: cfg.corePriceUsd, savings_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100), unlock: cfg.deliverableName },
+        path_c_partner_tool: cfg.affiliates[0]
+      }
+    });
+  });
+
   // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {
     res.json({
@@ -563,6 +586,7 @@ function attachExactBaselinePack(app, options = {}) {
         llms_txt: `https://${cfg.domain}/llms.txt`,
         llms_bundle: `https://${cfg.domain}/api/github-upgrade/llms-bundle.txt`,
         fuse_search: `https://${cfg.domain}/api/github-upgrade/fuse-search?q=`,
+        unlock_preview: `https://${cfg.domain}/api/github-upgrade/unlock-preview`,
         rss_feed: `https://${cfg.domain}/feed.xml`,
         json_feed: `https://${cfg.domain}/feed.json`,
         csv_export: `https://${cfg.domain}/api/github-upgrade/export.csv`,
@@ -570,7 +594,7 @@ function attachExactBaselinePack(app, options = {}) {
         github_upgrade_api: `https://${cfg.domain}/api/github-upgrade`,
         pst_telemetry: `https://${cfg.domain}/api/telemetry/pst-report`
       },
-      capabilities: ['fuse_js_fuzzy_search', 'nouislider_interactive_range', 'sonner_stacked_toast', 'hammer_js_mobile_exit', 'mozilla_readability_audit']
+      capabilities: ['floating_ui_value_gate', 'localforage_instant_unblur', 'prismjs_artifact_preview', 'fuse_js_fuzzy_search', 'nouislider_interactive_range']
     });
   });
 
@@ -582,13 +606,13 @@ function attachExactBaselinePack(app, options = {}) {
         repo: cfg.githubRepo,
         target,
         jina_reader_metrics: {
+          value_gate_curtain: 'PrismJS 5-Line Proof + localForage $0 Email Unblur + Floating-UI $1.99 Pass',
           fuse_fuzzy_search_endpoint: '/api/github-upgrade/fuse-search?q=stripe.com',
           clean_markdown_tokens: 1420,
           raw_html_tokens: 18940,
           token_bloat_ratio_pct: 7.5,
           mozilla_readability_score: '94.2% Signal-to-Noise',
           llms_bundle_download: '/api/github-upgrade/llms-bundle.txt',
-          mcp_manifest_url: `https://${cfg.domain}/.well-known/mcp.json`,
           sheetjs_csv_export: '/api/github-upgrade/export.csv'
         }
       });
@@ -599,11 +623,11 @@ function attachExactBaselinePack(app, options = {}) {
         repo: cfg.githubRepo,
         target,
         pyannote_diarization: {
+          value_gate_curtain: 'Decision-Maker Email Mask + Floating-UI $0 Email Reveal vs $1.99 Pass',
           nouislider_flight_range: [1, 30],
           fuse_fuzzy_search_endpoint: '/api/github-upgrade/fuse-search?q=ag1',
           host_read_confidence: 0.94,
           acoustic_trust_multiplier: '1.42x vs Dynamic Ad Insertion',
-          chartjs_3x_renewal_curve: [42, 68, 84, 94, 98],
           pitch_eml_download: '/api/github-upgrade/pitch.eml',
           sheetjs_csv_export: '/api/github-upgrade/export.csv'
         }
@@ -616,15 +640,14 @@ function attachExactBaselinePack(app, options = {}) {
         target,
         sonner_toast_active: true,
         driverjs_spotlight_active: true,
+        value_gate_curtain: 'Conflict #1 Free + PM 4-Night Skin-Cycling Curtain ($0 Email / $1.99 Pass / Sephora Swap)',
         fuse_fuzzy_search_endpoint: '/api/github-upgrade/fuse-search?q=retinol',
         ics_calendar_download: '/api/github-upgrade/skin-cycling.ics',
         sheetjs_csv_export: '/api/github-upgrade/export.csv',
         rdkit_dalton_matrix: [
           { step: 1, active: 'Glycolic Acid (AHA)', mw_da: 76.05, rule_500_pass: true, layer_zone: 'Zone 1: Low-pH Aqueous (<200 Da)' },
           { step: 2, active: 'Niacinamide (Vit B3)', mw_da: 122.12, rule_500_pass: true, layer_zone: 'Zone 2: Mid-pH Water Serum (120-250 Da)' },
-          { step: 3, active: 'L-Ascorbic Acid (Vit C)', mw_da: 176.12, rule_500_pass: true, layer_zone: 'Zone 1: AM Antioxidant (<200 Da)' },
-          { step: 4, active: 'All-Trans Retinoic Acid', mw_da: 300.44, rule_500_pass: true, layer_zone: 'Zone 3: Lipophilic Rx Active (300-480 Da)' },
-          { step: 5, active: 'Dimethicone / Ceramide NP', mw_da: 740.0, rule_500_pass: false, layer_zone: 'Zone 4: Surface Barrier Occlusive (>500 Da)' }
+          { step: 3, active: 'L-Ascorbic Acid (Vit C)', mw_da: 176.12, rule_500_pass: true, layer_zone: 'Zone 1: AM Antioxidant (<200 Da)' }
         ]
       });
     }
@@ -633,12 +656,11 @@ function attachExactBaselinePack(app, options = {}) {
       repo: cfg.githubRepo,
       target,
       posthog_hesitation_sensor: {
+        value_gate_curtain: 'PrismJS SDK Preview + localForage $0 Email Unblur + Floating-UI $1.99 Worker Pass',
         hammerjs_mobile_scroll_up_velocity: '-35px flick',
         ouibounce_exit_velocity_threshold: '-0.65px/ms',
         cmdk_shortcut_enabled: 'Cmd+K / Ctrl+K',
         fuse_fuzzy_search_endpoint: '/api/github-upgrade/fuse-search?q=shopify',
-        card_field_dwell_threshold_ms: 12000,
-        pre_exit_bandit_lift_pct: '+26.4%',
         worker_download_url: '/api/github-upgrade/stripe-recovery-worker.js',
         sheetjs_csv_export: '/api/github-upgrade/export.csv'
       }
@@ -700,10 +722,10 @@ function attachExactBaselinePack(app, options = {}) {
     res.json(store.getPstReport(hours));
   });
 
-  // 7. SendGrid Lead Capture + $1.99 Impulse Tripwire Handoff
+  // 7. SendGrid Lead Capture + Instant Client-Side Unblur Token
   app.post('/api/leads/capture', async (req, res) => {
     const email = String(req.body?.email || '').trim();
-    const summaryText = String(req.body?.summaryText || `${cfg.brandName} Executive Cheat Sheet`).trim();
+    const summaryText = String(req.body?.summaryText || `${cfg.brandName} ${cfg.freeDeliverableName}`).trim();
     const utmSource = String(req.body?.utmSource || 'direct').trim();
     if (!email || !email.includes('@')) {
       return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
@@ -726,9 +748,9 @@ function attachExactBaselinePack(app, options = {}) {
           method: 'POST',
           headers: { Authorization: `Bearer ${SENDGRID_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} Executive Summary & Action Checklist` }],
+            personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} Unlocked Deliverable & Checklist` }],
             from: { email: `reports@${cfg.domain.replace(/^www\./, '')}`, name: cfg.brandName },
-            content: [{ type: 'text/plain', value: `${summaryText}\n\nUnlock your 24-Hour Flash Pass ($1.99): https://${cfg.domain}/?unlock=flash_pass` }]
+            content: [{ type: 'text/plain', value: `${summaryText}\n\nUnlock the Full Pro Bundle ($1.99 One-Time): https://${cfg.domain}/?unlock=flash_pass` }]
           })
         });
         emailDispatched = sgRes.status >= 200 && sgRes.status < 300;
@@ -738,8 +760,9 @@ function attachExactBaselinePack(app, options = {}) {
     res.json({
       ok: true,
       email,
+      unlocked_standard: true,
       email_dispatched: emailDispatched,
-      tripwire_offer: { tier: 'flash_pass', sku: `${cfg.moduleId}_flash_pass`, price_usd: 1.99, headline: 'Wait — Upgrade to the Full 24-Hour Flash Pass for Just $1.99 (Save 85%)' }
+      tripwire_offer: { tier: 'flash_pass', sku: `${cfg.moduleId}_flash_pass`, price_usd: 1.99, headline: 'Deliverable Unblurred! Upgrade to Full Pro Bundle + Exports for $1.99' }
     });
   });
 
@@ -750,7 +773,7 @@ function attachExactBaselinePack(app, options = {}) {
 
   // 9. Direct $1.99 Flash Pass & Multi-Tier Stripe Checkout Handler
   async function handleTierCheckout(req, res) {
-    const rawTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || 'flash_pass').toLowerCase();
+    const rawTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
     const isFlash = rawTier.includes('flash') || rawTier.includes('199') || rawTier === 'pass';
     const isPro = rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth');
     const priceUsd = isFlash ? 1.99 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd);
@@ -760,11 +783,19 @@ function attachExactBaselinePack(app, options = {}) {
       ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault)
       : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv]);
 
-    const { isTest, isCrawler } = classifyTrafficRequest(req, req.body?.email || req.body?.customerEmail);
+    const userEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+    const { isTest, isCrawler } = classifyTrafficRequest(req, userEmail);
+    const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
+
+    if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
+      store.recordLead({ email: userEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', isTest });
+      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler });
+    }
+
     store.recordEvent({
       eventType: 'checkout_intent',
       pageUrl: String(req.body?.pageUrl || '/'),
-      deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop',
+      deviceType,
       isTest,
       isCrawler,
       meta: { tier: tierName, sku, price_usd: priceUsd }
@@ -782,14 +813,14 @@ function attachExactBaselinePack(app, options = {}) {
           'cancel_url': `${baseUrl}/?checkout=cancel`
         });
         if (priceId && priceId.startsWith('price_')) {
-          params.set('mode', isFlash || cfg.corePriceUsd === 49 && verticalId === 'citation_forge' || verticalId === 'derm_logic' && !isPro ? 'payment' : 'subscription');
+          params.set('mode', isFlash || (cfg.corePriceUsd === 49 && verticalId === 'citation_forge') || (verticalId === 'derm_logic' && !isPro) ? 'payment' : 'subscription');
           params.set('line_items[0][price]', priceId);
           params.set('line_items[0][quantity]', '1');
         } else {
           params.set('mode', 'payment');
           params.set('line_items[0][price_data][currency]', 'usd');
           params.set('line_items[0][price_data][unit_amount]', String(Math.round(priceUsd * 100)));
-          params.set('line_items[0][price_data][product_data][name]', `${cfg.brandName} — ${isFlash ? '24-Hour Flash Pass ($1.99)' : cfg.coreLabel}`);
+          params.set('line_items[0][price_data][product_data][name]', `${cfg.brandName} — ${isFlash ? '24-Hour Single-Audit Pass ($1.99)' : cfg.coreLabel}`);
           params.set('line_items[0][quantity]', '1');
         }
         const stRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -806,7 +837,7 @@ function attachExactBaselinePack(app, options = {}) {
     }
 
     store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, isTest });
-    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, session_id: sessionId, checkout_url: checkoutUrl, url: checkoutUrl });
+    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl });
   }
 
   app.post(`/api/calculators/${cfg.moduleId}/checkout`, handleTierCheckout);
@@ -821,15 +852,33 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/dossier/sample', (req, res) => res.status(200).type('html').send(renderSampleDossierHtml(cfg)));
   app.get('/dossier/sample/:mod', (req, res) => res.status(200).type('html').send(renderSampleDossierHtml(cfg)));
 
-  // 11. Middleware to log human visits/calculations & inject ExactBaseline cumulative CRO UI into HTML pages
+  // 11. Middleware to log human visits, calculations, native /api/affiliate clicks & inject ExactBaseline UI
   app.use((req, res, next) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     const ua = String(req.headers['user-agent'] || '');
     const deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
 
+    if (req.method === 'GET' && req.path === '/api/affiliate') {
+      store.recordEvent({
+        eventType: 'affiliate_click',
+        pageUrl: req.headers.referer || '/api/affiliate',
+        deviceType,
+        utmSource: String(req.query?.partner || 'sovrn'),
+        utmCampaign: String(req.query?.product || ''),
+        isTest,
+        isCrawler,
+        meta: { product: req.query?.product, partner: req.query?.partner }
+      });
+    }
+
     if (req.method === 'POST' && req.path === '/api/checkout') {
-      if (req.body?.tier === 'flash_pass' || req.body?.plan === 'flash_pass' || req.body?.planTier === 'flash_pass') {
+      if (req.body?.tier === 'flash_pass' || req.body?.plan === 'flash_pass' || req.body?.planTier === 'flash_pass' || req.body?.planId === 'flash_pass') {
         return handleTierCheckout(req, res);
+      }
+      const cEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+      if (cEmail && cEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(cEmail)) {
+        store.recordLead({ email: cEmail, summaryText: 'Native Checkout Form Lead', utmSource: 'native_checkout', isTest });
+        store.recordEvent({ eventType: 'lead_capture', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler });
       }
       store.recordEvent({
         eventType: 'checkout_intent',
@@ -837,7 +886,7 @@ function attachExactBaselinePack(app, options = {}) {
         deviceType,
         isTest,
         isCrawler,
-        meta: { plan: req.body?.plan || req.body?.tier || 'host_checkout' }
+        meta: { plan: req.body?.plan || req.body?.tier || req.body?.planId || req.body?.plan_tier || 'host_checkout' }
       });
     }
 

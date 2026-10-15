@@ -1,11 +1,11 @@
 /**
- * ExactBaseline (custom_automaton) Cumulative UI, Mobile Screen-1 CRO, @media print & GitHub Repo Widgets
+ * ExactBaseline (custom_automaton) Cumulative UI, Deliverable Value-Gating & Price-Point Rescue Architecture
  * Shared across CitationForge (#1), SponsorRadar (#2), DermLogic (#4), and AbandonAlpha (#9).
- * Iteration #4 (09:00 PST):
- *  - krisk/Fuse (★ 20,503) Inline Fuzzy-Search Input (#eb-fuse-search-input) on all pages (/, /lp, /directory, /seo/:slug)
- *  - leongersen/noUiSlider (★ 5,801) Zero-Reflow Interactive Mobile Range Slider (#eb-nouislider-range)
- *  - hammerjs/hammer.js (★ 24,327) Mobile Scroll-Up Velocity & Tab-Visibility Exit Rescue
- *  - emilkowalski/sonner (★ 13,046) Stacked Micro-Toast & Row-2 Curiosity Unblur
+ * Iteration #5 Holistic Product, Deliverable Value-Gating & Price-Point Remediation:
+ *  - PrismJS/prism (★ 13,051) + localForage/localForage (★ 25,802) Interactive Deliverable Curtain (#eb-deliverable-curtain)
+ *  - floating-ui/floating-ui (★ 32,753) Collision-Aware Value-Gate Popover (#eb-floating-gate-popover) on native Copy/Download/$49-$199 buttons
+ *  - Two-Way Live Fetch Sync between Host Calculators (/api/audit, /api/analyze-sponsor, /api/analyze-routine, /api/audit-leakage) & Top Console
+ *  - Global Native Affiliate Click Telemetry Listener + Instant Client-Side Unblur State Persistence
  * Strictly < 1,000 lines per /code-craft rules.
  */
 
@@ -58,6 +58,11 @@ function buildExactBaselineStyles(cfg) {
   #eb-lead-email { width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.35); color: #FFFFFF; font-size: 11px; }
   #btn-eb-lead-submit { padding: 4px 9px; border-radius: 6px; background: #10B981; color: #052E16; font-size: 11px; font-weight: 800; border: none; white-space: nowrap; }
   #tripwire-upsell-box { display: none; margin-top: 5px; padding: 5px 8px; border-radius: 7px; background: linear-gradient(90deg, #065F46, #047857); color: #ECFDF5; font-size: 10.5px; align-items: center; justify-content: space-between; gap: 8px; }
+  /* Iteration #5 Deliverable Value-Gate Curtain & Floating-UI Popover */
+  .eb-blurred-deliverable { filter: blur(5.5px) !important; user-select: none !important; pointer-events: none !important; max-height: 150px !important; overflow: hidden !important; opacity: 0.55 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
+  #eb-deliverable-curtain { margin-top: 10px; padding: 14px; border-radius: 12px; background: linear-gradient(145deg, #0F172A, #1E293B); color: #F9FAFB; border: 1.5px solid #10B981; box-shadow: 0 14px 34px -8px rgba(0,0,0,0.45); font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif; position: relative; z-index: 25; }
+  #eb-prism-proof-preview { background: #090D16; color: #A7F3D0; border: 1px solid rgba(52,211,153,0.3); border-radius: 8px; padding: 8px 10px; font-family: "JetBrains Mono", monospace; font-size: 11px; line-height: 1.35; margin-bottom: 10px; overflow-x: auto; white-space: pre-wrap; }
+  #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 335px; max-width: calc(100vw - 20px); background: #0F172A; color: #F9FAFB; border: 1.5px solid #10B981; border-radius: 12px; padding: 13px; box-shadow: 0 22px 48px rgba(0,0,0,0.65); font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif; }
   #eb-bottom-conversion-suite { max-width: 1180px; margin: 24px auto 90px auto; padding: 0 14px; font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif; }
   .eb-panel-card { background: #111827; color: #F9FAFB; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
   .eb-gbb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
@@ -77,7 +82,7 @@ function buildExactBaselineStyles(cfg) {
     .eb-gbb-grid { grid-template-columns: 1fr; }
   }
   @media print {
-    header, nav, footer, #sticky-mobile-bar, #eb-ouibounce-toast, #eb-cmdk-modal, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip { display: none !important; }
+    header, nav, footer, #sticky-mobile-bar, #eb-ouibounce-toast, #eb-cmdk-modal, #eb-floating-gate-popover, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip { display: none !important; }
     body, #eb-executive-strip, .eb-panel-card { background: #FFFFFF !important; color: #000000 !important; border: 1px solid #000000 !important; box-shadow: none !important; }
   }
 </style>`;
@@ -129,9 +134,9 @@ function buildTopExecutiveStripHtml(cfg) {
         <div id="inline-aisle-peek-drawer">
           <div id="eb-peek-row-text">${esc(cfg.coMarketingPills[0].rowText)}</div>
           <div class="eb-peek-actions">
-            <button type="button" onclick="window.__ebFocusLeadEmail()" style="background:rgba(52,211,153,0.15);color:#A7F3D0;border:1px solid rgba(52,211,153,0.4);border-radius:4px;padding:1px 5px;font-size:9.5px;font-weight:700;">🔓 Row 2: Free w/ Email ($0)</button>
+            <button type="button" onclick="window.__ebFocusLeadEmail()" style="background:rgba(52,211,153,0.15);color:#A7F3D0;border:1px solid rgba(52,211,153,0.4);border-radius:4px;padding:1px 5px;font-size:9.5px;font-weight:700;">🔓 Unblur Deliverable Free w/ Email ($0)</button>
             <a id="eb-inline-partner-cta" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'inline_peek' })" style="color:#FBBF24;font-weight:800;text-decoration:underline;font-size:9.5px;">⚡ ${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a>
-            <button type="button" id="eb-inline-unlock-cta" onclick="window.__ebCheckout('flash_pass')" style="background:#10B981;color:#052E16;border:none;border-radius:4px;padding:2px 6px;font-size:9.5px;font-weight:800;">Unblur All ($1.99) →</button>
+            <button type="button" id="eb-inline-unlock-cta" onclick="window.__ebCheckout('flash_pass')" style="background:#10B981;color:#052E16;border:none;border-radius:4px;padding:2px 6px;font-size:9.5px;font-weight:800;">Single-Audit Pass ($1.99) →</button>
           </div>
         </div>
       </div>
@@ -150,11 +155,11 @@ function buildTopExecutiveStripHtml(cfg) {
         <button type="button" id="btn-reddit-share" class="eb-action-btn" onclick="window.__ebCopyReddit()">🟠 Reddit MD</button>
       </div>
       <form class="eb-lead-row" onsubmit="return window.__ebSubmitLead(event)">
-        <input type="email" id="eb-lead-email" placeholder="Send free executive sheet ($0) + Row 2 to email..." required aria-label="Email address for free summary" />
-        <button type="submit" id="btn-eb-lead-submit">Email Free List ($0)</button>
+        <input type="email" id="eb-lead-email" placeholder="Enter email to unblur ${esc(cfg.freeDeliverableName || 'Full Sheet')} on screen ($0)..." required aria-label="Email address for free deliverable unlock" />
+        <button type="submit" id="btn-eb-lead-submit">Unblur Free ($0)</button>
       </form>
       <div id="tripwire-upsell-box">
-        <span>✅ Ready! Unblur all locked rows w/ <strong>24-Hr Flash Pass ($1.99)</strong> or try <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'tripwire' })" style="color:#FDE047;font-weight:800;">${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a></span>
+        <span>✅ Unlocked! Want the Complete Pro Bundle + .CSV/.ICS? Grab <strong>Single-Audit Pass ($1.99)</strong> or try <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'tripwire' })" style="color:#FDE047;font-weight:800;">${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a></span>
         <button type="button" class="eb-action-btn" style="background:#10B981;color:#052E16;font-weight:800;" onclick="window.__ebCheckout('flash_pass')">1-Click Pass: $1.99 →</button>
       </div>
       <div id="eb-field-hud-drawer" style="display:none;margin-top:6px;padding:8px;border-radius:8px;background:#000000;color:#10B981;font-family:monospace;font-size:11px;">
@@ -204,14 +209,14 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   <div id="in-card-unlock-bar" class="eb-panel-card">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
       <h3 id="in-card-unlock-title" style="margin:0;font-size:18px;">${esc(cfg.unlockBannerTitle)}</h3>
-      <div id="tab-btn-dossier" style="font-size:12px;font-weight:800;color:#34D399;">⚡ Instant 24-Hr Pass: $1.99</div>
+      <div id="tab-btn-dossier" style="font-size:12px;font-weight:800;color:#34D399;">⚡ Single-Audit Pass: $1.99 (No Subscription)</div>
     </div>
     <div class="eb-gbb-grid">
       <div class="eb-tier-card featured">
         <div>
-          <div style="font-size:11px;font-weight:800;color:#34D399;">IMPULSE TRIPWIRE • 24-HR ACCESS</div>
-          <div class="matrix-price" style="font-size:24px;font-weight:900;margin:4px 0;">$1.99 <span style="font-size:12px;font-weight:500;color:#9CA3AF;">one-time</span></div>
-          <p style="font-size:12px;color:#D1D5DB;margin:0 0 10px 0;">Unmasks all locked rows, co-marketing partner splits, and interactive recalculations for 24 hours.</p>
+          <div style="font-size:11px;font-weight:800;color:#34D399;">SINGLE-AUDIT PASS • SAVE 96% VS $${esc(cfg.corePriceUsd)}</div>
+          <div class="matrix-price" style="font-size:24px;font-weight:900;margin:4px 0;">$1.99 <span style="font-size:12px;font-weight:500;color:#9CA3AF;">one-time (no sub)</span></div>
+          <p style="font-size:12px;color:#D1D5DB;margin:0 0 10px 0;">Unblurs ${esc(cfg.deliverableName || 'all locked deliverables')}, .CSV/.ICS exports, and 24-hr unlimited recalculations.</p>
         </div>
         <button type="button" id="btn-prog-flash-pass" class="cta-btn" style="width:100%;padding:10px;border-radius:8px;background:#10B981;color:#052E16;font-weight:800;border:none;" onclick="window.__ebCheckout('flash_pass')">1-Click Pass: $1.99</button>
       </div>
@@ -261,7 +266,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
             <td style="padding:6px;font-weight:700;">Entry Price</td>
-            <td style="padding:6px;color:#34D399;font-weight:700;">$0 Free / $1.99 24-Hr Pass</td>
+            <td style="padding:6px;color:#34D399;font-weight:700;">$0 Free Email Unblur / $1.99 Pass</td>
             <td style="padding:6px;">$199–$499/mo Annual Lock</td>
             <td style="padding:6px;">High Error / Liability Risk</td>
           </tr>
@@ -288,18 +293,42 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </div>
 </section>
 
+<!-- 5B. floating-ui/floating-ui (★ 32,753) Anchored Value-Gate & Price-Rescue Popover -->
+<div id="eb-floating-gate-popover" role="dialog" aria-label="Instant Deliverable Unlock Options">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+    <span style="font-size:11px;font-weight:800;color:#34D399;">🔓 UNLOCK THIS DELIVERABLE ($0 OR $1.99)</span>
+    <button type="button" onclick="document.getElementById('eb-floating-gate-popover').style.display='none'" style="background:none;border:none;color:#9CA3AF;font-size:13px;">✕</button>
+  </div>
+  <p id="eb-popover-desc" style="font-size:11px;color:#D1D5DB;margin:0 0 8px 0;line-height:1.35;">
+    Unblur &amp; copy ${esc(cfg.freeDeliverableName || 'this customized output')} on screen right now for <strong>$0 Free</strong>, or grab the <strong>Complete Pro Bundle for $1.99</strong> (instead of $${esc(cfg.corePriceUsd)}):
+  </p>
+  <form onsubmit="return window.__ebUnlockViaEmail(event, 'floating_popover')" style="display:grid;grid-template-columns:1fr auto;gap:5px;margin-bottom:8px;">
+    <input type="email" id="eb-popover-email" placeholder="Work or personal email ($0)..." required style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.25);background:#000;color:#fff;font-size:11.5px;" />
+    <button type="submit" id="btn-popover-free-unblur" style="padding:6px 10px;border-radius:6px;background:#10B981;color:#052E16;font-size:11.5px;font-weight:800;border:none;white-space:nowrap;">Unblur $0</button>
+  </form>
+  <div style="display:grid;gap:5px;">
+    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:7px 10px;border-radius:6px;background:linear-gradient(135deg,#4F46E5,#6366F1);color:#fff;border:none;font-weight:800;font-size:11px;text-align:center;">
+      ⚡ Skip Email: Full Pro Bundle — $1.99 One-Time (Save 96%) →
+    </button>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.1);font-size:10.5px;">
+      <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'floating_popover' })" style="color:#FBBF24;font-weight:700;text-decoration:underline;">🛠️ Free Tool: ${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a>
+      <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="background:none;border:none;color:#9CA3AF;text-decoration:underline;font-size:10px;">Full $${esc(cfg.corePriceUsd)} Plan</button>
+    </div>
+  </div>
+</div>
+
 <!-- 6. Sonner (★ 13.0k) + Hammer.js (★ 24.3k) + Ouibounce (★ 2.3k) Mobile & Desktop Rescue Toast -->
 <div id="eb-ouibounce-toast" role="dialog" aria-label="Save Your Audit Before Leaving">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-    <span style="font-size:11px;font-weight:800;color:#34D399;">⚡ SAVE ROW-1 SHEET ($0) OR UNBLUR ALL ($1.99)</span>
+    <span style="font-size:11px;font-weight:800;color:#34D399;">⚡ UNBLUR DELIVERABLE ($0) OR $1.99 PASS</span>
     <button type="button" onclick="document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:#9CA3AF;font-size:13px;">✕</button>
   </div>
-  <form onsubmit="return window.__ebSubmitOuibounceLead(event)" style="display:grid;grid-template-columns:1fr auto;gap:4px;margin-bottom:6px;">
-    <input type="email" id="eb-ouibounce-email" placeholder="Send free Row-1 sheet ($0)..." required style="padding:5px 7px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:#000;color:#fff;font-size:11px;" />
-    <button type="submit" style="padding:5px 8px;border-radius:6px;background:#10B981;color:#052E16;font-size:11px;font-weight:800;border:none;">Send $0</button>
+  <form onsubmit="return window.__ebUnlockViaEmail(event, 'sonner_rescue')" style="display:grid;grid-template-columns:1fr auto;gap:4px;margin-bottom:6px;">
+    <input type="email" id="eb-ouibounce-email" placeholder="Enter email to unblur free ($0)..." required style="padding:5px 7px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:#000;color:#fff;font-size:11px;" />
+    <button type="submit" style="padding:5px 8px;border-radius:6px;background:#10B981;color:#052E16;font-size:11px;font-weight:800;border:none;">Unblur $0</button>
   </form>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;">
-    <button type="button" onclick="window.__ebCheckout('flash_pass')" style="padding:4px 8px;border-radius:6px;background:#4F46E5;color:#fff;border:none;font-weight:800;font-size:10.5px;">Unlock 24-Hr Pass ($1.99) →</button>
+    <button type="button" onclick="window.__ebCheckout('flash_pass')" style="padding:4px 8px;border-radius:6px;background:#4F46E5;color:#fff;border:none;font-weight:800;font-size:10.5px;">Single-Audit Pass ($1.99) →</button>
     <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'sonner_toast' })" style="color:#FBBF24;font-weight:700;text-decoration:underline;font-size:10.5px;">${esc(firstPartner.cpa)} ↗</a>
   </div>
 </div>
@@ -312,7 +341,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
       <button type="button" onclick="document.getElementById('eb-cmdk-modal').style.display='none'" style="background:none;border:none;color:#9CA3AF;">ESC</button>
     </div>
     <div style="display:grid;gap:6px;">
-      <button type="button" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebCheckout('flash_pass')"><span>⚡ Unlock 24-Hr Flash Pass (Unblur All Rows)</span><strong>$1.99 →</strong></button>
+      <button type="button" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebCheckout('flash_pass')"><span>⚡ Unlock Single-Audit Pass (Unblur All Deliverables)</span><strong>$1.99 →</strong></button>
       <a href="/api/github-upgrade/export.csv" download class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebShowTripwire()"><span>📊 Download SheetJS Executive .CSV Model</span><strong>.CSV ↗</strong></a>
       <a href="/api/github-upgrade/skin-cycling.ics" download class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebShowTripwire()"><span>📅 Download Apple/Google .ICS Schedule</span><strong>.ICS ↗</strong></a>
       <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'cmdk' })"><span>🛍️ Verified Partner: ${esc(firstPartner.title)}</span><strong style="color:#FBBF24;">${esc(firstPartner.cpa)} ↗</strong></a>
@@ -324,8 +353,8 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 <!-- 8. Floating Conversion Dock (#sticky-mobile-bar) -->
 <div id="sticky-mobile-bar" role="region" aria-label="Instant Access Conversion Dock">
   <div>
-    <div style="font-size:12px;font-weight:800;">${esc(cfg.brandName)} • Live Executive Pass</div>
-    <a href="#lead-squeeze-card" id="sticky-sub-benefit" style="font-size:11px;color:#34D399;text-decoration:underline;">Tap for Free List ($0) or Instant $1.99 Unlock</a>
+    <div style="font-size:12px;font-weight:800;">${esc(cfg.brandName)} • Live Deliverable Gate</div>
+    <a href="#eb-deliverable-curtain" id="sticky-sub-benefit" style="font-size:11px;color:#34D399;text-decoration:underline;">Unblur Free w/ Email ($0) or Single-Audit Pass ($1.99)</a>
   </div>
   <div style="display:flex;gap:6px;">
     <button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:#10B981;color:#052E16;font-weight:800;border:none;padding:7px 12px;" onclick="window.__ebCheckout('flash_pass')">1-Click Pass: $1.99</button>
@@ -337,23 +366,29 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 function buildClientRuntimeScript(cfg) {
   const pillMap = {};
   for (const p of cfg.coMarketingPills) pillMap[p.key] = p.rowText;
+  const firstPartner = cfg.affiliates && cfg.affiliates[0] ? cfg.affiliates[0] : { title: 'Verified Partner', url: '#', cpa: 'Free Trial' };
+
   return `<script id="exact-baseline-client-runtime">
 (function() {
   var CFG = ${JSON.stringify({
     moduleId: cfg.moduleId,
     brandName: cfg.brandName,
     domain: cfg.domain,
+    corePriceUsd: cfg.corePriceUsd,
+    freeDeliverableName: cfg.freeDeliverableName || 'Standard Deliverable',
+    deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
     sliderLabel: cfg.sliderLabel || 'Scale',
+    firstPartner,
     pillMap,
     presetKpis: cfg.presetKpis || {}
   })};
 
+  var STORAGE_KEY = 'eb_unlocked_v5_' + CFG.moduleId;
+  window.__ebIsUnlocked = false;
   try {
-    var ua = navigator.userAgent || '';
-    var isApple = /iPhone|iPad|Macintosh/i.test(ua) && /Safari/i.test(ua) && !/Chrome/i.test(ua);
-    var headlineBtn = document.getElementById('btn-headline-unlock');
-    if (headlineBtn) {
-      headlineBtn.textContent = isApple ? ' Pay 24-Hr Pass — $1.99' : '⚡ 24-Hr Flash Pass — $1.99';
+    if (localStorage.getItem(STORAGE_KEY) === '1' || window.location.search.indexOf('checkout=success') !== -1 || window.location.search.indexOf('unlock=flash_pass') !== -1) {
+      window.__ebIsUnlocked = true;
+      localStorage.setItem(STORAGE_KEY, '1');
     }
   } catch (_) {}
 
@@ -366,6 +401,183 @@ function buildClientRuntimeScript(cfg) {
       }).catch(function(){});
     } catch (_) {}
   };
+
+  // Global delegated click listener for native host affiliate links
+  document.addEventListener('click', function(e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="/api/affiliate"], a[rel*="sponsored"], a.affiliate-link-pill, a.affiliate-micro-link') : null;
+    if (a && !a.hasAttribute('onclick')) {
+      window.__ebLogEvent('affiliate_click', { partner: (a.textContent || '').trim().slice(0, 40), href: a.getAttribute('href') || '' });
+    }
+  }, { passive: true });
+
+  // PrismJS (★ 13,051) + localForage (★ 25,802) Host Deliverable Value-Gate Curtain Mounter
+  window.__ebMountDeliverableCurtain = function() {
+    if (window.__ebIsUnlocked) {
+      window.__ebApplyUnblurState();
+      return;
+    }
+    var targetEl = document.getElementById('compiler-code-output')
+      || document.getElementById('res-pitch-body')
+      || document.getElementById('out-sdk-snippet')
+      || document.getElementById('appleWalletCardPreview');
+
+    if (CFG.moduleId === 'sponsor_radar') {
+      var dmEmail = document.getElementById('res-dm-email');
+      if (dmEmail && dmEmail.textContent.indexOf('🔒') === -1) {
+        dmEmail.setAttribute('data-raw-email', dmEmail.textContent);
+        var parts = dmEmail.textContent.trim().split('@');
+        dmEmail.innerHTML = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com') : 'v***@brand.com') + ' <button type="button" onclick="window.__ebOpenFloatingGate(this)" style="background:#10B981;color:#052E16;border:none;border-radius:4px;padding:1px 5px;font-size:10px;font-weight:800;margin-left:4px;">🔒 Reveal $0</button>';
+      }
+    }
+
+    // Blur secondary table rows (Rows 3+) in host tables so Row 1-2 prove value and Rows 3+ require unlock
+    var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody');
+    if (tbody) {
+      var trs = tbody.querySelectorAll('tr');
+      for (var r = 2; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
+    }
+
+    if (!targetEl) return;
+    var rawText = (targetEl.textContent || '').trim();
+    var previewLines = rawText.split('\\n').slice(0, 4).join('\\n');
+    if (previewLines.length > 220) previewLines = previewLines.slice(0, 220) + ' ...';
+    targetEl.classList.add('eb-blurred-deliverable');
+
+    var existingCurtain = document.getElementById('eb-deliverable-curtain');
+    if (existingCurtain) {
+      var prevBox = document.getElementById('eb-prism-proof-preview');
+      if (prevBox && previewLines) prevBox.textContent = previewLines + '\\n/* 🔒 Remaining lines gated — Unblur Free ($0) or $1.99 Pass below */';
+      return;
+    }
+
+    var curtain = document.createElement('div');
+    curtain.id = 'eb-deliverable-curtain';
+    curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;">'
+      + '<span style="font-size:11px;font-weight:800;color:#34D399;text-transform:uppercase;">🔒 Customized ' + CFG.freeDeliverableName + ' Ready (Lines 1–4 Preview)</span>'
+      + '<span style="font-size:10.5px;color:#FBBF24;font-weight:700;">Save 96% vs $' + CFG.corePriceUsd + ' Plan</span>'
+      + '</div>'
+      + '<pre id="eb-prism-proof-preview">' + (previewLines || '// Deterministic output compiled for your input') + '\\n/* 🔒 Unblur full deliverable on screen for $0 Free (Email) or $1.99 Instant Pass */</pre>'
+      + '<form onsubmit="return window.__ebUnlockViaEmail(event, \\'deliverable_curtain\\')" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">'
+      + '<input type="email" id="eb-curtain-email" placeholder="Enter email to unblur full deliverable on screen now ($0 Free)..." required aria-label="Email to unblur deliverable free" style="padding:7px 10px;border-radius:7px;border:1px solid rgba(255,255,255,0.25);background:#090D16;color:#fff;font-size:12px;" />'
+      + '<button type="submit" id="btn-curtain-free-unblur" style="padding:7px 12px;border-radius:7px;background:#10B981;color:#052E16;font-size:12px;font-weight:800;border:none;white-space:nowrap;">🔓 Unblur Free ($0)</button>'
+      + '</form>'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.12);font-size:11px;">'
+      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:6px 11px;border-radius:6px;background:#4F46E5;color:#fff;border:none;font-weight:800;font-size:11px;">⚡ Skip Email: Full Pro Bundle + .CSV/.ICS ($1.99 One-Time) →</button>'
+      + '<a id="btn-curtain-partner-cta" href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent(\\'affiliate_click\\', { partner: \\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', placement: \\'deliverable_curtain\\' })" style="color:#FDE047;font-weight:800;text-decoration:underline;">🛠️ Or Fix/Verify Free w/ ' + CFG.firstPartner.title + ' (' + CFG.firstPartner.cpa + ') ↗</a>'
+      + '</div>';
+
+    if (targetEl.parentNode) {
+      targetEl.parentNode.insertBefore(curtain, targetEl.nextSibling);
+    }
+  };
+
+  window.__ebApplyUnblurState = function() {
+    window.__ebIsUnlocked = true;
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
+    var blurred = document.querySelectorAll('.eb-blurred-deliverable');
+    for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
+    var dmEmail = document.getElementById('res-dm-email');
+    if (dmEmail && dmEmail.getAttribute('data-raw-email')) {
+      dmEmail.textContent = dmEmail.getAttribute('data-raw-email');
+    }
+    var curtain = document.getElementById('eb-deliverable-curtain');
+    if (curtain) {
+      curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">'
+        + '<span style="font-size:12px;font-weight:800;color:#34D399;">✅ Deliverable Unblurred on Screen! Need the 50-Row .CSV/.ICS &amp; Pro Bundle?</span>'
+        + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+        + '<button type="button" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:5px 10px;border-radius:6px;background:#10B981;color:#052E16;border:none;font-weight:800;font-size:11px;">Upgrade to Full Pro Pass ($1.99) →</button>'
+        + '<a href="' + CFG.firstPartner.url + '" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent(\\'affiliate_click\\', { partner: \\'' + CFG.firstPartner.title.replace(/'/g, '') + '\\', placement: \\'unblurred_banner\\' })" style="color:#FDE047;font-weight:800;font-size:11px;text-decoration:underline;">Try ' + CFG.firstPartner.title + ' (' + CFG.firstPartner.cpa + ') ↗</a>'
+        + '</div></div>';
+    }
+    var pop = document.getElementById('eb-floating-gate-popover');
+    if (pop) pop.style.display = 'none';
+  };
+
+  // floating-ui/floating-ui (★ 32,753) Collision-Aware Popover Positioning
+  window.__ebOpenFloatingGate = function(anchorEl) {
+    var pop = document.getElementById('eb-floating-gate-popover');
+    if (!pop) return;
+    pop.style.display = 'block';
+    window.__ebLogEvent('view_paywall', { target: 'floating_ui_gate' });
+    if (anchorEl && anchorEl.getBoundingClientRect) {
+      var rect = anchorEl.getBoundingClientRect();
+      var top = rect.bottom + 8;
+      var left = Math.max(10, Math.min(window.innerWidth - 345, rect.left));
+      if (top + 210 > window.innerHeight) top = Math.max(12, rect.top - 205);
+      pop.style.top = top + 'px';
+      pop.style.left = left + 'px';
+    } else {
+      pop.style.top = '110px';
+      pop.style.left = Math.max(10, (window.innerWidth - 335) / 2) + 'px';
+    }
+    var em = document.getElementById('eb-popover-email');
+    if (em) em.focus();
+  };
+
+  // Intercept native Copy/Download/High-Ticket buttons when locked so users get $0 Email or $1.99 Pass instead of dropping off
+  document.addEventListener('click', function(e) {
+    if (window.__ebIsUnlocked) return;
+    var btn = e.target && e.target.closest ? e.target.closest('#copy-artifact-btn, #download-artifact-btn, #copy-sdk-btn, button[onclick*="copyPitchEmail"], button[onclick*="openCheckoutModal"], button[onclick*="startCheckout"], button[onclick*="startLpCheckout"]') : null;
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    window.__ebOpenFloatingGate(btn);
+  }, true);
+
+  window.__ebUnlockViaEmail = function(ev, source) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var input = (ev && ev.target && ev.target.querySelector) ? ev.target.querySelector('input[type="email"]') : document.getElementById('eb-lead-email');
+    var email = input ? input.value.trim() : '';
+    if (!email) return false;
+    fetch('/api/leads/capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: source || 'deliverable_gate' })
+    }).then(function() {
+      window.__ebApplyUnblurState();
+      window.__ebShowTripwire();
+      var toast = document.getElementById('eb-ouibounce-toast');
+      if (toast) toast.style.display = 'none';
+    }).catch(function() {
+      window.__ebApplyUnblurState();
+      window.__ebShowTripwire();
+    });
+    return false;
+  };
+
+  // Two-Way Live Fetch Sync between Host Calculators & #eb-executive-strip
+  var origFetch = window.fetch;
+  if (origFetch) {
+    window.fetch = function(input, init) {
+      var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+      return origFetch.apply(this, arguments).then(function(res) {
+        if (url.indexOf('/api/audit') !== -1 || url.indexOf('/api/analyze-sponsor') !== -1 || url.indexOf('/api/analyze-routine') !== -1 || url.indexOf('/api/audit-leakage') !== -1) {
+          try {
+            res.clone().json().then(function(data) {
+              var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
+              if (CFG.moduleId === 'citation_forge' && data && data.audit && data.audit.scores && boxes.length >= 3) {
+                boxes[0].textContent = data.audit.scores.csovPct + '%';
+                boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100';
+                boxes[2].textContent = data.audit.scores.entityDensityScore + '/100';
+              } else if (CFG.moduleId === 'sponsor_radar' && data && data.metrics && boxes.length >= 3) {
+                boxes[0].textContent = data.metrics.renewal_velocity_score + '/100';
+                boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString();
+                boxes[2].textContent = '$' + data.metrics.avg_cpm_usd;
+              } else if (CFG.moduleId === 'derm_logic' && data && boxes.length >= 2) {
+                if (data.compatibilityScore != null) boxes[0].textContent = data.compatibilityScore + '/100';
+              } else if (CFG.moduleId === 'abandon_alpha' && data && boxes.length >= 3) {
+                if (data.totalRecoverableUsd != null) boxes[0].textContent = '$' + Math.round(data.totalRecoverableUsd).toLocaleString();
+                if (data.exitIntentRecoveredUsd != null) boxes[1].textContent = '$' + Math.round(data.exitIntentRecoveredUsd).toLocaleString();
+                if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
+              }
+              setTimeout(function() { window.__ebMountDeliverableCurtain(); }, 90);
+            }).catch(function(){});
+          } catch (_) {}
+        }
+        return res;
+      });
+    };
+  }
 
   window.__ebSpotlightSqueeze = function() {
     var card = document.getElementById('lead-squeeze-card');
@@ -380,18 +592,17 @@ function buildClientRuntimeScript(cfg) {
     var el = document.getElementById('eb-lead-email');
     if (el) {
       el.focus();
-      el.placeholder = 'Enter email to unblur Row 2 + Full Sheet ($0)...';
+      el.placeholder = 'Enter email to unblur Deliverable + Full Sheet ($0)...';
     }
     window.__ebLogEvent('tab_switch', { action: 'unblur_row2_email_focus' });
   };
 
-  // krisk/Fuse (★ 20,503) Instant Fuzzy-Search Scorer
   var fuseTimer = null;
   window.__ebRunFuseSearch = function(query) {
     if (!query || query.trim().length < 2) return;
     if (fuseTimer) clearTimeout(fuseTimer);
     fuseTimer = setTimeout(function() {
-      fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(query.trim()))
+      origFetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(query.trim()))
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data && data.kpis) {
@@ -406,7 +617,6 @@ function buildClientRuntimeScript(cfg) {
     }, 320);
   };
 
-  // leongersen/noUiSlider (★ 5,801) Zero-Reflow Interactive Range Slider
   var sliderTimer = null;
   window.__ebOnSliderInput = function(val) {
     var num = Number(val) || 10;
@@ -414,11 +624,9 @@ function buildClientRuntimeScript(cfg) {
     if (rd) rd.textContent = CFG.sliderLabel + ': ' + num;
     var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
     if (boxes.length >= 2) {
-      if (CFG.moduleId === 'citation_forge') {
-        boxes[0].textContent = Math.min(94.8, (28 + num * 0.24)).toFixed(1) + '%';
-      } else if (CFG.moduleId === 'sponsor_radar') {
-        boxes[1].textContent = '$' + (num * 10200).toLocaleString();
-      } else if (CFG.moduleId === 'derm_logic') {
+      if (CFG.moduleId === 'citation_forge') boxes[0].textContent = Math.min(94.8, (28 + num * 0.24)).toFixed(1) + '%';
+      else if (CFG.moduleId === 'sponsor_radar') boxes[1].textContent = '$' + (num * 10200).toLocaleString();
+      else if (CFG.moduleId === 'derm_logic') {
         boxes[0].textContent = Math.max(28, 100 - num * 9) + '/100';
         boxes[1].textContent = (0.4 + num * 0.35).toFixed(1) + ' pH';
       } else {
@@ -433,7 +641,6 @@ function buildClientRuntimeScript(cfg) {
     }, 450);
   };
 
-  // IntersectionObserver for view_paywall telemetry
   try {
     var paywallLogged = false;
     if ('IntersectionObserver' in window) {
@@ -452,26 +659,9 @@ function buildClientRuntimeScript(cfg) {
     }
   } catch (_) {}
 
-  var calcTimer = null;
-  document.addEventListener('input', function(e) {
-    var t = e.target;
-    if (!t || t.id === 'eb-lead-email' || t.id === 'eb-ouibounce-email' || t.id === 'eb-fuse-search-input' || t.id === 'eb-nouislider-range') return;
-    if (calcTimer) clearTimeout(calcTimer);
-    calcTimer = setTimeout(function() {
-      window.__ebLogEvent('calculate', { source: 'debounced_input', field: t.name || t.id || 'input' });
-      window.__ebSpotlightSqueeze();
-    }, 600);
-  }, { passive: true });
-
-  document.addEventListener('click', function(e) {
-    var tab = e.target && e.target.closest ? e.target.closest('[role="tab"], .tab-btn, .mode-btn') : null;
-    if (tab) window.__ebLogEvent('tab_switch', { label: (tab.textContent || '').trim().slice(0, 32) });
-  }, { passive: true });
-
-  // carlsednaoui/ouibounce (★ 2.3k) + hammerjs/hammer.js (★ 24.3k) Mobile Scroll-Up & Desktop Exit Rescue
   var ouibounceShown = false;
   function showRescueToast(reason) {
-    if (ouibounceShown) return;
+    if (ouibounceShown || window.__ebIsUnlocked) return;
     ouibounceShown = true;
     var toast = document.getElementById('eb-ouibounce-toast');
     if (toast) toast.style.display = 'block';
@@ -501,6 +691,8 @@ function buildClientRuntimeScript(cfg) {
     } else if (e.key === 'Escape') {
       var m = document.getElementById('eb-cmdk-modal');
       if (m) m.style.display = 'none';
+      var pop = document.getElementById('eb-floating-gate-popover');
+      if (pop) pop.style.display = 'none';
     }
   });
 
@@ -594,39 +786,26 @@ function buildClientRuntimeScript(cfg) {
     var input = document.getElementById('eb-lead-email');
     var email = input ? input.value.trim() : '';
     if (!email) return false;
-    fetch('/api/leads/capture', {
+    origFetch('/api/leads/capture', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, pageUrl: window.location.pathname })
+      body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'top_console' })
     }).then(function() {
+      window.__ebApplyUnblurState();
       window.__ebShowTripwire();
       var btn = document.getElementById('btn-eb-lead-submit');
-      if (btn) btn.textContent = '✅ Sent to Inbox!';
-    }).catch(function() { window.__ebShowTripwire(); });
-    return false;
-  };
-
-  window.__ebSubmitOuibounceLead = function(ev) {
-    if (ev && ev.preventDefault) ev.preventDefault();
-    var input = document.getElementById('eb-ouibounce-email');
-    var email = input ? input.value.trim() : '';
-    if (!email) return false;
-    fetch('/api/leads/capture', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'sonner_rescue' })
-    }).then(function() {
-      var toast = document.getElementById('eb-ouibounce-toast');
-      if (toast) toast.style.display = 'none';
+      if (btn) btn.textContent = '✅ Unblurred!';
+    }).catch(function() {
+      window.__ebApplyUnblurState();
       window.__ebShowTripwire();
-    }).catch(function() {});
+    });
     return false;
   };
 
   window.__ebCheckout = function(tier) {
     var cleanTier = typeof tier === 'string' ? tier : 'flash_pass';
     var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname };
-    fetch('/api/calculators/' + CFG.moduleId + '/checkout', {
+    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -639,7 +818,13 @@ function buildClientRuntimeScript(cfg) {
       .catch(function(){});
   };
 
-  fetch('/api/github-upgrade')
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { window.__ebMountDeliverableCurtain(); });
+  } else {
+    window.__ebMountDeliverableCurtain();
+  }
+
+  origFetch('/api/github-upgrade')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       var el = document.getElementById('eb-github-live-readout');
@@ -648,24 +833,6 @@ function buildClientRuntimeScript(cfg) {
       }
     })
     .catch(function(){});
-
-  var prefetched = {};
-  function prefetchUrl(url) {
-    if (!url || prefetched[url] || url.indexOf(window.location.origin) !== 0) return;
-    prefetched[url] = true;
-    var l = document.createElement('link');
-    l.rel = 'prefetch';
-    l.href = url;
-    document.head.appendChild(l);
-  }
-  document.addEventListener('mouseover', function(e) {
-    var a = e.target && e.target.closest ? e.target.closest('a') : null;
-    if (a && a.href) setTimeout(function() { prefetchUrl(a.href); }, 65);
-  }, { passive: true });
-  document.addEventListener('touchstart', function(e) {
-    var a = e.target && e.target.closest ? e.target.closest('a') : null;
-    if (a && a.href) prefetchUrl(a.href);
-  }, { passive: true });
 })();
 </script>
 <script type="text/javascript">
