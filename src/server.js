@@ -211,16 +211,52 @@ app.get('/api/checkout', (req, res) => {
   });
 });
 
-app.post('/api/checkout', (req, res) => {
+app.post('/api/checkout', async (req, res) => {
   const body = req.body || {};
   // Pre-Launch Checklist #18: Honeypot Spam Protection
   if (body.website_url_hp) {
     return res.status(400).json({ error: 'Spam detected' });
   }
   const planTier = body.plan_tier === 'agency_feed_199' ? 'agency_feed_199' : 'creator_pro_49';
-  const amountUsd = planTier === 'agency_feed_199' ? 199 : 49;
+  const isAgency = planTier === 'agency_feed_199';
+  const amountUsd = isAgency ? 199 : 49;
   const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
-  const sessionId = `cs_live_sr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  let sessionId = `cs_live_sr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  let checkoutUrl = `/directory?checkout_session=${sessionId}`;
+
+  if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
+    try {
+      const priceId = isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49;
+      const params = new URLSearchParams({
+        mode: 'subscription',
+        customer_email: email,
+        success_url: `${PUBLIC_URL}/directory?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${PUBLIC_URL}/?checkout=cancelled`,
+        'line_items[0][quantity]': '1'
+      });
+      if (priceId) {
+        params.set('line_items[0][price]', priceId);
+      } else {
+        params.set('line_items[0][price_data][currency]', 'usd');
+        params.set('line_items[0][price_data][unit_amount]', String(amountUsd * 100));
+        params.set('line_items[0][price_data][product_data][name]', isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)');
+        params.set('line_items[0][price_data][recurring][interval]', 'month');
+      }
+      const sRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+      const sData = await sRes.json();
+      if (sRes.ok && sData.url) {
+        sessionId = sData.id;
+        checkoutUrl = sData.url;
+      }
+    } catch (_) {}
+  }
 
   db.prepare(`
     INSERT INTO checkout_sessions (session_id, plan_tier, amount_usd, customer_email, utm_source, utm_campaign, status)
@@ -238,7 +274,7 @@ app.post('/api/checkout', (req, res) => {
     plan_tier: planTier,
     amount_usd: amountUsd,
     customer_email: email,
-    checkout_url: `/directory?checkout_session=${sessionId}`
+    checkout_url: checkoutUrl
   });
 });
 
