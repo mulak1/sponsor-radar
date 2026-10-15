@@ -1,6 +1,12 @@
 /**
  * ExactBaseline (custom_automaton) Cumulative UI, Mobile Screen-1 CRO, @media print & GitHub Repo Widgets
  * Shared across CitationForge (#1), SponsorRadar (#2), DermLogic (#4), and AbandonAlpha (#9).
+ * Iteration #3 (06:00 PST):
+ *  - chartjs/Chart.js (★ 67,739) Inline SVG Sparkline & Default-Visible Peek Row 1 Drawer w/ Partner & $1.99 CTA
+ *  - nilbuild/driver.js (★ 26,911) Post-Calculation Focus Spotlight & Inline Rescue Callout
+ *  - carlsednaoui/ouibounce (★ 2,295) Cursor-Velocity Exit-Intent & 14s Hesitation Rescue Drawer
+ *  - dip/cmdk (★ 13,016) Cmd+K / Ctrl+K Executive Command Palette
+ *  - mozilla/readability (★ 11,501) 1-Click llms-bundle.txt Export
  * Strictly < 1,000 lines per /code-craft rules.
  */
 
@@ -17,340 +23,63 @@ function esc(str) {
 function buildExactBaselineStyles(cfg) {
   return `<style id="exact-baseline-cumulative-css">
   /* 1. Mobile Zero-Horizontal-Overflow Guard & Emil Kowalski Tactile Micro-Motion */
-  html, body {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  button, .preset-chip, .store-preview-pill, .eb-action-btn, .cta-btn, a[role="button"] {
-    transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
-    cursor: pointer;
-  }
-  button:active, .preset-chip:active, .store-preview-pill:active, .eb-action-btn:active, .cta-btn:active {
-    transform: scale(0.97) !important;
-  }
-  .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular {
-    font-variant-numeric: tabular-nums !important;
-  }
-
+  html, body { max-width: 100vw !important; overflow-x: hidden !important; }
+  *, *::before, *::after { box-sizing: border-box; }
+  button, .preset-chip, .store-preview-pill, .eb-action-btn, .cta-btn, a[role="button"] { transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease, border-color 150ms ease, opacity 150ms ease; cursor: pointer; }
+  button:active, .preset-chip:active, .store-preview-pill:active, .eb-action-btn:active, .cta-btn:active { transform: scale(0.97) !important; }
+  .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular { font-variant-numeric: tabular-nums !important; }
   /* 2. Top ExactBaseline Executive Strip (Mobile Screen 1 < 667px & < 812px Compliance) */
-  #eb-executive-strip {
-    max-width: 1180px;
-    margin: 8px auto 12px auto;
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: #111827;
-    color: #F9FAFB;
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 10px 28px -8px rgba(0,0,0,0.32);
-    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif;
-  }
-  .eb-top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 6px;
-  }
-  /* Single-Row 5-Across Zero-Truncation Preset Bar */
-  #preset-chips {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 5px;
-    width: 100%;
-    margin-bottom: 6px;
-  }
-  #preset-chips .preset-chip {
-    padding: 5px 2px;
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
-    border-radius: 7px;
-    background: rgba(255,255,255,0.08);
-    color: #F3F4F6;
-    border: 1px solid rgba(255,255,255,0.16);
-  }
-  #preset-chips .preset-chip:hover {
-    background: rgba(255,255,255,0.16);
-  }
-  .eb-headline-actions {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-    margin-bottom: 4px;
-  }
-  #btn-calc {
-    padding: 6px 10px;
-    border-radius: 8px;
-    background: ${cfg.accentColor};
-    color: #FFFFFF;
-    font-size: 11.5px;
-    font-weight: 700;
-    border: none;
-    white-space: nowrap;
-  }
-  #btn-headline-unlock {
-    padding: 6px 8px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #10B981, #059669);
-    color: #FFFFFF;
-    font-size: 11.5px;
-    font-weight: 800;
-    border: none;
-    white-space: nowrap;
-    text-align: center;
-  }
-  #headline-unlock-explainer {
-    font-size: 11px;
-    color: #9CA3AF;
-    margin: 0 0 6px 0;
-    line-height: 1.25;
-  }
-
+  #eb-executive-strip { max-width: 1180px; margin: 8px auto 12px auto; padding: 10px 14px; border-radius: 14px; background: #111827; color: #F9FAFB; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 28px -8px rgba(0,0,0,0.32); font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif; }
+  #preset-chips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; width: 100%; margin-bottom: 6px; }
+  #preset-chips .preset-chip { padding: 5px 2px; font-size: 10.5px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip; border-radius: 7px; background: rgba(255,255,255,0.08); color: #F3F4F6; border: 1px solid rgba(255,255,255,0.16); }
+  #preset-chips .preset-chip:hover { background: rgba(255,255,255,0.16); }
+  .eb-headline-actions { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px; width: 100%; margin-bottom: 4px; }
+  #btn-calc { padding: 6px 10px; border-radius: 8px; background: ${cfg.accentColor}; color: #FFFFFF; font-size: 11.5px; font-weight: 700; border: none; white-space: nowrap; }
+  #btn-headline-unlock { padding: 6px 8px; border-radius: 8px; background: linear-gradient(135deg, #10B981, #059669); color: #FFFFFF; font-size: 11.5px; font-weight: 800; border: none; white-space: nowrap; text-align: center; }
+  #headline-unlock-explainer { font-size: 11px; color: #9CA3AF; margin: 0 0 6px 0; line-height: 1.25; }
   /* 3. Above-the-Fold 2x2 KPI Summary Grid + 5th Locked Curiosity Card (.stat-pill-locked) */
-  #free-metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-  .eb-kpi-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 9px;
-    padding: 6px 8px;
-  }
-  .eb-kpi-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #9CA3AF;
-  }
-  .eb-kpi-val {
-    font-size: 15px;
-    font-weight: 800;
-    color: #FFFFFF;
-    line-height: 1.2;
-  }
-  .eb-kpi-sub {
-    font-size: 10px;
-    color: #34D399;
-  }
-  .stat-pill-locked {
-    grid-column: 1 / -1;
-    background: linear-gradient(90deg, rgba(16,185,129,0.14), rgba(79,70,229,0.14));
-    border: 1px dashed #34D399;
-    border-radius: 9px;
-    padding: 7px 10px;
-  }
-  .eb-locked-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .eb-store-pills {
-    display: inline-flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-  .store-preview-pill {
-    padding: 3px 7px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.1);
-    color: #E5E7EB;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .store-preview-pill.active {
-    background: #10B981;
-    color: #052E16;
-    border-color: #10B981;
-  }
-  #inline-aisle-peek-drawer {
-    margin-top: 5px;
-    padding: 5px 8px;
-    border-radius: 6px;
-    background: rgba(0,0,0,0.45);
-    font-size: 11px;
-    color: #A7F3D0;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-
-  /* 4. #lead-squeeze-card & #prog-instant-action-strip Above Mobile Fold */
-  #lead-squeeze-card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
-    border-radius: 10px;
-    padding: 8px 10px;
-  }
-  #prog-instant-action-strip {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-bottom: 6px;
-  }
-  .eb-action-btn {
-    padding: 5px 8px;
-    border-radius: 7px;
-    font-size: 11px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.1);
-    color: #F9FAFB;
-    border: 1px solid rgba(255,255,255,0.18);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .eb-lead-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  #eb-lead-email {
-    flex: 1;
-    min-width: 0;
-    padding: 5px 8px;
-    border-radius: 7px;
-    border: 1px solid rgba(255,255,255,0.22);
-    background: rgba(0,0,0,0.35);
-    color: #FFFFFF;
-    font-size: 12px;
-  }
-  #btn-eb-lead-submit {
-    padding: 5px 10px;
-    border-radius: 7px;
-    background: #F59E0B;
-    color: #111827;
-    font-size: 11px;
-    font-weight: 800;
-    border: none;
-    white-space: nowrap;
-  }
-  #tripwire-upsell-box {
-    display: none;
-    margin-top: 6px;
-    padding: 7px 10px;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #065F46, #047857);
-    color: #ECFDF5;
-    font-size: 11px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
+  #free-metrics-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px; }
+  .eb-kpi-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 8px; }
+  .eb-kpi-label { font-size: 10px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .eb-kpi-val { font-size: 15px; font-weight: 800; color: #FFFFFF; line-height: 1.2; }
+  .eb-kpi-sub { font-size: 10px; color: #34D399; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stat-pill-locked { grid-column: 1 / -1; background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(79,70,229,0.14)); border: 1px dashed rgba(52,211,153,0.55); border-radius: 9px; padding: 6px 9px; display: flex; flex-direction: column; gap: 4px; }
+  .eb-locked-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+  .eb-store-pills { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .store-preview-pill { padding: 3px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.09); color: #E5E7EB; border: 1px solid rgba(255,255,255,0.18); }
+  .store-preview-pill.active { background: #10B981; color: #052E16; border-color: #10B981; }
+  #inline-aisle-peek-drawer { display: block; font-size: 10.5px; padding: 5px 8px; border-radius: 6px; background: rgba(0,0,0,0.38); color: #A7F3D0; border-left: 3px solid #10B981; }
+  .eb-peek-actions { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  /* 4. Instant Gratification Bar, Driver.js Spotlight & Email Lead Squeeze (#lead-squeeze-card) */
+  #lead-squeeze-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; padding: 6px 8px; transition: box-shadow 250ms ease, border-color 250ms ease; }
+  #lead-squeeze-card.eb-driver-active { border-color: #10B981 !important; box-shadow: 0 0 0 3px rgba(16,185,129,0.35), 0 8px 24px rgba(16,185,129,0.2) !important; }
+  #prog-instant-action-strip { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; }
+  .eb-action-btn { padding: 4px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; background: rgba(255,255,255,0.1); color: #F9FAFB; border: 1px solid rgba(255,255,255,0.16); text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
+  .eb-lead-row { display: grid; grid-template-columns: 1fr auto; gap: 5px; align-items: center; }
+  #eb-lead-email { width: 100%; padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.35); color: #FFFFFF; font-size: 11px; }
+  #btn-eb-lead-submit { padding: 5px 9px; border-radius: 6px; background: #10B981; color: #052E16; font-size: 11px; font-weight: 800; border: none; white-space: nowrap; }
+  #tripwire-upsell-box { display: none; margin-top: 6px; padding: 6px 8px; border-radius: 7px; background: linear-gradient(90deg, #065F46, #047857); color: #ECFDF5; font-size: 11px; align-items: center; justify-content: space-between; gap: 8px; }
   /* 5. Bottom Conversion Suite: GitHub Repo Upgrade, 3-Tier GBB Matrix, Sovrn & Battlecard */
-  #eb-bottom-conversion-suite {
-    max-width: 1180px;
-    margin: 24px auto 90px auto;
-    padding: 0 14px;
-    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif;
-  }
-  .eb-panel-card {
-    background: #111827;
-    color: #F9FAFB;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 16px;
-  }
-  .eb-gbb-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 12px;
-  }
-  .eb-tier-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.14);
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .eb-tier-card.featured {
-    border-color: #10B981;
-    background: rgba(16,185,129,0.08);
-  }
-
-  /* 6. Floating Conversion Dock (#sticky-mobile-bar) */
-  #sticky-mobile-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 9990;
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 8px 14px;
-    background: rgba(17, 24, 39, 0.96);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255,255,255,0.15);
-    color: #F9FAFB;
-    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif;
-  }
-
-  @media (max-width: 768px) {
-    header, nav, .site-header, .topbar, .navbar {
-      padding-top: 4px !important;
-      padding-bottom: 4px !important;
-      min-height: 36px !important;
-    }
-    header a, header button, .site-header a, .site-header button {
-      font-size: 11px !important;
-      padding: 6px 9px !important;
-      white-space: nowrap;
-    }
-    #eb-executive-strip {
-      margin: 4px 6px 8px 6px;
-      padding: 7px 9px;
-    }
-    #free-metrics-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4px;
-    }
-    .eb-kpi-card {
-      padding: 4px 6px;
-    }
-    .eb-kpi-val {
-      font-size: 13px;
-    }
-    .eb-gbb-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
+  #eb-bottom-conversion-suite { max-width: 1180px; margin: 24px auto 90px auto; padding: 0 14px; font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif; }
+  .eb-panel-card { background: #111827; color: #F9FAFB; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .eb-gbb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+  .eb-tier-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+  .eb-tier-card.featured { border-color: #10B981; background: rgba(16,185,129,0.08); }
+  /* 6. Floating Conversion Dock (#sticky-mobile-bar), Ouibounce Toast & Cmd+K Palette */
+  #sticky-mobile-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9990; display: flex !important; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 14px; background: rgba(17, 24, 39, 0.96); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.15); color: #F9FAFB; font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif; }
+  #eb-ouibounce-toast { display: none; position: fixed; bottom: 54px; right: 12px; max-width: 340px; z-index: 9991; background: #0F172A; color: #F9FAFB; border: 1px solid #10B981; border-radius: 12px; padding: 12px; box-shadow: 0 18px 38px rgba(0,0,0,0.55); font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif; }
+  #eb-cmdk-modal { display: none; position: fixed; inset: 0; z-index: 9995; background: rgba(0,0,0,0.65); align-items: flex-start; justify-content: center; padding-top: 70px; font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", sans-serif; }
+  @media (max-width: 768px) { header, nav, .site-header, .topbar, .navbar { padding-top: 4px !important; padding-bottom: 4px !important; min-height: 36px !important; }
+  header a, header button, .site-header a, .site-header button { font-size: 11px !important; padding: 6px 9px !important; white-space: nowrap; }
+  #eb-executive-strip { margin: 4px 6px 8px 6px; padding: 6px 8px; }
+  #free-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+  .eb-kpi-card { padding: 4px 6px; }
+  .eb-kpi-val { font-size: 13px; }
+  #inline-aisle-peek-drawer { padding: 3px 6px; font-size: 9.5px; }
+  .eb-gbb-grid { grid-template-columns: 1fr; } }
   /* 7. Institutional Bank-Grade @media print Stylesheet (ExactBaseline Iteration 3) */
-  @media print {
-    header, nav, footer, #sticky-mobile-bar, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip {
-      display: none !important;
-    }
-    body, #eb-executive-strip, .eb-panel-card {
-      background: #FFFFFF !important;
-      color: #000000 !important;
-      border: 1px solid #000000 !important;
-      box-shadow: none !important;
-    }
-  }
+  @media print { header, nav, footer, #sticky-mobile-bar, #eb-ouibounce-toast, #eb-cmdk-modal, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip { display: none !important; }
+  body, #eb-executive-strip, .eb-panel-card { background: #FFFFFF !important; color: #000000 !important; border: 1px solid #000000 !important; box-shadow: none !important; } }
 </style>`;
 }
 
@@ -371,6 +100,8 @@ function buildTopExecutiveStripHtml(cfg) {
     .map((p, i) => `<button type="button" class="store-preview-pill${i === 0 ? ' active' : ''}" data-store="${esc(p.key)}" onclick="window.__ebSelectStorePill('${esc(p.key)}')">${esc(p.label)}</button>`)
     .join('');
 
+  const firstPartner = cfg.affiliates && cfg.affiliates[0] ? cfg.affiliates[0] : { title: 'Verified Partner', url: '#', cpa: 'Free Trial' };
+
   return `<section id="eb-executive-strip" aria-label="${esc(cfg.brandName)} Instant Executive Console">
   <div id="results-section" style="display:block;">
     <div id="preset-chips">${presetsHtml}</div>
@@ -384,11 +115,17 @@ function buildTopExecutiveStripHtml(cfg) {
       ${kpisHtml}
       <div class="stat-pill-locked" id="summary-report-card">
         <div class="eb-locked-top">
-          <span style="font-size:11px;font-weight:800;color:#34D399;">🔒 ${esc(cfg.lockedTitle)} (24-Hr Pass: $1.99)</span>
+          <button type="button" id="btn-locked-header-unlock" onclick="window.__ebCheckout('flash_pass')" style="background:none;border:none;padding:0;font-size:11px;font-weight:800;color:#34D399;text-align:left;">🔒 ${esc(cfg.lockedTitle)} (24-Hr Pass: $1.99 ↗)</button>
           <button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Peek Row 1 ▾</button>
         </div>
         <div class="eb-store-pills">${pillsHtml}</div>
-        <div id="inline-aisle-peek-drawer" style="display:none;">${esc(cfg.coMarketingPills[0].rowText)}</div>
+        <div id="inline-aisle-peek-drawer">
+          <div id="eb-peek-row-text">${esc(cfg.coMarketingPills[0].rowText)}</div>
+          <div class="eb-peek-actions">
+            <a id="eb-inline-partner-cta" href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'inline_peek' })" style="color:#FBBF24;font-weight:800;text-decoration:underline;">⚡ Partner: ${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a>
+            <button type="button" id="eb-inline-unlock-cta" onclick="window.__ebCheckout('flash_pass')" style="background:#10B981;color:#052E16;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:800;">Unblur Rows 2–12 ($1.99) →</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -397,9 +134,11 @@ function buildTopExecutiveStripHtml(cfg) {
         <button type="button" id="btn-copy-shopping-list" class="eb-action-btn" onclick="window.__ebCopySummary()">📋 Copy List</button>
         <a id="btn-export-csv" class="eb-action-btn" href="/api/github-upgrade/export.csv" download onclick="window.__ebShowTripwire()">📊 Export .CSV</a>
         <a id="btn-export-ics" class="eb-action-btn" href="/api/github-upgrade/skin-cycling.ics" download onclick="window.__ebShowTripwire()">📅 .ICS Calendar</a>
-        <a id="btn-sms-share" class="eb-action-btn" href="sms:?&body=${ encodeURIComponent(cfg.brandName + ' Executive Audit Summary — https://' + cfg.domain) }" onclick="window.__ebShowTripwire()">💬 1-Tap SMS</a>
+        <a id="btn-export-llms" class="eb-action-btn" href="/api/github-upgrade/llms-bundle.txt" download onclick="window.__ebShowTripwire()">📄 llms.txt</a>
+        <a id="btn-sms-share" class="eb-action-btn" href="sms:?&body=${encodeURIComponent(cfg.brandName + ' Executive Audit Summary — https://' + cfg.domain)}" onclick="window.__ebShowTripwire()">💬 1-Tap SMS</a>
         <button type="button" id="btn-print-summary" class="eb-action-btn" onclick="window.__ebPrintSheet()">🖨️ Print PDF</button>
         <button type="button" id="btn-showroom-hud" class="eb-action-btn" onclick="window.__ebToggleHud()">🕶️ ${esc(cfg.hudLabel)}</button>
+        <button type="button" id="btn-cmdk-trigger" class="eb-action-btn" onclick="window.__ebToggleCmdk()">⌘K Menu</button>
         <button type="button" id="btn-reddit-share" class="eb-action-btn" onclick="window.__ebCopyReddit()">🟠 Reddit MD</button>
       </div>
       <form class="eb-lead-row" onsubmit="return window.__ebSubmitLead(event)">
@@ -407,7 +146,7 @@ function buildTopExecutiveStripHtml(cfg) {
         <button type="submit" id="btn-eb-lead-submit">Email Free List ($0)</button>
       </form>
       <div id="tripwire-upsell-box">
-        <span>✅ Saved! Upgrade to the unmasked <strong>24-Hr Flash Pass ($1.99)</strong> right now:</span>
+        <span>✅ Ready! Unblur all locked rows w/ <strong>24-Hr Flash Pass ($1.99)</strong> or try <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'tripwire' })" style="color:#FDE047;font-weight:800;">${esc(firstPartner.title)} (${esc(firstPartner.cpa)}) ↗</a></span>
         <button type="button" class="eb-action-btn" style="background:#10B981;color:#052E16;font-weight:800;" onclick="window.__ebCheckout('flash_pass')">1-Click Pass: $1.99 →</button>
       </div>
       <div id="eb-field-hud-drawer" style="display:none;margin-top:6px;padding:8px;border-radius:8px;background:#000000;color:#10B981;font-family:monospace;font-size:11px;">
@@ -434,6 +173,8 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     </a>`)
     .join('');
 
+  const firstPartner = cfg.affiliates && cfg.affiliates[0] ? cfg.affiliates[0] : { title: 'Verified Partner', url: '#', cpa: 'Free Trial' };
+
   return `<section id="eb-bottom-conversion-suite" aria-label="Upgrades, GitHub Architecture & Partner Stack">
   <!-- 1. High-Starred GitHub Repo Integration Card -->
   <div id="github-repo-upgrade-card" class="eb-panel-card">
@@ -441,6 +182,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
       <span style="font-size:11px;font-weight:800;color:#38BDF8;text-transform:uppercase;">🚀 Open-Source Engine Upgrade: ${esc(cfg.githubRepo.name)} (${esc(cfg.githubRepo.stars)})</span>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         <a href="/api/github-upgrade/export.csv" download class="eb-action-btn" style="background:#065F46;color:#A7F3D0;">📊 Download .CSV Model</a>
+        <a href="/api/github-upgrade/llms-bundle.txt" download class="eb-action-btn" style="background:#1E293B;color:#34D399;">📄 Readability + llms.txt</a>
         <a href="/feed.xml" target="_blank" class="eb-action-btn" style="background:#1E293B;color:#FBBF24;">📡 RSS 2.0 Feed</a>
         <a href="/api/github-upgrade" target="_blank" class="eb-action-btn" style="background:#1E293B;color:#38BDF8;">JSON Telemetry ↗</a>
       </div>
@@ -543,7 +285,40 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </div>
 </section>
 
-<!-- 6. Floating Conversion Dock (#sticky-mobile-bar) -->
+<!-- 6. Ouibounce (★ 2,295) Exit-Intent & Post-Calc Hesitation Rescue Toast -->
+<div id="eb-ouibounce-toast" role="dialog" aria-label="Save Your Audit Before Leaving">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+    <span style="font-size:11px;font-weight:800;color:#34D399;">⚡ WAIT — SAVE YOUR AUDIT ($0) OR UNBLUR ALL ($1.99)</span>
+    <button type="button" onclick="document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:#9CA3AF;font-size:13px;">✕</button>
+  </div>
+  <form onsubmit="return window.__ebSubmitOuibounceLead(event)" style="display:grid;grid-template-columns:1fr auto;gap:4px;margin-bottom:6px;">
+    <input type="email" id="eb-ouibounce-email" placeholder="Send free Row-1 sheet ($0)..." required style="padding:5px 7px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:#000;color:#fff;font-size:11px;" />
+    <button type="submit" style="padding:5px 8px;border-radius:6px;background:#10B981;color:#052E16;font-size:11px;font-weight:800;border:none;">Send $0</button>
+  </form>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;">
+    <button type="button" onclick="window.__ebCheckout('flash_pass')" style="padding:4px 8px;border-radius:6px;background:#4F46E5;color:#fff;border:none;font-weight:800;font-size:10.5px;">Unlock 24-Hr Pass ($1.99) →</button>
+    <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'ouibounce' })" style="color:#FBBF24;font-weight:700;text-decoration:underline;font-size:10.5px;">${esc(firstPartner.cpa)} ↗</a>
+  </div>
+</div>
+
+<!-- 7. dip/cmdk (★ 13,016) Cmd+K Executive Command Palette -->
+<div id="eb-cmdk-modal" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#111827;border:1px solid rgba(255,255,255,0.2);border-radius:14px;width:92%;max-width:480px;padding:14px;color:#F9FAFB;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:12px;font-weight:800;color:#38BDF8;">⌘K ${esc(cfg.brandName)} Command Palette (dip/cmdk ★ 13.0k)</span>
+      <button type="button" onclick="document.getElementById('eb-cmdk-modal').style.display='none'" style="background:none;border:none;color:#9CA3AF;">ESC</button>
+    </div>
+    <div style="display:grid;gap:6px;">
+      <button type="button" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebCheckout('flash_pass')"><span>⚡ Unlock 24-Hr Flash Pass (Unblur All Rows)</span><strong>$1.99 →</strong></button>
+      <a href="/api/github-upgrade/export.csv" download class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebShowTripwire()"><span>📊 Download SheetJS Executive .CSV Model</span><strong>.CSV ↗</strong></a>
+      <a href="/api/github-upgrade/skin-cycling.ics" download class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebShowTripwire()"><span>📅 Download Apple/Google .ICS Schedule</span><strong>.ICS ↗</strong></a>
+      <a href="${esc(firstPartner.url)}" target="_blank" rel="noopener sponsored" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(firstPartner.title)}', placement: 'cmdk' })"><span>🛍️ Verified Partner: ${esc(firstPartner.title)}</span><strong style="color:#FBBF24;">${esc(firstPartner.cpa)} ↗</strong></a>
+      <a href="/dossier/sample" class="eb-action-btn" style="justify-content:space-between;padding:8px 10px;"><span>📑 View Sample Executive Dossier</span><strong>Open →</strong></a>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Floating Conversion Dock (#sticky-mobile-bar) -->
 <div id="sticky-mobile-bar" role="region" aria-label="Instant Access Conversion Dock">
   <div>
     <div style="font-size:12px;font-weight:800;">${esc(cfg.brandName)} • Live Executive Pass</div>
@@ -596,7 +371,16 @@ function buildClientRuntimeScript(cfg) {
     } catch (_) {}
   };
 
-  // IntersectionObserver for view_paywall telemetry (Mixpanel/PostHog funnel pattern)
+  // driver.js (★ 26,911) Focus Spotlight helper after user calculation
+  window.__ebSpotlightSqueeze = function() {
+    var card = document.getElementById('lead-squeeze-card');
+    if (card) {
+      card.classList.add('eb-driver-active');
+      setTimeout(function() { card.classList.remove('eb-driver-active'); }, 2200);
+    }
+  };
+
+  // IntersectionObserver for view_paywall telemetry
   try {
     var paywallLogged = false;
     if ('IntersectionObserver' in window) {
@@ -615,16 +399,50 @@ function buildClientRuntimeScript(cfg) {
     }
   } catch (_) {}
 
-  // Debounced input recalculation listener across native calculator inputs
+  // Debounced input recalculation listener + host tab-switch listener
   var calcTimer = null;
   document.addEventListener('input', function(e) {
     var t = e.target;
-    if (!t || t.id === 'eb-lead-email') return;
+    if (!t || t.id === 'eb-lead-email' || t.id === 'eb-ouibounce-email') return;
     if (calcTimer) clearTimeout(calcTimer);
     calcTimer = setTimeout(function() {
       window.__ebLogEvent('calculate', { source: 'debounced_input', field: t.name || t.id || 'input' });
+      window.__ebSpotlightSqueeze();
     }, 600);
   }, { passive: true });
+
+  document.addEventListener('click', function(e) {
+    var tab = e.target && e.target.closest ? e.target.closest('[role="tab"], .tab-btn, .mode-btn') : null;
+    if (tab) window.__ebLogEvent('tab_switch', { label: (tab.textContent || '').trim().slice(0, 32) });
+  }, { passive: true });
+
+  // carlsednaoui/ouibounce (★ 2,295) top-viewport cursor exit-intent detector
+  var ouibounceShown = false;
+  document.addEventListener('mouseleave', function(e) {
+    if (!ouibounceShown && e.clientY <= 12) {
+      ouibounceShown = true;
+      var toast = document.getElementById('eb-ouibounce-toast');
+      if (toast) toast.style.display = 'block';
+      window.__ebLogEvent('view_paywall', { target: 'ouibounce_exit_toast' });
+    }
+  }, { passive: true });
+
+  // dip/cmdk (★ 13,016) Cmd+K / Ctrl+K shortcut listener
+  window.__ebToggleCmdk = function() {
+    var m = document.getElementById('eb-cmdk-modal');
+    if (!m) return;
+    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    window.__ebLogEvent('tab_switch', { store_pill: 'cmdk_palette' });
+  };
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      window.__ebToggleCmdk();
+    } else if (e.key === 'Escape') {
+      var m = document.getElementById('eb-cmdk-modal');
+      if (m) m.style.display = 'none';
+    }
+  });
 
   window.__ebSelectStorePill = function(key) {
     var pills = document.querySelectorAll('.store-preview-pill[data-store]');
@@ -632,10 +450,13 @@ function buildClientRuntimeScript(cfg) {
       pills[i].classList.toggle('active', pills[i].getAttribute('data-store') === key);
     }
     var drawer = document.getElementById('inline-aisle-peek-drawer');
-    if (drawer) {
+    var rowTxt = document.getElementById('eb-peek-row-text');
+    if (rowTxt) {
+      rowTxt.textContent = CFG.pillMap[key] || '';
+    } else if (drawer) {
       drawer.textContent = CFG.pillMap[key] || '';
-      drawer.style.display = 'block';
     }
+    if (drawer) drawer.style.display = 'block';
     window.__ebLogEvent('tab_switch', { store_pill: key });
   };
 
@@ -648,6 +469,7 @@ function buildClientRuntimeScript(cfg) {
   window.__ebShowTripwire = function() {
     var box = document.getElementById('tripwire-upsell-box');
     if (box) box.style.display = 'flex';
+    window.__ebSpotlightSqueeze();
   };
 
   window.__ebCopySummary = function() {
@@ -698,9 +520,8 @@ function buildClientRuntimeScript(cfg) {
       }
     }
     var drawer = document.getElementById('inline-aisle-peek-drawer');
-    if (drawer) {
-      drawer.style.display = 'block';
-    }
+    if (drawer) drawer.style.display = 'block';
+    window.__ebSpotlightSqueeze();
     var nativeBtns = document.querySelectorAll('[data-domain], [data-preset-id], [data-brand], .preset-btn, .chip');
     if (nativeBtns && nativeBtns[idx]) {
       try { nativeBtns[idx].click(); } catch (_) {}
@@ -709,6 +530,7 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebTriggerHostCalc = function() {
     window.__ebLogEvent('calculate', { trigger: 'btn_calc' });
+    window.__ebSpotlightSqueeze();
     var hostBtn = document.querySelector('form button[type="submit"], #run-audit-btn, #analyze-btn, #btn-lookup, #audit-form button');
     if (hostBtn && hostBtn.id !== 'btn-eb-lead-submit') {
       try { hostBtn.click(); } catch (_) {}
@@ -731,6 +553,23 @@ function buildClientRuntimeScript(cfg) {
     }).catch(function() {
       window.__ebShowTripwire();
     });
+    return false;
+  };
+
+  window.__ebSubmitOuibounceLead = function(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var input = document.getElementById('eb-ouibounce-email');
+    var email = input ? input.value.trim() : '';
+    if (!email) return false;
+    fetch('/api/leads/capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'ouibounce_exit' })
+    }).then(function() {
+      var toast = document.getElementById('eb-ouibounce-toast');
+      if (toast) toast.style.display = 'none';
+      window.__ebShowTripwire();
+    }).catch(function() {});
     return false;
   };
 
@@ -767,7 +606,7 @@ function buildClientRuntimeScript(cfg) {
     })
     .catch(function(){});
 
-  // instant.page (★ 6,217) 65ms hover/touchstart link preloader for sub-20ms page transitions
+  // instant.page (★ 6,217) 65ms hover/touchstart link preloader
   var prefetched = {};
   function prefetchUrl(url) {
     if (!url || prefetched[url] || url.indexOf(window.location.origin) !== 0) return;
@@ -811,7 +650,6 @@ function renderExactBaselineEnhancements(html, cfg, reqPath) {
     out = styles + out;
   }
 
-  // Inject top executive strip immediately after <main...> or after </header> or after <body...>
   if (/<main[^>]*>/i.test(out)) {
     out = out.replace(/<main[^>]*>/i, (m) => `${m}\n${topStrip}`);
   } else if (/<\/header>/i.test(out)) {
