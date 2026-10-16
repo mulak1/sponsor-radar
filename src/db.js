@@ -10,6 +10,13 @@ if (!fs.existsSync(DATA_DIR)) {
 
 const DB_PATH = path.join(DATA_DIR, 'sponsor_radar.db');
 const db = new Database(DB_PATH);
+const origPrepare = db.prepare.bind(db);
+const stmtCache = new Map();
+db.prepare = function cachedPrepare(sql) {
+  let stmt = stmtCache.get(sql);
+  if (!stmt) { stmt = origPrepare(sql); stmtCache.set(sql, stmt); }
+  return stmt;
+};
 db.pragma('journal_mode = WAL');
 
 function computeRenewalScore(flights, hasPromoCode = true, hasVanityUrl = true) {

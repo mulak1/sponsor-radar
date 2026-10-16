@@ -458,10 +458,6 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebMountDeliverableCurtain = function(entityOverride) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
-    if (window.__ebIsUnlocked) {
-      window.__ebApplyUnblurState();
-      return;
-    }
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
 
     if (CFG.moduleId === 'sponsor_radar') {
@@ -479,11 +475,19 @@ function buildClientRuntimeScript(cfg) {
       for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
     }
 
-    if (!targetEl) return;
-    var rawText = (targetEl.textContent || '').trim();
+    var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
+    var seoTargetEl = null;
+    if (!targetEl && isPseoOrDir) {
+      var h1El = document.querySelector('main h1, h1');
+      if (h1El && !window.__ebActiveEntity) window.__ebActiveEntity = (h1El.textContent || '').trim().slice(0, 48);
+      seoTargetEl = document.querySelector('main table, main .card, main section, main article > div');
+    }
+    var mountAnchor = targetEl || seoTargetEl;
+    if (!mountAnchor) return;
+    var rawText = targetEl ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
     if (previewLines.length > 200) previewLines = previewLines.slice(0, 200) + ' ...';
-    targetEl.classList.add('eb-blurred-deliverable');
+    if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
@@ -514,12 +518,24 @@ function buildClientRuntimeScript(cfg) {
       + '<span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Apple Pay / Google Pay / Link ready</span>'
       + '</div>'
       + '<div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">'
-      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\'flash_pass\\')" style="padding:9px 16px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock Single-Audit Pass ($1.99) →</button>'
-      + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\'complete_dossier\\')" style="padding:8px 13px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:12px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
+      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 16px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock Single-Audit Pass ($1.99) →</button>'
+      + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 13px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:12px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>';
 
-    if (targetEl.parentNode) {
-      targetEl.parentNode.insertBefore(curtain, targetEl.nextSibling);
+    if (mountAnchor.parentNode) {
+      mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
+    }
+    if (window.__ebIsUnlocked) window.__ebApplyUnblurState();
+    var dermModal = document.getElementById('checkoutModal');
+    if (dermModal && !document.getElementById('eb-modal-flash-pass-pill')) {
+      var modalBox = dermModal.querySelector('.modal-card, div');
+      if (modalBox) {
+        var pill = document.createElement('div');
+        pill.id = 'eb-modal-flash-pass-pill';
+        pill.style.cssText = 'margin:10px 0;padding:10px 12px;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;';
+        pill.innerHTML = '<span style="font-size:12px;font-weight:700;color:' + CFG.theme.textPrimary + ';">✦ Single-Routine Instant Pass (Save 60%)</span><button type="button" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11.5px;">Unlock Pass ($1.99) →</button>';
+        modalBox.insertBefore(pill, modalBox.firstChild);
+      }
     }
   };
 
@@ -566,6 +582,11 @@ function buildClientRuntimeScript(cfg) {
   };
 
   document.addEventListener('click', function(e) {
+    var nativeCkBtn = e.target && e.target.closest ? e.target.closest('button[onclick*="startCheckout"]') : null;
+    if (nativeCkBtn) {
+      var cEmail = document.getElementById('checkout-email');
+      if (cEmail && (!cEmail.value || cEmail.value.indexOf('@') === -1)) cEmail.value = 'express-checkout@' + CFG.domain.replace('www.', '');
+    }
     if (window.__ebIsUnlocked) return;
     var btn = e.target && e.target.closest ? e.target.closest('#copy-artifact-btn, #download-artifact-btn, #copy-code-btn, #copy-sdk-btn, button[onclick*="copyCompiledCode"], button[onclick*="downloadCompiledFile"], button[onclick*="copyPitchEmail"]') : null;
     if (!btn) return;
