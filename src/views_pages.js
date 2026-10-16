@@ -5,6 +5,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
   const showPages = seoPages.filter(p => p.page_type === 'show_benchmark');
   const nichePages = seoPages.filter(p => p.page_type === 'niche_directory');
 
+  const brandSlugMap = new Map(brandPages.map(p => [p.target_slug, p.slug]));
+  const showSlugMap = new Map(showPages.map(p => [p.target_slug, p.slug]));
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -76,23 +79,29 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel">
           <div class="panel-header"><span style="font-weight:800;">All ${brands.length} Indexed Sponsor Brands</span></div>
           <div class="panel-body" style="max-height:380px; overflow-y:auto;">
-            ${brands.map(b => `
+            ${brands.map(b => {
+              const bSeo = brandSlugMap.get(b.slug);
+              return `
               <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px; gap:8px; flex-wrap:wrap;">
-                <span><strong>${escapeHtml(b.name)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(b.domain)})</span></span>
+                <span>${bSeo ? `<a href="/seo/${escapeHtml(bSeo)}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(b.name)}</a>` : `<strong>${escapeHtml(b.name)}</strong>`} <span style="color:var(--text-muted);">(${escapeHtml(b.domain)})</span></span>
                 <span class="mono" style="color:var(--amber-gold); font-weight:700;">$${(b.est_monthly_spend / 1000).toFixed(0)}K/mo • ${b.renewal_rate_pct}% 3x</span>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
         </div>
         <div class="panel">
           <div class="panel-header"><span style="font-weight:800;">All ${shows.length} Indexed Podcasts, Newsletters &amp; YouTube Shows</span></div>
           <div class="panel-body" style="max-height:380px; overflow-y:auto;">
-            ${shows.map(s => `
+            ${shows.map(s => {
+              const sSeo = showSlugMap.get(s.slug);
+              return `
               <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px; gap:8px; flex-wrap:wrap;">
-                <span><strong>${escapeHtml(s.name)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(s.channel_type)})</span></span>
+                <span>${sSeo ? `<a href="/seo/${escapeHtml(sSeo)}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(s.name)}</a>` : `<strong>${escapeHtml(s.name)}</strong>`} <span style="color:var(--text-muted);">(${escapeHtml(s.channel_type)})</span></span>
                 <span class="mono" style="color:var(--emerald-roi); font-weight:700;">$${s.midroll_rate_usd.toLocaleString()} mid-roll • $${s.base_cpm} CPM</span>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
         </div>
       </div>
@@ -111,6 +120,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
 }
 
 function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPitch }) {
+  const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
   const faqItems = [
     {
       q: `How much does ${brand ? brand.name : (show ? show.name : page.category)} spend on podcast and newsletter sponsorships in 2026?`,
@@ -133,7 +143,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         '@type': 'Dataset',
         name: page.title,
         description: page.meta_description,
-        url: `http://127.0.0.1:4102/seo/${page.slug}`,
+        url: `${baseUrl}/seo/${page.slug}`,
         creator: { '@type': 'Organization', name: 'SponsorRadar Intelligence' }
       },
       {
@@ -215,11 +225,14 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
               </tr>
             </thead>
             <tbody>
-              ${placements.map(p => `
+              ${placements.map(p => {
+                const bName = escapeHtml(p.brand_name || (brand && brand.name) || '');
+                const sName = escapeHtml(p.show_name || (show && show.name) || '');
+                return `
                 <tr>
-                  <td style="font-weight:700;">${escapeHtml(p.brand_name || (brand && brand.name) || '')}</td>
+                  <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}</td>
                   <td>
-                    <div style="font-weight:700;">${escapeHtml(p.show_name || (show && show.name) || '')}</div>
+                    <div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div>
                     <div class="mono" style="font-size:11px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div>
                   </td>
                   <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
@@ -230,7 +243,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                   </td>
                   <td class="mono" style="font-weight:700; color:var(--amber-gold);">$${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM)</td>
                 </tr>
-              `).join('')}
+              `;
+              }).join('')}
             </tbody>
           </table>
         </div>

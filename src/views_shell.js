@@ -48,7 +48,7 @@ function renderBrandLogoSvg(size = 38) {
 }
 
 function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHtml }) {
-  const baseUrl = 'http://127.0.0.1:4102';
+  const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
   const canonicalUrl = `${baseUrl}${canonicalPath || '/'}`;
   const ogImageUrl = `${baseUrl}/api/og?slug=${encodeURIComponent(ogSlug || 'sponsor-radar-editorial')}`;
 

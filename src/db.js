@@ -137,28 +137,28 @@ function initDb() {
     );
   `);
 
-  const brandCount = db.prepare('SELECT COUNT(*) AS cnt FROM brands').get().cnt;
-  if (brandCount === 0) {
-    const insertBrand = db.prepare(`
-      INSERT INTO brands (slug, name, domain, category, vertical, est_monthly_spend, avg_cpm, renewal_rate_pct, decision_maker_role, sponsor_email, landing_pattern, default_offer)
-      VALUES (@slug, @name, @domain, @category, @vertical, @est_monthly_spend, @avg_cpm, @renewal_rate_pct, @decision_maker_role, @sponsor_email, @landing_pattern, @default_offer)
-    `);
-    const insertShow = db.prepare(`
-      INSERT INTO shows (slug, name, channel_type, niche, audience_size, base_cpm, midroll_rate_usd, cadence, host_names, verified_3x_sponsors)
-      VALUES (@slug, @name, @channel_type, @niche, @audience_size, @base_cpm, @midroll_rate_usd, @cadence, @host_names, @verified_3x_sponsors)
-    `);
-    const insertPlacement = db.prepare(`
-      INSERT INTO placements (brand_slug, show_slug, flights, renewal_tier, renewal_badge, renewal_score, slot_type, timestamp_range, promo_code, vanity_url, est_spend_usd, cpm_usd, last_seen_date)
-      VALUES (@brand_slug, @show_slug, @flights, @renewal_tier, @renewal_badge, @renewal_score, @slot_type, @timestamp_range, @promo_code, @vanity_url, @est_spend_usd, @cpm_usd, @last_seen_date)
-    `);
-    const insertSeo = db.prepare(`
-      INSERT INTO seo_pages (slug, page_type, target_slug, title, meta_description, h1, category, est_monthly_spend, avg_cpm, summary)
-      VALUES (@slug, @page_type, @target_slug, @title, @meta_description, @h1, @category, @est_monthly_spend, @avg_cpm, @summary)
-    `);
+  const placementCount = db.prepare('SELECT COUNT(*) AS cnt FROM placements').get().cnt;
+  const insertBrand = db.prepare(`
+    INSERT OR REPLACE INTO brands (slug, name, domain, category, vertical, est_monthly_spend, avg_cpm, renewal_rate_pct, decision_maker_role, sponsor_email, landing_pattern, default_offer)
+    VALUES (@slug, @name, @domain, @category, @vertical, @est_monthly_spend, @avg_cpm, @renewal_rate_pct, @decision_maker_role, @sponsor_email, @landing_pattern, @default_offer)
+  `);
+  const insertShow = db.prepare(`
+    INSERT OR REPLACE INTO shows (slug, name, channel_type, niche, audience_size, base_cpm, midroll_rate_usd, cadence, host_names, verified_3x_sponsors)
+    VALUES (@slug, @name, @channel_type, @niche, @audience_size, @base_cpm, @midroll_rate_usd, @cadence, @host_names, @verified_3x_sponsors)
+  `);
+  const insertPlacement = db.prepare(`
+    INSERT INTO placements (brand_slug, show_slug, flights, renewal_tier, renewal_badge, renewal_score, slot_type, timestamp_range, promo_code, vanity_url, est_spend_usd, cpm_usd, last_seen_date)
+    VALUES (@brand_slug, @show_slug, @flights, @renewal_tier, @renewal_badge, @renewal_score, @slot_type, @timestamp_range, @promo_code, @vanity_url, @est_spend_usd, @cpm_usd, @last_seen_date)
+  `);
+  const insertSeo = db.prepare(`
+    INSERT OR REPLACE INTO seo_pages (slug, page_type, target_slug, title, meta_description, h1, category, est_monthly_spend, avg_cpm, summary)
+    VALUES (@slug, @page_type, @target_slug, @title, @meta_description, @h1, @category, @est_monthly_spend, @avg_cpm, @summary)
+  `);
 
-    const seedTx = db.transaction(() => {
-      for (const b of BRANDS) insertBrand.run(b);
-      for (const s of SHOWS) insertShow.run(s);
+  const seedTx = db.transaction(() => {
+    for (const b of BRANDS) insertBrand.run(b);
+    for (const s of SHOWS) insertShow.run(s);
+    if (placementCount === 0) {
       for (const p of PLACEMENT_PAIRS) {
         const [brand_slug, show_slug, flights, slot_type, timestamp_range, promo_code, vanity_url, perFlightUsd, cpm_usd, last_seen_date] = p;
         const renewal_tier = flights >= 3 ? '3x_proven_winner' : (flights === 2 ? '2x_scaling' : '1x_test');
@@ -181,10 +181,10 @@ function initDb() {
           last_seen_date
         });
       }
-      for (const page of SEO_PAGES) insertSeo.run(page);
-    });
-    seedTx();
-  }
+    }
+    for (const page of SEO_PAGES) insertSeo.run(page);
+  });
+  seedTx();
 }
 
 initDb();

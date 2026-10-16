@@ -265,7 +265,7 @@ function buildSeoPages() {
       page_type: 'brand_breakdown',
       target_slug: b.slug,
       title: `${b.name} Podcast, Newsletter & YouTube Sponsorship Spend (${b.renewal_rate_pct}% 3x-Renewal Rate)`,
-      meta_description: `Verified 2026 ad-spend ledger for ${b.name} (${b.domain}): $${(b.est_monthly_spend / 1000).toFixed(0)}K/mo estimated creator spend, $${b.avg_cpm} average CPM, active promo codes, vanity URLs, and 3x+ renewed shows.`,
+      meta_description: `${b.name} Podcast Ad Spend & Sponsorship Cost: $${(b.est_monthly_spend / 1000).toFixed(0)}K/mo budget, $${b.avg_cpm} Ad Rates & CPM, promo codes & ${b.renewal_rate_pct}% 3x+ renewed shows.`,
       h1: `${b.name} Sponsorship Spend Ledger, 3x-Renewal Shows & Outbound Pitch Playbook`,
       category: b.category,
       est_monthly_spend: b.est_monthly_spend,
@@ -294,7 +294,7 @@ function buildSeoPages() {
       page_type: 'show_benchmark',
       target_slug: s.slug,
       title: `${s.name} Sponsors, Ad Rates & $${s.base_cpm} CPM Media-Kit Benchmark (2026)`,
-      meta_description: `See all ${s.verified_3x_sponsors} verified 3x+ renewed sponsors on ${s.name}. Typical mid-roll rate: $${s.midroll_rate_usd.toLocaleString()} ($${s.base_cpm} CPM) across ${s.audience_size.toLocaleString()} ${s.channel_type} reach.`,
+      meta_description: `${s.name} Sponsorship Cost, Ad Rates & CPM ($${s.base_cpm}): $${s.midroll_rate_usd.toLocaleString()} mid-roll Podcast Ad Spend & ${s.verified_3x_sponsors} verified 3x+ renewed sponsors.`,
       h1: `${s.name} Verified Sponsors, Mid-Roll Ad Rates & 3x-Renewal ROI Ledger`,
       category: s.niche,
       est_monthly_spend: s.midroll_rate_usd * 4,
@@ -305,22 +305,22 @@ function buildSeoPages() {
 
   // 3. 16 Niche Sponsor Directories & Comparison Reports (Total = 60 pSEO pages)
   const directoryPages = [
-    { slug: 'top-verified-b2b-saas-podcast-sponsors-2026', title: 'Top Verified B2B SaaS Podcast Sponsors with 3x+ Renewals (2026 Ledger)', category: 'B2B SaaS', filter_vertical: 'B2B', avg_cpm: 64, est_monthly_spend: 4250000 },
+    { slug: 'top-verified-b2b-saas-podcast-sponsors-2026', title: 'Top Verified B2B SaaS Podcast Sponsors with 3x+ Renewals (2026 Ledger)', category: 'B2B SaaS', filter_vertical: 'B2B SaaS', avg_cpm: 64, est_monthly_spend: 4250000 },
     { slug: 'top-ai-newsletter-sponsors-with-3x-renewals', title: 'Top AI & LLM Newsletter Sponsors Renewing 3+ Times (2026 Spend Index)', category: 'AI & DevTools', filter_vertical: 'AI', avg_cpm: 61, est_monthly_spend: 2890000 },
     { slug: 'highest-spending-devtools-youtube-sponsors', title: 'Highest-Spending DevTools & Engineering YouTube Sponsors (2026 CPM Guide)', category: 'B2B DevTools', filter_vertical: 'DevTools', avg_cpm: 58, est_monthly_spend: 2150000 },
     { slug: 'fintech-and-cfo-podcast-sponsors-directory', title: 'Fintech, Corporate Card & CFO Podcast Sponsors (Ramp, Mercury, Brex, Stripe)', category: 'B2B Fintech', filter_vertical: 'Fintech', avg_cpm: 68, est_monthly_spend: 3120000 },
     { slug: 'dtc-health-and-wellness-podcast-sponsors-3x-renewed', title: 'DTC Health, Biohacking & Sleep Podcast Sponsors (AG1, Eight Sleep, LMNT, WHOOP)', category: 'Health & Performance', filter_vertical: 'DTC', avg_cpm: 43, est_monthly_spend: 3470000 },
     { slug: 'cybersecurity-and-compliance-podcast-sponsors', title: 'Cybersecurity, SOC 2 & Privacy Podcast Sponsors (Vanta, ExpressVPN, Cloudflare)', category: 'Security & Compliance', filter_vertical: 'Security', avg_cpm: 56, est_monthly_spend: 1930000 },
-    { slug: 'podcast-vs-newsletter-sponsorship-cpm-and-roi-benchmarks', title: 'Podcast Mid-Roll vs. B2B Newsletter Sponsorship CPM & 3x-Renewal ROI Benchmarks', category: 'Media Buying Strategy', filter_vertical: 'B2B', avg_cpm: 60, est_monthly_spend: 5100000 },
-    { slug: 'host-read-mid-roll-vs-pre-roll-conversion-rates', title: 'Host-Read Mid-Roll vs. Pre-Roll Ad Conversion Rates & Promo-Code Decay Curves', category: 'Ad Attribution Research', filter_vertical: 'B2B', avg_cpm: 57, est_monthly_spend: 3800000 },
-    { slug: 'outbound-podcast-sponsorship-cold-email-templates-2026', title: 'Data-Backed Outbound Sponsorship Cold Email Templates That Close 3-Flight Pilots', category: 'Creator Monetization', filter_vertical: 'B2B', avg_cpm: 55, est_monthly_spend: 2400000 },
-    { slug: 'how-to-track-competitor-podcast-ad-spend-and-promo-codes', title: 'How Media Buyers Track Competitor Podcast Ad Spend, Vanity URLs & 3x Renewals', category: 'Competitive Intelligence', filter_vertical: 'B2B', avg_cpm: 62, est_monthly_spend: 4600000 },
-    { slug: 'best-sponsors-for-software-engineering-newsletters', title: 'Best-Paying Sponsors for Software Engineering & System Design Newsletters (2026)', category: 'Engineering Newsletters', filter_vertical: 'DevTools', avg_cpm: 66, est_monthly_spend: 1980000 },
-    { slug: 'venture-capital-and-founder-podcast-sponsors-ledger', title: 'Top Sponsors on Venture Capital & Founder Podcasts (All-In, Acquired, 20VC)', category: 'VC & Founders', filter_vertical: 'B2B', avg_cpm: 71, est_monthly_spend: 3950000 },
-    { slug: 'youtube-tech-creator-integrated-sponsor-rates-2026', title: 'YouTube Tech & Coding Creator Integrated Sponsorship Rates & CPM Calculator', category: 'YouTube Creators', filter_vertical: 'DevTools', avg_cpm: 59, est_monthly_spend: 2740000 },
-    { slug: 'hr-payroll-and-remote-work-podcast-sponsors', title: 'HR, Global Payroll & Remote Work Podcast Sponsors (Deel, Rippling, Gusto)', category: 'HR & Payroll', filter_vertical: 'B2B', avg_cpm: 61, est_monthly_spend: 1800000 },
+    { slug: 'podcast-vs-newsletter-sponsorship-cpm-and-roi-benchmarks', title: 'Podcast Mid-Roll vs. B2B Newsletter Sponsorship CPM & 3x-Renewal ROI Benchmarks', category: 'Media Buying Strategy', filter_vertical: 'Newsletter', avg_cpm: 60, est_monthly_spend: 5100000 },
+    { slug: 'host-read-mid-roll-vs-pre-roll-conversion-rates', title: 'Host-Read Mid-Roll vs. Pre-Roll Ad Conversion Rates & Promo-Code Decay Curves', category: 'Ad Attribution Research', filter_vertical: 'Fitness', avg_cpm: 57, est_monthly_spend: 3800000 },
+    { slug: 'outbound-podcast-sponsorship-cold-email-templates-2026', title: 'Data-Backed Outbound Sponsorship Cold Email Templates That Close 3-Flight Pilots', category: 'Creator Monetization', filter_vertical: 'Productivity', avg_cpm: 55, est_monthly_spend: 2400000 },
+    { slug: 'how-to-track-competitor-podcast-ad-spend-and-promo-codes', title: 'How Media Buyers Track Competitor Podcast Ad Spend, Vanity URLs & 3x Renewals', category: 'Competitive Intelligence', filter_vertical: 'Strategy', avg_cpm: 62, est_monthly_spend: 4600000 },
+    { slug: 'best-sponsors-for-software-engineering-newsletters', title: 'Best-Paying Sponsors for Software Engineering & System Design Newsletters (2026)', category: 'Engineering Newsletters', filter_vertical: 'Engineering', avg_cpm: 66, est_monthly_spend: 1980000 },
+    { slug: 'venture-capital-and-founder-podcast-sponsors-ledger', title: 'Top Sponsors on Venture Capital & Founder Podcasts (All-In, Acquired, 20VC)', category: 'VC & Founders', filter_vertical: 'VC', avg_cpm: 71, est_monthly_spend: 3950000 },
+    { slug: 'youtube-tech-creator-integrated-sponsor-rates-2026', title: 'YouTube Tech & Coding Creator Integrated Sponsorship Rates & CPM Calculator', category: 'YouTube Creators', filter_vertical: 'YouTube', avg_cpm: 59, est_monthly_spend: 2740000 },
+    { slug: 'hr-payroll-and-remote-work-podcast-sponsors', title: 'HR, Global Payroll & Remote Work Podcast Sponsors (Deel, Rippling, Gusto)', category: 'HR & Payroll', filter_vertical: 'Payroll', avg_cpm: 61, est_monthly_spend: 1800000 },
     { slug: 'ecommerce-and-smb-business-podcast-sponsors', title: 'Ecommerce & SMB Entrepreneurship Podcast Sponsors (Shopify, HubSpot, Zapier)', category: 'Ecommerce & SMB', filter_vertical: 'SMB', avg_cpm: 52, est_monthly_spend: 2930000 },
-    { slug: 'cloud-observability-and-data-infrastructure-sponsors', title: 'Cloud Observability, Postgres & Data Infrastructure Sponsors (Datadog, Snowflake, Sentry)', category: 'Data & Cloud Infra', filter_vertical: 'Infra', avg_cpm: 65, est_monthly_spend: 2180000 }
+    { slug: 'cloud-observability-and-data-infrastructure-sponsors', title: 'Cloud Observability, Postgres & Data Infrastructure Sponsors (Datadog, Snowflake, Sentry)', category: 'Data & Cloud Infra', filter_vertical: 'Infrastructure', avg_cpm: 65, est_monthly_spend: 2180000 }
   ];
 
   for (const d of directoryPages) {
@@ -329,7 +329,7 @@ function buildSeoPages() {
       page_type: 'niche_directory',
       target_slug: d.filter_vertical,
       title: d.title,
-      meta_description: `Verified 2026 directory for ${d.title}. Compare 3x+ renewed brands, average $${d.avg_cpm} CPM rates, active vanity URLs, and direct sponsor contacts.`,
+      meta_description: `2026 ${d.category} Podcast Ad Spend & Sponsorship Cost: $${(d.est_monthly_spend / 1000000).toFixed(2)}M/mo volume, $${d.avg_cpm} Ad Rates & CPM, promo codes & 3x+ renewed brands.`,
       h1: d.title,
       category: d.category,
       est_monthly_spend: d.est_monthly_spend,

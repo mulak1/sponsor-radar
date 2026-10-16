@@ -2,7 +2,11 @@ const { escapeHtml, renderBrandLogoSvg, renderShell } = require('./views_shell')
 
 function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts, defaultAnalysis }) {
   const topPlacements = placements.slice(0, 18);
-  const topSeoLinks = seoPages.slice(0, 12);
+  const topSeoLinks = [
+    ...seoPages.filter(p => p.page_type === 'brand_breakdown').slice(0, 8),
+    ...seoPages.filter(p => p.page_type === 'show_benchmark').slice(0, 8),
+    ...seoPages.filter(p => p.page_type === 'niche_directory').slice(0, 8)
+  ];
 
   const jsonLd = {
     '@context': 'https://schema.org',

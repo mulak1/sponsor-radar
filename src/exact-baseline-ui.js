@@ -15,13 +15,10 @@
  */
 
 const SOVRN_KEY = process.env.SOVRN_COMMERCE_KEY || 'ea3d7b74c5752fd817f896be27cd1a01';
+const { buildMobileSeoCrawlMeshHtml, enhanceHtmlForSearchAndAiBots } = require('./exact-baseline-seo');
 
 function esc(str) {
-  return String(str || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function getTheme(cfg) {
@@ -327,6 +324,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <div style="font-size:11px;font-weight:700;color:${t.textMuted};text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Curated Companion Products &amp; Verified Ecosystem</div>
     <div class="eb-gbb-grid">${affiliatesHtml}</div>
   </div>
+  ${buildMobileSeoCrawlMeshHtml(cfg, reqPath)}
 </section>
 
 <!-- Floating Value-Gate Popover (Paid Choice Architecture — Zero $0 Cannibalization) -->
@@ -914,26 +912,16 @@ function buildClientRuntimeScript(cfg) {
 }
 
 function renderExactBaselineEnhancements(html, cfg, reqPath) {
-  let out = String(html);
+  let out = enhanceHtmlForSearchAndAiBots(html, cfg, reqPath);
   const styles = buildExactBaselineStyles(cfg);
   const bottomSuite = buildBottomConversionSuiteHtml(cfg, reqPath);
   const clientJs = buildClientRuntimeScript(cfg);
-
-  if (out.includes('</head>')) out = out.replace('</head>', () => `${styles}\n</head>`);
-  else out = styles + out;
-
+  out = out.includes('</head>') ? out.replace('</head>', () => `${styles}\n</head>`) : styles + out;
   // CRITICAL: Do NOT inject any box at the top of <main>! Keep the native Hero & Interactive Workbench first above the fold!
-  if (/<\/main>/i.test(out)) {
-    out = out.replace(/<\/main>/i, (m) => `${bottomSuite}\n${m}`);
-  } else if (out.includes('</body>')) {
-    out = out.replace('</body>', () => `${bottomSuite}\n</body>`);
-  } else {
-    out = `${out}\n${bottomSuite}`;
-  }
-
-  if (out.includes('</body>')) out = out.replace('</body>', () => `${clientJs}\n</body>`);
-  else out = `${out}\n${clientJs}`;
-  return out;
+  if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${bottomSuite}\n${m}`);
+  else if (out.includes('</body>')) out = out.replace('</body>', () => `${bottomSuite}\n</body>`);
+  else out = `${out}\n${bottomSuite}`;
+  return out.includes('</body>') ? out.replace('</body>', () => `${clientJs}\n</body>`) : `${out}\n${clientJs}`;
 }
 
 function renderEmbedWidgetHtml(cfg) {

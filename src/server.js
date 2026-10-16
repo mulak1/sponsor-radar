@@ -10,7 +10,7 @@ const { attachExactBaselinePack } = require('./exact-baseline-api');
 const app = express();
 const PORT = Number(process.env.PORT) || 4102;
 const HOST = process.env.HOST || '0.0.0.0';
-const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, '');
+const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -67,16 +67,115 @@ app.get('/manifest.webmanifest', (req, res) => {
 
 // robots.txt (Pre-Launch Checklist #9)
 app.get('/robots.txt', (req, res) => {
-  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.send(`User-agent: *
 Allow: /
 Allow: /seo/
 Allow: /directory
 Allow: /lp
+Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /admin/
 
 Sitemap: ${PUBLIC_URL}/sitemap.xml
 `);
+});
+
+// Native /llms.txt & /llms-full.txt (AnswerDotAI/llms-txt & mendableai/firecrawl specs)
+app.get('/llms.txt', (req, res) => {
+  const brands = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC').all();
+  const shows = db.prepare('SELECT * FROM shows ORDER BY audience_size DESC').all();
+  const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY page_type ASC, est_monthly_spend DESC').all();
+  const placements = db.prepare(`
+    SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
+    FROM placements p
+    JOIN brands b ON b.slug = p.brand_slug
+    JOIN shows s ON s.slug = p.show_slug
+    ORDER BY p.flights DESC, p.est_spend_usd DESC
+  `).all();
+
+  const lines = [
+    '# SponsorRadar (#2) — Podcast, Newsletter & YouTube Ad-Spend Ledger & 3x-Renewal ROI Engine',
+    '',
+    '> Autonomous Podcast, Newsletter & YouTube Sponsorship Spend Ledger indexing 42 active DTC & B2B sponsor brands, 46 flagship creator shows, 60 programmatic SEO spend & CPM benchmark reports, and 96 verified multi-flight ad-read placements with timestamps, promo codes, vanity URLs, and 1-click outbound pilot pitches.',
+    '',
+    '## Core Platform Routes',
+    `- [Interactive Spend Radar & Outbound Pitch Workbench](${PUBLIC_URL}/): Mode A Brand/Show Lookup & Mode B Transcript Ad-Read Extractor`,
+    `- [Full 60+ Report pSEO Directory](${PUBLIC_URL}/directory): Complete index of 42 sponsor brands, 46 creator shows, and 60 spend reports`,
+    `- [Brand Media Buyer & Creator Landing Brief](${PUBLIC_URL}/lp): Instant 3x-renewal verification & 30-day ROI guarantee`,
+    `- [Full Corpus LLM Index (/llms-full.txt)](${PUBLIC_URL}/llms-full.txt): Exhaustive structured dataset of all 42 brands, 46 shows, 60 reports, and 96 placements`,
+    `- [XML Sitemap](${PUBLIC_URL}/sitemap.xml): Canonical URL index`,
+    '',
+    `## All ${seoPages.length} Programmatic SEO Spend & CPM Benchmark Reports (/seo/:slug)`,
+    ...seoPages.map(p => `- [${p.title}](${PUBLIC_URL}/seo/${p.slug}): ${p.meta_description}`),
+    '',
+    `## All ${brands.length} Indexed Sponsor Brands`,
+    ...brands.map(b => `- **${b.name}** (${b.domain} | ${b.category} | ${b.vertical}): $${b.est_monthly_spend.toLocaleString()}/mo est. spend • $${b.avg_cpm} avg CPM • ${b.renewal_rate_pct}% 3x+ renewal rate • Contact: ${b.sponsor_email} (${b.decision_maker_role})`),
+    '',
+    `## All ${shows.length} Indexed Podcasts, Newsletters & YouTube Shows`,
+    ...shows.map(s => `- **${s.name}** (${s.channel_type} | ${s.niche}): ${s.audience_size.toLocaleString()} reach • $${s.midroll_rate_usd.toLocaleString()} mid-roll rate • $${s.base_cpm} base CPM • ${s.verified_3x_sponsors} verified 3x+ sponsors`),
+    '',
+    `## All ${placements.length} Verified Ad-Read Placements & Attribution Signals`,
+    ...placements.map(p => `- ${p.brand_name} → ${p.show_name} (${p.channel_type}): ${p.flights} flights (${p.renewal_badge}, ${p.renewal_score}/100 ROI) | ${p.slot_type} [${p.timestamp_range}] | Vanity: ${p.vanity_url} | Code: ${p.promo_code} | Cumulative Spend: $${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM)`)
+  ];
+
+  res.status(200).setHeader('Content-Type', 'text/plain; charset=utf-8').send(lines.join('\n'));
+});
+
+app.get('/llms-full.txt', (req, res) => {
+  const brands = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC').all();
+  const shows = db.prepare('SELECT * FROM shows ORDER BY audience_size DESC').all();
+  const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY page_type ASC, est_monthly_spend DESC').all();
+  const placements = db.prepare(`
+    SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email,
+           s.name AS show_name, s.channel_type, s.niche AS show_niche, s.audience_size
+    FROM placements p
+    JOIN brands b ON b.slug = p.brand_slug
+    JOIN shows s ON s.slug = p.show_slug
+    ORDER BY p.flights DESC, p.est_spend_usd DESC
+  `).all();
+
+  const lines = [
+    '# SponsorRadar (#2) — Full LLM Knowledge Corpus (/llms-full.txt)',
+    '',
+    '> Spec: AnswerDotAI/llms-txt v1.0 & mendableai/firecrawl Markdown Corpus',
+    `> Canonical Origin: ${PUBLIC_URL}`,
+    `> Coverage: ${brands.length} Sponsor Brands | ${shows.length} Creator Shows | ${seoPages.length} Programmatic SEO Reports | ${placements.length} Verified Ad-Read Placements`,
+    '',
+    '---',
+    `## SECTION 1: ALL ${brands.length} VERIFIED SPONSOR BRANDS`,
+    ...brands.map(b => [
+      `### Brand: ${b.name} (\`${b.slug}\`)`,
+      `- Domain: ${b.domain} | Category: ${b.category} | Vertical: ${b.vertical}`,
+      `- Est. Monthly Sponsorship Spend: $${b.est_monthly_spend.toLocaleString()} | Blended Avg CPM: $${b.avg_cpm} | 3x+ Renewal Rate: ${b.renewal_rate_pct}%`,
+      `- Partnerships Decision Maker: ${b.decision_maker_role} (${b.sponsor_email})`,
+      `- Attribution Pattern: ${b.landing_pattern} | Default Offer: ${b.default_offer}`,
+      ''
+    ].join('\n')),
+    '---',
+    `## SECTION 2: ALL ${shows.length} VERIFIED PODCASTS, NEWSLETTERS & YOUTUBE SHOWS`,
+    ...shows.map(s => [
+      `### Show: ${s.name} (\`${s.slug}\`)`,
+      `- Channel: ${s.channel_type} | Niche: ${s.niche} | Cadence: ${s.cadence} | Hosts: ${s.host_names}`,
+      `- Audience Reach: ${s.audience_size.toLocaleString()} | Mid-Roll Ad Rate: $${s.midroll_rate_usd.toLocaleString()} | Base CPM: $${s.base_cpm} | Verified 3x+ Renewed Sponsors: ${s.verified_3x_sponsors}`,
+      ''
+    ].join('\n')),
+    '---',
+    `## SECTION 3: ALL ${seoPages.length} PROGRAMMATIC SEO SPEND & CPM REPORTS (/seo/:slug)`,
+    ...seoPages.map(p => [
+      `### Report: ${p.title}`,
+      `- Canonical URL: ${PUBLIC_URL}/seo/${p.slug}`,
+      `- Type: ${p.page_type} | Category: ${p.category} | Est. Monthly Spend: $${p.est_monthly_spend.toLocaleString()} | Avg CPM: $${p.avg_cpm}`,
+      `- Meta Description: ${p.meta_description}`,
+      `- Executive Summary: ${p.summary}`,
+      ''
+    ].join('\n')),
+    '---',
+    `## SECTION 4: ALL ${placements.length} VERIFIED AD-READ PLACEMENTS & TIMESTAMPS`,
+    ...placements.map((p, idx) => `- [${idx + 1}] **${p.brand_name}** (${p.brand_domain}) on **${p.show_name}** (${p.channel_type}, ${p.audience_size.toLocaleString()} reach) | Flights: ${p.flights} (${p.renewal_badge}, Score: ${p.renewal_score}/100) | Slot: ${p.slot_type} @ ${p.timestamp_range} | Vanity URL: ${p.vanity_url} | Promo Code: ${p.promo_code} | Total Spend: $${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM) | Last Seen: ${p.last_seen_date}`)
+  ];
+
+  res.status(200).setHeader('Content-Type', 'text/plain; charset=utf-8').send(lines.join('\n'));
 });
 
 // sitemap.xml (Pre-Launch Checklist #9)
@@ -334,20 +433,26 @@ app.get('/seo/:slug', (req, res) => {
   if (page.page_type === 'brand_breakdown') {
     brand = db.prepare('SELECT * FROM brands WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
+      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+             sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
       JOIN shows s ON s.slug = p.show_slug
+      LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
+      LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
       WHERE p.brand_slug = ?
       ORDER BY p.flights DESC
     `).all(page.target_slug);
   } else if (page.page_type === 'show_benchmark') {
     show = db.prepare('SELECT * FROM shows WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
+      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+             sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
       JOIN shows s ON s.slug = p.show_slug
+      LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
+      LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
       WHERE p.show_slug = ?
       ORDER BY p.flights DESC
     `).all(page.target_slug);
@@ -355,16 +460,36 @@ app.get('/seo/:slug', (req, res) => {
       brand = db.prepare('SELECT * FROM brands WHERE slug = ?').get(placements[0].brand_slug);
     }
   } else {
+    const kw = `%${page.target_slug}%`;
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
+      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+             sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
       JOIN shows s ON s.slug = p.show_slug
-      WHERE p.flights >= 3
+      LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
+      LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
+      WHERE (b.vertical LIKE ? OR b.category LIKE ? OR s.niche LIKE ? OR s.channel_type LIKE ?)
       ORDER BY p.flights DESC, p.est_spend_usd DESC
       LIMIT 12
-    `).all();
-    brand = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
+    `).all(kw, kw, kw, kw);
+    if (placements.length === 0) {
+      placements = db.prepare(`
+        SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+               sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
+        FROM placements p
+        JOIN brands b ON b.slug = p.brand_slug
+        JOIN shows s ON s.slug = p.show_slug
+        LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
+        LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
+        WHERE p.flights >= 3
+        ORDER BY p.flights DESC, p.est_spend_usd DESC
+        LIMIT 12
+      `).all();
+    }
+    brand = placements.length > 0
+      ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(placements[0].brand_slug)
+      : db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
   }
 
   const outboundPitch = brand ? generateOutboundPitch({
@@ -376,8 +501,11 @@ app.get('/seo/:slug', (req, res) => {
   }) : null;
 
   const relatedPages = db.prepare(`
-    SELECT * FROM seo_pages WHERE slug != ? ORDER BY RANDOM() LIMIT 6
-  `).all(page.slug);
+    SELECT * FROM seo_pages
+    WHERE slug != ?
+    ORDER BY (CASE WHEN category = ? THEN 0 WHEN page_type = ? THEN 1 ELSE 2 END), ((rowid * 7) % 60) ASC
+    LIMIT 8
+  `).all(page.slug, page.category, page.page_type);
 
   res.send(renderSeoPage({
     page,

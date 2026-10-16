@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const { renderExactBaselineEnhancements, renderEmbedWidgetHtml, renderSampleDossierHtml } = require('./exact-baseline-ui');
+const { CRAWLER_UA_REGEX, loadVerticalSeoCatalog, attachUniversalSeoAndAiRoutes } = require('./exact-baseline-seo');
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || 'b25e791e2b694f4c9c57d8e20ad8d904';
 const SOVRN_COMMERCE_KEY = process.env.SOVRN_COMMERCE_KEY || 'ea3d7b74c5752fd817f896be27cd1a01';
@@ -401,7 +402,7 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const isPlaywrightHeader = Boolean(req.headers['x-playwright-test'] || req.headers['x-test-mode']);
   const isQueryTest = req.query && (req.query.test === '1' || req.query.is_test === '1');
   const emailLower = String(extraEmail || '').toLowerCase();
-  const isSearchOrAiCrawler = /(googlebot|bingbot|perplexitybot|gptbot|oai-searchbot|claudebot|anthropic|applebot|ahrefsbot|semrushbot|bytespider|yandex|duckduckbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot)/i.test(ua);
+  const isSearchOrAiCrawler = CRAWLER_UA_REGEX.test(ua);
 
   if (
     isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua ||
@@ -514,78 +515,47 @@ function attachExactBaselinePack(app, options = {}) {
   const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
   const store = createTelemetryStore(dataDir, cfg.moduleId);
 
-  // Register SIGTERM / SIGINT zero-crash handlers so Railway container rollouts never trigger npm SIGTERM failure emails
   registerGracefulShutdown(cfg.brandName);
+  loadVerticalSeoCatalog(cfg, __dirname);
 
-  // Unified Healthcheck Endpoint (/api/health & /healthz) for Railway zero-downtime readiness
   app.get('/healthz', (req, res) => res.status(200).json({ ok: true, status: 'ok', service: cfg.brandName }));
   if (verticalId === 'sponsor_radar') {
     app.get('/api/health', (req, res) => res.status(200).json({ ok: true, status: 'ok', service: cfg.brandName }));
   }
 
-  // 0. Unified AI-Search & Crawler-Permissive /robots.txt
-  app.get('/robots.txt', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    if (isCrawler) store.recordEvent({ eventType: 'crawler_robots', pageUrl: '/robots.txt', isTest, isCrawler });
-    const txt = [
-      'User-agent: *', 'Allow: /', 'Allow: /seo/', 'Allow: /directory', 'Allow: /lp', 'Allow: /feed.xml', 'Allow: /feed.json', 'Allow: /llms.txt', '',
-      'User-agent: GPTBot', 'Allow: /', '', 'User-agent: OAI-SearchBot', 'Allow: /', '',
-      'User-agent: PerplexityBot', 'Allow: /', '', 'User-agent: ClaudeBot', 'Allow: /', '', 'User-agent: Google-Extended', 'Allow: /', '',
-      `Sitemap: https://${cfg.domain}/sitemap.xml`, `Sitemap: https://${cfg.domain}/feed.xml`
-    ].join('\n');
-    res.status(200).type('text/plain; charset=utf-8').send(txt);
-  });
-
-  // 1. IndexNow Key Verification & Sitemap Batch Push Routes
+  // 0 & 1. Universal 27-Bot /robots.txt, /llms.txt, /llms-full.txt, .md Twins, Segmented Sitemaps, oEmbed & IndexNow
   app.get(`/${INDEXNOW_KEY}.txt`, (req, res) => res.status(200).type('text/plain; charset=utf-8').send(INDEXNOW_KEY));
   app.get('/indexnow-key.txt', (req, res) => res.status(200).type('text/plain; charset=utf-8').send(INDEXNOW_KEY));
-  app.post('/api/indexnow/push', async (req, res) => {
-    const host = cfg.domain;
-    const urlList = Array.isArray(req.body?.urls) && req.body.urls.length > 0
-      ? req.body.urls
-      : [`https://${host}/`, `https://${host}/lp`, `https://${host}/directory`, `https://${host}/feed.xml`, `https://${host}/feed.json`, `https://${host}/dossier/sample`, `https://${host}/sitemap.xml`];
-    let status = 200;
-    try {
-      const r = await fetch('https://api.indexnow.org/indexnow', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify({ host, key: INDEXNOW_KEY, keyLocation: `https://${host}/${INDEXNOW_KEY}.txt`, urlList })
-      });
-      status = r.status;
-    } catch (_) { status = 202; }
-    res.json({ ok: true, host, key: INDEXNOW_KEY, submitted_count: urlList.length, upstream_status: status });
-  });
+  attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, INDEXNOW_KEY, __dirname);
 
-  // 2. RSS 2.0 & JSON Feed 1.1 Syndication
+  // 2. RSS 2.0 & JSON Feed 1.1 Syndication (Full 60+ pSEO Benchmarks + Presets)
   app.get('/feed.xml', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.xml', isTest, isCrawler });
     const nowRfc = new Date().toUTCString();
-    const itemsXml = cfg.presets.map((p) => `    <item>
-      <title>${cfg.brandName} Benchmark: ${p.label} (${p.key})</title>
-      <link>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</link>
-      <guid>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</guid>
-      <pubDate>${nowRfc}</pubDate>
-      <description>${cfg.explainerText}</description>
-    </item>`).join('\n');
-    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${cfg.brandName} — Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <description>${cfg.explainerText}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
+    const seoEntries = loadVerticalSeoCatalog(cfg, __dirname);
+    const escX = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const itemsXml = [
+      ...cfg.presets.map((p) => `    <item><title>${escX(cfg.brandName)} Scenario: ${escX(p.label)}</title><link>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</link><guid>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(cfg.explainerText)}</description></item>`),
+      ...seoEntries.map((e) => `    <item><title>${escX(e.title)}</title><link>https://${cfg.domain}/seo/${escX(e.slug)}</link><guid>https://${cfg.domain}/seo/${escX(e.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(e.summary)}</description></item>`)
+    ].join('\n');
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escX(cfg.brandName)} — Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
     res.status(200).type('application/rss+xml; charset=utf-8').send(rss);
   });
 
   app.get('/feed.json', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.json', isTest, isCrawler });
+    const seoEntries = loadVerticalSeoCatalog(cfg, __dirname);
     res.json({
       version: 'https://jsonfeed.org/version/1.1',
       title: `${cfg.brandName} — Live Benchmark Feed`,
       home_page_url: `https://${cfg.domain}/`,
       feed_url: `https://${cfg.domain}/feed.json`,
-      items: cfg.presets.map((p) => ({
-        id: `${cfg.moduleId}_${p.key}`,
-        url: `https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}`,
-        title: `${cfg.brandName} Executive Audit: ${p.label}`,
-        content_text: cfg.explainerText
-      }))
+      items: [
+        ...cfg.presets.map((p) => ({ id: `${cfg.moduleId}_${p.key}`, url: `https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}`, title: `${cfg.brandName} Executive Audit: ${p.label}`, content_text: cfg.explainerText })),
+        ...seoEntries.map((e) => ({ id: `${cfg.moduleId}_seo_${e.slug}`, url: `https://${cfg.domain}/seo/${e.slug}`, title: e.title, content_text: e.summary }))
+      ]
     });
   });
 
@@ -960,6 +930,10 @@ function attachExactBaselinePack(app, options = {}) {
       const isEnhancableRoute = req.method === 'GET' && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || req.path.startsWith('/seo/'));
 
       if (isHtml && isEnhancableRoute && !body.includes('id="eb-bottom-conversion-suite"')) {
+        try {
+          res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+          res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`);
+        } catch (_) {}
         store.recordEvent({
           eventType: 'visit',
           pageUrl: req.originalUrl || req.path,
