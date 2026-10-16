@@ -484,6 +484,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/vaul-pseo-quickbar', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 11,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'emilkowalski/vaul (★ 15,000+) & emilkowalski/sonner (★ 11,500+) — Post-Calculation Spotlight & Action Drawer (__ebTriggerPostCalcSpotlight) with 99¢ Single-File Pass & 1-Tap Scorecard Email Saver',
+        'TanStack/table (★ 28,492) & AnswerDotAI/llms-txt (★ 2,661) — Above-the-Fold /seo/:slug Quick-Action & Custom Benchmark Strip (#eb-pseo-quick-bar) below Lead Paragraph'
+      ],
+      features: {
+        pseo_above_fold_quick_bar: true,
+        post_calc_vaul_sonner_spotlight: true,
+        intersection_observer_low_threshold: true,
+        single_file_99c_toast_cta: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

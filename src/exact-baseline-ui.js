@@ -350,22 +350,21 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </form>
 </div>
 
-<!-- Exit-Intent Downsell Toast (#eb-ouibounce-toast) — Captures Abandoning Visitors Only -->
+<!-- Exit-Intent & Post-Calculation Spotlight Toast (#eb-ouibounce-toast) -->
 <div id="eb-ouibounce-toast" role="dialog" aria-label="Send 1-Page Diagnostic Summary Before Leaving">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-    <span style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">Leaving so soon?</span>
+    <span id="eb-ouibounce-title" style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">✦ Diagnostic Summary &amp; Instant Export</span>
     <button type="button" onclick="document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
   </div>
-  <p style="font-size:12px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">
-    Send the 1-page diagnostic summary to your inbox, or unlock the full export bundle now for <strong>$1.99</strong>:
-  </p>
+  <p id="eb-ouibounce-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Email your custom diagnostic scorecard &amp; link, or download the production file now (<strong>99¢ Single-File</strong> / <strong>$1.99 Bundle</strong>):</p>
   <form onsubmit="return window.__ebSendExitSummary(event)" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
-    <input type="email" id="eb-ouibounce-email" placeholder="Your email for 1-page summary..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
-    <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};font-size:11.5px;font-weight:700;border:1px solid ${t.border};">Send Summary</button>
+    <input type="email" id="eb-ouibounce-email" placeholder="Your email for diagnostic scorecard..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
+    <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};font-size:11.5px;font-weight:700;border:1px solid ${t.border};">Email Link →</button>
   </form>
-  <button type="button" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:7px 10px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:11.5px;">
-    Unlock Full Export Pass — $1.99 →
-  </button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+    <button type="button" id="btn-toast-micro-pass" onclick="window.__ebCheckout('micro_pass')" style="padding:7px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:11px;">Single File (99¢) →</button>
+    <button type="button" onclick="window.__ebCheckout('flash_pass')" style="padding:7px 8px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:11px;">3-File Bundle ($1.99) →</button>
+  </div>
 </div>
 
 <!-- Cmd+K Executive Command Palette -->
@@ -456,12 +455,26 @@ function buildClientRuntimeScript(cfg) {
     }
   }, { passive: true });
 
+  window.__ebTriggerPostCalcSpotlight = function(entityName) {
+    if (window.__ebIsUnlocked) return;
+    var curtain = document.getElementById('eb-deliverable-curtain');
+    if (curtain) curtain.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 12px 32px rgba(15,23,42,0.10)';
+    var toast = document.getElementById('eb-ouibounce-toast');
+    if (toast) {
+      var tTitle = document.getElementById('eb-ouibounce-title');
+      if (tTitle) tTitle.textContent = '✦ Custom Diagnostic Ready' + (entityName ? ': ' + String(entityName).slice(0, 26) : '');
+      toast.style.display = 'block';
+    }
+    window.__ebLogEvent('view_paywall', { target: 'vaul_post_calc_spotlight' });
+  };
+
   window.__ebCompileCustomCurtain = function(presetKey) {
     var inp = document.getElementById('eb-curtain-entity-input');
     if (presetKey && inp) inp.value = presetKey;
-    var q = inp && inp.value.trim() ? inp.value.trim() : (window.__ebActiveEntity || 'custom-audit');
+    var q = inp && inp.value.trim() ? inp.value.trim() : (presetKey || window.__ebActiveEntity || 'custom-audit');
     window.__ebActiveEntity = q;
     var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
+    window.__ebLogEvent('calculate', { source: 'curtain_custom_compile', query: q });
     fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
       .then(function(r) { return r.json(); })
       .then(function(data) {
@@ -469,25 +482,22 @@ function buildClientRuntimeScript(cfg) {
         if (hdr) hdr.textContent = '✦ Custom Deliverable (' + q + ') — Verified Preview';
         var pills = document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
-          pills.innerHTML = CFG.deliverableFiles.map(function(f) {
-            return '<span onclick="window.__ebOpenFloatingGate(this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
+          pills.innerHTML = CFG.deliverableFiles.map(function(f, idx) {
+            return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
           }).join('');
         }
         var pre = document.getElementById('eb-prism-proof-preview');
-        if (pre && data) {
-          pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Custom KPIs for ' + q + ': ' + ((data.kpis || []).join(' | ')) + '\\n' + (data.row1_insight || '');
-        }
+        if (pre && data) pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Custom KPIs for ' + q + ': ' + ((data.kpis || []).join(' | ')) + '\\n' + (data.row1_insight || '');
         var btn = document.getElementById('btn-curtain-flash-pass');
-        if (btn) {
-          btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
-          btn.style.boxShadow = '0 0 0 4px ' + CFG.theme.accentBorder;
-        }
+        if (btn) btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
+        window.__ebTriggerPostCalcSpotlight(q);
       }).catch(function(){});
   };
 
   window.__ebMountDeliverableCurtain = function(entityOverride) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
+    var firstFile = (CFG.deliverableFiles && CFG.deliverableFiles[0]) ? CFG.deliverableFiles[0].file : 'Single-File';
 
     if (CFG.moduleId === 'sponsor_radar') {
       var emailNodes = [document.getElementById('res-dm-email')].concat(Array.prototype.slice.call(document.querySelectorAll('.kpi-box .kpi-val, .pitch-box .mono')));
@@ -519,6 +529,16 @@ function buildClientRuntimeScript(cfg) {
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
     if (isPseoOrDir && !window.__ebIsUnlocked) {
       Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
+      var leadP = document.querySelector('.pseo-lead, .subhead, main h1 + p, article h1 + p, main p');
+      if (leadP && leadP.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
+        var qBar = document.createElement('div');
+        qBar.id = 'eb-pseo-quick-bar';
+        qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+        qBar.innerHTML = '<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:190px;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span><input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run Custom ↵</button></div>'
+          + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">Download ' + firstFile + ' (99¢) →</button><button type="button" id="btn-pseo-quick-email" onclick="window.__ebOpenFloatingGate(this)" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">📩 Email Scorecard</button></div>';
+        leadP.parentNode.insertBefore(qBar, leadP.nextSibling);
+        if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
+      }
     }
     var seoTargetEl = null;
     if (!targetEl && isPseoOrDir) {
@@ -549,18 +569,15 @@ function buildClientRuntimeScript(cfg) {
     var chipsHtml = (CFG.presets || []).map(function(p) {
       return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
     }).join('');
-    var firstFile = (CFG.deliverableFiles && CFG.deliverableFiles[0]) ? CFG.deliverableFiles[0].file : 'Single-File';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
       + '<span id="eb-curtain-title-span" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview</span>'
-      + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span>'
-      + '</div>'
+      + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
       + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
-      + chipsHtml
-      + '</div>'
+      + chipsHtml + '</div>'
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
@@ -574,8 +591,7 @@ function buildClientRuntimeScript(cfg) {
       + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">📩 Working on mobile or sharing with your team? Email this diagnostic scorecard &amp; custom link:</span>'
       + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
       + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work or personal email..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
-      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:700;font-size:11px;cursor:pointer;">Email Scorecard →</button>'
-      + '</div></form>';
+      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:700;font-size:11px;cursor:pointer;">Email Scorecard →</button></div></form>';
 
     if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -695,7 +711,6 @@ function buildClientRuntimeScript(cfg) {
       .then(function() {
         var btn = document.getElementById('btn-ouibounce-submit');
         if (btn) btn.textContent = '✓ Sent!';
-        setTimeout(function() { var toast = document.getElementById('eb-ouibounce-toast'); if (toast) toast.style.display = 'none'; }, 900);
       }).catch(function() {});
     return false;
   };
@@ -734,7 +749,7 @@ function buildClientRuntimeScript(cfg) {
                   if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
                 }
               }
-              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); }, 90);
+              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); window.__ebTriggerPostCalcSpotlight(entityName); }, 90);
             }).catch(function(){});
           } catch (_) {}
         }
@@ -779,8 +794,8 @@ function buildClientRuntimeScript(cfg) {
         entries.forEach(function(entry) {
           if (entry.isIntersecting && !paywallLogged) { paywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
         });
-      }, { threshold: 0.35 });
-      ['in-card-unlock-bar', 'eb-deliverable-curtain'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
+      }, { threshold: 0.15 });
+      ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-pseo-quick-bar'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
     }
   } catch (_) {}
 
@@ -833,21 +848,12 @@ function buildClientRuntimeScript(cfg) {
     var btn = document.getElementById('btn-reddit-share'); if (btn) btn.textContent = '✓ Copied MD!';
     window.__ebShowTripwire();
   };
-
   window.__ebCopyScenarioLink = function(btn) {
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(window.location.href).catch(function(){});
     if (btn) btn.textContent = 'Copied Link!';
   };
-
-  window.__ebPrintSheet = function() {
-    window.__ebLogEvent('print_sheet');
-    window.print();
-  };
-
-  window.__ebToggleHud = function() {
-    var d = document.getElementById('eb-field-hud-drawer');
-    if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
-  };
+  window.__ebPrintSheet = function() { window.__ebLogEvent('print_sheet'); window.print(); };
+  window.__ebToggleHud = function() { var d = document.getElementById('eb-field-hud-drawer'); if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none'; };
 
   window.__ebApplyPreset = function(presetKey, idx) {
     window.__ebLogEvent('calculate', { preset: presetKey });
@@ -859,38 +865,24 @@ function buildClientRuntimeScript(cfg) {
     var drawer = document.getElementById('inline-aisle-peek-drawer');
     if (drawer) drawer.style.display = 'block';
     var nativeBtns = document.querySelectorAll('[data-domain], [data-preset-id], [data-brand], .preset-btn, .chip');
-    if (nativeBtns && nativeBtns[idx]) {
-      try { nativeBtns[idx].click(); } catch (_) {}
-    }
+    if (nativeBtns && nativeBtns[idx]) { try { nativeBtns[idx].click(); } catch (_) {} }
   };
 
   window.__ebTriggerHostCalc = function() {
     var searchIn = document.getElementById('eb-fuse-search-input');
-    if (searchIn && searchIn.value.trim().length > 1) {
-      window.__ebRunFuseSearch(searchIn.value);
-      return;
-    }
+    if (searchIn && searchIn.value.trim().length > 1) { window.__ebRunFuseSearch(searchIn.value); return; }
     window.__ebLogEvent('calculate', { trigger: 'btn_calc' });
     window.__ebShowTripwire();
     var hostBtn = document.querySelector('form button[type="submit"], #run-audit-btn, #analyzeBtn, #btn-run-lookup, #audit-form button');
-    if (hostBtn) {
-      try { hostBtn.click(); } catch (_) {}
-    }
+    if (hostBtn) { try { hostBtn.click(); } catch (_) {} }
   };
 
   window.__ebCheckout = function(tier) {
     var cleanTier = typeof tier === 'string' ? tier : 'flash_pass';
     var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname };
-    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var targetUrl = data && (data.checkout_url || data.url);
-        if (targetUrl) window.location.href = targetUrl;
-      })
+      .then(function(data) { var targetUrl = data && (data.checkout_url || data.url); if (targetUrl) window.location.href = targetUrl; })
       .catch(function(){});
   };
 
