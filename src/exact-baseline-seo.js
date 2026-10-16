@@ -522,6 +522,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/algolia-hotkeys-quickbar', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 13,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'algolia/autocomplete (★ 4,000+) & jaywcjlove/hotkeys-js (★ 6,900+) — Universal Above-the-Fold Quick-Action, 1-Tap Preset & Inline Row #4 Reciprocity Strip (#eb-pseo-quick-bar) across /, /lp, /directory, and /seo/:slug',
+        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+) — Above-the-Fold Inline Email Capture (#eb-quick-inline-form) + 1-Tap 99¢ Single-File Pass'
+      ],
+      features: {
+        universal_above_fold_quick_bar: true,
+        one_tap_quick_bar_presets: true,
+        above_fold_inline_row4_email_form: true,
+        above_fold_99c_single_file_cta: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

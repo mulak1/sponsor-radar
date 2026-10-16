@@ -198,20 +198,10 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 
   const actionsHtml = buildActionButtonsHtml(cfg);
 
-  const affiliatesHtml = cfg.affiliates
-    .map((a) => `<a href="${esc(a.url)}" target="_blank" rel="noopener sponsored" class="eb-tier-card" style="text-decoration:none;color:${t.textPrimary};" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(a.title)}' })">
-      <div>
-        <span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:${t.safeColor};">${esc(a.badge)}</span>
-        <div style="font-size:15px;font-weight:700;margin-top:4px;color:${t.textPrimary};">${esc(a.title)}</div>
-      </div>
-      <div style="margin-top:10px;font-size:12.5px;color:${t.brandPrimary};font-weight:700;">${esc(a.cpa)} →</div>
-    </a>`)
-    .join('');
+  const affiliatesHtml = cfg.affiliates.map((a) => `<a href="${esc(a.url)}" target="_blank" rel="noopener sponsored" class="eb-tier-card" style="text-decoration:none;color:${t.textPrimary};" onclick="window.__ebLogEvent('affiliate_click', { partner: '${esc(a.title)}' })"><div><span style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:${t.safeColor};">${esc(a.badge)}</span><div style="font-size:15px;font-weight:700;margin-top:4px;color:${t.textPrimary};">${esc(a.title)}</div></div><div style="margin-top:10px;font-size:12.5px;color:${t.brandPrimary};font-weight:700;">${esc(a.cpa)} →</div></a>`).join('');
 
   const bc = cfg.battlecard || {
-    heading: `Why ${cfg.brandName} Outperforms Traditional Alternatives`,
-    colLegacy: 'Legacy Suites',
-    colManual: 'Manual Guesswork',
+    heading: `Why ${cfg.brandName} Outperforms Traditional Alternatives`, colLegacy: 'Legacy Suites', colManual: 'Manual Guesswork',
     rows: [
       ['Diagnostic Precision', '< 15ms Deterministic Engine', 'Slow Legacy Audits', 'Manual Trial & Error'],
       ['Actionable Deliverable', cfg.deliverableName, 'Generic Reports', 'Static Notes'],
@@ -219,14 +209,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     ]
   };
 
-  const battlecardRowsHtml = bc.rows.map((r, idx) => `
-    <tr style="${idx < bc.rows.length - 1 ? `border-bottom:1px solid ${t.border};` : ''}">
-      <td style="padding:10px 12px;font-weight:600;">${esc(r[0])}</td>
-      <td style="padding:10px 12px;color:${t.safeColor};font-weight:700;">✓ ${esc(r[1])}</td>
-      <td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[2])}</td>
-      <td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[3])}</td>
-    </tr>`).join('');
-
+  const battlecardRowsHtml = bc.rows.map((r, idx) => `<tr style="${idx < bc.rows.length - 1 ? `border-bottom:1px solid ${t.border};` : ''}"><td style="padding:10px 12px;font-weight:600;">${esc(r[0])}</td><td style="padding:10px 12px;color:${t.safeColor};font-weight:700;">✓ ${esc(r[1])}</td><td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[2])}</td><td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[3])}</td></tr>`).join('');
   const savingsPct = Math.max(50, Math.round((1 - 1.99 / cfg.corePriceUsd) * 100));
 
   return `<section id="eb-bottom-conversion-suite" aria-label="${esc(cfg.brandName)} Export Passes, Comparisons & Partner Ecosystem">
@@ -266,26 +249,10 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     </div>
     <button type="button" id="btn-checkout" style="display:none;" onclick="window.__ebCheckout('flash_pass')">Hidden Test Alias</button>
   </div>
-
   <div id="competitor-battlecard" class="eb-panel-card">
     <h3 style="margin:0 0 12px 0;font-size:19px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">${esc(bc.heading)}</h3>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;color:${t.textPrimary};">
-        <thead>
-          <tr style="border-bottom:1px solid ${t.border};color:${t.textMuted};background:${t.subtleBg};">
-            <th style="padding:10px 12px;">Capability</th>
-            <th style="padding:10px 12px;color:${t.brandPrimary};">${esc(cfg.brandName)}</th>
-            <th style="padding:10px 12px;">${esc(bc.colLegacy)}</th>
-            <th style="padding:10px 12px;">${esc(bc.colManual)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${battlecardRowsHtml}
-        </tbody>
-      </table>
-    </div>
+    <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;color:${t.textPrimary};"><thead><tr style="border-bottom:1px solid ${t.border};color:${t.textMuted};background:${t.subtleBg};"><th style="padding:10px 12px;">Capability</th><th style="padding:10px 12px;color:${t.brandPrimary};">${esc(cfg.brandName)}</th><th style="padding:10px 12px;">${esc(bc.colLegacy)}</th><th style="padding:10px 12px;">${esc(bc.colManual)}</th></tr></thead><tbody>${battlecardRowsHtml}</tbody></table></div>
   </div>
-
   <div id="eb-export-utility-bar" class="eb-panel-card">
     <div class="stat-pill-locked" id="summary-report-card" style="margin-bottom:12px;">
       <div class="eb-locked-top">
@@ -293,15 +260,11 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
         <button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Toggle Insight ▾</button>
       </div>
       <div class="eb-store-pills">${pillsHtml}</div>
-      <div id="inline-aisle-peek-drawer">
-        <div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div>
-      </div>
+      <div id="inline-aisle-peek-drawer"><div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div></div>
     </div>
     <div id="lead-squeeze-card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div id="prog-instant-action-strip">
-          ${actionsHtml}
-        </div>
+        <div id="prog-instant-action-strip">${actionsHtml}</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;" id="prog-share-toolbar">
           <button type="button" id="btn-copy-scenario-link" class="eb-action-btn" onclick="window.__ebCopyScenarioLink(this)">Copy Link</button>
           <a id="btn-share-reddit" class="eb-action-btn" href="${esc(redditHref)}" target="_blank" rel="noopener">Share on r/${esc(cfg.redditSub)}</a>
@@ -314,12 +277,9 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
         <span>Need the full unblurred production deliverable &amp; multi-row exports? Unlock the <strong>Single-Audit Export Pass ($1.99)</strong> — one-time payment, no subscription.</span>
         <button type="button" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;border-color:${t.brandPrimary};font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock $1.99 Pass →</button>
       </div>
-      <div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};border:1px solid ${t.border};color:${t.safeColor};font-family:monospace;font-size:11.5px;">
-        [${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}
-      </div>
+      <div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};border:1px solid ${t.border};color:${t.safeColor};font-family:monospace;font-size:11.5px;">[${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}</div>
     </div>
   </div>
-
   <div id="eb-sovrn-affiliate-strip" class="eb-panel-card">
     <div style="font-size:11px;font-weight:700;color:${t.textMuted};text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Curated Companion Products &amp; Verified Ecosystem</div>
     <div class="eb-gbb-grid">${affiliatesHtml}</div>
@@ -534,15 +494,17 @@ function buildClientRuntimeScript(cfg) {
     }
 
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
-    if (isPseoOrDir && !window.__ebIsUnlocked) {
-      Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
-      var leadP = document.querySelector('.pseo-lead, .subhead, main h1 + p, article h1 + p, main p');
+    if (!window.__ebIsUnlocked) {
+      if (isPseoOrDir) Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
+      var h1Node = document.querySelector('main h1, article h1, h1');
+      var leadP = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 + p, article h1 + p') || (h1Node && h1Node.parentNode ? h1Node.parentNode.querySelector('p') : null);
       if (leadP && leadP.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
+        var qChips = (CFG.presets || []).slice(0, 2).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
         var qBar = document.createElement('div');
         qBar.id = 'eb-pseo-quick-bar';
         qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        qBar.innerHTML = '<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:190px;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span><input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run Custom ↵</button></div>'
-          + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">Download ' + firstFile + ' (99¢) →</button><button type="button" id="btn-pseo-quick-email" onclick="window.__ebOpenFloatingGate(this)" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">🔓 Reveal Row #4</button></div>';
+        qBar.innerHTML = '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button></div>'
+          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="Email to reveal Row #4..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">🔓 Reveal Row #4</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢) →</button></form>';
         leadP.parentNode.insertBefore(qBar, leadP.nextSibling);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
