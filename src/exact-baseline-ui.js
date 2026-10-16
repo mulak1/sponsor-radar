@@ -40,7 +40,7 @@ function buildExactBaselineStyles(cfg) {
   button, .preset-chip, .store-preview-pill, .eb-action-btn, .cta-btn, a[role="button"] { transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease; cursor: pointer; }
   button:active, .preset-chip:active, .store-preview-pill:active, .eb-action-btn:active, .cta-btn:active { transform: scale(0.98) !important; }
   .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular { font-variant-numeric: tabular-nums !important; }
-  .eb-blurred-deliverable { filter: blur(5px) !important; user-select: none !important; pointer-events: none !important; max-height: 140px !important; overflow: hidden !important; opacity: 0.52 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
+  .eb-blurred-deliverable { filter: blur(5px) !important; user-select: none !important; cursor: pointer !important; max-height: 140px !important; overflow: hidden !important; opacity: 0.55 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
   #eb-deliverable-curtain { margin-top: 14px; padding: 16px 18px; border-radius: ${t.radiusCard}; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; box-shadow: ${t.shadow}; font-family: ${t.fontSans}; position: relative; z-index: 20; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; font-weight: 400 !important; }
   #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 10px 12px; font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.45; margin-bottom: 12px; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 350px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
@@ -344,6 +344,10 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:10px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:13px;">Unlock All 3 Files Bundle — $1.99 →</button>
     <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:600;font-size:12px;">Or Get ${esc(cfg.coreLabel)}</button>
   </div>
+  <form id="eb-popover-scorecard-form" onsubmit="return window.__ebSaveInlineScorecard(event, 'eb-popover-scorecard-email', 'eb-popover-scorecard-form')" style="margin-top:8px;padding-top:8px;border-top:1px dashed ${t.border};display:grid;grid-template-columns:1fr auto;gap:5px;">
+    <input type="email" id="eb-popover-scorecard-email" placeholder="Or email scorecard &amp; 99¢ pass link..." required style="padding:5px 8px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11px;" />
+    <button type="submit" style="padding:5px 9px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:700;font-size:11px;">Send →</button>
+  </form>
 </div>
 
 <!-- Exit-Intent Downsell Toast (#eb-ouibounce-toast) — Captures Abandoning Visitors Only -->
@@ -486,33 +490,48 @@ function buildClientRuntimeScript(cfg) {
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
 
     if (CFG.moduleId === 'sponsor_radar') {
-      var dmEmail = document.getElementById('res-dm-email');
-      if (dmEmail && dmEmail.textContent.indexOf('Unlock') === -1) {
-        dmEmail.setAttribute('data-raw-email', dmEmail.textContent);
-        var parts = dmEmail.textContent.trim().split('@');
-        dmEmail.innerHTML = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com') : 'p***@brand.com') + ' <button type="button" onclick="window.__ebOpenFloatingGate(this)" style="background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;margin-left:4px;">Unlock ($1.99)</button>';
+      var emailNodes = [document.getElementById('res-dm-email')].concat(Array.prototype.slice.call(document.querySelectorAll('.kpi-box .kpi-val, .pitch-box .mono')));
+      emailNodes.forEach(function(nd) {
+        if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('Unlock') === -1) {
+          nd.setAttribute('data-raw-email', nd.textContent);
+          var parts = nd.textContent.trim().split('@');
+          nd.innerHTML = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com') + ' <button type="button" onclick="window.__ebOpenFloatingGate(this)" style="background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;margin-left:4px;">Unlock (99¢)</button>';
+        }
+      });
+    }
+
+    var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
+    if (tbody && !window.__ebIsUnlocked) {
+      var trs = tbody.querySelectorAll('tr');
+      for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
+      var tblEl = tbody.closest('table');
+      var tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
+      if (tblWrap && tblWrap.parentNode && !document.getElementById('eb-tanstack-table-bar')) {
+        var tBar = document.createElement('div');
+        tBar.id = 'eb-tanstack-table-bar';
+        tBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:7px 10px;margin-bottom:8px;border-radius:9px;background:' + CFG.theme.subtleBg + ';border:1px solid ' + CFG.theme.border + ';font-family:' + CFG.theme.fontSans + ';';
+        tBar.innerHTML = '<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:190px;"><span style="font-size:10.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Live Table Filter:</span><input type="search" id="eb-tanstack-filter-input" placeholder="Filter rows or calculate custom scenario..." oninput="window.__ebFilterAndCalcTable(this.value)" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /></div>'
+          + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-tanstack-sort" onclick="window.__ebSortTableRows()" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⇅ Sort Top ROI</button><button type="button" id="btn-tanstack-unlock-rows" onclick="window.__ebOpenFloatingGate(this)" style="padding:4px 10px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">🔒 Unblur All Rows (99¢)</button></div>';
+        tblWrap.parentNode.insertBefore(tBar, tblWrap);
       }
     }
 
-    var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody');
-    if (tbody) {
-      var trs = tbody.querySelectorAll('tr');
-      for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
-    }
-
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
+    if (isPseoOrDir && !window.__ebIsUnlocked) {
+      Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
+    }
     var seoTargetEl = null;
     if (!targetEl && isPseoOrDir) {
-      var h1El = document.querySelector('main h1, h1');
+      var h1El = document.querySelector('main h1, article h1, h1');
       if (h1El && !window.__ebActiveEntity) window.__ebActiveEntity = (h1El.textContent || '').trim().slice(0, 48);
-      seoTargetEl = document.querySelector('main table, main .card, main section, main article > div');
+      seoTargetEl = document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section');
     }
     var mountAnchor = targetEl || seoTargetEl;
     if (!mountAnchor) return;
     var rawText = targetEl ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
     if (previewLines.length > 200) previewLines = previewLines.slice(0, 200) + ' ...';
-    if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
+    if (targetEl && !window.__ebIsUnlocked) targetEl.classList.add('eb-blurred-deliverable');
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
@@ -531,7 +550,6 @@ function buildClientRuntimeScript(cfg) {
       return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
     }).join('');
     var firstFile = (CFG.deliverableFiles && CFG.deliverableFiles[0]) ? CFG.deliverableFiles[0].file : 'Single-File';
-    var savingsPct = Math.max(50, Math.round((1 - 1.99 / CFG.corePriceUsd) * 100));
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
@@ -575,12 +593,33 @@ function buildClientRuntimeScript(cfg) {
     }
   };
 
+  window.__ebFilterAndCalcTable = function(q) {
+    var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
+    if (tbody) {
+      var rows = tbody.querySelectorAll('tr');
+      var low = String(q || '').toLowerCase();
+      for (var i = 0; i < Math.min(3, rows.length); i++) {
+        rows[i].style.display = (!low || rows[i].textContent.toLowerCase().indexOf(low) !== -1) ? '' : 'none';
+      }
+    }
+    if (q && q.trim().length > 2) window.__ebCompileCustomCurtain(q.trim());
+  };
+
+  window.__ebSortTableRows = function() {
+    var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
+    if (tbody) {
+      var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'), 0, 3);
+      rows.reverse().forEach(function(r) { tbody.insertBefore(r, tbody.firstChild); });
+    }
+    window.__ebLogEvent('calculate', { source: 'tanstack_list_sort' });
+    var btn = document.getElementById('btn-tanstack-sort');
+    if (btn) btn.textContent = '✓ Sorted Top ROI';
+  };
+
   window.__ebSelectManifestFile = function(idx, pillEl) {
     var f = (CFG.deliverableFiles && CFG.deliverableFiles[idx]) || { file: 'deliverable.txt', size: '4.2 KB', desc: 'Verified export' };
     var prevBox = document.getElementById('eb-prism-proof-preview');
-    if (prevBox) {
-      prevBox.textContent = '// [FILE PREVIEW: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Production lines 5–68 locked — Click "Download ' + f.file + ' (99¢)" below for instant export]';
-    }
+    if (prevBox) prevBox.textContent = '// [FILE PREVIEW: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Production lines 5–68 locked — Click "Download ' + f.file + ' (99¢)" below for instant export]';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
     if (microBtn) microBtn.textContent = 'Download ' + f.file + ' (99¢)';
     var popMicroBtn = document.getElementById('btn-popover-micro-pass');
@@ -589,14 +628,14 @@ function buildClientRuntimeScript(cfg) {
     window.__ebOpenFloatingGate(pillEl);
   };
 
-  window.__ebSaveInlineScorecard = function(ev) {
+  window.__ebSaveInlineScorecard = function(ev, inputId, formId) {
     if (ev && ev.preventDefault) ev.preventDefault();
-    var inp = document.getElementById('eb-inline-scorecard-email');
+    var inp = document.getElementById(inputId || 'eb-inline-scorecard-email');
     var email = inp ? inp.value.trim() : '';
     if (!email) return false;
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'inline_scorecard_saver' }) })
       .then(function() {
-        var bar = document.getElementById('eb-save-scorecard-bar');
+        var bar = document.getElementById(formId || 'eb-save-scorecard-bar');
         if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Scorecard queued for ' + email.replace(/</g, '') + '!</span><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Download Full Production File Now (99¢) →</button>';
       }).catch(function(){});
     return false;
@@ -607,18 +646,12 @@ function buildClientRuntimeScript(cfg) {
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
     var blurred = document.querySelectorAll('.eb-blurred-deliverable');
     for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
-    var dmEmail = document.getElementById('res-dm-email');
-    if (dmEmail && dmEmail.getAttribute('data-raw-email')) dmEmail.textContent = dmEmail.getAttribute('data-raw-email');
+    Array.prototype.slice.call(document.querySelectorAll('[data-raw-email]')).forEach(function(nd) { nd.textContent = nd.getAttribute('data-raw-email'); });
     var curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) {
       curtain.style.background = CFG.theme.safeSoftBg;
       curtain.style.borderColor = CFG.theme.safeBorder;
-      curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">'
-        + '<span style="font-size:12.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Full Production Deliverable Unlocked! Download your bundle below:</span>'
-        + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
-        + '<button type="button" id="btn-filesaver-bundle" onclick="window.__ebSaveBundleFile()" style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700;font-size:11.5px;">Download Deliverable Bundle (.TXT) ↓</button>'
-        + '<a href="/api/github-upgrade/export.csv" download style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;text-decoration:none;font-weight:700;font-size:11.5px;">Export .CSV ↓</a>'
-        + '</div></div>';
+      curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:12.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Full Production Deliverable Unlocked! Download your bundle below:</span><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-filesaver-bundle" onclick="window.__ebSaveBundleFile()" style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700;font-size:11.5px;">Download Deliverable Bundle (.TXT) ↓</button><a href="/api/github-upgrade/export.csv" download style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;text-decoration:none;font-weight:700;font-size:11.5px;">Export .CSV ↓</a></div></div>';
     }
     var pop = document.getElementById('eb-floating-gate-popover');
     if (pop) pop.style.display = 'none';
@@ -631,14 +664,11 @@ function buildClientRuntimeScript(cfg) {
     window.__ebLogEvent('view_paywall', { target: 'floating_ui_gate' });
     if (anchorEl && anchorEl.getBoundingClientRect) {
       var rect = anchorEl.getBoundingClientRect();
-      var top = rect.bottom + 8;
-      var left = Math.max(12, Math.min(window.innerWidth - 362, rect.left));
-      if (top + 200 > window.innerHeight) top = Math.max(12, rect.top - 195);
-      pop.style.top = top + 'px';
-      pop.style.left = left + 'px';
+      var top = rect.bottom + 8, left = Math.max(12, Math.min(window.innerWidth - 362, rect.left));
+      if (top + 220 > window.innerHeight) top = Math.max(12, rect.top - 210);
+      pop.style.top = top + 'px'; pop.style.left = left + 'px';
     } else {
-      pop.style.top = '120px';
-      pop.style.left = Math.max(12, (window.innerWidth - 350) / 2) + 'px';
+      pop.style.top = '120px'; pop.style.left = Math.max(12, (window.innerWidth - 350) / 2) + 'px';
     }
   };
 
@@ -649,7 +679,7 @@ function buildClientRuntimeScript(cfg) {
       if (cEmail && (!cEmail.value || cEmail.value.indexOf('@') === -1)) cEmail.value = 'express-checkout@' + CFG.domain.replace('www.', '');
     }
     if (window.__ebIsUnlocked) return;
-    var btn = e.target && e.target.closest ? e.target.closest('#copy-artifact-btn, #download-artifact-btn, #copy-code-btn, #copy-sdk-btn, button[onclick*="copyCompiledCode"], button[onclick*="downloadCompiledFile"], button[onclick*="copyPitchEmail"]') : null;
+    var btn = e.target && e.target.closest ? e.target.closest('.eb-blurred-deliverable, .pitch-box a[href*="#pricing"], #copy-artifact-btn, #download-artifact-btn, #copy-code-btn, #copy-sdk-btn, button[onclick*="copyCompiledCode"], button[onclick*="downloadCompiledFile"], button[onclick*="copyPitchEmail"]') : null;
     if (!btn) return;
     e.preventDefault();
     e.stopPropagation();
@@ -670,7 +700,6 @@ function buildClientRuntimeScript(cfg) {
     return false;
   };
 
-  // Two-Way Live Fetch Sync between Host Calculators, Native /api/checkout & Deliverable Curtain
   var origFetch = window.fetch;
   if (origFetch) {
     window.fetch = function(input, init) {
@@ -680,31 +709,20 @@ function buildClientRuntimeScript(cfg) {
           try {
             res.clone().json().then(function(data) {
               var stripeUrl = data && (data.checkout_url || data.checkoutUrl || data.url || (data.order && data.order.checkout_url));
-              if (stripeUrl && String(stripeUrl).indexOf('https://checkout.stripe.com') === 0 && !navigator.webdriver) {
-                setTimeout(function() { window.location.href = stripeUrl; }, 220);
-              }
+              if (stripeUrl && String(stripeUrl).indexOf('https://checkout.stripe.com') === 0 && !navigator.webdriver) setTimeout(function() { window.location.href = stripeUrl; }, 220);
             }).catch(function(){});
           } catch (_) {}
         }
         if (url.indexOf('/api/audit') !== -1 || url.indexOf('/api/analyze-sponsor') !== -1 || url.indexOf('/api/analyze-routine') !== -1 || url.indexOf('/api/audit-leakage') !== -1) {
           try {
             res.clone().json().then(function(data) {
-              var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
-              var entityName = '';
+              var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val'), entityName = '';
               if (CFG.moduleId === 'citation_forge' && data && data.audit) {
                 entityName = data.audit.domain || '';
-                if (data.audit.scores && boxes.length >= 3) {
-                  boxes[0].textContent = data.audit.scores.csovPct + '%';
-                  boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100';
-                  boxes[2].textContent = data.audit.scores.entityDensityScore + '/100';
-                }
+                if (data.audit.scores && boxes.length >= 3) { boxes[0].textContent = data.audit.scores.csovPct + '%'; boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100'; boxes[2].textContent = data.audit.scores.entityDensityScore + '/100'; }
               } else if (CFG.moduleId === 'sponsor_radar' && data) {
                 entityName = (data.brand && data.brand.name) || '';
-                if (data.metrics && boxes.length >= 3) {
-                  boxes[0].textContent = data.metrics.renewal_velocity_score + '/100';
-                  boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString();
-                  boxes[2].textContent = '$' + data.metrics.avg_cpm_usd;
-                }
+                if (data.metrics && boxes.length >= 3) { boxes[0].textContent = data.metrics.renewal_velocity_score + '/100'; boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString(); boxes[2].textContent = '$' + data.metrics.avg_cpm_usd; }
               } else if (CFG.moduleId === 'derm_logic' && data) {
                 entityName = data.compatibilityScore != null ? ('Score ' + data.compatibilityScore + '/100') : '';
                 if (boxes.length >= 2 && data.compatibilityScore != null) boxes[0].textContent = data.compatibilityScore + '/100';
@@ -725,42 +743,27 @@ function buildClientRuntimeScript(cfg) {
     };
   }
 
-  var fuseTimer = null;
+  var fuseTimer = null, sliderTimer = null;
   window.__ebRunFuseSearch = function(query) {
     if (!query || query.trim().length < 2) return;
     if (fuseTimer) clearTimeout(fuseTimer);
     fuseTimer = setTimeout(function() {
-      origFetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(query.trim()))
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data && data.kpis) {
-            var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
-            for (var i = 0; i < boxes.length && i < data.kpis.length; i++) boxes[i].textContent = data.kpis[i];
-          }
-          var rowTxt = document.getElementById('eb-peek-row-text');
-          if (rowTxt && data && data.row1_insight) rowTxt.textContent = data.row1_insight;
-          window.__ebShowTripwire();
-        })
-        .catch(function(){});
+      origFetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(query.trim())).then(function(r) { return r.json(); }).then(function(data) {
+        if (data && data.kpis) { var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val'); for (var i = 0; i < boxes.length && i < data.kpis.length; i++) boxes[i].textContent = data.kpis[i]; }
+        var rowTxt = document.getElementById('eb-peek-row-text'); if (rowTxt && data && data.row1_insight) rowTxt.textContent = data.row1_insight;
+        window.__ebShowTripwire();
+      }).catch(function(){});
     }, 300);
   };
 
-  var sliderTimer = null;
   window.__ebOnSliderInput = function(val) {
-    var num = Number(val) || 10;
-    var rd = document.getElementById('eb-slider-readout');
+    var num = Number(val) || 10, rd = document.getElementById('eb-slider-readout'), boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
     if (rd) rd.textContent = CFG.sliderLabel + ': ' + num;
-    var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
     if (boxes.length >= 2) {
       if (CFG.moduleId === 'citation_forge') boxes[0].textContent = Math.min(94.8, (22 + num * 0.24)).toFixed(1) + '%';
       else if (CFG.moduleId === 'sponsor_radar') boxes[1].textContent = '$' + (num * 10200).toLocaleString();
-      else if (CFG.moduleId === 'derm_logic') {
-        boxes[0].textContent = Math.max(20, 100 - num * 9) + '/100';
-        boxes[1].textContent = (0.4 + num * 0.35).toFixed(1) + ' pH';
-      } else {
-        boxes[0].textContent = '$' + Math.round(num * 665).toLocaleString();
-        boxes[1].textContent = '$' + Math.round(num * 575).toLocaleString();
-      }
+      else if (CFG.moduleId === 'derm_logic') { boxes[0].textContent = Math.max(20, 100 - num * 9) + '/100'; boxes[1].textContent = (0.4 + num * 0.35).toFixed(1) + ' pH'; }
+      else { boxes[0].textContent = '$' + Math.round(num * 665).toLocaleString(); boxes[1].textContent = '$' + Math.round(num * 575).toLocaleString(); }
     }
     if (sliderTimer) clearTimeout(sliderTimer);
     sliderTimer = setTimeout(function() {

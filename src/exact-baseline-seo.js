@@ -465,6 +465,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/tanstack-list-table', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 10,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'TanStack/table (★ 28,492) & javve/list.js (★ 11,207) — Interactive Table Filter, Sort & Quick-Calculate Bar (#eb-tanstack-table-bar) on / and /seo/:slug',
+        'ghosh/Micromodal (★ 3,659) & floating-ui/floating-ui (★ 31,400+) — Clickable Blurred Deliverable & Row Hotspots (.eb-blurred-deliverable) + Inline Popover Scorecard OTO'
+      ],
+      features: {
+        tanstack_table_filter_bar: true,
+        pseo_above_fold_curtain_placement: true,
+        pseo_table_and_pitch_gating: true,
+        clickable_blurred_deliverable_hotspot: true,
+        popover_inline_scorecard_oto: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

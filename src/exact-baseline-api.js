@@ -464,6 +464,7 @@ function createTelemetryStore(dataDir, moduleId) {
       const recentRows = winEventsList.slice(-5).reverse().map((e) => ({
         pst_ts: toPstString(e.created_at),
         event_type: e.event_type,
+        page_url: e.page_url || '/',
         device_type: e.device_type,
         utm_source: e.utm_source || 'direct'
       }));
