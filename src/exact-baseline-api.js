@@ -690,19 +690,19 @@ function attachExactBaselinePack(app, options = {}) {
     });
   });
 
-  // 4F. zenorocha/clipboard.js (★ 34,103) + floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812) Endowment Customizer & ROI Engine
+  // 4F. nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103) Spotlight & Endowment Engine
   const handleRoiAndEndowment = (req, res) => {
     const legacyCostUsd = verticalId === 'citation_forge' ? 299 : (verticalId === 'sponsor_radar' ? 2500 : (verticalId === 'derm_logic' ? 332 : 1800));
     const paybackMultiple = Math.round(legacyCostUsd / 1.99);
     res.json({
       ok: true, module_id: cfg.moduleId,
-      engine: 'zenorocha/clipboard.js (★ 34,103) + floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812)',
+      engine: 'nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103)',
       micro_pass_usd: 0.99, flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple,
+      driver_spotlight_enabled: true, one_tap_preset_chips: true, interactive_file_pill_modals: true,
       endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, sqlite_statement_cache_active: true
     });
   };
-  app.get('/api/github-upgrade/roi-payback', handleRoiAndEndowment);
-  app.get('/api/github-upgrade/endowment-customizer', handleRoiAndEndowment);
+  app.get(['/api/github-upgrade/roi-payback', '/api/github-upgrade/endowment-customizer', '/api/github-upgrade/driver-spotlight'], handleRoiAndEndowment);
 
   // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {
@@ -868,7 +868,7 @@ function attachExactBaselinePack(app, options = {}) {
           params.set('mode', 'payment');
           params.set('line_items[0][price_data][currency]', 'usd');
           params.set('line_items[0][price_data][unit_amount]', String(Math.round(priceUsd * 100)));
-          params.set('line_items[0][price_data][product_data][name]', `${cfg.brandName} — ${isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : cfg.coreLabel}`);
+          params.set('line_items[0][price_data][product_data][name]', `${cfg.brandName} — ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : cfg.coreLabel)}`);
           params.set('line_items[0][quantity]', '1');
         }
         const stRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {

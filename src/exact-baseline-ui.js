@@ -335,19 +335,16 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <span style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;letter-spacing:0.04em;">✦ Instant Deliverable Export</span>
     <button type="button" onclick="document.getElementById('eb-floating-gate-popover').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:15px;">✕</button>
   </div>
-  <div style="font-family:${t.fontDisplay};font-size:17px;font-weight:700;color:${t.textPrimary};margin-bottom:6px;">
+  <div id="eb-popover-title" style="font-family:${t.fontDisplay};font-size:17px;font-weight:700;color:${t.textPrimary};margin-bottom:6px;">
     Unblur &amp; Download ${esc(cfg.freeDeliverableName)}
   </div>
   <p id="eb-popover-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 12px 0;line-height:1.45;">
-    Get instant on-screen access and downloadable files with our <strong>$1.99 Single-Audit Pass</strong> (save ${savingsPct}% vs. the $${esc(cfg.corePriceUsd)} pack):
+    Choose a <strong>99¢ Single-File Pass</strong> or unlock all 3 files with our <strong>$1.99 Bundle Pass</strong> (save ${savingsPct}% vs. $${esc(cfg.corePriceUsd)}):
   </p>
-  <div style="display:grid;gap:8px;">
-    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:10px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:13px;">
-      Unlock Single-Audit Pass — $1.99 →
-    </button>
-    <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:600;font-size:12px;">
-      Or Get ${esc(cfg.coreLabel)}
-    </button>
+  <div style="display:grid;gap:6px;">
+    <button type="button" id="btn-popover-micro-pass" onclick="window.__ebCheckout('micro_pass')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:12px;">Download Single File — 99¢ →</button>
+    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:10px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:13px;">Unlock All 3 Files Bundle — $1.99 →</button>
+    <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:600;font-size:12px;">Or Get ${esc(cfg.coreLabel)}</button>
   </div>
 </div>
 
@@ -411,7 +408,7 @@ function buildClientRuntimeScript(cfg) {
     moduleId: cfg.moduleId, brandName: cfg.brandName, domain: cfg.domain, corePriceUsd: cfg.corePriceUsd,
     coreLabel: cfg.coreLabel, freeDeliverableName: cfg.freeDeliverableName || 'Production Deliverable',
     deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
-    deliverableFiles: cfg.deliverableFiles || [],
+    deliverableFiles: cfg.deliverableFiles || [], presets: (cfg.presets || []).slice(0, 3),
     searchPlaceholder: cfg.searchPlaceholder || 'Enter domain or brand...',
     sliderLabel: cfg.sliderLabel || 'Scale', theme: t, firstPartner, remDiff, pillMap, presetKpis: cfg.presetKpis || {}
   })};
@@ -457,8 +454,9 @@ function buildClientRuntimeScript(cfg) {
     }
   }, { passive: true });
 
-  window.__ebCompileCustomCurtain = function() {
+  window.__ebCompileCustomCurtain = function(presetKey) {
     var inp = document.getElementById('eb-curtain-entity-input');
+    if (presetKey && inp) inp.value = presetKey;
     var q = inp && inp.value.trim() ? inp.value.trim() : (window.__ebActiveEntity || 'custom-audit');
     window.__ebActiveEntity = q;
     var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
@@ -470,7 +468,7 @@ function buildClientRuntimeScript(cfg) {
         var pills = document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
           pills.innerHTML = CFG.deliverableFiles.map(function(f) {
-            return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
+            return '<span onclick="window.__ebOpenFloatingGate(this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
           }).join('');
         }
         var pre = document.getElementById('eb-prism-proof-preview');
@@ -478,7 +476,10 @@ function buildClientRuntimeScript(cfg) {
           pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Custom KPIs for ' + q + ': ' + ((data.kpis || []).join(' | ')) + '\\n' + (data.row1_insight || '');
         }
         var btn = document.getElementById('btn-curtain-flash-pass');
-        if (btn) btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
+        if (btn) {
+          btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
+          btn.style.boxShadow = '0 0 0 4px ' + CFG.theme.accentBorder;
+        }
       }).catch(function(){});
   };
 
@@ -526,7 +527,10 @@ function buildClientRuntimeScript(cfg) {
     }
 
     var filesHtml = (CFG.deliverableFiles || []).map(function(f) {
-      return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
+      return '<span onclick="window.__ebOpenFloatingGate(this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
+    }).join('');
+    var chipsHtml = (CFG.presets || []).map(function(p) {
+      return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
     }).join('');
 
     var savingsPct = Math.max(50, Math.round((1 - 1.99 / CFG.corePriceUsd) * 100));
@@ -537,8 +541,9 @@ function buildClientRuntimeScript(cfg) {
       + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span>'
       + '</div>'
       + '<div id="eb-curtain-customizer-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
-      + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:180px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
+      + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
+      + chipsHtml
       + '</div>'
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
@@ -551,6 +556,7 @@ function buildClientRuntimeScript(cfg) {
       + '</div></div>';
 
     if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
+    if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
     if (window.__ebIsUnlocked) window.__ebApplyUnblurState();
     var dermModal = document.getElementById('checkoutModal');
     if (dermModal && !document.getElementById('eb-modal-flash-pass-pill')) {
@@ -743,16 +749,12 @@ function buildClientRuntimeScript(cfg) {
   try {
     var paywallLogged = false;
     if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function(entries) {
+      var obs = window.__ebPaywallObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-          if (entry.isIntersecting && !paywallLogged) {
-            paywallLogged = true;
-            window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' });
-          }
+          if (entry.isIntersecting && !paywallLogged) { paywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
         });
       }, { threshold: 0.35 });
-      var unlockBar = document.getElementById('in-card-unlock-bar');
-      if (unlockBar) obs.observe(unlockBar);
+      ['in-card-unlock-bar', 'eb-deliverable-curtain'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
     }
   } catch (_) {}
 
