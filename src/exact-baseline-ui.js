@@ -412,6 +412,7 @@ function buildClientRuntimeScript(cfg) {
     coreLabel: cfg.coreLabel, freeDeliverableName: cfg.freeDeliverableName || 'Production Deliverable',
     deliverableName: cfg.deliverableName || 'Complete Pro Deliverable',
     deliverableFiles: cfg.deliverableFiles || [],
+    searchPlaceholder: cfg.searchPlaceholder || 'Enter domain or brand...',
     sliderLabel: cfg.sliderLabel || 'Scale', theme: t, firstPartner, remDiff, pillMap, presetKpis: cfg.presetKpis || {}
   })};
 
@@ -455,6 +456,31 @@ function buildClientRuntimeScript(cfg) {
       window.__ebLogEvent('calculate', { source: 'native_interactive_control' });
     }
   }, { passive: true });
+
+  window.__ebCompileCustomCurtain = function() {
+    var inp = document.getElementById('eb-curtain-entity-input');
+    var q = inp && inp.value.trim() ? inp.value.trim() : (window.__ebActiveEntity || 'custom-audit');
+    window.__ebActiveEntity = q;
+    var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
+    fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var hdr = document.getElementById('eb-curtain-title-span');
+        if (hdr) hdr.textContent = '✦ Custom Deliverable (' + q + ') — Verified Preview';
+        var pills = document.getElementById('eb-zod-manifest-pills');
+        if (pills && CFG.deliverableFiles) {
+          pills.innerHTML = CFG.deliverableFiles.map(function(f) {
+            return '<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
+          }).join('');
+        }
+        var pre = document.getElementById('eb-prism-proof-preview');
+        if (pre && data) {
+          pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Custom KPIs for ' + q + ': ' + ((data.kpis || []).join(' | ')) + '\\n' + (data.row1_insight || '');
+        }
+        var btn = document.getElementById('btn-curtain-flash-pass');
+        if (btn) btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
+      }).catch(function(){});
+  };
 
   window.__ebMountDeliverableCurtain = function(entityOverride) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
@@ -510,21 +536,21 @@ function buildClientRuntimeScript(cfg) {
       + '<span id="eb-curtain-title-span" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview</span>'
       + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span>'
       + '</div>'
+      + '<div id="eb-curtain-customizer-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
+      + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:180px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
+      + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
+      + '</div>'
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
-      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';">'
-      + '<strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/>'
-      + '<span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Apple Pay / Google Pay / Link ready</span>'
-      + '</div>'
-      + '<div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">'
-      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 16px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock Single-Audit Pass ($1.99) →</button>'
-      + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 13px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:12px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
+      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/><span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Apple Pay / Google Pay / Link ready</span></div>'
+      + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">'
+      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">Single-File Pass (99¢)</button>'
+      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 15px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock 3-File Bundle ($1.99) →</button>'
+      + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>';
 
-    if (mountAnchor.parentNode) {
-      mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
-    }
+    if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     if (window.__ebIsUnlocked) window.__ebApplyUnblurState();
     var dermModal = document.getElementById('checkoutModal');
     if (dermModal && !document.getElementById('eb-modal-flash-pass-pill')) {

@@ -690,17 +690,19 @@ function attachExactBaselinePack(app, options = {}) {
     });
   });
 
-  // 4F. floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812) pSEO Inline ROI & Payback Engine
-  app.get('/api/github-upgrade/roi-payback', (req, res) => {
+  // 4F. zenorocha/clipboard.js (★ 34,103) + floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812) Endowment Customizer & ROI Engine
+  const handleRoiAndEndowment = (req, res) => {
     const legacyCostUsd = verticalId === 'citation_forge' ? 299 : (verticalId === 'sponsor_radar' ? 2500 : (verticalId === 'derm_logic' ? 332 : 1800));
     const paybackMultiple = Math.round(legacyCostUsd / 1.99);
     res.json({
       ok: true, module_id: cfg.moduleId,
-      engine: 'floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812) Statement Cache',
-      flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple,
-      pseo_inline_curtain_enabled: true, sqlite_statement_cache_active: true
+      engine: 'zenorocha/clipboard.js (★ 34,103) + floating-ui/floating-ui (★ 32,754) + JoshuaWise/better-sqlite3 (★ 6,812)',
+      micro_pass_usd: 0.99, flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple,
+      endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, sqlite_statement_cache_active: true
     });
-  });
+  };
+  app.get('/api/github-upgrade/roi-payback', handleRoiAndEndowment);
+  app.get('/api/github-upgrade/endowment-customizer', handleRoiAndEndowment);
 
   // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {
@@ -711,11 +713,12 @@ function attachExactBaselinePack(app, options = {}) {
         llms_txt: `https://${cfg.domain}/llms.txt`, llms_bundle: `https://${cfg.domain}/api/github-upgrade/llms-bundle.txt`,
         fuse_search: `https://${cfg.domain}/api/github-upgrade/fuse-search?q=`, unlock_preview: `https://${cfg.domain}/api/github-upgrade/unlock-preview`,
         deliverable_manifest: `https://${cfg.domain}/api/github-upgrade/deliverable-manifest`, roi_payback: `https://${cfg.domain}/api/github-upgrade/roi-payback`,
+        endowment_customizer: `https://${cfg.domain}/api/github-upgrade/endowment-customizer`,
         rss_feed: `https://${cfg.domain}/feed.xml`, json_feed: `https://${cfg.domain}/feed.json`,
         csv_export: `https://${cfg.domain}/api/github-upgrade/export.csv`, sitemap: `https://${cfg.domain}/sitemap.xml`,
         github_upgrade_api: `https://${cfg.domain}/api/github-upgrade`, pst_telemetry: `https://${cfg.domain}/api/telemetry/pst-report`
       },
-      capabilities: ['ariely_zero_price_guard', 'gbb_decoy_anchoring', 'zod_deliverable_manifest', 'pseo_inline_curtain', 'sqlite_stmt_cache']
+      capabilities: ['ariely_zero_price_guard', 'gbb_decoy_anchoring', 'zod_deliverable_manifest', 'pseo_inline_curtain', 'endowment_customizer', 'sqlite_stmt_cache']
     });
   });
 
@@ -723,7 +726,7 @@ function attachExactBaselinePack(app, options = {}) {
     const target = String(req.query.target || cfg.presets[0].key);
     return res.json({
       ok: true, repo: cfg.githubRepo, target, deliverable_files: cfg.deliverableFiles || [],
-      behavioral_economics: { zero_price_cannibalization_removed: true, native_hero_first_above_fold: true, pseo_inline_curtain: true, paid_tiers_usd: [1.99, cfg.corePriceUsd, cfg.proPriceUsd] }
+      behavioral_economics: { zero_price_cannibalization_removed: true, native_hero_first_above_fold: true, pseo_inline_curtain: true, endowment_customizer: true, paid_tiers_usd: [0.99, 1.99, cfg.corePriceUsd, cfg.proPriceUsd] }
     });
   });
 
