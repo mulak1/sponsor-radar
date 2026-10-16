@@ -503,6 +503,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/ag-grid-row4-reciprocity', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 12,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'ag-grid/ag-grid (★ 12,800+) & SortableJS/Sortable (★ 29,500+) — Context-Aware Clicked Row Inspector in Floating Gate Popover (__ebOpenFloatingGate) + Zeigarnik Row #4 On-Screen Reciprocity Reveal',
+        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+) — Interactive Payback & ROI Scale Pills (__ebSetCurtainRoiScale) + Instant Browser Unblur Guarantee Badge'
+      ],
+      features: {
+        clicked_row_context_popover: true,
+        zeigarnik_row4_reciprocity_reveal: true,
+        curtain_roi_payback_pills: true,
+        instant_browser_unblur_guarantee: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

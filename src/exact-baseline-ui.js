@@ -329,24 +329,23 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 
 <!-- Floating Value-Gate Popover (Paid Choice Architecture — Zero $0 Cannibalization) -->
 <div id="eb-floating-gate-popover" role="dialog" aria-label="Instant Deliverable Export Pass">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;letter-spacing:0.04em;">✦ Instant Deliverable Export</span>
     <button type="button" onclick="document.getElementById('eb-floating-gate-popover').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:15px;">✕</button>
   </div>
-  <div id="eb-popover-title" style="font-family:${t.fontDisplay};font-size:17px;font-weight:700;color:${t.textPrimary};margin-bottom:6px;">
-    Unblur &amp; Download ${esc(cfg.freeDeliverableName)}
-  </div>
-  <p id="eb-popover-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 12px 0;line-height:1.45;">
-    Choose a <strong>99¢ Single-File Pass</strong> or unlock all 3 files with our <strong>$1.99 Bundle Pass</strong> (save ${savingsPct}% vs. $${esc(cfg.corePriceUsd)}):
-  </p>
+  <div id="eb-popover-title" style="font-family:${t.fontDisplay};font-size:16.5px;font-weight:700;color:${t.textPrimary};margin-bottom:4px;">Unblur &amp; Download ${esc(cfg.freeDeliverableName)}</div>
+  <p id="eb-popover-desc" style="font-size:11.5px;color:${t.textSecondary};margin:0 0 10px 0;line-height:1.4;">🔒 <strong>Instant Browser Unblur + Download</strong> • No account required • <strong>99¢ Single-File</strong> or <strong>$1.99 Full Bundle</strong> (save ${savingsPct}% vs. $${esc(cfg.corePriceUsd)}):</p>
   <div style="display:grid;gap:6px;">
-    <button type="button" id="btn-popover-micro-pass" onclick="window.__ebCheckout('micro_pass')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:12px;">Download Single File — 99¢ →</button>
-    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:10px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:13px;">Unlock All 3 Files Bundle — $1.99 →</button>
-    <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:600;font-size:12px;">Or Get ${esc(cfg.coreLabel)}</button>
+    <button type="button" id="btn-popover-micro-pass" onclick="window.__ebCheckout('micro_pass')" style="width:100%;padding:8px 12px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:12px;">⚡ Unblur + Download Single File — 99¢ →</button>
+    <button type="button" id="btn-popover-flash-pass" onclick="window.__ebCheckout('flash_pass')" style="width:100%;padding:10px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;border:none;font-weight:700;font-size:13px;">Unlock All Rows + 3-File Bundle — $1.99 →</button>
+    <button type="button" onclick="window.__ebCheckout('complete_dossier')" style="width:100%;padding:7px 12px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:600;font-size:11.5px;">Or Get ${esc(cfg.coreLabel)}</button>
   </div>
-  <form id="eb-popover-scorecard-form" onsubmit="return window.__ebSaveInlineScorecard(event, 'eb-popover-scorecard-email', 'eb-popover-scorecard-form')" style="margin-top:8px;padding-top:8px;border-top:1px dashed ${t.border};display:grid;grid-template-columns:1fr auto;gap:5px;">
-    <input type="email" id="eb-popover-scorecard-email" placeholder="Or email scorecard &amp; 99¢ pass link..." required style="padding:5px 8px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11px;" />
-    <button type="submit" style="padding:5px 9px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};border:1px solid ${t.border};font-weight:700;font-size:11px;">Send →</button>
+  <form id="eb-popover-scorecard-form" onsubmit="return window.__ebSaveInlineScorecard(event, 'eb-popover-scorecard-email', 'eb-popover-scorecard-form')" style="margin-top:8px;padding-top:8px;border-top:1px dashed ${t.border};">
+    <div style="font-size:10.5px;font-weight:600;color:${t.textSecondary};margin-bottom:4px;">🔓 Want to inspect 1 more row first? Reveal Row #4 on-screen + email 1-Page Checklist:</div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:5px;">
+      <input type="email" id="eb-popover-scorecard-email" placeholder="Enter email to reveal Row #4..." required style="padding:5px 8px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11px;" />
+      <button type="submit" style="padding:5px 9px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:11px;">Reveal Row #4 →</button>
+    </div>
   </form>
 </div>
 
@@ -356,10 +355,10 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <span id="eb-ouibounce-title" style="font-size:11px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">✦ Diagnostic Summary &amp; Instant Export</span>
     <button type="button" onclick="document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
   </div>
-  <p id="eb-ouibounce-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Email your custom diagnostic scorecard &amp; link, or download the production file now (<strong>99¢ Single-File</strong> / <strong>$1.99 Bundle</strong>):</p>
+  <p id="eb-ouibounce-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Reveal Row #4 on-screen + email your 1-Page Fix Checklist, or download the production file now (<strong>99¢ Single-File</strong> / <strong>$1.99 Bundle</strong>):</p>
   <form onsubmit="return window.__ebSendExitSummary(event)" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
-    <input type="email" id="eb-ouibounce-email" placeholder="Your email for diagnostic scorecard..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
-    <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.subtleBg};color:${t.textPrimary};font-size:11.5px;font-weight:700;border:1px solid ${t.border};">Email Link →</button>
+    <input type="email" id="eb-ouibounce-email" placeholder="Enter email to reveal Row #4 &amp; checklist..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
+    <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandPrimary};font-size:11.5px;font-weight:700;border:1px solid ${t.accentBorder};">Reveal Row #4 →</button>
   </form>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
     <button type="button" id="btn-toast-micro-pass" onclick="window.__ebCheckout('micro_pass')" style="padding:7px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-weight:700;font-size:11px;">Single File (99¢) →</button>
@@ -468,6 +467,14 @@ function buildClientRuntimeScript(cfg) {
     window.__ebLogEvent('view_paywall', { target: 'vaul_post_calc_spotlight' });
   };
 
+  window.__ebSetCurtainRoiScale = function(mult) {
+    var m = Number(mult) || 1;
+    var baseUsd = CFG.moduleId === 'citation_forge' ? 1420 : (CFG.moduleId === 'sponsor_radar' ? 4800 : (CFG.moduleId === 'derm_logic' ? 165 : 5600));
+    var badge = document.getElementById('eb-curtain-roi-badge');
+    if (badge) badge.textContent = 'Est. Value: $' + (baseUsd * m).toLocaleString() + ' (' + Math.round((baseUsd * m) / 0.99).toLocaleString() + 'x vs 99¢ Pass)';
+    window.__ebLogEvent('calculate', { source: 'curtain_roi_scale', multiplier: m });
+  };
+
   window.__ebCompileCustomCurtain = function(presetKey) {
     var inp = document.getElementById('eb-curtain-entity-input');
     if (presetKey && inp) inp.value = presetKey;
@@ -535,7 +542,7 @@ function buildClientRuntimeScript(cfg) {
         qBar.id = 'eb-pseo-quick-bar';
         qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
         qBar.innerHTML = '<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:190px;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span><input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run Custom ↵</button></div>'
-          + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">Download ' + firstFile + ' (99¢) →</button><button type="button" id="btn-pseo-quick-email" onclick="window.__ebOpenFloatingGate(this)" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">📩 Email Scorecard</button></div>';
+          + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">Download ' + firstFile + ' (99¢) →</button><button type="button" id="btn-pseo-quick-email" onclick="window.__ebOpenFloatingGate(this)" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">🔓 Reveal Row #4</button></div>';
         leadP.parentNode.insertBefore(qBar, leadP.nextSibling);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
@@ -573,7 +580,7 @@ function buildClientRuntimeScript(cfg) {
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
       + '<span id="eb-curtain-title-span" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview</span>'
-      + '<span style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div>'
+      + '<div style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span><button type="button" onclick="window.__ebSetCurtainRoiScale(1)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">1x</button><button type="button" onclick="window.__ebSetCurtainRoiScale(5)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">5x</button><button type="button" onclick="window.__ebSetCurtainRoiScale(10)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">10x ROI</button></div></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
       + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
@@ -581,17 +588,17 @@ function buildClientRuntimeScript(cfg) {
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
-      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/><span>One-time pass • No recurring subscription • Apple Pay / Google Pay / Link ready</span></div>'
+      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">🔒 Instant Browser Unblur &amp; Production File Download</strong><br/><span>1-Time Pass • No account or subscription • Apple Pay / Google Pay / Link</span></div>'
       + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">'
-      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">Download ' + firstFile + ' (99¢)</button>'
+      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">⚡ Download ' + firstFile + ' (99¢)</button>'
       + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 15px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock 3-File Bundle ($1.99) →</button>'
       + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>'
       + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
-      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">📩 Working on mobile or sharing with your team? Email this diagnostic scorecard &amp; custom link:</span>'
+      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want to inspect 1 more row first?</strong> Reveal Row #4 on-screen + email 1-Page Fix Checklist:</span>'
       + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
-      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work or personal email..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
-      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:700;font-size:11px;cursor:pointer;">Email Scorecard →</button></div></form>';
+      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Enter email to reveal Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
+      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">Reveal Row #4 + Send Checklist →</button></div></form>';
 
     if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -637,9 +644,9 @@ function buildClientRuntimeScript(cfg) {
     var prevBox = document.getElementById('eb-prism-proof-preview');
     if (prevBox) prevBox.textContent = '// [FILE PREVIEW: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Production lines 5–68 locked — Click "Download ' + f.file + ' (99¢)" below for instant export]';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
-    if (microBtn) microBtn.textContent = 'Download ' + f.file + ' (99¢)';
+    if (microBtn) microBtn.textContent = '⚡ Download ' + f.file + ' (99¢)';
     var popMicroBtn = document.getElementById('btn-popover-micro-pass');
-    if (popMicroBtn) popMicroBtn.textContent = 'Download ' + f.file + ' — 99¢ →';
+    if (popMicroBtn) popMicroBtn.textContent = '⚡ Unblur + Download ' + f.file + ' — 99¢ →';
     window.__ebLogEvent('tab_switch', { store_pill: 'file_' + f.file });
     window.__ebOpenFloatingGate(pillEl);
   };
@@ -649,10 +656,14 @@ function buildClientRuntimeScript(cfg) {
     var inp = document.getElementById(inputId || 'eb-inline-scorecard-email');
     var email = inp ? inp.value.trim() : '';
     if (!email) return false;
-    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'inline_scorecard_saver' }) })
+    var r4 = document.querySelector('tr.eb-blurred-deliverable');
+    if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
+    var prevBox = document.getElementById('eb-prism-proof-preview');
+    if (prevBox) prevBox.textContent += '\\n// ✓ [ROW #4 REVEALED FOR ' + email.replace(/</g, '') + '] — Remaining rows & 3 files ready below';
+    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'zeigarnik_row4_reveal' }) })
       .then(function() {
         var bar = document.getElementById(formId || 'eb-save-scorecard-bar');
-        if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Scorecard queued for ' + email.replace(/</g, '') + '!</span><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Download Full Production File Now (99¢) →</button>';
+        if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; Checklist Sent to ' + email.replace(/</g, '') + '!</span><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Unblur All Remaining Rows + File (99¢) →</button>';
       }).catch(function(){});
     return false;
   };
@@ -676,12 +687,21 @@ function buildClientRuntimeScript(cfg) {
   window.__ebOpenFloatingGate = function(anchorEl) {
     var pop = document.getElementById('eb-floating-gate-popover');
     if (!pop) return;
+    if (anchorEl) {
+      var trEl = anchorEl.tagName === 'TR' ? anchorEl : (anchorEl.closest ? anchorEl.closest('tr') : null);
+      var pTitle = document.getElementById('eb-popover-title');
+      if (trEl && pTitle) {
+        var firstCell = trEl.querySelector('td, th');
+        var cellTxt = firstCell ? (firstCell.textContent || '').trim().slice(0, 34) : '';
+        if (cellTxt) pTitle.textContent = 'Unblur "' + cellTxt + '" + Full Deliverable';
+      }
+    }
     pop.style.display = 'block';
     window.__ebLogEvent('view_paywall', { target: 'floating_ui_gate' });
     if (anchorEl && anchorEl.getBoundingClientRect) {
       var rect = anchorEl.getBoundingClientRect();
       var top = rect.bottom + 8, left = Math.max(12, Math.min(window.innerWidth - 362, rect.left));
-      if (top + 220 > window.innerHeight) top = Math.max(12, rect.top - 210);
+      if (top + 240 > window.innerHeight) top = Math.max(12, rect.top - 230);
       pop.style.top = top + 'px'; pop.style.left = left + 'px';
     } else {
       pop.style.top = '120px'; pop.style.left = Math.max(12, (window.innerWidth - 350) / 2) + 'px';
@@ -707,10 +727,12 @@ function buildClientRuntimeScript(cfg) {
     var input = document.getElementById('eb-ouibounce-email');
     var email = input ? input.value.trim() : '';
     if (!email) return false;
+    var r4 = document.querySelector('tr.eb-blurred-deliverable');
+    if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) })
       .then(function() {
         var btn = document.getElementById('btn-ouibounce-submit');
-        if (btn) btn.textContent = '✓ Sent!';
+        if (btn) btn.textContent = '✓ Row #4 Revealed!';
       }).catch(function() {});
     return false;
   };
