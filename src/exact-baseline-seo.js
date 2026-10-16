@@ -445,6 +445,26 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       canonical_host_enforced: hostUrl
     });
   });
+
+  app.get('/api/github-upgrade/react-email-oto', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 9,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'resend/react-email (★ 15,400+) & nodemailer/nodemailer (★ 16,600+) — Inline Diagnostic Scorecard & Permalink Saver + Post-Lead VIP 99¢ One-Time Offer (OTO)',
+        'PrismJS/prism (★ 12,300+) & floating-ui/floating-ui (★ 31,400+) — Interactive 3-File Tab Preview Switcher (__ebSelectManifestFile) & Dynamic Single-File 99¢ Pass',
+        'carlosedna/ouibounce (★ 5,400+) — Mobile Scroll-Depth + 12s Dwell Rescue Toast Trigger'
+      ],
+      features: {
+        inline_scorecard_saver: true,
+        post_lead_99c_oto: true,
+        interactive_file_tab_preview: true,
+        mobile_dwell_scroll_rescue: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

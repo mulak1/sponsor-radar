@@ -524,13 +524,13 @@ function buildClientRuntimeScript(cfg) {
       return;
     }
 
-    var filesHtml = (CFG.deliverableFiles || []).map(function(f) {
-      return '<span onclick="window.__ebOpenFloatingGate(this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
+    var filesHtml = (CFG.deliverableFiles || []).map(function(f, idx) {
+      return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + (idx === 0 ? CFG.theme.brandSoftBg : CFG.theme.subtleBg) + ';color:' + (idx === 0 ? CFG.theme.brandPrimary : CFG.theme.textPrimary) + ';border:1px solid ' + (idx === 0 ? CFG.theme.accentBorder : CFG.theme.border) + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
     }).join('');
     var chipsHtml = (CFG.presets || []).map(function(p) {
       return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
     }).join('');
-
+    var firstFile = (CFG.deliverableFiles && CFG.deliverableFiles[0]) ? CFG.deliverableFiles[0].file : 'Single-File';
     var savingsPct = Math.max(50, Math.round((1 - 1.99 / CFG.corePriceUsd) * 100));
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
@@ -546,12 +546,18 @@ function buildClientRuntimeScript(cfg) {
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
       + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
-      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/><span>One-time pass • Save ' + savingsPct + '% vs. $' + CFG.corePriceUsd + ' pack • Apple Pay / Google Pay / Link ready</span></div>'
+      + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">Unlock Full Production Deliverable &amp; Export Bundle</strong><br/><span>One-time pass • No recurring subscription • Apple Pay / Google Pay / Link ready</span></div>'
       + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">'
-      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">Single-File Pass (99¢)</button>'
+      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">Download ' + firstFile + ' (99¢)</button>'
       + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 15px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock 3-File Bundle ($1.99) →</button>'
       + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
-      + '</div></div>';
+      + '</div></div>'
+      + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
+      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">📩 Working on mobile or sharing with your team? Email this diagnostic scorecard &amp; custom link:</span>'
+      + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
+      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work or personal email..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
+      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:700;font-size:11px;cursor:pointer;">Email Scorecard →</button>'
+      + '</div></form>';
 
     if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -569,15 +575,40 @@ function buildClientRuntimeScript(cfg) {
     }
   };
 
+  window.__ebSelectManifestFile = function(idx, pillEl) {
+    var f = (CFG.deliverableFiles && CFG.deliverableFiles[idx]) || { file: 'deliverable.txt', size: '4.2 KB', desc: 'Verified export' };
+    var prevBox = document.getElementById('eb-prism-proof-preview');
+    if (prevBox) {
+      prevBox.textContent = '// [FILE PREVIEW: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Production lines 5–68 locked — Click "Download ' + f.file + ' (99¢)" below for instant export]';
+    }
+    var microBtn = document.getElementById('btn-curtain-micro-pass');
+    if (microBtn) microBtn.textContent = 'Download ' + f.file + ' (99¢)';
+    var popMicroBtn = document.getElementById('btn-popover-micro-pass');
+    if (popMicroBtn) popMicroBtn.textContent = 'Download ' + f.file + ' — 99¢ →';
+    window.__ebLogEvent('tab_switch', { store_pill: 'file_' + f.file });
+    window.__ebOpenFloatingGate(pillEl);
+  };
+
+  window.__ebSaveInlineScorecard = function(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var inp = document.getElementById('eb-inline-scorecard-email');
+    var email = inp ? inp.value.trim() : '';
+    if (!email) return false;
+    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'inline_scorecard_saver' }) })
+      .then(function() {
+        var bar = document.getElementById('eb-save-scorecard-bar');
+        if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Scorecard queued for ' + email.replace(/</g, '') + '!</span><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Download Full Production File Now (99¢) →</button>';
+      }).catch(function(){});
+    return false;
+  };
+
   window.__ebApplyUnblurState = function() {
     window.__ebIsUnlocked = true;
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
     var blurred = document.querySelectorAll('.eb-blurred-deliverable');
     for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
     var dmEmail = document.getElementById('res-dm-email');
-    if (dmEmail && dmEmail.getAttribute('data-raw-email')) {
-      dmEmail.textContent = dmEmail.getAttribute('data-raw-email');
-    }
+    if (dmEmail && dmEmail.getAttribute('data-raw-email')) dmEmail.textContent = dmEmail.getAttribute('data-raw-email');
     var curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) {
       curtain.style.background = CFG.theme.safeSoftBg;
@@ -630,18 +661,12 @@ function buildClientRuntimeScript(cfg) {
     var input = document.getElementById('eb-ouibounce-email');
     var email = input ? input.value.trim() : '';
     if (!email) return false;
-    fetch('/api/leads/capture', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' })
-    }).then(function() {
-      var btn = document.getElementById('btn-ouibounce-submit');
-      if (btn) btn.textContent = '✓ Sent!';
-      setTimeout(function() {
-        var toast = document.getElementById('eb-ouibounce-toast');
-        if (toast) toast.style.display = 'none';
-      }, 900);
-    }).catch(function() {});
+    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) })
+      .then(function() {
+        var btn = document.getElementById('btn-ouibounce-submit');
+        if (btn) btn.textContent = '✓ Sent!';
+        setTimeout(function() { var toast = document.getElementById('eb-ouibounce-toast'); if (toast) toast.style.display = 'none'; }, 900);
+      }).catch(function() {});
     return false;
   };
 
@@ -756,7 +781,7 @@ function buildClientRuntimeScript(cfg) {
     }
   } catch (_) {}
 
-  var ouibounceShown = false;
+  var ouibounceShown = false, maxScrollY = 0, pageEnteredAt = Date.now();
   function showRescueToast(reason) {
     if (ouibounceShown || window.__ebIsUnlocked) return;
     ouibounceShown = true;
@@ -764,15 +789,12 @@ function buildClientRuntimeScript(cfg) {
     if (toast) toast.style.display = 'block';
     window.__ebLogEvent('view_paywall', { target: 'sonner_rescue_' + reason });
   }
-  document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 12) showRescueToast('desktop_exit');
-  }, { passive: true });
-
-  var maxScrollY = 0;
+  document.addEventListener('mouseleave', function(e) { if (e.clientY <= 12) showRescueToast('desktop_exit'); }, { passive: true });
   window.addEventListener('scroll', function() {
     var y = window.scrollY || 0;
     if (y > maxScrollY) maxScrollY = y;
     else if (maxScrollY > 360 && (maxScrollY - y) > 95) showRescueToast('mobile_scroll_up');
+    if (y > 280 && (Date.now() - pageEnteredAt) > 12000) showRescueToast('mobile_dwell_scroll');
   }, { passive: true });
 
   window.__ebToggleCmdk = function() {
@@ -782,53 +804,30 @@ function buildClientRuntimeScript(cfg) {
     window.__ebLogEvent('tab_switch', { store_pill: 'cmdk_palette' });
   };
   document.addEventListener('keydown', function(e) {
-    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
-      e.preventDefault();
-      window.__ebToggleCmdk();
-    } else if (e.key === 'Escape') {
-      var m = document.getElementById('eb-cmdk-modal');
-      if (m) m.style.display = 'none';
-      var pop = document.getElementById('eb-floating-gate-popover');
-      if (pop) pop.style.display = 'none';
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); window.__ebToggleCmdk(); }
+    else if (e.key === 'Escape') {
+      ['eb-cmdk-modal', 'eb-floating-gate-popover'].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
     }
   });
 
   window.__ebSelectStorePill = function(key) {
     var pills = document.querySelectorAll('.store-preview-pill[data-store]');
     for (var i = 0; i < pills.length; i++) pills[i].classList.toggle('active', pills[i].getAttribute('data-store') === key);
-    var drawer = document.getElementById('inline-aisle-peek-drawer');
-    var rowTxt = document.getElementById('eb-peek-row-text');
-    if (rowTxt) rowTxt.textContent = CFG.pillMap[key] || '';
-    else if (drawer) drawer.textContent = CFG.pillMap[key] || '';
+    var drawer = document.getElementById('inline-aisle-peek-drawer'), rowTxt = document.getElementById('eb-peek-row-text');
+    if (rowTxt) rowTxt.textContent = CFG.pillMap[key] || ''; else if (drawer) drawer.textContent = CFG.pillMap[key] || '';
     if (drawer) drawer.style.display = 'block';
     window.__ebLogEvent('tab_switch', { store_pill: key });
   };
-
-  window.__ebTogglePeekDrawer = function() {
-    var drawer = document.getElementById('inline-aisle-peek-drawer');
-    if (!drawer) return;
-    drawer.style.display = drawer.style.display === 'none' ? 'block' : 'none';
-  };
-
-  window.__ebShowTripwire = function() {
-    var box = document.getElementById('tripwire-upsell-box');
-    if (box) box.style.display = 'flex';
-  };
-
+  window.__ebTogglePeekDrawer = function() { var d = document.getElementById('inline-aisle-peek-drawer'); if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none'; };
+  window.__ebShowTripwire = function() { var b = document.getElementById('tripwire-upsell-box'); if (b) b.style.display = 'flex'; };
   window.__ebCopySummary = function() {
-    var text = CFG.brandName + ' Executive Summary (' + window.location.href + ')';
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function(){});
-    var btn = document.getElementById('btn-copy-shopping-list');
-    if (btn) btn.textContent = '✓ Copied!';
-    window.__ebShowTripwire();
-    window.__ebLogEvent('copy_summary');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(CFG.brandName + ' Executive Summary (' + window.location.href + ')').catch(function(){});
+    var btn = document.getElementById('btn-copy-shopping-list'); if (btn) btn.textContent = '✓ Copied!';
+    window.__ebShowTripwire(); window.__ebLogEvent('copy_summary');
   };
-
   window.__ebCopyReddit = function() {
-    var md = '**' + CFG.brandName + ' Benchmark** — ' + window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(md).catch(function(){});
-    var btn = document.getElementById('btn-reddit-share');
-    if (btn) btn.textContent = '✓ Copied MD!';
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('**' + CFG.brandName + ' Benchmark** — ' + window.location.href).catch(function(){});
+    var btn = document.getElementById('btn-reddit-share'); if (btn) btn.textContent = '✓ Copied MD!';
     window.__ebShowTripwire();
   };
 
