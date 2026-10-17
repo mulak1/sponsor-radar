@@ -49,16 +49,17 @@ function buildExactBaselineStyles(cfg) {
   .eb-doppelrand-img { width: 100%; height: 178px; object-fit: cover; object-position: center 44%; display: block; transition: transform 750ms cubic-bezier(0.32, 0.72, 0, 1); }
   .eb-doppelrand-shell:hover .eb-doppelrand-img { transform: scale(1.03); }
   .eb-doppelrand-caption, .eb-doppelrand-caption * { font-family: ${t.fontSans} !important; line-height: 1.25 !important; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; }
-  .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 10.5px !important; color: ${t.textSecondary} !important; max-height: 40px; overflow: hidden; }
-  #eb-hero-sparkline-pill { position: absolute; top: 8px; right: 8px; z-index: 6; padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border: 1px solid ${t.accentBorder}; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: ${t.fontSans} !important; text-transform: none !important; letter-spacing: normal !important; }
-  #eb-dossier-format-pill { position: absolute; top: 6px; left: 6px; z-index: 6; padding: 2px 7px; border-radius: 999px; background: rgba(15, 23, 42, 0.80); backdrop-filter: blur(8px); color: #FFFFFF !important; font-family: "JetBrains Mono", monospace !important; font-size: 9.5px !important; font-weight: 700 !important; letter-spacing: 0.01em !important; text-transform: none !important; transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 10.5px !important; color: ${t.textSecondary} !important; max-height: 36px; overflow: hidden; white-space: nowrap; }
+  #eb-hero-sparkline-pill { position: absolute; top: 8px; right: 8px; z-index: 6; padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border: 1px solid ${t.accentBorder}; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: ${t.fontSans} !important; text-transform: none !important; letter-spacing: normal !important; white-space: nowrap; }
+  #eb-dossier-format-pill { position: absolute; top: 6px; left: 6px; z-index: 6; padding: 2px 7px; border-radius: 999px; background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(8px); color: #FFFFFF !important; font-family: "JetBrains Mono", monospace !important; font-size: 9.5px !important; font-weight: 700 !important; letter-spacing: 0.01em !important; text-transform: none !important; white-space: nowrap !important; max-width: calc(100% - 12px); overflow: hidden; text-overflow: ellipsis; transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1); }
   tr[data-eb-live-row] { cursor: pointer; transition: background-color 150ms ease; }
   tr[data-eb-live-row]:hover { background-color: ${t.brandSoftBg} !important; }
-  #eb-curtain-visual-split { display: grid; grid-template-columns: 185px minmax(0, 1fr); gap: 10px; align-items: stretch; margin-bottom: 10px; }
+  #eb-pseo-hero-split { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: stretch; margin: 12px 0 18px 0; } #eb-pseo-hero-split #eb-doppelrand-hero-card, #eb-curtain-visual-split #eb-curtain-dossier-card { display: flex; flex-direction: column; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-inner, #eb-curtain-visual-split .eb-doppelrand-inner { flex: 1; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-img { height: 100% !important; min-height: 190px; max-height: 310px; object-fit: cover; } #eb-curtain-visual-split .eb-doppelrand-img { height: 100% !important; min-height: 132px; max-height: 185px; object-fit: cover; }
+  #eb-curtain-visual-split { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: stretch; margin-bottom: 10px; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 350px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
   #eb-bottom-conversion-suite { max-width: 1280px; margin: 40px auto 88px auto; padding: 0 24px; font-family: ${t.fontSans}; text-transform: none !important; }
   .eb-panel-card { background: ${t.cardBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: ${t.radiusCard}; padding: 22px 24px; margin-bottom: 20px; box-shadow: ${t.shadow}; }
-  .eb-gbb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  .eb-gbb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; align-items: stretch; }
   .eb-tier-card { background: ${t.canvasBg}; border: 1px solid ${t.border}; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; color: ${t.textPrimary}; }
   .eb-tier-card.featured { border: 2px solid ${t.brandPrimary}; background: ${t.brandSoftBg}; position: relative; }
   #eb-executive-strip { margin-bottom: 20px; }
@@ -93,8 +94,8 @@ function buildExactBaselineStyles(cfg) {
   @media (max-width: 768px) {
     #eb-bottom-conversion-suite { padding: 0 14px; margin: 28px auto 82px auto; }
     .eb-panel-card { padding: 16px; }
-    .eb-gbb-grid, #eb-curtain-visual-split, #eb-interactive-control-row { grid-template-columns: 1fr; }
-    .eb-doppelrand-img { height: 132px; }
+    .eb-gbb-grid, #eb-pseo-hero-split, #eb-curtain-visual-split, #eb-interactive-control-row { grid-template-columns: 1fr; }
+    .eb-doppelrand-img { height: 136px; }
     #free-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #preset-chips { gap: 4px; }
     #preset-chips .preset-chip { font-size: 11px; padding: 5px 3px; }
@@ -181,8 +182,8 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <div class="eb-gbb-grid">
       <div class="eb-tier-card featured">
         <div>
-          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Deliverable Dossier" class="eb-doppelrand-img" style="height:88px;" loading="lazy" /></div></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.brandPrimary};">${esc(cfg.tier1Tag || `SINGLE-AUDIT PASS • SAVE ${savingsPct}% VS $${cfg.corePriceUsd}`)}</div>
+          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Deliverable Dossier" class="eb-doppelrand-img" style="height:84px;object-position:center 35%;" loading="lazy" /></div></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.brandPrimary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier1Tag || `SINGLE-AUDIT PASS • SAVE ${savingsPct}% VS $${cfg.corePriceUsd}`)}</div>
           <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$1.99 <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">one-time • no subscription</span></div>
           <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier1Desc || `Instantly unblurs ${cfg.deliverableName}, downloadable exports, and 24-hour recalculations.`)}</p>
         </div>
@@ -190,16 +191,18 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
       </div>
       <div class="eb-tier-card">
         <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.textSecondary};">${esc(cfg.tier2Tag || 'COMPLETE PACK')}</div>
-          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.corePriceUsd)}</div>
+          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-hero.jpg" alt="${esc(cfg.brandName)} Complete Pack" class="eb-doppelrand-img" style="height:84px;object-position:center 50%;" loading="lazy" /></div></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.textSecondary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier2Tag || 'COMPLETE PACK')}</div>
+          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.corePriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">complete pack</span></div>
           <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier2Desc || cfg.coreLabel)}</p>
         </div>
         <button type="button" id="btn-prog-full-dossier" class="cta-btn" style="width:100%;padding:11px 14px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};font-weight:700;font-size:13.5px;border:1px solid ${t.border};" onclick="window.__ebCheckout('complete_dossier')">${esc(cfg.coreLabel)}</button>
       </div>
       <div class="eb-tier-card">
         <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.safeColor};">${esc(cfg.tier3Tag || 'PRO / UNLIMITED TIER')}</div>
-          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.proPriceUsd)}</div>
+          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Pro Tier" class="eb-doppelrand-img" style="height:84px;object-position:center 68%;" loading="lazy" /></div></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.safeColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier3Tag || 'PRO / UNLIMITED TIER')}</div>
+          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.proPriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">unlimited pro</span></div>
           <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier3Desc || cfg.proLabel)}</p>
         </div>
         <button type="button" id="btn-prog-pro-b2b" class="cta-btn" style="width:100%;padding:11px 14px;border-radius:${t.radiusPill};background:${t.textPrimary};color:#FFFFFF;font-weight:700;font-size:13.5px;border:none;" onclick="window.__ebCheckout('pro_b2b')">${esc(cfg.proLabel)}</button>
@@ -514,21 +517,47 @@ function buildClientRuntimeScript(cfg) {
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
     var h1Node = document.querySelector('main h1, article h1, h1');
     if (h1Node && !window.__ebActiveEntity && isPseoOrDir) window.__ebActiveEntity = (h1Node.textContent || '').trim().slice(0, 48);
-    var dListHtml = '<datalist id="eb-entity-datalist">' + (CFG.presets || []).map(function(p) { return '<option value="' + p.key + '">' + p.label + '</option>'; }).join('') + '</datalist>';
-    if (!window.__ebIsUnlocked) {
-      if (isPseoOrDir) Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
-      if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
-        var qChips = (CFG.presets || []).slice(0, 2).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
-        var qBar = document.createElement('div');
-        qBar.id = 'eb-pseo-quick-bar';
-        qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        qBar.innerHTML = dListHtml + '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;"></span></div>'
-          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + ' →</button></form>';
-        h1Node.parentNode.insertBefore(qBar, h1Node.nextSibling);
-        if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
+    if (!document.getElementById('eb-entity-datalist')) document.body.insertAdjacentHTML('beforeend', '<datalist id="eb-entity-datalist">' + (CFG.presets || []).map(function(p) { return '<option value="' + p.key + '">' + p.label + '</option>'; }).join('') + '</datalist>');
+    var sparkPillHtml = '<div id="eb-hero-sparkline-pill" onclick="window.__ebCycleHeroScenario(event)" title="Tap to simulate live scenario"><span style="width:6px;height:6px;border-radius:50%;background:' + CFG.theme.safeColor + ';box-shadow:0 0 0 3px ' + CFG.theme.safeSoftBg + ';"></span><svg width="42" height="14" viewBox="0 0 42 14" fill="none" style="overflow:visible;"><path id="eb-sparkline-path" d="M1 11 C 9 10, 14 4, 22 6 C 29 8, 34 2, 41 2" stroke="' + CFG.theme.brandPrimary + '" stroke-width="1.8" stroke-linecap="round"/><circle cx="41" cy="2" r="2.2" fill="' + CFG.theme.safeColor + '"/></svg><span id="eb-hero-sparkline-label" class="eb-tabular" style="font-size:10px !important;font-weight:700 !important;color:#0F172A;white-space:nowrap;">⚡ Tap to Sim</span></div>';
+    var buildHeroCardEl = function(imgH, marginCss) {
+      var hc = document.createElement('div'); hc.id = 'eb-doppelrand-hero-card'; hc.className = 'eb-doppelrand-shell'; hc.style.cssText = (marginCss || 'margin:0;') + 'cursor:pointer;';
+      hc.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
+      hc.innerHTML = '<div class="eb-doppelrand-inner">' + sparkPillHtml + '<img src="/public/editorial-hero.jpg" alt="' + CFG.brandName + ' — ' + PERSONA.heroTitle + '" class="eb-doppelrand-img" style="height:' + (imgH || 168) + 'px;" loading="eager" fetchpriority="high" decoding="async" /><div class="eb-doppelrand-caption"><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong style="font-size:11px !important;color:#0F172A;font-weight:700 !important;">' + PERSONA.heroTitle + '</strong> <span style="font-size:10.5px !important;color:#475569;">• ' + PERSONA.heroSub + '</span></div><span style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700 !important;font-size:10px !important;white-space:nowrap;flex-shrink:0;">' + PERSONA.heroBadge + '</span></div></div>';
+      return hc;
+    };
+    if (isPseoOrDir) {
+      if (!window.__ebIsUnlocked) Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
+      if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-hero-split')) {
+        var splitWrap = document.createElement('div'); splitWrap.id = 'eb-pseo-hero-split';
+        var leftCol = document.createElement('div'); leftCol.id = 'eb-pseo-hero-left'; leftCol.style.cssText = 'display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-width:0;';
+        var leadP = document.querySelector('.pseo-lead') || (h1Node.nextElementSibling && h1Node.nextElementSibling.tagName === 'P' ? h1Node.nextElementSibling : null);
+        h1Node.parentNode.insertBefore(splitWrap, h1Node.nextSibling);
+        if (leadP) { leadP.style.margin = '0'; leftCol.appendChild(leadP); }
+        if (!window.__ebIsUnlocked && !document.getElementById('eb-pseo-quick-bar')) {
+          var qChips = (CFG.presets || []).slice(0, 2).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
+          var qBar = document.createElement('div'); qBar.id = 'eb-pseo-quick-bar';
+          qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:9px 11px;margin:0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+          qBar.innerHTML = '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:115px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;"></span></div>'
+            + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + ' →</button></form>';
+          leftCol.appendChild(qBar); if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
+        }
+        splitWrap.appendChild(leftCol); splitWrap.appendChild(buildHeroCardEl(168, 'margin:0;'));
+      }
+    } else {
+      var nativePhotoShell = document.querySelector('.editorial-photo-shell');
+      if (nativePhotoShell && !document.getElementById('eb-hero-sparkline-pill')) {
+        nativePhotoShell.style.position = 'relative'; nativePhotoShell.style.cursor = 'pointer';
+        nativePhotoShell.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
+        nativePhotoShell.insertAdjacentHTML('beforeend', sparkPillHtml);
+      } else if (!nativePhotoShell && !document.getElementById('eb-doppelrand-hero-card')) {
+        var presetRowCf = document.querySelector('.hero-grid .preset-strip, .hero-grid .preset-row'), teHeaderAa = document.querySelector('.telemetry-card .card-header-bar'), subheadSr = document.querySelector('.hero-grid p.subhead'), fallbackLead = document.querySelector('.hero-sub, .subhead, .hero-lead, main h1 ~ p');
+        if (presetRowCf && presetRowCf.parentNode) presetRowCf.parentNode.insertBefore(buildHeroCardEl(126, 'margin:14px 0 0 0;'), presetRowCf.nextSibling);
+        else if (teHeaderAa && teHeaderAa.parentNode) teHeaderAa.parentNode.insertBefore(buildHeroCardEl(132, 'margin:0 0 12px 0;'), teHeaderAa.nextSibling);
+        else if (subheadSr && subheadSr.parentNode) subheadSr.parentNode.insertBefore(buildHeroCardEl(148, 'margin:12px 0 14px 0;'), subheadSr.nextSibling);
+        else if (fallbackLead && fallbackLead.parentNode) fallbackLead.parentNode.insertBefore(buildHeroCardEl(148, 'margin:12px 0 14px 0;'), fallbackLead.nextSibling);
       }
     }
-    var scoreAnchor = document.querySelector('#liveResultsContainer .score-strip, .telemetry-card .metric-duo, #results-panel .kpi-grid');
+    var scoreAnchor = document.querySelector('#liveResultsContainer .score-strip, .telemetry-card .metric-duo, #results-panel .kpi-grid, .panel-elevated .telemetry-grid');
     if ((scoreAnchor || targetEl) && !window.__ebIsUnlocked) {
       if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
       if (!document.getElementById('eb-postcalc-inline-cta')) {
@@ -543,29 +572,10 @@ function buildClientRuntimeScript(cfg) {
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
       }
     }
-    var sparkPillHtml = '<div id="eb-hero-sparkline-pill" onclick="window.__ebCycleHeroScenario(event)" title="Tap to simulate live scenario"><span style="width:6px;height:6px;border-radius:50%;background:' + CFG.theme.safeColor + ';box-shadow:0 0 0 3px ' + CFG.theme.safeSoftBg + ';"></span><svg width="42" height="14" viewBox="0 0 42 14" fill="none" style="overflow:visible;"><path id="eb-sparkline-path" d="M1 11 C 9 10, 14 4, 22 6 C 29 8, 34 2, 41 2" stroke="' + CFG.theme.brandPrimary + '" stroke-width="1.8" stroke-linecap="round"/><circle cx="41" cy="2" r="2.2" fill="' + CFG.theme.safeColor + '"/></svg><span id="eb-hero-sparkline-label" class="eb-tabular" style="font-size:10px !important;font-weight:700 !important;color:#0F172A;white-space:nowrap;">⚡ Tap to Sim</span></div>';
-    var nativePhotoShell = document.querySelector('.editorial-photo-shell');
-    if (nativePhotoShell && !document.getElementById('eb-hero-sparkline-pill')) {
-      nativePhotoShell.style.position = 'relative';
-      nativePhotoShell.style.cursor = 'pointer';
-      nativePhotoShell.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
-      nativePhotoShell.insertAdjacentHTML('beforeend', sparkPillHtml);
-    }
-    var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
-    if (leadAnchor && leadAnchor.parentNode && !nativePhotoShell && !document.getElementById('eb-doppelrand-hero-card')) {
-      var heroCard = document.createElement('div');
-      heroCard.id = 'eb-doppelrand-hero-card';
-      heroCard.className = 'eb-doppelrand-shell';
-      heroCard.style.cssText = 'margin:10px 0 14px 0;cursor:pointer;';
-      heroCard.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
-      heroCard.innerHTML = '<div class="eb-doppelrand-inner">' + sparkPillHtml + '<img src="/public/editorial-hero.jpg" alt="' + CFG.brandName + ' — ' + PERSONA.heroTitle + '" class="eb-doppelrand-img" style="height:178px;" loading="eager" fetchpriority="high" decoding="async" /><div class="eb-doppelrand-caption"><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong style="font-size:11px !important;color:#0F172A;font-weight:700 !important;">' + PERSONA.heroTitle + '</strong> <span style="font-size:10.5px !important;color:#475569;">• ' + PERSONA.heroSub + '</span></div><span style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700 !important;font-size:10px !important;white-space:nowrap;flex-shrink:0;">' + PERSONA.heroBadge + '</span></div></div>';
-      var qBarEl = document.getElementById('eb-pseo-quick-bar');
-      var heroInsertAfter = (qBarEl && qBarEl.parentNode === leadAnchor.parentNode) ? qBarEl : leadAnchor;
-      heroInsertAfter.parentNode.insertBefore(heroCard, heroInsertAfter.nextSibling);
-    }
     var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
-    var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
-    var mountAnchor = isPseoOrDir ? (document.getElementById('eb-doppelrand-hero-card') || leadAnchor || tBarAnchor || seoTargetEl || targetEl) : (tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card') || leadAnchor);
+    var homeFullGrid = !isPseoOrDir ? document.querySelector('main .bento-grid, main .hero-split, main .hero-grid') : null;
+    var seoTargetEl = isPseoOrDir ? (document.getElementById('eb-pseo-hero-split') || document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || tBarAnchor || targetEl) : null;
+    var mountAnchor = isPseoOrDir ? seoTargetEl : (homeFullGrid || tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card'));
     if (!mountAnchor) return;
     var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
@@ -591,7 +601,7 @@ function buildClientRuntimeScript(cfg) {
       return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="padding:2px 7px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:600;cursor:pointer;">' + d + '</button>';
     }).join('');
     var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' };
-    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' • ' + fInit.size + '</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:112px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;">99¢ →</span></div></div></div><pre id="eb-prism-proof-preview" style="margin:0;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre></div>';
+    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' • ' + fInit.size + '</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:132px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:4px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;flex-shrink:0;">99¢ →</span></div></div></div><pre id="eb-prism-proof-preview" style="margin:0;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'

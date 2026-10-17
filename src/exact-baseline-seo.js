@@ -681,6 +681,26 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/whole-page-visual-symmetry', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 20,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+) — Balanced 2-Column Hero & Bento Spatial Architecture, Zero H1-to-Subhead Interruptions, and 1:1:1 Horizontal Baseline Symmetry across all 3 Pricing Tier Cards (.eb-tier-card)',
+        'high-end-visual-design (soft-skill) & emil-design-eng — Symmetrical 2-Column pSEO Hero Split (#eb-pseo-hero-split: 1.35fr 1fr), Full-Width Deliverable Curtain Placement, and Uncluttered 230px Dossier Studio Preview (#eb-curtain-dossier-card)'
+      ],
+      features: {
+        uninterrupted_h1_to_subtitle_hierarchy: true,
+        balanced_two_column_hero_heights: true,
+        full_width_deliverable_curtain: true,
+        pseo_two_column_hero_split: true,
+        uniform_three_tier_pricing_headers: true,
+        uncluttered_230px_dossier_preview: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
