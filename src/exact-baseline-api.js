@@ -397,24 +397,41 @@ const VERTICAL_CONFIGS = {
   }
 };
 
+const OWNER_EXCLUDED_IPS = ['99.112.70.144', '99.112.70.', '2600:1702:75f1:4c10', '127.0.0.1', '::1', 'localhost', ...(process.env.EXCLUDED_TEST_IPS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)];
+
+function extractClientIps(req) {
+  const rawList = [req.headers?.['cf-connecting-ip'], req.headers?.['true-client-ip'], req.headers?.['x-real-ip'], ...String(req.headers?.['x-forwarded-for'] || '').split(','), req.ip, req.socket?.remoteAddress];
+  return rawList.map((ip) => String(ip || '').trim().toLowerCase().replace(/^::ffff:/, '')).filter(Boolean);
+}
+
+function isExcludedOwnerIp(ipStr) {
+  const clean = String(ipStr || '').trim().toLowerCase().replace(/^::ffff:/, '');
+  if (!clean) return false;
+  return OWNER_EXCLUDED_IPS.some((p) => clean === p || clean.startsWith(p));
+}
+
 function classifyTrafficRequest(req, extraEmail = '') {
   const ua = String(req.headers['user-agent'] || '').toLowerCase();
+  const ips = extractClientIps(req);
+  const clientIp = ips[0] || '';
+  const isOwnerCookie = String(req.headers.cookie || '').includes('eb_owner_test=1');
+  const isOwnerIp = isOwnerCookie || ips.some(isExcludedOwnerIp) || Boolean(req.query && req.query.owner === '1');
   const isPlaywrightHeader = Boolean(req.headers['x-playwright-test'] || req.headers['x-test-mode']);
   const isQueryTest = req.query && (req.query.test === '1' || req.query.is_test === '1');
   const emailLower = String(extraEmail || '').toLowerCase();
   const isSearchOrAiCrawler = CRAWLER_UA_REGEX.test(ua);
 
   if (
-    isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua ||
+    isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua ||
     ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') ||
     ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') ||
     ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') ||
     ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') ||
     emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')
   ) {
-    return { isTest: 1, isCrawler: isSearchOrAiCrawler ? 1 : 0 };
+    return { isTest: 1, isCrawler: isSearchOrAiCrawler ? 1 : 0, isOwnerIp: isOwnerIp ? 1 : 0, clientIp };
   }
-  return { isTest: 0, isCrawler: 0 };
+  return { isTest: 0, isCrawler: 0, isOwnerIp: 0, clientIp };
 }
 
 function createTelemetryStore(dataDir, moduleId) {
@@ -427,72 +444,68 @@ function createTelemetryStore(dataDir, moduleId) {
   function save() {
     try { fs.writeFileSync(ledgerPath, JSON.stringify(state)); } catch (_) {}
   }
+  let sanitized = false;
+  for (const e of state.events) {
+    if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (e.created_at >= '2026-10-17T09:18:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
+      e.is_test = 1; e.is_owner = 1; sanitized = true;
+    }
+  }
+  for (const l of state.leads) { if (Number(l.is_test) === 0 && (isExcludedOwnerIp(l.client_ip) || l.is_owner)) { l.is_test = 1; l.is_owner = 1; sanitized = true; } }
+  for (const o of state.orders) { if (Number(o.is_test) === 0 && (isExcludedOwnerIp(o.client_ip) || o.is_owner)) { o.is_test = 1; o.is_owner = 1; sanitized = true; } }
+  if (sanitized) save();
+
   return {
-    recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, meta = {} }) {
+    recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, isOwnerIp = 0, clientIp = '', meta = {} }) {
       const nowIso = new Date().toISOString();
+      const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
-      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: utmSource, utm_campaign: utmCampaign, is_test: isTest ? 1 : 0, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
+      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: utmSource, utm_campaign: utmCampaign, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
       if (state.events.length > 5000) state.events = state.events.slice(-4000);
       if (eventType === 'visit') state.impressions += 1;
       if (eventType === 'calculate') state.calculations += 1;
       if (eventType === 'checkout_intent') state.checkout_intents += 1;
       save();
     },
-    recordLead({ email, summaryText = '', utmSource = '', isTest = 0 }) {
-      state.leads.push({ id: state.leads.length + 1, module_id: moduleId, email, summary_text: String(summaryText).slice(0, 600), utm_source: utmSource, is_test: isTest ? 1 : 0, created_at: new Date().toISOString() });
+    recordLead({ email, summaryText = '', utmSource = '', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
+      const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
+      state.leads.push({ id: state.leads.length + 1, module_id: moduleId, email, summary_text: String(summaryText).slice(0, 600), utm_source: utmSource, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
       save();
     },
-    recordOrder({ tier, sku, amountUsd, status = 'intent', sessionId = '', isTest = 0 }) {
-      state.orders.push({ id: state.orders.length + 1, module_id: moduleId, tier, sku, amount_usd: Number(amountUsd) || 0, status, session_id: sessionId, is_test: isTest ? 1 : 0, created_at: new Date().toISOString() });
+    recordOrder({ tier, sku, amountUsd, status = 'intent', sessionId = '', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
+      const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
+      state.orders.push({ id: state.orders.length + 1, module_id: moduleId, tier, sku, amount_usd: Number(amountUsd) || 0, status, session_id: sessionId, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
       save();
     },
     getPstReport(windowHours = 3) {
       const nowMs = Date.now();
       const cutoffMs = nowMs - windowHours * 3600 * 1000;
-      const toPstString = (iso) => {
-        const d = new Date(new Date(iso).getTime() - 7 * 3600 * 1000);
-        return d.toISOString().replace('T', ' ').slice(0, 19);
-      };
-      const humanEvents = state.events.filter((e) => Number(e.is_test) === 0);
+      const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
+      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !isExcludedOwnerIp(e.client_ip);
+      const humanEvents = state.events.filter(isHumanEvent);
+      const testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
       const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs);
+      const winTestList = testEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs);
       const winCrawlerHits = state.events.filter((e) => Number(e.is_crawler) === 1 && new Date(e.created_at).getTime() >= cutoffMs).length;
 
-      const winCounts = {};
+      const winCounts = {}, winTestCounts = {}, cumCounts = {};
       for (const e of winEventsList) winCounts[e.event_type] = (winCounts[e.event_type] || 0) + 1;
-      const cumCounts = {};
+      for (const e of winTestList) winTestCounts[e.event_type] = (winTestCounts[e.event_type] || 0) + 1;
       for (const e of humanEvents) cumCounts[e.event_type] = (cumCounts[e.event_type] || 0) + 1;
       const recentRows = winEventsList.slice(-5).reverse().map((e) => ({
-        pst_ts: toPstString(e.created_at),
-        event_type: e.event_type,
-        page_url: e.page_url || '/',
-        device_type: e.device_type,
-        utm_source: e.utm_source || 'direct'
+        pst_ts: toPstString(e.created_at), event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type, utm_source: e.utm_source || 'direct'
       }));
-      const humanLeads = state.leads.filter((l) => Number(l.is_test) === 0).length;
-      const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && o.status === 'paid');
+      const humanLeads = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)).length;
+      const testLeads = state.leads.length - humanLeads;
+      const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
       const paidOrders = paidOrdersList.length;
       const paidRevUsd = paidOrdersList.reduce((acc, o) => acc + (Number(o.amount_usd) || 0), 0);
 
       return {
-        ok: true,
-        module_id: moduleId,
-        pst_now: toPstString(new Date(nowMs).toISOString()),
-        pst_window_start: toPstString(new Date(cutoffMs).toISOString()),
-        window_hours: windowHours,
-        window_events: winCounts,
-        window_crawler_hits: winCrawlerHits,
-        recent_pst_events: recentRows,
-        all_time_human_funnel: cumCounts,
-        human_leads: humanLeads,
-        paid_orders: paidOrders,
-        paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
-        server_registry_totals: {
-          impressions: state.impressions,
-          calculations: state.calculations,
-          checkout_intents: state.checkout_intents,
-          crawler_hits: state.crawler_hits || 0,
-          total_events_logged: state.events.length
-        }
+        ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()),
+        window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1'],
+        window_events: winCounts, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, recent_pst_events: recentRows,
+        all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
+        server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: state.crawler_hits || 0, total_events_logged: state.events.length }
       };
     }
   };
@@ -750,14 +763,21 @@ function attachExactBaselinePack(app, options = {}) {
     });
   });
 
-  // 6. Telemetry Ingestion & 3-Hourly PST Report Endpoints
+  // 6. Telemetry Ingestion, Owner IP Verification & 3-Hourly PST Report Endpoints
+  app.get('/api/telemetry/whoami', (req, res) => {
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    if (isOwnerIp) res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax');
+    res.json({ ok: true, client_ip: clientIp, candidate_ips: extractClientIps(req), is_owner_ip: isOwnerIp, is_test: isTest, is_crawler: isCrawler, classification: isCrawler ? 'crawler' : (isTest ? 'test' : 'human'), human_reporting_excluded: Boolean(isTest) });
+  });
+
   app.post('/api/telemetry/event', (req, res) => {
     const body = req.body || {};
     const ua = String(req.headers['user-agent'] || '');
     const deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
-    const { isTest, isCrawler } = classifyTrafficRequest(req, body.email);
-    store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction'), pageUrl: String(body.page_url || body.pageUrl || '/'), deviceType: String(body.device_type || deviceType), utmSource: String(body.utm_source || ''), utmCampaign: String(body.utm_campaign || ''), isTest, isCrawler, meta: body.meta || {} });
-    res.json({ ok: true, is_test: isTest, is_crawler: isCrawler });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, body.email);
+    if (isOwnerIp) res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax');
+    store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction'), pageUrl: String(body.page_url || body.pageUrl || '/'), deviceType: String(body.device_type || deviceType), utmSource: String(body.utm_source || ''), utmCampaign: String(body.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
+    res.json({ ok: true, is_test: isTest, is_owner_ip: isOwnerIp, is_crawler: isCrawler });
   });
 
   app.get('/api/telemetry/pst-report', (req, res) => {
@@ -770,9 +790,9 @@ function attachExactBaselinePack(app, options = {}) {
     const summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary`).trim();
     const utmSource = String(req.body?.utmSource || 'exit_downsell').trim();
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
-    const { isTest, isCrawler } = classifyTrafficRequest(req, email);
-    store.recordLead({ email, summaryText, utmSource, isTest });
-    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email);
+    store.recordLead({ email, summaryText, utmSource, isTest, isOwnerIp, clientIp });
+    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp });
 
     let emailDispatched = false;
     if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
@@ -810,15 +830,15 @@ function attachExactBaselinePack(app, options = {}) {
     const priceId = isMicro ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv]));
 
     const userEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
-    const { isTest, isCrawler } = classifyTrafficRequest(req, userEmail);
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
 
     if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
-      store.recordLead({ email: userEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', isTest });
-      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler });
+      store.recordLead({ email: userEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', isTest, isOwnerIp, clientIp });
+      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp });
     }
 
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler, meta: { tier: tierName, sku, price_usd: priceUsd } });
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd } });
 
     const baseUrl = `https://${cfg.domain}`;
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
@@ -855,7 +875,7 @@ function attachExactBaselinePack(app, options = {}) {
       } catch (_) {}
     }
 
-    store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, isTest });
+    store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, isTest, isOwnerIp, clientIp });
     return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl });
   }
 
@@ -873,21 +893,15 @@ function attachExactBaselinePack(app, options = {}) {
 
   // 11. Middleware to log human visits, calculations, native /api/affiliate clicks & inject ExactBaseline UI
   app.use((req, res, next) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    if (isOwnerIp) {
+      try { res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax'); } catch (_) {}
+    }
     const ua = String(req.headers['user-agent'] || '');
     const deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
 
     if (req.method === 'GET' && req.path === '/api/affiliate') {
-      store.recordEvent({
-        eventType: 'affiliate_click',
-        pageUrl: req.headers.referer || '/api/affiliate',
-        deviceType,
-        utmSource: String(req.query?.partner || 'sovrn'),
-        utmCampaign: String(req.query?.product || ''),
-        isTest,
-        isCrawler,
-        meta: { product: req.query?.product, partner: req.query?.partner }
-      });
+      store.recordEvent({ eventType: 'affiliate_click', pageUrl: req.headers.referer || '/api/affiliate', deviceType, utmSource: String(req.query?.partner || 'sovrn'), utmCampaign: String(req.query?.product || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: { product: req.query?.product, partner: req.query?.partner } });
     }
 
     if (req.method === 'POST' && req.path === '/api/checkout') {
@@ -896,32 +910,18 @@ function attachExactBaselinePack(app, options = {}) {
       }
       const cEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
       if (cEmail && cEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(cEmail)) {
-        store.recordLead({ email: cEmail, summaryText: 'Native Checkout Form Lead', utmSource: 'native_checkout', isTest });
-        store.recordEvent({ eventType: 'lead_capture', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler });
+        store.recordLead({ email: cEmail, summaryText: 'Native Checkout Form Lead', utmSource: 'native_checkout', isTest, isOwnerIp, clientIp });
+        store.recordEvent({ eventType: 'lead_capture', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp });
       }
-      store.recordEvent({
-        eventType: 'checkout_intent',
-        pageUrl: req.originalUrl || req.path,
-        deviceType,
-        isTest,
-        isCrawler,
-        meta: { plan: req.body?.plan || req.body?.tier || req.body?.planId || req.body?.plan_tier || 'host_checkout' }
-      });
+      store.recordEvent({ eventType: 'checkout_intent', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { plan: req.body?.plan || req.body?.tier || req.body?.planId || req.body?.plan_tier || 'host_checkout' } });
     }
 
     if (req.method === 'POST' && !req.headers['x-auto-init'] && /^\/api\/(audit|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) {
-      store.recordEvent({
-        eventType: 'calculate',
-        pageUrl: req.originalUrl || req.path,
-        deviceType,
-        utmSource: String(req.query?.utm_source || req.body?.utm_source || ''),
-        isTest,
-        isCrawler
-      });
+      store.recordEvent({ eventType: 'calculate', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || req.body?.utm_source || ''), isTest, isCrawler, isOwnerIp, clientIp });
     }
 
     if (req.method === 'GET' && (req.path === '/sitemap.xml' || req.path === '/llms.txt') && isCrawler) {
-      store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, deviceType, isTest, isCrawler });
+      store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp });
     }
 
     const origSend = res.send.bind(res);
@@ -935,15 +935,7 @@ function attachExactBaselinePack(app, options = {}) {
           res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`);
         } catch (_) {}
-        store.recordEvent({
-          eventType: 'visit',
-          pageUrl: req.originalUrl || req.path,
-          deviceType,
-          utmSource: String(req.query?.utm_source || ''),
-          utmCampaign: String(req.query?.utm_campaign || ''),
-          isTest,
-          isCrawler
-        });
+        store.recordEvent({ eventType: 'visit', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || ''), utmCampaign: String(req.query?.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp });
         body = renderExactBaselineEnhancements(body, cfg, req.path);
       }
       return origSend(body);
