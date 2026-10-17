@@ -577,6 +577,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/turbo-autocomplete-firstfold-curtain', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 15,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'Hotwired/Turbo (★ 28,900+) & alpinejs/alpine (★ 28,800+) — First-Screen Hero-Lead-Adjacent Deliverable Curtain Placement (y = 480px–760px on / and /seo/:slug) + Instant In-Place Live KPI Readout (#eb-quick-live-readout)',
+        'github/auto-complete-element (★ 4,600+) & LeaVerou/awesomplete (★ 9,900+) — Zero-Typing Mobile/Desktop Native <datalist> Instant Benchmark Selector (#eb-entity-datalist)'
+      ],
+      features: {
+        hero_lead_adjacent_firstfold_curtain: true,
+        zero_typing_datalist_autocomplete: true,
+        in_place_quickbar_live_readout: true,
+        context_clear_checklist_lead_offer: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

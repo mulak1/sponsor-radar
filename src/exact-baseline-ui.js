@@ -436,8 +436,9 @@ function buildClientRuntimeScript(cfg) {
   };
 
   window.__ebCompileCustomCurtain = function(presetKey) {
-    var inp = document.getElementById('eb-curtain-entity-input');
+    var inp = document.getElementById('eb-curtain-entity-input'), qIn = document.getElementById('eb-pseo-quick-input');
     if (presetKey && inp) inp.value = presetKey;
+    if (presetKey && qIn) qIn.value = presetKey;
     var q = inp && inp.value.trim() ? inp.value.trim() : (presetKey || window.__ebActiveEntity || 'custom-audit');
     window.__ebActiveEntity = q;
     var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
@@ -445,8 +446,9 @@ function buildClientRuntimeScript(cfg) {
     fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        var hdr = document.getElementById('eb-curtain-title-span');
+        var hdr = document.getElementById('eb-curtain-title-span'), qRd = document.getElementById('eb-quick-live-readout');
         if (hdr) hdr.textContent = '✦ Custom Deliverable (' + q + ') — Verified Preview';
+        if (qRd && data && data.kpis) { qRd.style.display = 'inline-flex'; qRd.textContent = '✓ ' + q.slice(0, 18) + ': ' + data.kpis.slice(0, 2).join(' • '); }
         var pills = document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
           pills.innerHTML = CFG.deliverableFiles.map(function(f, idx) {
@@ -496,6 +498,7 @@ function buildClientRuntimeScript(cfg) {
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
     var h1Node = document.querySelector('main h1, article h1, h1');
     if (h1Node && !window.__ebActiveEntity && isPseoOrDir) window.__ebActiveEntity = (h1Node.textContent || '').trim().slice(0, 48);
+    var dListHtml = '<datalist id="eb-entity-datalist">' + (CFG.presets || []).map(function(p) { return '<option value="' + p.key + '">' + p.label + '</option>'; }).join('') + '</datalist>';
     if (!window.__ebIsUnlocked) {
       if (isPseoOrDir) Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
       if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
@@ -503,15 +506,16 @@ function buildClientRuntimeScript(cfg) {
         var qBar = document.createElement('div');
         qBar.id = 'eb-pseo-quick-bar';
         qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        qBar.innerHTML = '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button></div>'
-          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="Email to reveal Row #4..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">🔓 Reveal Row #4</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢) →</button></form>';
+        qBar.innerHTML = dListHtml + '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;"></span></div>'
+          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="Work email for 1-Page Checklist..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">📩 Send Fix Checklist + Row #4</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢) →</button></form>';
         h1Node.parentNode.insertBefore(qBar, h1Node.nextSibling);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
     }
+    var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
     var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
     var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
-    var mountAnchor = tBarAnchor || seoTargetEl || targetEl;
+    var mountAnchor = leadAnchor || tBarAnchor || seoTargetEl || targetEl;
     if (!mountAnchor) return;
     var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
@@ -540,7 +544,7 @@ function buildClientRuntimeScript(cfg) {
       + '<span id="eb-curtain-title-span" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' — Diagnostic Proof Preview</span>'
       + '<div style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:11px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 9px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span><button type="button" onclick="window.__ebSetCurtainRoiScale(1)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">1x</button><button type="button" onclick="window.__ebSetCurtainRoiScale(5)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">5x</button><button type="button" onclick="window.__ebSetCurtainRoiScale(10)" style="padding:1px 6px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;font-size:10px;font-weight:700;cursor:pointer;">10x ROI</button></div></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
-      + '<input type="text" id="eb-curtain-entity-input" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
+      + '<input type="text" id="eb-curtain-entity-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
       + chipsHtml + '</div>'
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
@@ -553,10 +557,10 @@ function buildClientRuntimeScript(cfg) {
       + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>'
       + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
-      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want to inspect 1 more row first?</strong> Reveal Row #4 on-screen + email 1-Page Fix Checklist:</span>'
+      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want the 1-Page Executive Fix Checklist + Row #4?</strong> Reveal Row #4 on-screen + email checklist:</span>'
       + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
-      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Enter email to reveal Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
-      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">Reveal Row #4 + Send Checklist →</button></div></form>';
+      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work email for 1-Page Checklist + Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
+      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">📩 Send Fix Checklist + Row #4 →</button></div></form>';
 
     if (mountAnchor.parentNode) {
       if (mountAnchor === tBarAnchor) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
