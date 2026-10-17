@@ -633,6 +633,35 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/public/:assetFile', (req, res, next) => {
+    const safeName = path.basename(String(req.params.assetFile || ''));
+    if (!/\.(jpg|jpeg|png|webp|svg)$/i.test(safeName)) return next();
+    const assetPath = path.resolve(__dirname, '../public', safeName);
+    if (!fs.existsSync(assetPath)) return next();
+    res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    return res.sendFile(assetPath);
+  });
+
+  app.get('/api/github-upgrade/doppelrand-editorial-imagery', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 18,
+      module_id: cfg.moduleId,
+      hero_image: '/public/editorial-hero.jpg',
+      dossier_image: '/public/editorial-dossier.jpg',
+      github_repos: [
+        'high-end-visual-design (soft-skill) & design-taste-frontend (taste-skill) — Double-Bezel (Doppelrand) Nested Hardware-Glass Visual Showcases (#eb-doppelrand-hero-card & #eb-curtain-dossier-card) with bespoke art-directed studio photography',
+        'lovell/sharp (★ 29,600+) & CaliCastle/zola-theme — Sub-190KB compressed progressive JPEG visual anchors with frosted-glass telemetry captions and cubic-bezier(0.32,0.72,0,1) hover physics'
+      ],
+      features: {
+        doppelrand_hero_visual_anchor: true,
+        curtain_dossier_visual_preview: true,
+        tier_card_visual_header: true,
+        cubic_bezier_hover_physics: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

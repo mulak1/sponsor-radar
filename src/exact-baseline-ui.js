@@ -42,7 +42,15 @@ function buildExactBaselineStyles(cfg) {
   .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular { font-variant-numeric: tabular-nums !important; }
   .eb-blurred-deliverable { filter: blur(5px) !important; user-select: none !important; cursor: pointer !important; max-height: 140px !important; overflow: hidden !important; opacity: 0.55 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
   #eb-deliverable-curtain { margin-top: 14px; padding: 16px 18px; border-radius: ${t.radiusCard}; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; box-shadow: ${t.shadow}; font-family: ${t.fontSans}; position: relative; z-index: 20; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; font-weight: 400 !important; }
-  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 10px 12px; font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.45; margin-bottom: 12px; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
+  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 10px 12px; font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.45; margin: 0; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
+  .eb-doppelrand-shell { padding: 6px; border-radius: 18px; background: rgba(15, 23, 42, 0.035); border: 1px solid ${t.border}; box-shadow: 0 14px 34px -10px rgba(15, 23, 42, 0.08); margin: 10px 0 12px 0; transition: transform 650ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 650ms cubic-bezier(0.32, 0.72, 0, 1); }
+  .eb-doppelrand-shell:hover { transform: translateY(-2px); box-shadow: 0 20px 42px -12px rgba(15, 23, 42, 0.13); }
+  .eb-doppelrand-inner { position: relative; border-radius: 13px; overflow: hidden; background: ${t.cardBg}; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65); }
+  .eb-doppelrand-img { width: 100%; height: 178px; object-fit: cover; object-position: center 44%; display: block; transition: transform 750ms cubic-bezier(0.32, 0.72, 0, 1); }
+  .eb-doppelrand-shell:hover .eb-doppelrand-img { transform: scale(1.03); }
+  .eb-doppelrand-caption, .eb-doppelrand-caption * { font-family: ${t.fontSans} !important; line-height: 1.25 !important; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; }
+  .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 10.5px !important; color: ${t.textSecondary} !important; max-height: 40px; overflow: hidden; }
+  #eb-curtain-visual-split { display: grid; grid-template-columns: 185px minmax(0, 1fr); gap: 10px; align-items: stretch; margin-bottom: 10px; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 350px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
   #eb-bottom-conversion-suite { max-width: 1280px; margin: 40px auto 88px auto; padding: 0 24px; font-family: ${t.fontSans}; text-transform: none !important; }
   .eb-panel-card { background: ${t.cardBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: ${t.radiusCard}; padding: 22px 24px; margin-bottom: 20px; box-shadow: ${t.shadow}; }
@@ -81,8 +89,8 @@ function buildExactBaselineStyles(cfg) {
   @media (max-width: 768px) {
     #eb-bottom-conversion-suite { padding: 0 14px; margin: 28px auto 82px auto; }
     .eb-panel-card { padding: 16px; }
-    .eb-gbb-grid { grid-template-columns: 1fr; }
-    #eb-interactive-control-row { grid-template-columns: 1fr; }
+    .eb-gbb-grid, #eb-curtain-visual-split, #eb-interactive-control-row { grid-template-columns: 1fr; }
+    .eb-doppelrand-img { height: 132px; }
     #free-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #preset-chips { gap: 4px; }
     #preset-chips .preset-chip { font-size: 11px; padding: 5px 3px; }
@@ -224,6 +232,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <div class="eb-gbb-grid">
       <div class="eb-tier-card featured">
         <div>
+          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Deliverable Dossier" class="eb-doppelrand-img" style="height:88px;" loading="lazy" /></div></div>
           <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.brandPrimary};">${esc(cfg.tier1Tag || `SINGLE-AUDIT PASS • SAVE ${savingsPct}% VS $${cfg.corePriceUsd}`)}</div>
           <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$1.99 <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">one-time • no subscription</span></div>
           <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier1Desc || `Instantly unblurs ${cfg.deliverableName}, downloadable exports, and 24-hour recalculations.`)}</p>
@@ -378,11 +387,11 @@ function buildClientRuntimeScript(cfg) {
   window.__ebActiveEntity = '';
   window.__ebUserInteracted = false;
   var PERSONA = ({
-    derm_logic: { leadBtn: '📩 Email My AM/PM Routine', leadPh: 'Email for AM/PM Routine + Conflict Fix...', microBtn: '⚡ 9:16 Wallet Card (99¢)', ctaTitle: '✦ Routine Safety Verdict Ready — Email AM/PM Split or Save Wallet Card:' },
-    sponsor_radar: { leadBtn: '📩 Send Pitch Template + Row #4', leadPh: 'Work email for Sponsor Pitch + Row #4...', microBtn: '⚡ Buyer Email + CSV (99¢)', ctaTitle: '✦ Sponsor ROI & Buyer Match Ready — Email Pitch or Unblur Direct Email:' },
-    citation_forge: { leadBtn: '📩 Send GEO Checklist + Row #4', leadPh: 'Work email for GEO Checklist + Row #4...', microBtn: '⚡ llms-full.txt (99¢)', ctaTitle: '✦ AI Citation Audit Ready — Email GEO Checklist or Download llms-full.txt:' },
-    abandon_alpha: { leadBtn: '📩 Send Retry Playbook + Row #4', leadPh: 'Work email for Retry Playbook + Row #4...', microBtn: '⚡ Bandit SDK + Worker (99¢)', ctaTitle: '✦ Recovery Audit Ready — Email Retry Playbook or Download Bandit SDK:' }
-  })[CFG.moduleId] || { leadBtn: '📩 Send Fix Checklist + Row #4', leadPh: 'Work email for 1-Page Checklist...', microBtn: '⚡ Single-File (99¢)', ctaTitle: '✦ Deliverable Ready — Email Checklist or Unblur Output:' };
+    derm_logic: { leadBtn: '📩 Email My AM/PM Routine', leadPh: 'Email for AM/PM Routine + Conflict Fix...', microBtn: '⚡ 9:16 Wallet Card (99¢)', ctaTitle: '✦ Routine Safety Verdict Ready — Email AM/PM Split or Save Wallet Card:', heroTitle: 'Clinical Formulation Lab • pH 3.2 – 6.0', heroSub: 'Active Chelation, Hydrolysis & Barrier-Safety Telemetry', heroBadge: '✓ CosIng + pKa Verified', dossierTag: 'AM/PM Split & Wallet Card' },
+    sponsor_radar: { leadBtn: '📩 Send Pitch Template + Row #4', leadPh: 'Work email for Sponsor Pitch + Row #4...', microBtn: '⚡ Buyer Email + CSV (99¢)', ctaTitle: '✦ Sponsor ROI & Buyer Match Ready — Email Pitch or Unblur Direct Email:', heroTitle: 'Verified Creator Ad-Read Desk • 96 Placements', heroSub: '3x+ Renewal Signals, CPM Rate Cards & Buyer Contacts', heroBadge: '✓ 3x+ Renewal Audited', dossierTag: 'Verified Media Kit & Buyer CSV' },
+    citation_forge: { leadBtn: '📩 Send GEO Checklist + Row #4', leadPh: 'Work email for GEO Checklist + Row #4...', microBtn: '⚡ llms-full.txt (99¢)', ctaTitle: '✦ AI Citation Audit Ready — Email GEO Checklist or Download llms-full.txt:', heroTitle: 'AI Search Entity & Knowledge Graph Optical Prism', heroSub: 'ChatGPT Search, Perplexity & Gemini Citation Share-of-Voice', heroBadge: '✓ AnswerDotAI / llms.txt v2', dossierTag: 'llms-full.txt & JSON-LD Graph' },
+    abandon_alpha: { leadBtn: '📩 Send Retry Playbook + Row #4', leadPh: 'Work email for Retry Playbook + Row #4...', microBtn: '⚡ Bandit SDK + Worker (99¢)', ctaTitle: '✦ Recovery Audit Ready — Email Retry Playbook or Download Bandit SDK:', heroTitle: 'Autonomous FinOps Payment Routing & Bandit Core', heroSub: 'C1–C6 Exit-Intent Posteriors & Smart Decline Retry Windows', heroBadge: '✓ Beta-Bernoulli Bandit', dossierTag: 'Bandit SDK & Webhook Worker' }
+  })[CFG.moduleId] || { leadBtn: '📩 Send Fix Checklist + Row #4', leadPh: 'Work email for 1-Page Checklist...', microBtn: '⚡ Single-File (99¢)', ctaTitle: '✦ Deliverable Ready — Email Checklist or Unblur Output:', heroTitle: CFG.brandName + ' Studio Desk', heroSub: 'Deterministic Audit & Production Deliverable', heroBadge: '✓ Verified Engine', dossierTag: 'Production Deliverable' };
   ['pointerdown', 'keydown', 'input'].forEach(function(ev) { document.addEventListener(ev, function() { window.__ebUserInteracted = true; }, { passive: true, once: true }); });
   try {
     if (localStorage.getItem(STORAGE_KEY) === '1' || window.location.search.indexOf('checkout=success') !== -1 || window.location.search.indexOf('unlock=flash_pass') !== -1) {
@@ -558,9 +567,19 @@ function buildClientRuntimeScript(cfg) {
       }
     }
     var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
+    if (leadAnchor && leadAnchor.parentNode && !document.querySelector('.editorial-photo-shell') && !document.getElementById('eb-doppelrand-hero-card')) {
+      var heroCard = document.createElement('div');
+      heroCard.id = 'eb-doppelrand-hero-card';
+      heroCard.className = 'eb-doppelrand-shell';
+      heroCard.style.cssText = 'margin:10px 0 14px 0;';
+      heroCard.innerHTML = '<div class="eb-doppelrand-inner"><img src="/public/editorial-hero.jpg" alt="' + CFG.brandName + ' — ' + PERSONA.heroTitle + '" class="eb-doppelrand-img" style="height:178px;" loading="eager" fetchpriority="high" decoding="async" /><div class="eb-doppelrand-caption"><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong style="font-size:11px !important;color:#0F172A;font-weight:700 !important;">' + PERSONA.heroTitle + '</strong> <span style="font-size:10.5px !important;color:#475569;">• ' + PERSONA.heroSub + '</span></div><span style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700 !important;font-size:10px !important;white-space:nowrap;flex-shrink:0;">' + PERSONA.heroBadge + '</span></div></div>';
+      var qBarEl = document.getElementById('eb-pseo-quick-bar');
+      var heroInsertAfter = (qBarEl && qBarEl.parentNode === leadAnchor.parentNode) ? qBarEl : leadAnchor;
+      heroInsertAfter.parentNode.insertBefore(heroCard, heroInsertAfter.nextSibling);
+    }
     var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
     var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
-    var mountAnchor = isPseoOrDir ? (leadAnchor || tBarAnchor || seoTargetEl || targetEl) : (tBarAnchor || targetEl || leadAnchor);
+    var mountAnchor = isPseoOrDir ? (document.getElementById('eb-doppelrand-hero-card') || leadAnchor || tBarAnchor || seoTargetEl || targetEl) : (tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card') || leadAnchor);
     if (!mountAnchor) return;
     var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
@@ -585,6 +604,7 @@ function buildClientRuntimeScript(cfg) {
     var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
       return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="padding:2px 7px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:600;cursor:pointer;">' + d + '</button>';
     }).join('');
+    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:112px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;">99¢ →</span></div></div></div><pre id="eb-prism-proof-preview" style="margin:0;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
@@ -595,7 +615,7 @@ function buildClientRuntimeScript(cfg) {
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
       + chipsHtml + '</div>'
       + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
-      + '<pre id="eb-prism-proof-preview">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre>'
+      + dossierSplitHtml
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
       + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">🔒 Instant Browser Unblur &amp; Production File Download</strong><br/><span>1-Time Pass • No account or subscription • Apple Pay / Google Pay / Link</span></div>'
       + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">'
