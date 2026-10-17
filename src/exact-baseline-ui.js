@@ -100,7 +100,7 @@ function buildExactBaselineStyles(cfg) {
     #free-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #preset-chips { gap: 4px; }
     #preset-chips .preset-chip { font-size: 11px; padding: 5px 3px; }
-    #sticky-mobile-bar { padding: 7px 12px; gap: 6px; }
+    #sticky-mobile-bar { padding: 7px 12px; gap: 6px; } #eb-sticky-email-form, #btn-sticky-micro-unlock { display: none !important; }
   }
   @media print {
     header, nav, footer, #sticky-mobile-bar, #eb-ouibounce-toast, #eb-cmdk-modal, #eb-floating-gate-popover, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip { display: none !important; }
@@ -306,12 +306,14 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 
 <!-- Frosted Light Editorial Conversion Dock (#sticky-mobile-bar) -->
 <div id="sticky-mobile-bar" role="region" aria-label="Instant Access Conversion Dock">
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span style="font-size:12.5px;font-weight:700;color:${t.textPrimary};">${esc(cfg.brandName)}</span>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:${t.textPrimary};"><span style="width:7px;height:7px;border-radius:50%;background:${t.safeColor};display:inline-block;"></span>${esc(cfg.brandName)}</span>
     <a href="#in-card-unlock-bar" id="sticky-sub-benefit" style="font-size:12px;color:${t.textSecondary};font-weight:600;text-decoration:none;">${esc(cfg.freeDeliverableName)} • <strong style="color:${t.brandPrimary};">Save ${savingsPct}% vs. $${esc(cfg.corePriceUsd)}</strong></a>
   </div>
-  <div style="display:flex;gap:8px;">
-    <button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;border:none;padding:7px 15px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('flash_pass')">Single-Audit Pass: $1.99 →</button>
+  <form id="eb-sticky-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, 'eb-sticky-email-input', 'eb-sticky-email-form')" style="display:inline-flex;align-items:center;gap:6px;margin:0;background:${t.subtleBg};padding:3px 5px 3px 10px;border-radius:999px;border:1px solid ${t.border};"><span style="font-size:11px;font-weight:700;color:${t.textSecondary};white-space:nowrap;">Reveal Row #4 + PDF:</span><input type="email" id="eb-sticky-email-input" placeholder="you@company.com" required style="border:none;background:transparent;font-size:11.5px;color:${t.textPrimary};width:145px;outline:none;" /><button type="submit" id="btn-sticky-email-submit" style="padding:4px 10px;border-radius:999px;background:#FFFFFF;color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">Send Free ↵</button></form>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <button type="button" id="btn-sticky-micro-unlock" class="eb-action-btn" style="background:#FFFFFF;color:${t.brandPrimary};font-weight:700;border:1px solid ${t.accentBorder};padding:6px 12px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('micro_pass')">⚡ 99¢ File</button>
+    <button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;border:none;padding:7px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('flash_pass')">Single-Audit Pass: $1.99 →</button>
     <button type="button" id="btn-dock-flash-pass" style="display:none;" onclick="window.__ebCheckout('flash_pass')">Single-Audit Pass: $1.99</button>
   </div>
 </div>`;
@@ -539,7 +541,8 @@ function buildClientRuntimeScript(cfg) {
         return qBar;
       };
       if (existingHeroSplit) {
-        if (!window.__ebIsUnlocked && !document.getElementById('eb-pseo-quick-bar') && h1Node && h1Node.parentNode) h1Node.parentNode.appendChild(buildQBar());
+        existingHeroSplit.style.alignItems = 'stretch';
+        if (h1Node && h1Node.parentNode) { h1Node.parentNode.style.cssText += ';display:flex;flex-direction:column;justify-content:space-between;height:100%;'; if (!window.__ebIsUnlocked && !document.getElementById('eb-pseo-quick-bar')) h1Node.parentNode.appendChild(buildQBar()); }
         var teHeaderPseo = existingHeroSplit.querySelector('.telemetry-card .card-header-bar');
         if (teHeaderPseo && teHeaderPseo.parentNode && !document.getElementById('eb-doppelrand-hero-card')) teHeaderPseo.parentNode.insertBefore(buildHeroCardEl(128, 'margin:0 0 12px 0;'), teHeaderPseo.nextSibling);
       } else if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-hero-split')) {
@@ -547,7 +550,7 @@ function buildClientRuntimeScript(cfg) {
         var leftCol = document.createElement('div'); leftCol.id = 'eb-pseo-hero-left'; leftCol.style.cssText = 'display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-width:0;';
         var leadP = document.querySelector('.pseo-lead') || (h1Node.nextElementSibling && h1Node.nextElementSibling.tagName === 'P' ? h1Node.nextElementSibling : null);
         h1Node.parentNode.insertBefore(splitWrap, h1Node.nextSibling);
-        if (leadP) { leadP.classList.add('eb-pseo-lead-card'); leftCol.appendChild(leadP); }
+        if (leadP) { leadP.classList.add('eb-pseo-lead-card'); if (!leadP.querySelector('div, span')) leadP.insertAdjacentHTML('afterbegin', '<div style="font-size:10.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:' + CFG.theme.brandPrimary + ';margin-bottom:6px;">✦ ANSWER-FIRST EXECUTIVE SUMMARY • ' + PERSONA.heroBadge + '</div>'); leftCol.appendChild(leadP); }
         if (!window.__ebIsUnlocked && !document.getElementById('eb-pseo-quick-bar')) leftCol.appendChild(buildQBar());
         splitWrap.appendChild(leftCol); splitWrap.appendChild(buildHeroCardEl(168, 'margin:0;'));
       }

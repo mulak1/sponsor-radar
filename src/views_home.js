@@ -675,7 +675,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         const txt = document.getElementById('checkout-status-text');
         if (banner && txt) {
           banner.style.display = 'block';
-          txt.textContent = 'Stripe Session ' + data.session_id + ' ready for ' + email + ' (' + planTier.toUpperCase() + ' - $' + amountUsd + '/mo).';
+          txt.innerHTML = 'Stripe Session ' + data.session_id + ' ready for ' + email + ' (' + planTier.toUpperCase() + ' - $' + amountUsd + '/mo). <a href="' + (data.checkout_url || '/buy/complete_dossier') + '" style="color:var(--emerald-roi);text-decoration:underline;font-weight:700;margin-left:8px;">Proceed to Stripe Checkout ↗</a>';
+        }
+        if (!navigator.webdriver && data.checkout_url && data.checkout_url.startsWith('https://checkout.stripe.com')) {
+          window.location.href = data.checkout_url;
         }
       } catch (e) {
         console.error(e);
@@ -810,7 +813,8 @@ function renderLandingPage({ defaultAnalysis }) {
       fireMetaEvent('Purchase', 49, { plan_tier: 'creator_pro_49', session_id: data.session_id });
       const msg = document.getElementById('lp-confirm-msg');
       msg.style.display = 'block';
-      msg.textContent = 'Verified Session ' + data.session_id + ' unlocked for ' + email + ' (Meta CAPI Purchase + Lead logged).';
+      msg.innerHTML = 'Verified Session ' + data.session_id + ' unlocked for ' + email + '. <a href="' + (data.checkout_url || '/buy/complete_dossier') + '" style="color:var(--emerald-roi);text-decoration:underline;font-weight:700;">Proceed to Stripe Checkout ↗</a>';
+      if (!navigator.webdriver && data.checkout_url && data.checkout_url.startsWith('https://checkout.stripe.com')) window.location.href = data.checkout_url;
     }
   </script>
   `;
