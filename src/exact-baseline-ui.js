@@ -55,6 +55,7 @@ function buildExactBaselineStyles(cfg) {
   tr[data-eb-live-row] { cursor: pointer; transition: background-color 150ms ease; }
   tr[data-eb-live-row]:hover { background-color: ${t.brandSoftBg} !important; }
   #eb-pseo-hero-split { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: stretch; margin: 12px 0 18px 0; } #eb-pseo-hero-split #eb-doppelrand-hero-card, #eb-curtain-visual-split #eb-curtain-dossier-card { display: flex; flex-direction: column; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-inner, #eb-curtain-visual-split .eb-doppelrand-inner { flex: 1; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-img { height: 100% !important; min-height: 190px; max-height: 310px; object-fit: cover; } #eb-curtain-visual-split .eb-doppelrand-img { height: 100% !important; min-height: 132px; max-height: 185px; object-fit: cover; } .eb-pseo-lead-card { flex: 1; width: 100% !important; max-width: none !important; display: flex; flex-direction: column; justify-content: center; padding: 14px 18px; border-radius: 12px; background: ${t.cardBg}; border: 1px solid ${t.border}; border-left: 3.5px solid ${t.brandPrimary}; box-shadow: ${t.shadow}; margin: 0 !important; }
+  @media (min-width: 960px) { .hero-grid, .hero-split, .hero-editorial-grid { align-items: stretch !important; } .hero-grid > *, .hero-split > * { display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; } .hero-grid > .bezel-shell > *, .hero-grid > .double-bezel > * { flex: 1 !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; } }
   #eb-curtain-visual-split { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: stretch; margin-bottom: 10px; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 350px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
   #eb-bottom-conversion-suite { max-width: 1280px; margin: 40px auto 88px auto; padding: 0 24px; font-family: ${t.fontSans}; text-transform: none !important; }
@@ -557,11 +558,11 @@ function buildClientRuntimeScript(cfg) {
         nativePhotoShell.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
         nativePhotoShell.insertAdjacentHTML('beforeend', sparkPillHtml);
       } else if (!nativePhotoShell && !document.getElementById('eb-doppelrand-hero-card')) {
-        var presetRowCf = document.querySelector('.hero-grid .preset-strip, .hero-grid .preset-row'), teHeaderAa = document.querySelector('.telemetry-card .card-header-bar'), subheadSr = document.querySelector('.hero-grid p.subhead'), fallbackLead = document.querySelector('.hero-sub, .subhead, .hero-lead, main h1 ~ p');
-        if (presetRowCf && presetRowCf.parentNode) presetRowCf.parentNode.insertBefore(buildHeroCardEl(126, 'margin:14px 0 0 0;'), presetRowCf.nextSibling);
+        var presetRowCf = document.querySelector('#grader .preset-strip'), teHeaderAa = document.querySelector('.telemetry-card .card-header-bar'), subheadSr = document.querySelector('#radar-tool .hero-grid p.subhead, .hero-grid p.subhead'), fallbackLead = document.querySelector('.hero-sub, .subhead, .hero-lead, main h1 ~ p');
+        if (presetRowCf && presetRowCf.parentNode) presetRowCf.parentNode.insertBefore(buildHeroCardEl(128, 'margin:14px 0 0 0;'), presetRowCf.nextSibling);
         else if (teHeaderAa && teHeaderAa.parentNode) teHeaderAa.parentNode.insertBefore(buildHeroCardEl(132, 'margin:0 0 12px 0;'), teHeaderAa.nextSibling);
-        else if (subheadSr && subheadSr.parentNode) subheadSr.parentNode.insertBefore(buildHeroCardEl(148, 'margin:12px 0 14px 0;'), subheadSr.nextSibling);
-        else if (fallbackLead && fallbackLead.parentNode) fallbackLead.parentNode.insertBefore(buildHeroCardEl(148, 'margin:12px 0 14px 0;'), fallbackLead.nextSibling);
+        else if (subheadSr && subheadSr.parentNode) subheadSr.parentNode.insertBefore(buildHeroCardEl(138, 'margin:10px 0 12px 0;'), subheadSr.nextSibling);
+        else if (fallbackLead && fallbackLead.parentNode) fallbackLead.parentNode.insertBefore(buildHeroCardEl(140, 'margin:12px 0 14px 0;'), fallbackLead.nextSibling);
       }
     }
     var scoreAnchor = document.querySelector('#liveResultsContainer .score-strip, .telemetry-card .metric-duo, #results-panel .kpi-grid, .panel-elevated .telemetry-grid');

@@ -507,7 +507,8 @@ function createTelemetryStore(dataDir, moduleId) {
         all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
         server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: state.crawler_hits || 0, total_events_logged: state.events.length }
       };
-    }
+    },
+    getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip))
   };
 }
 
@@ -787,54 +788,55 @@ function attachExactBaselinePack(app, options = {}) {
     res.json(store.getPstReport(Number(req.query.hours || 3)));
   });
 
-  // 7. Transactional Lead Capture & Follow-Up Email Dispatcher (/api/leads/capture, /api/leads/consumer, /api/studio/trial-signup)
+  // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher (/api/leads/capture, /api/leads/resend-backfill)
+  const buildBuyLinks = (email) => ({
+    micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`,
+    flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`,
+    complete_dossier: `https://${cfg.domain}/buy/complete_dossier?email=${encodeURIComponent(email)}`,
+    pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}`
+  });
+  async function sendOneClickLeadEmail(email, summaryText, isTest) {
+    const links = buildBuyLinks(email);
+    const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${links.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${links.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${links.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${links.pro_b2b}\n`;
+    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${cfg.brandName} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${summaryText}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${cfg.coreLabel} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${cfg.proLabel} →</strong></a></li></ul></div>`;
+    const resendKey = process.env.RESEND_API_KEY || '';
+    if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
+      try {
+        const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', { method: 'POST', headers: { Authorization: `Bearer ${SENDGRID_API_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass` }], from: { email: `reports@${cfg.domain.replace(/^www\./, '')}`, name: cfg.brandName }, content: [{ type: 'text/plain', value: textMail }, { type: 'text/html', value: htmlMail }] }) });
+        return sgRes.status >= 200 && sgRes.status < 300;
+      } catch (_) { return false; }
+    } else if (resendKey && resendKey.startsWith('re_') && !isTest) {
+      try {
+        const rsRes = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: `${cfg.brandName} <reports@${cfg.domain.replace(/^www\./, '')}>`, to: [email], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass`, text: textMail, html: htmlMail }) });
+        return rsRes.status >= 200 && rsRes.status < 300;
+      } catch (_) { return false; }
+    }
+    return false;
+  }
   async function handleLeadCaptureAndFollowUp(req, res) {
     const email = String(req.body?.email || req.body?.customerEmail || '').trim();
     const summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary & Row #4 Reveal`).trim();
     const utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'exit_downsell').trim();
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email);
-    const directBuyLinks = {
-      micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`,
-      flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`,
-      complete_dossier: `https://${cfg.domain}/buy/complete_dossier?email=${encodeURIComponent(email)}`,
-      pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}`
-    };
+    const directBuyLinks = buildBuyLinks(email);
     store.recordLead({ email, summaryText: `${summaryText} [Buy: ${directBuyLinks.micro_pass}]`, utmSource, isTest, isOwnerIp, clientIp });
     store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp });
-
-    const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${directBuyLinks.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${directBuyLinks.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${directBuyLinks.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${directBuyLinks.pro_b2b}\n`;
-    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${cfg.brandName} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${summaryText}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${directBuyLinks.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${directBuyLinks.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}) →</strong></a></li><li><a href="${directBuyLinks.complete_dossier}"><strong>$${cfg.corePriceUsd} ${cfg.coreLabel} →</strong></a></li><li><a href="${directBuyLinks.pro_b2b}"><strong>$${cfg.proPriceUsd} ${cfg.proLabel} →</strong></a></li></ul></div>`;
-
-    let emailDispatched = false;
-    const resendKey = process.env.RESEND_API_KEY || '';
-    if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
-      try {
-        const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${SENDGRID_API_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass` }],
-            from: { email: `reports@${cfg.domain.replace(/^www\./, '')}`, name: cfg.brandName },
-            content: [{ type: 'text/plain', value: textMail }, { type: 'text/html', value: htmlMail }]
-          })
-        });
-        emailDispatched = sgRes.status >= 200 && sgRes.status < 300;
-      } catch (_) { emailDispatched = false; }
-    } else if (resendKey && resendKey.startsWith('re_') && !isTest) {
-      try {
-        const rsRes = await fetch('https://api.resend.com/emails', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ from: `${cfg.brandName} <reports@${cfg.domain.replace(/^www\./, '')}>`, to: [email], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass`, text: textMail, html: htmlMail })
-        });
-        emailDispatched = rsRes.status >= 200 && rsRes.status < 300;
-      } catch (_) { emailDispatched = false; }
-    }
-
+    const emailDispatched = await sendOneClickLeadEmail(email, summaryText, isTest);
     res.json({ ok: true, email, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
   }
   app.post(['/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
+  app.all('/api/leads/resend-backfill', async (req, res) => {
+    const humanLeads = store.getHumanLeads();
+    let resentCount = 0;
+    for (const l of humanLeads) {
+      if (l.email && l.email.includes('@')) {
+        const ok = await sendOneClickLeadEmail(l.email, l.summary_text || `${cfg.brandName} Diagnostic Summary`, false);
+        if (ok) resentCount++;
+      }
+    }
+    res.json({ ok: true, module_id: cfg.moduleId, sendgrid_configured: Boolean(SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.')), total_human_leads_scanned: humanLeads.length, emails_resent: resentCount, status: humanLeads.length === 0 ? 'zero_prior_human_leads_to_resend' : 'backfill_completed' });
+  });
 
   // 8. Sovrn //Commerce Contextual Partner Offers & Status
   app.get('/api/affiliates/offers', (req, res) => {
