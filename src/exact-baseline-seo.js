@@ -307,6 +307,23 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), 'index'));
   });
 
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && req.path.startsWith('/seo/') && !req.path.endsWith('.md')) {
+      let rawTail = req.path.slice(5);
+      try { rawTail = decodeURIComponent(rawTail); } catch (_) {}
+      const entries = getEntries();
+      const exact = entries.find((e) => e.slug === rawTail);
+      if (!exact) {
+        const cleanCand = rawTail.split(/[\]\(\s"'<>.,;]/)[0].replace(/[^a-zA-Z0-9-_]/g, '').toLowerCase();
+        if (cleanCand) {
+          const matched = entries.find((e) => e.slug === cleanCand || e.slug.startsWith(cleanCand) || cleanCand.startsWith(e.slug));
+          if (matched) return res.redirect(301, `/seo/${matched.slug}`);
+        }
+      }
+    }
+    next();
+  });
+
   app.get('/seo/:slug.md', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, isTest, isCrawler });
@@ -537,6 +554,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
         one_tap_quick_bar_presets: true,
         above_fold_inline_row4_email_form: true,
         above_fold_99c_single_file_cta: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
+
+  app.get('/api/github-upgrade/shadcn-curtain-canonical-seo', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 14,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+) — First-Scroll Above-Table Deliverable Curtain Placement + Interactive 3-File Tab Switcher & 1-Tap Row #4 Email Focus',
+        'pillarjs/path-to-regexp (★ 7,300+) & sindresorhus/slugify (★ 2,400+) — Fuzzy / Markdown-Sanitized /seo/* Canonical 301 Recovery Middleware'
+      ],
+      features: {
+        first_scroll_above_table_curtain: true,
+        h1_adjacent_above_fold_quickbar: true,
+        interactive_shadcn_file_tabs: true,
+        fuzzy_markdown_seo_url_recovery_301: true,
         zero_price_cannibalization_guard: true
       }
     });

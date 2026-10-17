@@ -494,30 +494,26 @@ function buildClientRuntimeScript(cfg) {
     }
 
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
+    var h1Node = document.querySelector('main h1, article h1, h1');
+    if (h1Node && !window.__ebActiveEntity && isPseoOrDir) window.__ebActiveEntity = (h1Node.textContent || '').trim().slice(0, 48);
     if (!window.__ebIsUnlocked) {
       if (isPseoOrDir) Array.prototype.slice.call(document.querySelectorAll('.pitch-pre, .code-snippet-box code')).forEach(function(el) { el.classList.add('eb-blurred-deliverable'); });
-      var h1Node = document.querySelector('main h1, article h1, h1');
-      var leadP = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 + p, article h1 + p') || (h1Node && h1Node.parentNode ? h1Node.parentNode.querySelector('p') : null);
-      if (leadP && leadP.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
+      if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-quick-bar')) {
         var qChips = (CFG.presets || []).slice(0, 2).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
         var qBar = document.createElement('div');
         qBar.id = 'eb-pseo-quick-bar';
         qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
         qBar.innerHTML = '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button></div>'
           + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="Email to reveal Row #4..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">🔓 Reveal Row #4</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢) →</button></form>';
-        leadP.parentNode.insertBefore(qBar, leadP.nextSibling);
+        h1Node.parentNode.insertBefore(qBar, h1Node.nextSibling);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
     }
-    var seoTargetEl = null;
-    if (!targetEl && isPseoOrDir) {
-      var h1El = document.querySelector('main h1, article h1, h1');
-      if (h1El && !window.__ebActiveEntity) window.__ebActiveEntity = (h1El.textContent || '').trim().slice(0, 48);
-      seoTargetEl = document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section');
-    }
-    var mountAnchor = targetEl || seoTargetEl;
+    var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
+    var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
+    var mountAnchor = tBarAnchor || seoTargetEl || targetEl;
     if (!mountAnchor) return;
-    var rawText = targetEl ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
+    var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
     if (previewLines.length > 200) previewLines = previewLines.slice(0, 200) + ' ...';
     if (targetEl && !window.__ebIsUnlocked) targetEl.classList.add('eb-blurred-deliverable');
@@ -562,7 +558,10 @@ function buildClientRuntimeScript(cfg) {
       + '<input type="email" id="eb-inline-scorecard-email" placeholder="Enter email to reveal Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
       + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">Reveal Row #4 + Send Checklist →</button></div></form>';
 
-    if (mountAnchor.parentNode) mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
+    if (mountAnchor.parentNode) {
+      if (mountAnchor === tBarAnchor) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
+      else mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
+    }
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
     if (window.__ebIsUnlocked) window.__ebApplyUnblurState();
     var dermModal = document.getElementById('checkoutModal');
@@ -603,14 +602,22 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebSelectManifestFile = function(idx, pillEl) {
     var f = (CFG.deliverableFiles && CFG.deliverableFiles[idx]) || { file: 'deliverable.txt', size: '4.2 KB', desc: 'Verified export' };
+    var allPills = document.querySelectorAll('#eb-zod-manifest-pills .eb-manifest-pill');
+    for (var p = 0; p < allPills.length; p++) {
+      var active = p === idx;
+      allPills[p].style.background = active ? CFG.theme.brandSoftBg : CFG.theme.subtleBg;
+      allPills[p].style.color = active ? CFG.theme.brandPrimary : CFG.theme.textPrimary;
+      allPills[p].style.borderColor = active ? CFG.theme.accentBorder : CFG.theme.border;
+    }
     var prevBox = document.getElementById('eb-prism-proof-preview');
-    if (prevBox) prevBox.textContent = '// [FILE PREVIEW: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Production lines 5–68 locked — Click "Download ' + f.file + ' (99¢)" below for instant export]';
+    if (prevBox) prevBox.textContent = '// [ACTIVE TAB: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Lines 5–68 ready — Click "⚡ Download ' + f.file + ' (99¢)" or reveal Row #4 below]';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
     if (microBtn) microBtn.textContent = '⚡ Download ' + f.file + ' (99¢)';
     var popMicroBtn = document.getElementById('btn-popover-micro-pass');
     if (popMicroBtn) popMicroBtn.textContent = '⚡ Unblur + Download ' + f.file + ' — 99¢ →';
+    var emIn = document.getElementById('eb-inline-scorecard-email');
+    if (emIn) emIn.placeholder = 'Email to reveal Row #4 + ' + f.file + ' checklist...';
     window.__ebLogEvent('tab_switch', { store_pill: 'file_' + f.file });
-    window.__ebOpenFloatingGate(pillEl);
   };
 
   window.__ebSaveInlineScorecard = function(ev, inputId, formId) {
