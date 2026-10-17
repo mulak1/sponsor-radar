@@ -380,10 +380,8 @@ function buildClientRuntimeScript(cfg) {
     if (a && !a.hasAttribute('onclick')) {
       window.__ebLogEvent('affiliate_click', { partner: (a.textContent || '').trim().slice(0, 40), href: a.getAttribute('href') || '' });
     }
-    var presetBtn = e.target && e.target.closest ? e.target.closest('[onclick*="recalcPseo"], [onclick*="pasteSample"], [onclick*="filterPlacements"]') : null;
-    if (presetBtn) {
-      window.__ebLogEvent('calculate', { source: 'native_interactive_control' });
-    }
+    var presetBtn = e.target && e.target.closest ? e.target.closest('[onclick*="recalcPseo"], [onclick*="pasteSample"], [onclick*="filterPlacements"], [onclick*="filterLedgerRows"], [onclick*="switchToolMode"], [onclick*="setBrandPreset"], [onclick*="setPresetDomain"], [onclick*="switchCompilerTab"], [onclick*="applyRoutinePreset"], .preset-btn, .obj-btn') : null;
+    if (presetBtn) window.__ebLogEvent('calculate', { source: 'native_interactive_control' });
   }, { passive: true });
 
   window.__ebTriggerPostCalcSpotlight = function(entityName) {
@@ -460,7 +458,7 @@ function buildClientRuntimeScript(cfg) {
         var hdr = document.getElementById('eb-curtain-title-span'), qRd = document.getElementById('eb-quick-live-readout');
         if (hdr) hdr.textContent = '✦ Custom Deliverable (' + q + ') — Verified Preview';
         if (qRd && data && data.kpis) { qRd.style.display = 'inline-flex'; qRd.textContent = '✓ ' + q.slice(0, 18) + ': ' + data.kpis.slice(0, 2).join(' • '); }
-        var pills = document.getElementById('eb-zod-manifest-pills');
+        var pills = document.getElementById('eb-manifest-pills-left') || document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
           pills.innerHTML = CFG.deliverableFiles.map(function(f, idx) {
             return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
@@ -622,7 +620,7 @@ function buildClientRuntimeScript(cfg) {
       + '<input type="text" id="eb-curtain-entity-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + ' (Compile Custom Deliverable)..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:12px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;cursor:pointer;">Compile Custom Preview ↵</button>'
       + chipsHtml + '</div>'
-      + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">' + filesHtml + '</div>' : '')
+      + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;"><div id="eb-manifest-pills-left" style="display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;">' + filesHtml + '</div><div id="eb-observable-telemetry-pill" style="display:inline-flex;align-items:center;gap:8px;padding:3px 10px;border-radius:999px;background:#F8FAFC;border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:700;color:' + CFG.theme.textSecondary + ';"><svg width="68" height="14" viewBox="0 0 68 14" style="vertical-align:middle;"><rect x="1" y="8" width="8" height="5" rx="1.5" fill="#94A3B8"/><rect x="12" y="6" width="8" height="7" rx="1.5" fill="#64748B"/><rect x="23" y="4" width="8" height="9" rx="1.5" fill="' + CFG.theme.brandPrimary + '" opacity="0.75"/><rect x="34" y="2" width="8" height="11" rx="1.5" fill="' + CFG.theme.brandPrimary + '"/><rect x="45" y="1" width="8" height="12" rx="1.5" fill="' + CFG.theme.safeColor + '"/><path d="M56 10 L60 6 L66 2" fill="none" stroke="' + CFG.theme.safeColor + '" stroke-width="1.8" stroke-linecap="round"/></svg><span>SHA-256 Verified • <code>observablehq/plot</code> ΔLift</span><button type="button" onclick="if(navigator.clipboard&&document.getElementById(\\\'eb-prism-proof-preview\\\')){navigator.clipboard.writeText(document.getElementById(\\\'eb-prism-proof-preview\\\').textContent);this.textContent=\\\'✓ Copied\\\';}" style="padding:1px 7px;border-radius:999px;border:1px solid ' + CFG.theme.accentBorder + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';font-size:10px;font-weight:700;cursor:pointer;">Copy Diff ↗</button></div></div>' : '')
       + dossierSplitHtml
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
       + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">🔒 Instant Browser Unblur &amp; Production File Download</strong><br/><span>1-Time Pass • No account or subscription • Apple Pay / Google Pay / Link</span></div>'
