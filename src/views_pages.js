@@ -257,7 +257,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <span class="pill-emerald">READY-TO-SEND 3-FLIGHT PILOT PITCH</span>
             <span class="mono" style="font-size:12px; color:var(--text-secondary); margin-left:8px;">To: ${escapeHtml(outboundPitch.to_email)} (${escapeHtml(outboundPitch.decision_maker_role)})</span>
           </div>
-          <a href="/#pricing" class="btn btn-emerald" style="padding:7px 14px; min-height:36px; font-size:12.5px;">Unlock Full Contact Vault ($49/mo)</a>
+          <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier');return false;}" class="btn btn-emerald" style="padding:7px 14px; min-height:36px; font-size:12.5px;">Unlock Full Contact Vault ($49/mo) →</a>
         </div>
         <pre class="pitch-pre">${escapeHtml('Subject: ' + outboundPitch.subject + '\n\n' + outboundPitch.body)}</pre>
       </div>

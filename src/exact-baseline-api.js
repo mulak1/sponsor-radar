@@ -717,15 +717,17 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/pitch.eml', (req, res) => {
     const brand = String(req.query.brand || 'AG1');
     const eml = [
-      'From: Sponsorship Desk <partnerships@sponsorradar.io>',
+      `From: ${cfg.brandName} Desk <partnerships@${cfg.domain.replace(/^www\./, '')}>`,
       `To: media-buying@${brand.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
       `Subject: [3x-Renewal Verified] Host-Voiced Mid-Roll Slot for ${brand} (1.42x Pyannote Trust Score)`,
       'MIME-Version: 1.0', 'Content-Type: text/plain; charset=utf-8', '',
-      `Hi ${brand} Growth & Podcast Media Buying Team,`, '',
-      `SponsorRadar's ledger tracked your 3x+ renewed host-read flights and verified a $38.50 cleared net eCPM benchmark.`,
+      `Hi ${brand} Growth & Media Buying Team,`, '',
+      `${cfg.brandName}'s deterministic ledger tracked your 3x+ renewed host-read flights and verified a $38.50 cleared net eCPM benchmark.`,
       'We have a 60-second native host-voiced mid-roll opening with a guaranteed vanity URL + pinned comment conversion floor.', '',
-      'Reply "RATE CARD" to lock the Q4 test flight with a 30-day ROAS make-good guarantee.', '',
-      'Best,\nSponsorRadar Media Buying Intelligence\nhttps://www.sponsorradar.io'
+      `• 1-Click Instant Audit & Rate Card Pass ($1.99): https://${cfg.domain}/buy/flash_pass?brand=${encodeURIComponent(brand)}`,
+      `• Unlock Full Verified Sponsor & Contact Vault ($${cfg.corePriceUsd}): https://${cfg.domain}/buy/complete_dossier?brand=${encodeURIComponent(brand)}`,
+      `• Agency & B2B Team License ($${cfg.proPriceUsd}): https://${cfg.domain}/buy/pro_b2b?brand=${encodeURIComponent(brand)}`, '',
+      `Best,\n${cfg.brandName} Revenue Intelligence\nhttps://${cfg.domain}`
     ].join('\r\n');
     res.status(200).type('message/rfc822').setHeader('Content-Disposition', `attachment; filename="${brand.toLowerCase()}-outreach-pitch.eml"`).send(eml);
   });
@@ -756,9 +758,10 @@ function attachExactBaselinePack(app, options = {}) {
       roi_badge: diff.roiBadge,
       unified_patch: `--- a/${cfg.domain}/baseline\n+++ b/${cfg.domain}/remediated\n@@ -1,1 +1,1 @@\n${diff.beforeLine}\n${diff.afterLine}`,
       unlock_paths: [
-        { path: 'flash_pass', price_usd: 1.99, label: `$1.99 Single-Audit Export Pass (${cfg.freeDeliverableName})` },
-        { path: 'complete_dossier', price_usd: cfg.corePriceUsd, label: cfg.coreLabel },
-        { path: 'pro_b2b', price_usd: cfg.proPriceUsd, label: cfg.proLabel }
+        { path: 'micro_pass', price_usd: 0.99, buy_url: `https://${cfg.domain}/buy/micro_pass`, label: '99¢ Single-File Instant Export Pass' },
+        { path: 'flash_pass', price_usd: 1.99, buy_url: `https://${cfg.domain}/buy/flash_pass`, label: `$1.99 Single-Audit Export Pass (${cfg.freeDeliverableName})` },
+        { path: 'complete_dossier', price_usd: cfg.corePriceUsd, buy_url: `https://${cfg.domain}/buy/complete_dossier`, label: cfg.coreLabel },
+        { path: 'pro_b2b', price_usd: cfg.proPriceUsd, buy_url: `https://${cfg.domain}/buy/pro_b2b`, label: cfg.proLabel }
       ]
     });
   });
@@ -784,90 +787,123 @@ function attachExactBaselinePack(app, options = {}) {
     res.json(store.getPstReport(Number(req.query.hours || 3)));
   });
 
-  // 7. SendGrid Exit-Intent Downsell Summary Capture
-  app.post('/api/leads/capture', async (req, res) => {
-    const email = String(req.body?.email || '').trim();
-    const summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary`).trim();
-    const utmSource = String(req.body?.utmSource || 'exit_downsell').trim();
+  // 7. Transactional Lead Capture & Follow-Up Email Dispatcher (/api/leads/capture, /api/leads/consumer, /api/studio/trial-signup)
+  async function handleLeadCaptureAndFollowUp(req, res) {
+    const email = String(req.body?.email || req.body?.customerEmail || '').trim();
+    const summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary & Row #4 Reveal`).trim();
+    const utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'exit_downsell').trim();
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email);
-    store.recordLead({ email, summaryText, utmSource, isTest, isOwnerIp, clientIp });
+    const directBuyLinks = {
+      micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`,
+      flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`,
+      complete_dossier: `https://${cfg.domain}/buy/complete_dossier?email=${encodeURIComponent(email)}`,
+      pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}`
+    };
+    store.recordLead({ email, summaryText: `${summaryText} [Buy: ${directBuyLinks.micro_pass}]`, utmSource, isTest, isOwnerIp, clientIp });
     store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp });
 
+    const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${directBuyLinks.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${directBuyLinks.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${directBuyLinks.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${directBuyLinks.pro_b2b}\n`;
+    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${cfg.brandName} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${summaryText}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${directBuyLinks.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${directBuyLinks.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}) →</strong></a></li><li><a href="${directBuyLinks.complete_dossier}"><strong>$${cfg.corePriceUsd} ${cfg.coreLabel} →</strong></a></li><li><a href="${directBuyLinks.pro_b2b}"><strong>$${cfg.proPriceUsd} ${cfg.proLabel} →</strong></a></li></ul></div>`;
+
     let emailDispatched = false;
+    const resendKey = process.env.RESEND_API_KEY || '';
     if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
       try {
         const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', {
           method: 'POST',
           headers: { Authorization: `Bearer ${SENDGRID_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} 1-Page Diagnostic Summary` }],
+            personalizations: [{ to: [{ email }], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass` }],
             from: { email: `reports@${cfg.domain.replace(/^www\./, '')}`, name: cfg.brandName },
-            content: [{ type: 'text/plain', value: `${summaryText}\n\nUnlock the Full Export Bundle ($1.99 One-Time Pass): https://${cfg.domain}/?unlock=flash_pass` }]
+            content: [{ type: 'text/plain', value: textMail }, { type: 'text/html', value: htmlMail }]
           })
         });
         emailDispatched = sgRes.status >= 200 && sgRes.status < 300;
       } catch (_) { emailDispatched = false; }
+    } else if (resendKey && resendKey.startsWith('re_') && !isTest) {
+      try {
+        const rsRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: `${cfg.brandName} <reports@${cfg.domain.replace(/^www\./, '')}>`, to: [email], subject: `Your ${cfg.brandName} Diagnostic Summary & 1-Click Export Pass`, text: textMail, html: htmlMail })
+        });
+        emailDispatched = rsRes.status >= 200 && rsRes.status < 300;
+      } catch (_) { emailDispatched = false; }
     }
 
-    res.json({ ok: true, email, summary_sent: true, email_dispatched: emailDispatched, tripwire_offer: { tier: 'flash_pass', sku: `${cfg.moduleId}_flash_pass`, price_usd: 1.99, headline: 'Summary Sent! Unlock the Full Production Deliverable & Exports for $1.99' } });
-  });
+    res.json({ ok: true, email, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
+  }
+  app.post(['/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
 
   // 8. Sovrn //Commerce Contextual Partner Offers & Status
   app.get('/api/affiliates/offers', (req, res) => {
     res.json({ ok: true, sovrn_commerce_key: SOVRN_COMMERCE_KEY, sovrn_secret_configured: Boolean(SOVRN_SECRET_KEY), offers: cfg.affiliates });
   });
 
-  // 9. Multi-Tier Stripe Checkout Handler ($1.99 Single-Audit Pass, $4.99/$49 Complete Pack, $19.99/$99/$199 Pro)
+  // 9. Multi-Tier Stripe Checkout Handler + GET /buy/:tier 1-Click HTTP 303 Payment Redirects
   async function handleTierCheckout(req, res) {
-    const rawTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
+    const rawTier = String(req.params?.tier || req.query?.tier || req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
     const isMicro = rawTier.includes('micro') || rawTier.includes('099') || rawTier.includes('99c');
-    const isFlash = !isMicro && (rawTier.includes('flash') || rawTier.includes('199') || rawTier === 'pass');
-    const isPro = rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth');
+    const isFlash = !isMicro && (rawTier.includes('flash') || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
+    const isPro = !isMicro && !isFlash && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
     const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd));
     const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
     const priceId = isMicro ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv]));
+    const isOneTime = isMicro || isFlash || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
 
-    const userEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+    const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
 
     if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
       store.recordLead({ email: userEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', isTest, isOwnerIp, clientIp });
-      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp });
+      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp });
     }
 
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd } });
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method } });
 
     const baseUrl = `https://${cfg.domain}`;
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
     let sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
     const stripeKey = process.env.STRIPE_SECRET_KEY || '';
+    const prodLabel = `${cfg.brandName} — ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : (isPro ? cfg.proLabel : cfg.coreLabel))}`;
+
+    const buildInlineParams = () => {
+      const p = new URLSearchParams({
+        'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`,
+        'cancel_url': `${baseUrl}/?checkout=cancel`,
+        'mode': isOneTime ? 'payment' : 'subscription',
+        'line_items[0][price_data][currency]': 'usd',
+        'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)),
+        'line_items[0][price_data][product_data][name]': prodLabel,
+        'line_items[0][quantity]': '1'
+      });
+      if (!isOneTime) p.set('line_items[0][price_data][recurring][interval]', verticalId === 'derm_logic' ? 'year' : 'month');
+      if (userEmail && userEmail.includes('@')) p.set('customer_email', userEmail);
+      return p;
+    };
 
     if (stripeKey && stripeKey.startsWith('sk_')) {
       try {
-        const params = new URLSearchParams({
-          'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`,
-          'cancel_url': `${baseUrl}/?checkout=cancel`
-        });
+        let stData = null;
         if (priceId && priceId.startsWith('price_')) {
-          params.set('mode', isFlash || (cfg.corePriceUsd === 49 && verticalId === 'citation_forge') || (verticalId === 'derm_logic' && !isPro) ? 'payment' : 'subscription');
-          params.set('line_items[0][price]', priceId);
-          params.set('line_items[0][quantity]', '1');
-        } else {
-          params.set('mode', 'payment');
-          params.set('line_items[0][price_data][currency]', 'usd');
-          params.set('line_items[0][price_data][unit_amount]', String(Math.round(priceUsd * 100)));
-          params.set('line_items[0][price_data][product_data][name]', `${cfg.brandName} — ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : cfg.coreLabel)}`);
-          params.set('line_items[0][quantity]', '1');
+          const params = new URLSearchParams({
+            'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`,
+            'cancel_url': `${baseUrl}/?checkout=cancel`,
+            'mode': isOneTime ? 'payment' : 'subscription',
+            'line_items[0][price]': priceId,
+            'line_items[0][quantity]': '1'
+          });
+          if (userEmail && userEmail.includes('@')) params.set('customer_email', userEmail);
+          const stRes = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
+          stData = await stRes.json();
         }
-        const stRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params
-        });
-        const stData = await stRes.json();
+        if (!stData || !stData.url) {
+          const fallbackRes = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: buildInlineParams() });
+          stData = await fallbackRes.json();
+        }
         if (stData && stData.url) {
           checkoutUrl = stData.url;
           sessionId = stData.id;
@@ -876,12 +912,14 @@ function attachExactBaselinePack(app, options = {}) {
     }
 
     store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, isTest, isOwnerIp, clientIp });
-    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl });
+    if (req.method === 'GET' && req.query?.format !== 'json') {
+      return res.redirect(303, checkoutUrl);
+    }
+    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl, direct_buy_url: `${baseUrl}/buy/${tierName}` });
   }
 
-  app.post(`/api/calculators/${cfg.moduleId}/checkout`, handleTierCheckout);
-  app.post('/api/calculators/:anyMod/checkout', handleTierCheckout);
-  app.post('/api/exact-checkout', handleTierCheckout);
+  app.get(['/buy/:tier', '/api/buy/:tier'], handleTierCheckout);
+  app.post([`/api/calculators/${cfg.moduleId}/checkout`, '/api/calculators/:anyMod/checkout', '/api/exact-checkout', '/api/checkout/create-session', '/api/stripe/create-checkout-session'], handleTierCheckout);
 
   // 10. Viral Embeddable Widget (/embed) & Dual-Tier Sample Dossier (/dossier/sample)
   app.get('/embed', (req, res) => {
@@ -905,7 +943,8 @@ function attachExactBaselinePack(app, options = {}) {
     }
 
     if (req.method === 'POST' && req.path === '/api/checkout') {
-      if (req.body?.tier === 'flash_pass' || req.body?.plan === 'flash_pass' || req.body?.planTier === 'flash_pass' || req.body?.planId === 'flash_pass') {
+      const reqTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.planId || '').toLowerCase();
+      if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'complete_dossier' || reqTier === 'pro_b2b') {
         return handleTierCheckout(req, res);
       }
       const cEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();

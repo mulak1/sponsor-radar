@@ -144,6 +144,12 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [JSON Feed 1.1](${host}/feed.json): Structured JSON feed for automated agents.`,
     `- [Model Context Protocol (MCP) Manifest](${host}/.well-known/mcp.json): Agent tool & capability discovery manifest.`,
     '',
+    '## Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect — Zero JS Required)',
+    `- [99¢ Single-File Instant Export Pass](${host}/buy/micro_pass): Direct 1-click Stripe Checkout for any single production remediation file.`,
+    `- [$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName})](${host}/buy/flash_pass): Direct 1-click Stripe Checkout for the complete single-audit bundle.`,
+    `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/complete_dossier): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
+    `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/pro_b2b): Direct 1-click Stripe Checkout for continuous B2B / Agency access.`,
+    '',
     '## Verified Scenario Presets & Headline KPIs',
     ...cfg.presets.map((p) => {
       const vals = cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val);
@@ -172,13 +178,17 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
     '',
     `> ${cfg.explainerText}`,
     '',
-    '## 1. Deterministic Before / After Remediation Proof',
+    '## 1. Deterministic Before / After Remediation Proof & 1-Click Checkout Links',
     '```diff',
     cfg.remediationDiff.beforeLine,
     cfg.remediationDiff.afterLine,
     '```',
     `- **ROI Impact**: ${cfg.remediationDiff.roiBadge}`,
     `- **Production Deliverable Bundle**: ${cfg.deliverableName} (${(cfg.deliverableFiles || []).map((f) => `${f.file} [${f.size}]`).join(', ')})`,
+    `- **1-Click Stripe Checkout (99¢ Single-File Pass)**: ${host}/buy/micro_pass`,
+    `- **1-Click Stripe Checkout ($1.99 Single-Audit Bundle)**: ${host}/buy/flash_pass`,
+    `- **1-Click Stripe Checkout ($${cfg.corePriceUsd} ${cfg.coreLabel})**: ${host}/buy/complete_dossier`,
+    `- **1-Click Stripe Checkout ($${cfg.proPriceUsd} ${cfg.proLabel})**: ${host}/buy/pro_b2b`,
     '',
     '## 2. Benchmark KPI Matrix Across Verified Presets',
     `| Scenario Preset | ${cfg.kpis.map((k) => k.label).join(' | ')} |`,
@@ -247,8 +257,12 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     '## 3. Related Verified Benchmarks & Playbooks',
     ...related.map((r) => `- [${r.title}](${host}/seo/${r.slug}) ([.md](${host}/seo/${r.slug}.md)): ${r.summary}`),
     '',
-    `## 4. Run Interactive Audit`,
-    `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`
+    `## 4. Run Interactive Audit & 1-Click Direct Stripe Checkout`,
+    `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`,
+    `- 1-Click 99¢ Single-File Instant Export Pass: [${host}/buy/micro_pass](${host}/buy/micro_pass)`,
+    `- 1-Click $1.99 Single-Audit Export Bundle: [${host}/buy/flash_pass](${host}/buy/flash_pass)`,
+    `- 1-Click $${cfg.corePriceUsd} ${cfg.coreLabel}: [${host}/buy/complete_dossier](${host}/buy/complete_dossier)`,
+    `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/pro_b2b](${host}/buy/pro_b2b)`
   ].join('\n');
 }
 
@@ -718,6 +732,30 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
         full_width_1240px_pseo_deliverable_curtain: true,
         expanded_crawler_ua_classifier: true,
         owner_ip_test_exclusion_active: true
+      }
+    });
+  });
+
+  app.get('/api/github-upgrade/zero-dead-checkout-audit', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 22,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'stripe/stripe-node (★ 4,100+) — Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
+        'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+) — Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
+      ],
+      direct_buy_links: {
+        micro_pass_99c: `https://${cfg.domain}/buy/micro_pass`,
+        flash_pass_199: `https://${cfg.domain}/buy/flash_pass`,
+        complete_dossier: `https://${cfg.domain}/buy/complete_dossier`,
+        pro_b2b: `https://${cfg.domain}/buy/pro_b2b`
+      },
+      critical_bugs_eliminated: {
+        bug_1_pseo_express_checkout_and_stripe_price_fallback: true,
+        bug_2_outbound_pitch_direct_stripe_links_zero_free_forever: true,
+        bug_3_get_buy_tier_303_redirect_in_llms_and_md_twins: true,
+        bug_4_transactional_lead_followup_with_direct_buy_links: true
       }
     });
   });

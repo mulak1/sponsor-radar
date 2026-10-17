@@ -21,25 +21,29 @@ function generateOutboundPitch({ brand, anchorPlacements, senderShowName, sender
 
 I track verified sponsorship renewals across ${niche} via SponsorRadar, and noticed ${brand.name} has run ${topAnchor.flights} verified flights on ${topAnchor.show_name} (${topAnchor.vanity_url} | code: ${topAnchor.promo_code}) at an estimated ~$${topAnchor.cpm_usd} CPM.
 
-Because multi-flight renewals signal strong promo-code and vanity-URL conversion with ${niche} buyers, I wanted to share an high-intent audience arbitrage opportunity with ${showTitle}:
+Because multi-flight renewals signal strong promo-code and vanity-URL conversion with ${niche} buyers, I wanted to share a high-intent audience arbitrage opportunity with ${showTitle}:
 
 • Verified Reach: ${audience.toLocaleString()} active subscribers/listeners per release
 • Audience Fit: High concentration of ${brand.vertical} decision-makers & technical buyers
 • De-Risked 3-Flight Pilot: 3x 60-second Host-Read Mid-Rolls + Dedicated Vanity Slug (${brand.domain}/${showTitle.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 10)}) + Custom Promo Code
 • Pilot Rate: $${package3FlightPrice.toLocaleString()} total for 3 flights ($${effectiveCpm} effective CPM — 15% below category benchmark of $${brand.avg_cpm} CPM)
-• Conversion Guarantee: If your vanity URL doesn't hit your baseline click-through benchmark across the first 3 flights, we run a 4th make-good insertion free.
+• Performance Floor: Guaranteed click-through floor with pro-rata CPM rate adjustment on renewal blocks
+• 1-Click Rate Card & Attribution Export ($1.99): https://www.sponsorradar.io/buy/flash_pass?brand=${encodeURIComponent(brand.slug || brand.name)}
+• Unlock Full Verified Sponsor & Contact Vault ($49/mo): https://www.sponsorradar.io/buy/complete_dossier?brand=${encodeURIComponent(brand.slug || brand.name)}
 
 Worth a quick 10-minute look at our Q4/Q1 attribution deck this Thursday?
 
 Best,
 [Your Name]
-${showTitle} • Verified via SponsorRadar Intelligence`;
+${showTitle} • Verified via SponsorRadar (https://www.sponsorradar.io)`;
 
   return {
     to_email: brand.sponsor_email,
     decision_maker_role: brand.decision_maker_role,
     subject,
     body,
+    direct_checkout_url: `https://www.sponsorradar.io/buy/complete_dossier?brand=${encodeURIComponent(brand.slug || brand.name)}`,
+    flash_checkout_url: `https://www.sponsorradar.io/buy/flash_pass?brand=${encodeURIComponent(brand.slug || brand.name)}`,
     proposed_single_rate_usd: proposedMidrollPrice,
     proposed_3flight_pilot_usd: package3FlightPrice,
     effective_cpm_usd: effectiveCpm

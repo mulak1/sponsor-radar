@@ -709,7 +709,7 @@ function buildClientRuntimeScript(cfg) {
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'zeigarnik_row4_reveal' }) })
       .then(function() {
         var bar = document.getElementById(formId || 'eb-save-scorecard-bar');
-        if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; Checklist Sent to ' + email.replace(/</g, '') + '!</span><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Unblur All Remaining Rows + File (99¢) →</button>';
+        if (bar) bar.innerHTML = '<span style="font-size:11.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; 1-Click Links Emailed to ' + email.replace(/</g, '') + '!</span><a href="/buy/micro_pass" onclick="window.__ebCheckout(\\\'micro_pass\\\');return false;" style="padding:5px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;text-decoration:none;font-weight:700;font-size:11px;cursor:pointer;">VIP Add-On: Unblur All Remaining Rows + File (99¢) →</a>';
       }).catch(function(){});
     return false;
   };
@@ -779,7 +779,7 @@ function buildClientRuntimeScript(cfg) {
       .then(function() {
         var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc');
         if (btn) btn.textContent = '✓ Row #4 Revealed!';
-        if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; Checklist Sent!</strong> Unlock all remaining rows + production file for <strong>99¢</strong> below:';
+        if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; 1-Click Links Sent!</strong> <a href="/buy/micro_pass" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;">Unblur all remaining rows + file for 99¢ →</a>';
       }).catch(function() {});
     return false;
   };
@@ -950,7 +950,7 @@ function buildClientRuntimeScript(cfg) {
   window.__ebCheckout = function(tier) {
     var cleanTier = typeof tier === 'string' ? tier : 'flash_pass';
     var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname };
-    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); if (targetUrl) window.location.href = targetUrl; }).catch(function(){});
+    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); window.location.href = targetUrl || ('/buy/' + encodeURIComponent(cleanTier)); }).catch(function(){ window.location.href = '/buy/' + encodeURIComponent(cleanTier); });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { window.__ebMountDeliverableCurtain(); });
   else window.__ebMountDeliverableCurtain();
