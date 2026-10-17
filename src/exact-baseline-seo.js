@@ -662,6 +662,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/floating-sparkline-visual-ui', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 19,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'floating-ui/floating-ui (★ 32,754) — Interactive Floating Frosted-Glass Telemetry Pill (#eb-hero-sparkline-pill) + Dynamic Dossier File-Format Loupe Badge (#eb-dossier-format-pill)',
+        'recharts/recharts (★ 27,636) & tremorlabs/tremor (★ 3,667) — Inline SVG Bezier Sparkline Micro-Visualization with 1-Tap Scenario Simulation & Unblurred Table Row 1–3 Live Benchmark Trigger (tr[data-eb-live-row])'
+      ],
+      features: {
+        floating_svg_sparkline_pill: true,
+        hero_card_scenario_cycling: true,
+        dossier_file_format_loupe_badge: true,
+        unblurred_row_live_benchmark_trigger: true,
+        owner_ip_test_exclusion_active: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

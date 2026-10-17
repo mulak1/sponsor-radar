@@ -50,6 +50,10 @@ function buildExactBaselineStyles(cfg) {
   .eb-doppelrand-shell:hover .eb-doppelrand-img { transform: scale(1.03); }
   .eb-doppelrand-caption, .eb-doppelrand-caption * { font-family: ${t.fontSans} !important; line-height: 1.25 !important; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; }
   .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 10.5px !important; color: ${t.textSecondary} !important; max-height: 40px; overflow: hidden; }
+  #eb-hero-sparkline-pill { position: absolute; top: 8px; right: 8px; z-index: 6; padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border: 1px solid ${t.accentBorder}; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: ${t.fontSans} !important; text-transform: none !important; letter-spacing: normal !important; }
+  #eb-dossier-format-pill { position: absolute; top: 6px; left: 6px; z-index: 6; padding: 2px 7px; border-radius: 999px; background: rgba(15, 23, 42, 0.80); backdrop-filter: blur(8px); color: #FFFFFF !important; font-family: "JetBrains Mono", monospace !important; font-size: 9.5px !important; font-weight: 700 !important; letter-spacing: 0.01em !important; text-transform: none !important; transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1); }
+  tr[data-eb-live-row] { cursor: pointer; transition: background-color 150ms ease; }
+  tr[data-eb-live-row]:hover { background-color: ${t.brandSoftBg} !important; }
   #eb-curtain-visual-split { display: grid; grid-template-columns: 185px minmax(0, 1fr); gap: 10px; align-items: stretch; margin-bottom: 10px; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 350px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
   #eb-bottom-conversion-suite { max-width: 1280px; margin: 40px auto 88px auto; padding: 0 24px; font-family: ${t.fontSans}; text-transform: none !important; }
@@ -115,80 +119,25 @@ function buildActionButtonsHtml(cfg) {
     { id: 'btn-reddit-share', label: 'Reddit MD', type: 'reddit' }
   ];
   return actions.map((a) => {
-    if (a.href) {
-      return `<a id="${esc(a.id)}" class="eb-action-btn" href="${esc(a.href)}" download onclick="window.__ebShowTripwire()">${esc(a.label)}</a>`;
-    }
-    const fn = a.type === 'copy' ? 'window.__ebCopySummary()'
-      : a.type === 'print' ? 'window.__ebPrintSheet()'
-      : a.type === 'hud' ? 'window.__ebToggleHud()'
-      : a.type === 'cmdk' ? 'window.__ebToggleCmdk()'
-      : 'window.__ebCopyReddit()';
+    if (a.href) return `<a id="${esc(a.id)}" class="eb-action-btn" href="${esc(a.href)}" download onclick="window.__ebShowTripwire()">${esc(a.label)}</a>`;
+    const fn = a.type === 'copy' ? 'window.__ebCopySummary()' : a.type === 'print' ? 'window.__ebPrintSheet()' : a.type === 'hud' ? 'window.__ebToggleHud()' : a.type === 'cmdk' ? 'window.__ebToggleCmdk()' : 'window.__ebCopyReddit()';
     return `<button type="button" id="${esc(a.id)}" class="eb-action-btn" onclick="${fn}">${esc(a.label)}</button>`;
   }).join('');
 }
 
 function buildScenarioAndExportWorkbenchHtml(cfg) {
   const t = getTheme(cfg);
-  const presetsHtml = cfg.presets
-    .map((p, idx) => `<button type="button" class="preset-chip" data-preset="${esc(p.key)}" onclick="window.__ebApplyPreset('${esc(p.key)}', ${idx})">${esc(p.label)}</button>`)
-    .join('');
-
-  const kpisHtml = cfg.kpis
-    .map((k) => `<div class="eb-kpi-card">
-      <div class="eb-kpi-label">${esc(k.label)}</div>
-      <div class="eb-kpi-val metric-box-value">${esc(k.val)}</div>
-      <div class="eb-kpi-sub">${esc(k.sub)}</div>
-    </div>`)
-    .join('');
-
-  const pillsHtml = cfg.coMarketingPills
-    .map((p, i) => `<button type="button" class="store-preview-pill${i === 0 ? ' active' : ''}" data-store="${esc(p.key)}" onclick="window.__ebSelectStorePill('${esc(p.key)}')">${esc(p.label)}</button>`)
-    .join('');
-
+  const presetsHtml = cfg.presets.map((p, idx) => `<button type="button" class="preset-chip" data-preset="${esc(p.key)}" onclick="window.__ebApplyPreset('${esc(p.key)}', ${idx})">${esc(p.label)}</button>`).join('');
+  const kpisHtml = cfg.kpis.map((k) => `<div class="eb-kpi-card"><div class="eb-kpi-label">${esc(k.label)}</div><div class="eb-kpi-val metric-box-value">${esc(k.val)}</div><div class="eb-kpi-sub">${esc(k.sub)}</div></div>`).join('');
+  const pillsHtml = cfg.coMarketingPills.map((p, i) => `<button type="button" class="store-preview-pill${i === 0 ? ' active' : ''}" data-store="${esc(p.key)}" onclick="window.__ebSelectStorePill('${esc(p.key)}')">${esc(p.label)}</button>`).join('');
   const actionsHtml = buildActionButtonsHtml(cfg);
-
   return `<div id="eb-executive-strip" class="eb-panel-card" aria-label="${esc(cfg.brandName)} Scenario Simulator & Export Utilities">
   <div id="results-section" style="display:block;">
-    <div class="eb-strip-top-bar">
-      <span class="eb-strip-eyebrow">✦ ${esc(cfg.brandName)} Interactive Benchmark &amp; Export Utilities</span>
-      <span id="headline-unlock-explainer" style="font-size:12px;color:${t.textMuted};">${esc(cfg.explainerText)}</span>
-    </div>
+    <div class="eb-strip-top-bar"><span class="eb-strip-eyebrow">✦ ${esc(cfg.brandName)} Interactive Benchmark &amp; Export Utilities</span><span id="headline-unlock-explainer" style="font-size:12px;color:${t.textMuted};">${esc(cfg.explainerText)}</span></div>
     <div id="preset-chips">${presetsHtml}</div>
-    <div id="eb-interactive-control-row">
-      <input type="text" id="eb-fuse-search-input" placeholder="${esc(cfg.searchPlaceholder || 'Filter scenario...')}" aria-label="Filter Scenario" oninput="window.__ebRunFuseSearch(this.value)" />
-      <label class="eb-slider-wrap" for="eb-nouislider-range">
-        <span id="eb-slider-readout">${esc(cfg.sliderLabel || 'Scale')}: ${esc(cfg.sliderVal || 50)}</span>
-        <input type="range" id="eb-nouislider-range" min="${esc(cfg.sliderMin || 1)}" max="${esc(cfg.sliderMax || 100)}" value="${esc(cfg.sliderVal || 50)}" oninput="window.__ebOnSliderInput(this.value)" />
-      </label>
-    </div>
-
-    <div id="free-metrics-grid" class="grid-metrics">
-      ${kpisHtml}
-      <div class="stat-pill-locked" id="summary-report-card">
-        <div class="eb-locked-top">
-          <span style="font-size:12px;font-weight:700;color:${t.brandText};">✦ ${esc(cfg.lockedTitle)} — Channel &amp; Protocol Insights</span>
-          <button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Toggle Insight ▾</button>
-        </div>
-        <div class="eb-store-pills">${pillsHtml}</div>
-        <div id="inline-aisle-peek-drawer">
-          <div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="lead-squeeze-card">
-      <div id="prog-instant-action-strip">
-        ${actionsHtml}
-        <button type="button" id="btn-calc" class="eb-action-btn" style="background:${t.brandSoftBg};color:${t.brandText};border-color:${t.accentBorder};font-weight:700;" onclick="window.__ebTriggerHostCalc()">Recalculate ↗</button>
-      </div>
-      <div id="tripwire-upsell-box">
-        <span>Need the full unblurred production deliverable &amp; multi-row exports? Unlock the <strong>Single-Audit Export Pass ($1.99)</strong> — one-time payment, no subscription.</span>
-        <button type="button" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;border-color:${t.brandPrimary};font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock $1.99 Pass →</button>
-      </div>
-      <div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};border:1px solid ${t.border};color:${t.safeColor};font-family:monospace;font-size:11.5px;">
-        [${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}
-      </div>
-    </div>
+    <div id="eb-interactive-control-row"><input type="text" id="eb-fuse-search-input" placeholder="${esc(cfg.searchPlaceholder || 'Filter scenario...')}" aria-label="Filter Scenario" oninput="window.__ebRunFuseSearch(this.value)" /><label class="eb-slider-wrap" for="eb-nouislider-range"><span id="eb-slider-readout">${esc(cfg.sliderLabel || 'Scale')}: ${esc(cfg.sliderVal || 50)}</span><input type="range" id="eb-nouislider-range" min="${esc(cfg.sliderMin || 1)}" max="${esc(cfg.sliderMax || 100)}" value="${esc(cfg.sliderVal || 50)}" oninput="window.__ebOnSliderInput(this.value)" /></label></div>
+    <div id="free-metrics-grid" class="grid-metrics">${kpisHtml}<div class="stat-pill-locked" id="summary-report-card"><div class="eb-locked-top"><span style="font-size:12px;font-weight:700;color:${t.brandText};">✦ ${esc(cfg.lockedTitle)} — Channel &amp; Protocol Insights</span><button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Toggle Insight ▾</button></div><div class="eb-store-pills">${pillsHtml}</div><div id="inline-aisle-peek-drawer"><div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div></div></div></div>
+    <div id="lead-squeeze-card"><div id="prog-instant-action-strip">${actionsHtml}<button type="button" id="btn-calc" class="eb-action-btn" style="background:${t.brandSoftBg};color:${t.brandText};border-color:${t.accentBorder};font-weight:700;" onclick="window.__ebTriggerHostCalc()">Recalculate ↗</button></div><div id="tripwire-upsell-box"><span>Need the full unblurred production deliverable &amp; multi-row exports? Unlock the <strong>Single-Audit Export Pass ($1.99)</strong> — one-time payment, no subscription.</span><button type="button" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;border-color:${t.brandPrimary};font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock $1.99 Pass →</button></div><div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};border:1px solid ${t.border};color:${t.safeColor};font-family:monospace;font-size:11.5px;">[${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}</div></div>
   </div>
 </div>`;
 }
@@ -474,6 +423,18 @@ function buildClientRuntimeScript(cfg) {
     window.__ebLogEvent('calculate', { source: 'curtain_roi_scale', multiplier: m });
   };
 
+  window.__ebCycleHeroScenario = function(ev) {
+    if (ev && ev.stopPropagation) ev.stopPropagation();
+    var list = (CFG.presets && CFG.presets.length) ? CFG.presets : [{ key: 'custom-benchmark', label: 'Live Scenario' }];
+    window.__ebHeroPresetIdx = ((window.__ebHeroPresetIdx || 0) + 1) % list.length;
+    var p = list[window.__ebHeroPresetIdx];
+    var curves = ['M1 11 C 9 10, 14 4, 22 6 C 29 8, 34 2, 41 2', 'M1 12 C 10 6, 18 9, 26 4 C 32 2, 37 5, 41 1', 'M1 9 C 8 11, 16 3, 24 7 C 31 4, 36 3, 41 2'];
+    var pathEl = document.getElementById('eb-sparkline-path'), lblEl = document.getElementById('eb-hero-sparkline-label');
+    if (pathEl) pathEl.setAttribute('d', curves[window.__ebHeroPresetIdx % curves.length]);
+    if (lblEl) lblEl.textContent = '⚡ ' + p.label + ' Simulated';
+    window.__ebCompileCustomCurtain(p.key);
+  };
+
   window.__ebCompileCustomCurtain = function(presetKey) {
     window.__ebUserInteracted = true;
     var inp = document.getElementById('eb-curtain-entity-input'), qIn = document.getElementById('eb-pseo-quick-input');
@@ -483,6 +444,10 @@ function buildClientRuntimeScript(cfg) {
     window.__ebActiveEntity = q;
     var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
     window.__ebLogEvent('calculate', { source: 'curtain_custom_compile', query: q });
+    var dPill = document.getElementById('eb-dossier-format-pill'), f0 = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' };
+    if (dPill) { dPill.textContent = '📄 ' + slug + '-' + f0.file + ' • ' + f0.size; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
+    var spLbl = document.getElementById('eb-hero-sparkline-label');
+    if (spLbl) spLbl.textContent = '✓ ' + q.slice(0, 18) + ' Active';
     fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
       .then(function(r) { return r.json(); })
       .then(function(data) {
@@ -521,6 +486,18 @@ function buildClientRuntimeScript(cfg) {
     var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
     if (tbody && !window.__ebIsUnlocked) {
       var trs = tbody.querySelectorAll('tr');
+      for (var r0 = 0; r0 < Math.min(3, trs.length); r0++) {
+        if (!trs[r0].hasAttribute('data-eb-live-row')) {
+          trs[r0].setAttribute('data-eb-live-row', String(r0 + 1));
+          trs[r0].title = 'Click row to benchmark & compile custom deliverable';
+          trs[r0].addEventListener('click', function(ev) {
+            if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return;
+            var td0 = this.querySelector('td, th');
+            var ent = td0 ? (td0.textContent || '').trim().slice(0, 36) : '';
+            if (ent) window.__ebCompileCustomCurtain(ent);
+          });
+        }
+      }
       for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
       var tblEl = tbody.closest('table');
       var tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
@@ -566,13 +543,22 @@ function buildClientRuntimeScript(cfg) {
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
       }
     }
+    var sparkPillHtml = '<div id="eb-hero-sparkline-pill" onclick="window.__ebCycleHeroScenario(event)" title="Tap to simulate live scenario"><span style="width:6px;height:6px;border-radius:50%;background:' + CFG.theme.safeColor + ';box-shadow:0 0 0 3px ' + CFG.theme.safeSoftBg + ';"></span><svg width="42" height="14" viewBox="0 0 42 14" fill="none" style="overflow:visible;"><path id="eb-sparkline-path" d="M1 11 C 9 10, 14 4, 22 6 C 29 8, 34 2, 41 2" stroke="' + CFG.theme.brandPrimary + '" stroke-width="1.8" stroke-linecap="round"/><circle cx="41" cy="2" r="2.2" fill="' + CFG.theme.safeColor + '"/></svg><span id="eb-hero-sparkline-label" class="eb-tabular" style="font-size:10px !important;font-weight:700 !important;color:#0F172A;white-space:nowrap;">⚡ Tap to Sim</span></div>';
+    var nativePhotoShell = document.querySelector('.editorial-photo-shell');
+    if (nativePhotoShell && !document.getElementById('eb-hero-sparkline-pill')) {
+      nativePhotoShell.style.position = 'relative';
+      nativePhotoShell.style.cursor = 'pointer';
+      nativePhotoShell.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
+      nativePhotoShell.insertAdjacentHTML('beforeend', sparkPillHtml);
+    }
     var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
-    if (leadAnchor && leadAnchor.parentNode && !document.querySelector('.editorial-photo-shell') && !document.getElementById('eb-doppelrand-hero-card')) {
+    if (leadAnchor && leadAnchor.parentNode && !nativePhotoShell && !document.getElementById('eb-doppelrand-hero-card')) {
       var heroCard = document.createElement('div');
       heroCard.id = 'eb-doppelrand-hero-card';
       heroCard.className = 'eb-doppelrand-shell';
-      heroCard.style.cssText = 'margin:10px 0 14px 0;';
-      heroCard.innerHTML = '<div class="eb-doppelrand-inner"><img src="/public/editorial-hero.jpg" alt="' + CFG.brandName + ' — ' + PERSONA.heroTitle + '" class="eb-doppelrand-img" style="height:178px;" loading="eager" fetchpriority="high" decoding="async" /><div class="eb-doppelrand-caption"><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong style="font-size:11px !important;color:#0F172A;font-weight:700 !important;">' + PERSONA.heroTitle + '</strong> <span style="font-size:10.5px !important;color:#475569;">• ' + PERSONA.heroSub + '</span></div><span style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700 !important;font-size:10px !important;white-space:nowrap;flex-shrink:0;">' + PERSONA.heroBadge + '</span></div></div>';
+      heroCard.style.cssText = 'margin:10px 0 14px 0;cursor:pointer;';
+      heroCard.onclick = function(ev) { window.__ebCycleHeroScenario(ev); };
+      heroCard.innerHTML = '<div class="eb-doppelrand-inner">' + sparkPillHtml + '<img src="/public/editorial-hero.jpg" alt="' + CFG.brandName + ' — ' + PERSONA.heroTitle + '" class="eb-doppelrand-img" style="height:178px;" loading="eager" fetchpriority="high" decoding="async" /><div class="eb-doppelrand-caption"><div style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong style="font-size:11px !important;color:#0F172A;font-weight:700 !important;">' + PERSONA.heroTitle + '</strong> <span style="font-size:10.5px !important;color:#475569;">• ' + PERSONA.heroSub + '</span></div><span style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700 !important;font-size:10px !important;white-space:nowrap;flex-shrink:0;">' + PERSONA.heroBadge + '</span></div></div>';
       var qBarEl = document.getElementById('eb-pseo-quick-bar');
       var heroInsertAfter = (qBarEl && qBarEl.parentNode === leadAnchor.parentNode) ? qBarEl : leadAnchor;
       heroInsertAfter.parentNode.insertBefore(heroCard, heroInsertAfter.nextSibling);
@@ -604,7 +590,8 @@ function buildClientRuntimeScript(cfg) {
     var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
       return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="padding:2px 7px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:600;cursor:pointer;">' + d + '</button>';
     }).join('');
-    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:112px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;">99¢ →</span></div></div></div><pre id="eb-prism-proof-preview" style="margin:0;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre></div>';
+    var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' };
+    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' • ' + fInit.size + '</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:112px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;">99¢ →</span></div></div></div><pre id="eb-prism-proof-preview" style="margin:0;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
@@ -680,6 +667,8 @@ function buildClientRuntimeScript(cfg) {
       allPills[p].style.color = active ? CFG.theme.brandPrimary : CFG.theme.textPrimary;
       allPills[p].style.borderColor = active ? CFG.theme.accentBorder : CFG.theme.border;
     }
+    var dPill = document.getElementById('eb-dossier-format-pill');
+    if (dPill) { dPill.textContent = '📄 ' + f.file + ' • ' + f.size; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
     var prevBox = document.getElementById('eb-prism-proof-preview');
     if (prevBox) prevBox.textContent = '// [ACTIVE TAB: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Lines 5–68 ready — Click "⚡ Download ' + f.file + ' (99¢)" or reveal Row #4 below]';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
