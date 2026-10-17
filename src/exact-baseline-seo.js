@@ -596,6 +596,24 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/autoanimate-postcalc-cta', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 16,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'formkit/auto-animate (★ 12,800+) & TanStack/query (★ 43,000+) — Post-Calculation Results-Adjacent Action Bar (#eb-postcalc-inline-cta) mounted directly above native calculator output + synchronized KPI/entity spotlight',
+        'downshift-js/downshift (★ 11,900+) & algolia/autocomplete (★ 4,000+) — 1-Tap Email Domain Auto-Chip Completer (.eb-domain-chip: @gmail.com, @icloud.com, @outlook.com) for zero-friction mobile/desktop lead capture'
+      ],
+      features: {
+        postcalc_results_adjacent_action_bar: true,
+        one_tap_email_domain_chips: true,
+        toast_post_lead_99c_vip_oto: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

@@ -416,15 +416,37 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebTriggerPostCalcSpotlight = function(entityName) {
     if (window.__ebIsUnlocked) return;
+    var label = entityName ? (': ' + String(entityName).slice(0, 26)) : '';
     var curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) curtain.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 12px 32px rgba(15,23,42,0.10)';
+    var pcBar = document.getElementById('eb-postcalc-inline-cta');
+    if (pcBar) {
+      pcBar.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 10px 26px rgba(15,23,42,0.10)';
+      var pcTitle = document.getElementById('eb-postcalc-cta-title');
+      if (pcTitle) pcTitle.textContent = '✦ Custom Result Ready' + label + ' — Unblur Full Output or Email Fix Checklist';
+    }
     var toast = document.getElementById('eb-ouibounce-toast');
     if (toast) {
       var tTitle = document.getElementById('eb-ouibounce-title');
-      if (tTitle) tTitle.textContent = '✦ Custom Diagnostic Ready' + (entityName ? ': ' + String(entityName).slice(0, 26) : '');
+      if (tTitle) tTitle.textContent = '✦ Custom Diagnostic Ready' + label;
       toast.style.display = 'block';
     }
     window.__ebLogEvent('view_paywall', { target: 'vaul_post_calc_spotlight' });
+  };
+
+  window.__ebFillEmailDomain = function(inputId, domain, formId) {
+    var inp = document.getElementById(inputId || 'eb-inline-scorecard-email');
+    if (!inp) return;
+    var val = (inp.value || '').trim();
+    var prefix = val.split('@')[0].trim();
+    if (prefix.length > 0) {
+      inp.value = prefix + domain;
+      window.__ebSaveInlineScorecard(null, inputId || 'eb-inline-scorecard-email', formId || 'eb-save-scorecard-bar');
+    } else {
+      inp.value = domain;
+      inp.focus();
+      try { inp.setSelectionRange(0, 0); } catch (_) {}
+    }
   };
 
   window.__ebSetCurtainRoiScale = function(mult) {
@@ -512,6 +534,19 @@ function buildClientRuntimeScript(cfg) {
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
     }
+    if (targetEl && !window.__ebIsUnlocked) {
+      targetEl.classList.add('eb-blurred-deliverable');
+      if (targetEl.parentNode && !document.getElementById('eb-postcalc-inline-cta')) {
+        var pcCta = document.createElement('div');
+        pcCta.id = 'eb-postcalc-inline-cta';
+        pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">✦ ' + CFG.freeDeliverableName + ' Ready — Unblur Output or Email 1-Page Checklist:</span>'
+          + '<div style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;"><form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:inline-flex;gap:4px;align-items:center;margin:0;"><input type="email" id="eb-postcalc-email-input" placeholder="Email for Checklist + Row #4..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" style="padding:4px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;">📩 Send Checklist</button></form>'
+          + '<button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢)</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">3-File Bundle ($1.99) →</button></div>';
+        targetEl.parentNode.insertBefore(pcCta, targetEl);
+        if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
+      }
+    }
     var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
     var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
     var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
@@ -520,7 +555,6 @@ function buildClientRuntimeScript(cfg) {
     var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
     if (previewLines.length > 200) previewLines = previewLines.slice(0, 200) + ' ...';
-    if (targetEl && !window.__ebIsUnlocked) targetEl.classList.add('eb-blurred-deliverable');
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
@@ -537,6 +571,9 @@ function buildClientRuntimeScript(cfg) {
     }).join('');
     var chipsHtml = (CFG.presets || []).map(function(p) {
       return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:11px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
+    }).join('');
+    var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
+      return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="padding:2px 7px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:600;cursor:pointer;">' + d + '</button>';
     }).join('');
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
@@ -557,7 +594,7 @@ function buildClientRuntimeScript(cfg) {
       + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>'
       + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
-      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want the 1-Page Executive Fix Checklist + Row #4?</strong> Reveal Row #4 on-screen + email checklist:</span>'
+      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want the 1-Page Executive Fix Checklist + Row #4?</strong> Type prefix &amp; tap domain: ' + domChipsHtml + '</span>'
       + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
       + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work email for 1-Page Checklist + Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
       + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">📩 Send Fix Checklist + Row #4 →</button></div></form>';
@@ -628,7 +665,7 @@ function buildClientRuntimeScript(cfg) {
     if (ev && ev.preventDefault) ev.preventDefault();
     var inp = document.getElementById(inputId || 'eb-inline-scorecard-email');
     var email = inp ? inp.value.trim() : '';
-    if (!email) return false;
+    if (!email || email.indexOf('@') <= 0) return false;
     var r4 = document.querySelector('tr.eb-blurred-deliverable');
     if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
     var prevBox = document.getElementById('eb-prism-proof-preview');
@@ -704,8 +741,9 @@ function buildClientRuntimeScript(cfg) {
     if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) })
       .then(function() {
-        var btn = document.getElementById('btn-ouibounce-submit');
+        var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc');
         if (btn) btn.textContent = '✓ Row #4 Revealed!';
+        if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; Checklist Sent!</strong> Unlock all remaining rows + production file for <strong>99¢</strong> below:';
       }).catch(function() {});
     return false;
   };
@@ -790,7 +828,7 @@ function buildClientRuntimeScript(cfg) {
           if (entry.isIntersecting && !paywallLogged) { paywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
         });
       }, { threshold: 0.15 });
-      ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-pseo-quick-bar'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
+      ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-pseo-quick-bar', 'eb-postcalc-inline-cta'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
     }
   } catch (_) {}
 
@@ -906,7 +944,6 @@ function renderExactBaselineEnhancements(html, cfg, reqPath) {
   const bottomSuite = buildBottomConversionSuiteHtml(cfg, reqPath);
   const clientJs = buildClientRuntimeScript(cfg);
   out = out.includes('</head>') ? out.replace('</head>', () => `${styles}\n</head>`) : styles + out;
-  // CRITICAL: Do NOT inject any box at the top of <main>! Keep the native Hero & Interactive Workbench first above the fold!
   if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${bottomSuite}\n${m}`);
   else if (out.includes('</body>')) out = out.replace('</body>', () => `${bottomSuite}\n</body>`);
   else out = `${out}\n${bottomSuite}`;
@@ -915,53 +952,12 @@ function renderExactBaselineEnhancements(html, cfg, reqPath) {
 
 function renderEmbedWidgetHtml(cfg) {
   const t = getTheme(cfg);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(cfg.brandName)} — Embeddable Benchmark Widget</title>
-  ${buildExactBaselineStyles(cfg)}
-</head>
-<body style="margin:0;padding:12px;background:${t.canvasBg};color:${t.textPrimary};">
-  ${buildScenarioAndExportWorkbenchHtml(cfg)}
-  <div style="text-align:right;font-size:11px;margin-top:6px;">
-    Powered by <a href="https://${esc(cfg.domain)}" target="_blank" rel="dofollow" style="color:${t.brandPrimary};font-weight:700;">${esc(cfg.brandName)} (${esc(cfg.domain)})</a>
-  </div>
-  ${buildClientRuntimeScript(cfg)}
-</body>
-</html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${esc(cfg.brandName)} — Embeddable Benchmark Widget</title>${buildExactBaselineStyles(cfg)}</head><body style="margin:0;padding:12px;background:${t.canvasBg};color:${t.textPrimary};">${buildScenarioAndExportWorkbenchHtml(cfg)}<div style="text-align:right;font-size:11px;margin-top:6px;">Powered by <a href="https://${esc(cfg.domain)}" target="_blank" rel="dofollow" style="color:${t.brandPrimary};font-weight:700;">${esc(cfg.brandName)} (${esc(cfg.domain)})</a></div>${buildClientRuntimeScript(cfg)}</body></html>`;
 }
 
 function renderSampleDossierHtml(cfg) {
   const t = getTheme(cfg);
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(cfg.brandName)} — Executive Sample Dossier & Pass Options</title>
-  ${buildExactBaselineStyles(cfg)}
-</head>
-<body style="margin:0;padding:20px;background:${t.canvasBg};color:${t.textPrimary};font-family:${t.fontSans};">
-  <div style="max-width:960px;margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <a href="/" style="color:${t.textSecondary};text-decoration:none;font-size:13px;">← Back to ${esc(cfg.brandName)}</a>
-      <button id="btn-top-pass-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock Single-Audit Pass — $1.99</button>
-    </div>
-    <h1 class="dossier-hero-title" style="margin:0 0 8px 0;font-family:${t.fontDisplay};">${esc(cfg.brandName)} — Verified Sample Deliverable</h1>
-    <div class="hero-tier-diff" style="margin-bottom:14px;font-size:13px;color:${t.textSecondary};">
-      Choose between the <strong>$1.99 Single-Audit Pass</strong> (Instant Export) or the <strong>${esc(cfg.coreLabel)}</strong>.
-    </div>
-  </div>
-  ${buildBottomConversionSuiteHtml(cfg, '/dossier/sample')}
-  ${buildClientRuntimeScript(cfg)}
-</body>
-</html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${esc(cfg.brandName)} — Executive Sample Dossier & Pass Options</title>${buildExactBaselineStyles(cfg)}</head><body style="margin:0;padding:20px;background:${t.canvasBg};color:${t.textPrimary};font-family:${t.fontSans};"><div style="max-width:960px;margin:0 auto;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><a href="/" style="color:${t.textSecondary};text-decoration:none;font-size:13px;">← Back to ${esc(cfg.brandName)}</a><button id="btn-top-pass-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock Single-Audit Pass — $1.99</button></div><h1 class="dossier-hero-title" style="margin:0 0 8px 0;font-family:${t.fontDisplay};">${esc(cfg.brandName)} — Verified Sample Deliverable</h1><div class="hero-tier-diff" style="margin-bottom:14px;font-size:13px;color:${t.textSecondary};">Choose between the <strong>$1.99 Single-Audit Pass</strong> (Instant Export) or the <strong>${esc(cfg.coreLabel)}</strong>.</div></div>${buildBottomConversionSuiteHtml(cfg, '/dossier/sample')}${buildClientRuntimeScript(cfg)}</body></html>`;
 }
 
-module.exports = {
-  renderExactBaselineEnhancements,
-  renderEmbedWidgetHtml,
-  renderSampleDossierHtml
-};
+module.exports = { renderExactBaselineEnhancements, renderEmbedWidgetHtml, renderSampleDossierHtml };
