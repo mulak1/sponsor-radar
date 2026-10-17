@@ -23,7 +23,7 @@ const AI_CRAWLER_AGENTS = [
   'Amazonbot', 'YouBot', 'DuckAssistBot', 'CCBot', 'Cohere-ai', 'Bytespider'
 ];
 
-const CRAWLER_UA_REGEX = /(googlebot|googlebot-mobile|google-extended|googleother|google-inspectiontool|bingbot|msnbot|perplexitybot|perplexity-user|gptbot|oai-searchbot|chatgpt-user|claudebot|claude-web|claude-searchbot|anthropic-ai|anthropic|applebot|applebot-extended|meta-externalagent|meta-externalfetcher|facebookbot|facebookexternalhit|amazonbot|youbot|duckassistbot|duckduckbot|ccbot|cohere-ai|bytespider|ahrefsbot|semrushbot|yandex|baiduspider|twitterbot|linkedinbot|slackbot|discordbot)/i;
+const CRAWLER_UA_REGEX = /(googlebot|googlebot-mobile|google-extended|googleother|google-inspectiontool|bingbot|msnbot|perplexitybot|perplexity-user|gptbot|oai-searchbot|chatgpt-user|claudebot|claude-web|claude-searchbot|anthropic-ai|anthropic|applebot|applebot-extended|meta-externalagent|meta-externalfetcher|facebookbot|facebookexternalhit|amazonbot|youbot|duckassistbot|duckduckbot|ccbot|cohere-ai|bytespider|ahrefsbot|semrushbot|yandex|baiduspider|twitterbot|linkedinbot|slackbot|discordbot|petalbot|mj12bot|dotbot|rogerbot|dataforseo|screaming frog|prerender|phantomjs|slurp|seznambot|sogou|ia_archiver|wget|axios|got\/|okhttp|httpx|aiohttp|scrapy|libwww|python-urllib|java\/)/i;
 
 function escXml(str) {
   return String(str || '')
@@ -698,6 +698,26 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
         pseo_two_column_hero_split: true,
         uniform_three_tier_pricing_headers: true,
         uncluttered_230px_dossier_preview: true
+      }
+    });
+  });
+
+  app.get('/api/github-upgrade/interactive-hotspot-pseo-symmetry', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 21,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'framer/motion (★ 26,400+) & radix-ui/primitives (★ 16,500+) — Native .hero-split Aware pSEO 2-Column Symmetry (zero nested splits on AbandonAlpha /seo/:slug) + Full-Height Executive Summary Lead Card (.eb-pseo-lead-card) on SponsorRadar & DermLogic /seo/:slug',
+        'tanstack/table (★ 26,100+) & AnswerDotAI/llms-txt — Deduplicated Single-Bar pSEO Benchmark Header (#eb-pseo-quick-bar) + Expanded Headless/Verifier Crawler Classifier (CRAWLER_UA_REGEX)'
+      ],
+      features: {
+        zero_nested_pseo_hero_splits: true,
+        full_height_pseo_executive_lead_card: true,
+        deduplicated_pseo_benchmark_bar: true,
+        full_width_1240px_pseo_deliverable_curtain: true,
+        expanded_crawler_ua_classifier: true,
+        owner_ip_test_exclusion_active: true
       }
     });
   });

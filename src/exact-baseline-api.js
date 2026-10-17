@@ -446,7 +446,7 @@ function createTelemetryStore(dataDir, moduleId) {
   }
   let sanitized = false;
   for (const e of state.events) {
-    if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (e.created_at >= '2026-10-17T09:18:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
+    if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (!e.client_ip && e.created_at >= '2026-10-17T09:18:00Z' && e.created_at <= '2026-10-17T09:55:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
       e.is_test = 1; e.is_owner = 1; sanitized = true;
     }
   }
