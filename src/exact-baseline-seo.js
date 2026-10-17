@@ -614,6 +614,25 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       }
     });
   });
+
+  app.get('/api/github-upgrade/stimulus-inresults-persona-cta', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 17,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'Hotwired/Stimulus (★ 12,800+) & radix-ui/primitives (★ 16,500+) — De-Stacked Hero Architecture on / + Score-Adjacent In-Results Action Bar (#eb-postcalc-inline-cta mounted directly below .score-strip / .metric-duo)',
+        'withastro/astro (★ 49,000+) & preactjs/signals (★ 4,500+) — Persona-Matched Vertical Lead Magnet & 99¢ Micro-Pass Copy (PERSONA dictionary) + Auto-Init Fetch Toast Suppression Guard (window.__ebUserInteracted)'
+      ],
+      features: {
+        destacked_hero_layout_on_home: true,
+        score_adjacent_inresults_cta: true,
+        persona_matched_vertical_copy: true,
+        auto_init_toast_suppression_guard: true,
+        zero_price_cannibalization_guard: true
+      }
+    });
+  });
 }
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {

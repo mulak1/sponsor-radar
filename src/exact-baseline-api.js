@@ -909,7 +909,7 @@ function attachExactBaselinePack(app, options = {}) {
       });
     }
 
-    if (req.method === 'POST' && /^\/api\/(audit|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) {
+    if (req.method === 'POST' && !req.headers['x-auto-init'] && /^\/api\/(audit|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) {
       store.recordEvent({
         eventType: 'calculate',
         pageUrl: req.originalUrl || req.path,

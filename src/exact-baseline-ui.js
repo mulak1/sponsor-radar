@@ -376,6 +376,14 @@ function buildClientRuntimeScript(cfg) {
   var STORAGE_KEY = 'eb_paid_unlocked_v6_' + CFG.moduleId;
   window.__ebIsUnlocked = false;
   window.__ebActiveEntity = '';
+  window.__ebUserInteracted = false;
+  var PERSONA = ({
+    derm_logic: { leadBtn: '📩 Email My AM/PM Routine', leadPh: 'Email for AM/PM Routine + Conflict Fix...', microBtn: '⚡ 9:16 Wallet Card (99¢)', ctaTitle: '✦ Routine Safety Verdict Ready — Email AM/PM Split or Save Wallet Card:' },
+    sponsor_radar: { leadBtn: '📩 Send Pitch Template + Row #4', leadPh: 'Work email for Sponsor Pitch + Row #4...', microBtn: '⚡ Buyer Email + CSV (99¢)', ctaTitle: '✦ Sponsor ROI & Buyer Match Ready — Email Pitch or Unblur Direct Email:' },
+    citation_forge: { leadBtn: '📩 Send GEO Checklist + Row #4', leadPh: 'Work email for GEO Checklist + Row #4...', microBtn: '⚡ llms-full.txt (99¢)', ctaTitle: '✦ AI Citation Audit Ready — Email GEO Checklist or Download llms-full.txt:' },
+    abandon_alpha: { leadBtn: '📩 Send Retry Playbook + Row #4', leadPh: 'Work email for Retry Playbook + Row #4...', microBtn: '⚡ Bandit SDK + Worker (99¢)', ctaTitle: '✦ Recovery Audit Ready — Email Retry Playbook or Download Bandit SDK:' }
+  })[CFG.moduleId] || { leadBtn: '📩 Send Fix Checklist + Row #4', leadPh: 'Work email for 1-Page Checklist...', microBtn: '⚡ Single-File (99¢)', ctaTitle: '✦ Deliverable Ready — Email Checklist or Unblur Output:' };
+  ['pointerdown', 'keydown', 'input'].forEach(function(ev) { document.addEventListener(ev, function() { window.__ebUserInteracted = true; }, { passive: true, once: true }); });
   try {
     if (localStorage.getItem(STORAGE_KEY) === '1' || window.location.search.indexOf('checkout=success') !== -1 || window.location.search.indexOf('unlock=flash_pass') !== -1) {
       window.__ebIsUnlocked = true;
@@ -416,17 +424,17 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebTriggerPostCalcSpotlight = function(entityName) {
     if (window.__ebIsUnlocked) return;
-    var label = entityName ? (': ' + String(entityName).slice(0, 26)) : '';
+    var label = entityName ? (' (' + String(entityName).slice(0, 26) + ')') : '';
     var curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) curtain.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 12px 32px rgba(15,23,42,0.10)';
     var pcBar = document.getElementById('eb-postcalc-inline-cta');
     if (pcBar) {
       pcBar.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 10px 26px rgba(15,23,42,0.10)';
       var pcTitle = document.getElementById('eb-postcalc-cta-title');
-      if (pcTitle) pcTitle.textContent = '✦ Custom Result Ready' + label + ' — Unblur Full Output or Email Fix Checklist';
+      if (pcTitle) pcTitle.textContent = PERSONA.ctaTitle.replace('Ready', 'Ready' + label);
     }
     var toast = document.getElementById('eb-ouibounce-toast');
-    if (toast) {
+    if (toast && window.__ebUserInteracted) {
       var tTitle = document.getElementById('eb-ouibounce-title');
       if (tTitle) tTitle.textContent = '✦ Custom Diagnostic Ready' + label;
       toast.style.display = 'block';
@@ -458,6 +466,7 @@ function buildClientRuntimeScript(cfg) {
   };
 
   window.__ebCompileCustomCurtain = function(presetKey) {
+    window.__ebUserInteracted = true;
     var inp = document.getElementById('eb-curtain-entity-input'), qIn = document.getElementById('eb-pseo-quick-input');
     if (presetKey && inp) inp.value = presetKey;
     if (presetKey && qIn) qIn.value = presetKey;
@@ -487,8 +496,7 @@ function buildClientRuntimeScript(cfg) {
 
   window.__ebMountDeliverableCurtain = function(entityOverride) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
-    var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
-    var firstFile = (CFG.deliverableFiles && CFG.deliverableFiles[0]) ? CFG.deliverableFiles[0].file : 'Single-File';
+    var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('walletConflicts') || document.getElementById('appleWalletCardPreview');
 
     if (CFG.moduleId === 'sponsor_radar') {
       var emailNodes = [document.getElementById('res-dm-email')].concat(Array.prototype.slice.call(document.querySelectorAll('.kpi-box .kpi-val, .pitch-box .mono')));
@@ -529,28 +537,30 @@ function buildClientRuntimeScript(cfg) {
         qBar.id = 'eb-pseo-quick-bar';
         qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0 12px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
         qBar.innerHTML = dListHtml + '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="eb-pseo-quick-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" id="btn-pseo-quick-calc" onclick="var v=document.getElementById(\\\'eb-pseo-quick-input\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;"></span></div>'
-          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="Work email for 1-Page Checklist..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">📩 Send Fix Checklist + Row #4</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢) →</button></form>';
+          + '<form id="eb-quick-inline-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-quick-inline-email\\\', \\\'eb-quick-inline-form\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="eb-quick-inline-email" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-pseo-quick-email" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button><button type="button" id="btn-pseo-quick-micro" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + ' →</button></form>';
         h1Node.parentNode.insertBefore(qBar, h1Node.nextSibling);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       }
     }
-    if (targetEl && !window.__ebIsUnlocked) {
-      targetEl.classList.add('eb-blurred-deliverable');
-      if (targetEl.parentNode && !document.getElementById('eb-postcalc-inline-cta')) {
+    var scoreAnchor = document.querySelector('#liveResultsContainer .score-strip, .telemetry-card .metric-duo, #results-panel .kpi-grid');
+    if ((scoreAnchor || targetEl) && !window.__ebIsUnlocked) {
+      if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
+      if (!document.getElementById('eb-postcalc-inline-cta')) {
         var pcCta = document.createElement('div');
         pcCta.id = 'eb-postcalc-inline-cta';
-        pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 11px;margin:8px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">✦ ' + CFG.freeDeliverableName + ' Ready — Unblur Output or Email 1-Page Checklist:</span>'
-          + '<div style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;"><form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:inline-flex;gap:4px;align-items:center;margin:0;"><input type="email" id="eb-postcalc-email-input" placeholder="Email for Checklist + Row #4..." required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" style="padding:4px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;">📩 Send Checklist</button></form>'
-          + '<button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">⚡ ' + firstFile + ' (99¢)</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">3-File Bundle ($1.99) →</button></div>';
-        targetEl.parentNode.insertBefore(pcCta, targetEl);
+        pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:11.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span>'
+          + '<div style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;"><form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:inline-flex;gap:4px;align-items:center;margin:0;"><input type="email" id="eb-postcalc-email-input" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-postcalc-email-submit" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button></form>'
+          + '<button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:5px 11px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">3-File Bundle ($1.99) →</button></div>';
+        if (scoreAnchor && scoreAnchor.parentNode) scoreAnchor.parentNode.insertBefore(pcCta, scoreAnchor.nextSibling);
+        else if (targetEl && targetEl.parentNode) targetEl.parentNode.insertBefore(pcCta, targetEl);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
       }
     }
     var leadAnchor = document.querySelector('.pseo-lead, .subhead, .hero-sub, main h1 ~ p, article h1 ~ p') || document.getElementById('eb-pseo-quick-bar');
     var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
     var seoTargetEl = isPseoOrDir ? (document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || document.querySelector('main table, article table') || document.querySelector('.pitch-box, main .panel, article .panel, main .card, main section')) : null;
-    var mountAnchor = leadAnchor || tBarAnchor || seoTargetEl || targetEl;
+    var mountAnchor = isPseoOrDir ? (leadAnchor || tBarAnchor || seoTargetEl || targetEl) : (tBarAnchor || targetEl || leadAnchor);
     if (!mountAnchor) return;
     var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
@@ -589,18 +599,18 @@ function buildClientRuntimeScript(cfg) {
       + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:8px;border-top:1px solid ' + CFG.theme.border + ';">'
       + '<div style="font-size:12px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">🔒 Instant Browser Unblur &amp; Production File Download</strong><br/><span>1-Time Pass • No account or subscription • Apple Pay / Google Pay / Link</span></div>'
       + '<div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">'
-      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">⚡ Download ' + firstFile + ' (99¢)</button>'
+      + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11.5px;">' + PERSONA.microBtn + '</button>'
       + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:9px 15px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:12.5px;">Unlock 3-File Bundle ($1.99) →</button>'
       + '<button type="button" id="btn-curtain-complete-pass" onclick="window.__ebCheckout(\\\'complete_dossier\\\')" style="padding:8px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-weight:600;font-size:11.5px;">Complete Pack ($' + CFG.corePriceUsd + ')</button>'
       + '</div></div>'
       + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">'
-      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Want the 1-Page Executive Fix Checklist + Row #4?</strong> Type prefix &amp; tap domain: ' + domChipsHtml + '</span>'
+      + '<span style="font-size:11.5px;color:' + CFG.theme.textSecondary + ';">🔓 <strong>Prefer Email Delivery + Row #4 Reveal?</strong> Type prefix &amp; tap domain: ' + domChipsHtml + '</span>'
       + '<div style="display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;">'
-      + '<input type="email" id="eb-inline-scorecard-email" placeholder="Work email for 1-Page Checklist + Row #4..." required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
-      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">📩 Send Fix Checklist + Row #4 →</button></div></form>';
+      + '<input type="email" id="eb-inline-scorecard-email" placeholder="' + PERSONA.leadPh + '" required style="padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;min-width:185px;" />'
+      + '<button type="submit" id="btn-save-scorecard" style="padding:5px 11px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:11px;cursor:pointer;">' + PERSONA.leadBtn + ' →</button></div></form>';
 
     if (mountAnchor.parentNode) {
-      if (mountAnchor === tBarAnchor) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
+      if (mountAnchor === tBarAnchor || mountAnchor === targetEl) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
       else mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     }
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -752,6 +762,7 @@ function buildClientRuntimeScript(cfg) {
   if (origFetch) {
     window.fetch = function(input, init) {
       var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+      var isAutoInit = !!(init && init.headers && (init.headers['x-auto-init'] || init.headers['X-Auto-Init']));
       return origFetch.apply(this, arguments).then(function(res) {
         if (url.indexOf('/api/checkout') !== -1) {
           try {
@@ -782,7 +793,7 @@ function buildClientRuntimeScript(cfg) {
                   if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
                 }
               }
-              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); window.__ebTriggerPostCalcSpotlight(entityName); }, 90);
+              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); if (!isAutoInit && window.__ebUserInteracted) window.__ebTriggerPostCalcSpotlight(entityName); }, 90);
             }).catch(function(){});
           } catch (_) {}
         }
