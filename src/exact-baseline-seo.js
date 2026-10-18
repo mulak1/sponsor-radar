@@ -156,6 +156,10 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/complete_dossier): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
     `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/pro_b2b): Direct 1-click Stripe Checkout for continuous B2B / Agency access.`,
     '',
+    '## Public Scan Permalinks & Hall of Fame Leaderboard (/leaderboard & /scan/:target)',
+    `- [Public Hall of Fame (A+) & Wall of Shame Leaderboard](${host}/leaderboard) ([.md](${host}/leaderboard.md)): Ranked public entity scorecards with CNN visual/acoustic sensor readouts.`,
+    ...loadPublicScanLedger(cfg).slice(0, 12).map((s) => `- [${s.target} — Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
+    '',
     '## Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
     ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
     ...getGrowthConfig(cfg.moduleId).comparisons.map((c) => `- [${c.title}](${host}/compare/${c.slug}) ([.md](${host}/compare/${c.slug}.md)): ${c.summary}`),
@@ -285,11 +289,13 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   app.get('/robots.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_robots', pageUrl: '/robots.txt', isTest, isCrawler });
-    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /tools/\nAllow: /compare/\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /openapi.json\n`).join('\n');
+    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /scan/\nAllow: /leaderboard\nAllow: /tools/\nAllow: /compare/\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /openapi.json\n`).join('\n');
     const txt = [
       'User-agent: *',
       'Allow: /',
       'Allow: /seo/',
+      'Allow: /scan/',
+      'Allow: /leaderboard',
       'Allow: /tools/',
       'Allow: /compare/',
       'Allow: /badge/',
@@ -309,6 +315,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       `Host: ${cfg.domain}`,
       `Sitemap: ${hostUrl}/sitemap-index.xml`,
       `Sitemap: ${hostUrl}/sitemap.xml`,
+      `Sitemap: ${hostUrl}/sitemap-scans.xml`,
       `Sitemap: ${hostUrl}/sitemap-images.xml`,
       `Sitemap: ${hostUrl}/feed.xml`
     ].join('\n');
@@ -368,10 +375,12 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const g = getGrowthConfig(cfg.moduleId);
     const growthUrls = includeStatic ? [
       ...g.tools.map((t) => ({ loc: `${hostUrl}/tools/${escXml(t.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(t.target)}`, title: t.title })),
-      ...g.comparisons.map((c) => ({ loc: `${hostUrl}/compare/${escXml(c.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(c.target)}`, title: c.title }))
+      ...g.comparisons.map((c) => ({ loc: `${hostUrl}/compare/${escXml(c.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(c.target)}`, title: c.title })),
+      ...loadPublicScanLedger(cfg).slice(0, 16).map((s) => ({ loc: `${hostUrl}/scan/${escXml(encodeURIComponent(s.target))}`, priority: '0.85', changefreq: 'daily', img: `${hostUrl}/api/badge/cnn/${encodeURIComponent(s.target)}.svg`, title: `${s.target} — ${cfg.brandName} Audit (${s.grade})` }))
     ] : [];
     const staticUrls = includeStatic ? [
       { loc: `${hostUrl}/`, priority: '1.0', changefreq: 'daily', img: `${hostUrl}/api/og?slug=home`, title: `${cfg.brandName} — Official Workbench` },
+      { loc: `${hostUrl}/leaderboard`, priority: '0.95', changefreq: 'daily', img: `${hostUrl}/api/og?slug=leaderboard`, title: `${cfg.brandName} — Public Hall of Fame & Wall of Shame Leaderboard` },
       { loc: `${hostUrl}/directory`, priority: '0.9', changefreq: 'daily', img: `${hostUrl}/api/og?slug=directory`, title: `${cfg.brandName} — Full 60+ Benchmark Directory` },
       { loc: `${hostUrl}/lp`, priority: '0.8', changefreq: 'weekly', img: `${hostUrl}/api/og?slug=lp`, title: `${cfg.brandName} — Direct Audit` },
       { loc: `${hostUrl}/llms.txt`, priority: '0.9', changefreq: 'daily' },
@@ -398,7 +407,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   };
 
   app.get('/sitemap-index.xml', (req, res) => {
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${hostUrl}/sitemap.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-pages.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-seo.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-images.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n</sitemapindex>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${hostUrl}/sitemap.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-pages.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-seo.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-scans.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-images.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n</sitemapindex>`;
     res.status(200).type('application/xml; charset=utf-8').send(xml);
   });
   app.get('/sitemap.xml', (req, res) => {

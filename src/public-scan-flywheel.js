@@ -458,14 +458,15 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
   app.get('/api/github-upgrade/cnn-public-scan-flywheel', (req, res) => {
     return res.json({
       ok: true,
-      iteration: 33,
+      iteration: 34,
       module_id: cfg.moduleId,
       github_repos: [
         'anuraghazra/github-readme-stats (★ 69,000+) & badges/shields (★ 23,000+) — Multi-Metric SVG CNN Scorecard (/api/badge/cnn/:target.svg) & Public Ego-Bait Leaderboard (/leaderboard)',
         'huggingface/transformers.js (★ 13,500+) & microsoft/onnxruntime (★ 16,200+) — Interactive Live ONNX/CNN Sensor Workbench (#eb-onnx-cnn-workbench) with Custom Scan Input',
-        'react-hook-form/react-hook-form (★ 42,000+) & emilkowalski/vaul (★ 7,500+) — Inline Row #4 Instant Email Reveal + 99¢ Micro-Pass Strip (#eb-inline-row4-unlock)'
+        'react-hook-form/react-hook-form (★ 42,000+) & emilkowalski/vaul (★ 7,500+) — Inline Row #4 Instant Email Reveal + 99¢ Micro-Pass Strip (#eb-inline-row4-unlock)',
+        'ekalinin/sitemap.js (★ 1,900+) & AnswerDotAI/llms-txt (★ 3,100+) — Unified Sitemap Index (/sitemap-scans.xml), Image Sitemaps & llms.txt Public Scan Graph'
       ],
-      features: { interactive_onnx_cnn_workbench: true, cnn_inspect_calc_telemetry: true, multi_metric_svg_cnn_card: true, inline_row4_email_reveal_and_custom_scan: true },
+      features: { interactive_onnx_cnn_workbench: true, cnn_inspect_calc_telemetry: true, multi_metric_svg_cnn_card: true, inline_row4_email_reveal_and_custom_scan: true, unified_sitemap_and_llms_txt_scan_graph: true },
       endpoints: { leaderboard: `https://${cfg.domain}/leaderboard`, sample_scan: `https://${cfg.domain}/scan/${encodeURIComponent(cat.entities[0].target)}`, cnn_inspect: `https://${cfg.domain}/api/cnn/inspect?target=${encodeURIComponent(cat.entities[0].target)}`, cnn_svg_card: `https://${cfg.domain}/api/badge/cnn/${encodeURIComponent(cat.entities[0].target)}.svg`, sitemap_scans: `https://${cfg.domain}/sitemap-scans.xml` }
     });
   });
