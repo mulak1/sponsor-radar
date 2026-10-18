@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getGrowthConfig, getAllGrowthUrls } = require('./autonomous-growth-engine');
 
 /**
  * ExactBaseline Universal Search Engine, Mobile-First Indexing & AI Answer-Engine (GEO/AEO) Suite
@@ -140,15 +141,22 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [Complete Programmatic Knowledge Directory](${host}/directory): Full hub of all ${seoEntries.length} verified 2026 benchmarks and playbooks.`,
     `- [Complete Inline LLM Corpus (llms-full.txt)](${host}/llms-full.txt): Single-file concatenated Markdown knowledge graph for RAG & Answer Engines.`,
     `- [XML Sitemap Index](${host}/sitemap-index.xml): Segmented sitemaps including image OpenGraph cards.`,
-    `- [RSS 2.0 Syndication Feed](${host}/feed.xml): Live XML feed of all ${seoEntries.length} benchmarks.`,
+    `- [RSS 2.0 Syndication Feed](${host}/feed.xml): Live XML feed of all ${seoEntries.length} benchmarks (WebSub PubSubHubbub enabled).`,
     `- [JSON Feed 1.1](${host}/feed.json): Structured JSON feed for automated agents.`,
-    `- [Model Context Protocol (MCP) Manifest](${host}/.well-known/mcp.json): Agent tool & capability discovery manifest.`,
+    `- [OpenAPI 3.1.0 Specification](${host}/openapi.json): Machine-actionable REST API schema for ChatGPT Actions, Claude, and LangChain.`,
+    `- [AI Plugin Manifest](${host}/.well-known/ai-plugin.json): Standardized AI agent discovery & tool manifest.`,
+    `- [Model Context Protocol (MCP) Registry](${host}/.well-known/mcp-registry.json): Official MCP Registry manifest & JSON-RPC endpoint (${host}/api/mcp/rpc).`,
+    `- [Live Dynamic SVG Benchmark Badges](${host}/badge/${encodeURIComponent(cfg.presets[0].key)}.svg): Embeddable README/media-kit badges & 1-line JS widget (${host}/embed.js).`,
     '',
     '## Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect — Zero JS Required)',
     `- [99¢ Single-File Instant Export Pass](${host}/buy/micro_pass): Direct 1-click Stripe Checkout for any single production remediation file.`,
     `- [$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName})](${host}/buy/flash_pass): Direct 1-click Stripe Checkout for the complete single-audit bundle.`,
     `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/complete_dossier): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
     `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/pro_b2b): Direct 1-click Stripe Checkout for continuous B2B / Agency access.`,
+    '',
+    '## Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
+    ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
+    ...getGrowthConfig(cfg.moduleId).comparisons.map((c) => `- [${c.title}](${host}/compare/${c.slug}) ([.md](${host}/compare/${c.slug}.md)): ${c.summary}`),
     '',
     '## Verified Scenario Presets & Headline KPIs',
     ...cfg.presets.map((p) => {
@@ -275,11 +283,17 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   app.get('/robots.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_robots', pageUrl: '/robots.txt', isTest, isCrawler });
-    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /llms.txt\nAllow: /llms-full.txt\n`).join('\n');
+    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /tools/\nAllow: /compare/\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /openapi.json\n`).join('\n');
     const txt = [
       'User-agent: *',
       'Allow: /',
       'Allow: /seo/',
+      'Allow: /tools/',
+      'Allow: /compare/',
+      'Allow: /badge/',
+      'Allow: /openapi.json',
+      'Allow: /.well-known/ai-plugin.json',
+      'Allow: /.well-known/mcp-registry.json',
       'Allow: /directory',
       'Allow: /lp',
       'Allow: /llms.txt',
@@ -303,6 +317,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   app.get(['/llms.txt', '/.well-known/llms.txt'], (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, isTest, isCrawler });
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
     res.status(200).type('text/plain; charset=utf-8').send(buildLlmsTxtContent(cfg, getEntries()));
   });
@@ -310,6 +325,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   app.get('/llms-full.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: '/llms-full.txt', isTest, isCrawler });
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
     res.status(200).type('text/plain; charset=utf-8').send(buildLlmsFullTxtContent(cfg, getEntries()));
   });
@@ -347,13 +363,20 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
 
   // 3. ekalinin/sitemap.js Segmented & Image-Enriched XML Sitemaps
   const buildSitemapXml = (entries, includeStatic = true) => {
+    const g = getGrowthConfig(cfg.moduleId);
+    const growthUrls = includeStatic ? [
+      ...g.tools.map((t) => ({ loc: `${hostUrl}/tools/${escXml(t.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(t.target)}`, title: t.title })),
+      ...g.comparisons.map((c) => ({ loc: `${hostUrl}/compare/${escXml(c.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(c.target)}`, title: c.title }))
+    ] : [];
     const staticUrls = includeStatic ? [
       { loc: `${hostUrl}/`, priority: '1.0', changefreq: 'daily', img: `${hostUrl}/api/og?slug=home`, title: `${cfg.brandName} — Official Workbench` },
       { loc: `${hostUrl}/directory`, priority: '0.9', changefreq: 'daily', img: `${hostUrl}/api/og?slug=directory`, title: `${cfg.brandName} — Full 60+ Benchmark Directory` },
       { loc: `${hostUrl}/lp`, priority: '0.8', changefreq: 'weekly', img: `${hostUrl}/api/og?slug=lp`, title: `${cfg.brandName} — Direct Audit` },
       { loc: `${hostUrl}/llms.txt`, priority: '0.9', changefreq: 'daily' },
       { loc: `${hostUrl}/llms-full.txt`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${hostUrl}/dossier/sample`, priority: '0.8', changefreq: 'weekly' }
+      { loc: `${hostUrl}/openapi.json`, priority: '0.8', changefreq: 'weekly' },
+      { loc: `${hostUrl}/dossier/sample`, priority: '0.8', changefreq: 'weekly' },
+      ...growthUrls
     ] : [];
     const seoUrls = entries.map((e) => ({
       loc: `${hostUrl}/seo/${escXml(e.slug)}`,
@@ -387,6 +410,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
 
   // 4.iamcal/oembed 1.0 JSON Discovery & Fallback PWA Webmanifest
   app.get(['/api/oembed', '/.well-known/oembed.json'], (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     const targetUrl = String(req.query.url || `${hostUrl}/`);
     res.json({
       version: '1.0',
@@ -432,14 +456,19 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       `${hostUrl}/sitemap-index.xml`,
       `${hostUrl}/sitemap.xml`,
       `${hostUrl}/feed.xml`,
+      ...getAllGrowthUrls(cfg),
       ...entries.map((e) => `${hostUrl}/seo/${e.slug}`),
       ...entries.slice(0, 20).map((e) => `${hostUrl}/seo/${e.slug}.md`)
     ];
   };
 
+  let lastIndexNowPushMs = 0;
   app.post('/api/indexnow/push', async (req, res) => {
     const host = cfg.domain;
-    const urlList = Array.isArray(req.body?.urls) && req.body.urls.length > 0 ? req.body.urls : getFullCanonicalUrlList();
+    const rawUrls = Array.isArray(req.body?.urls) ? req.body.urls.filter((u) => typeof u === 'string' && u.startsWith(`${hostUrl}/`)).slice(0, 100) : [];
+    const urlList = rawUrls.length > 0 ? rawUrls : getFullCanonicalUrlList();
+    if (Date.now() - lastIndexNowPushMs < 60000) return res.json({ ok: true, host, key: indexNowKey, submitted_count: urlList.length, throttled: true, upstream_status: 200 });
+    lastIndexNowPushMs = Date.now();
     const payload = JSON.stringify({ host, key: indexNowKey, keyLocation: `${hostUrl}/${indexNowKey}.txt`, urlList });
     const engines = ['https://api.indexnow.org/indexnow', 'https://www.bing.com/indexnow', 'https://yandex.com/indexnow', 'https://search.seznam.cz/indexnow'];
     const results = {};
@@ -786,15 +815,16 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const hostUrl = `https://${cfg.domain}`;
   const cleanPath = reqPath === '/' ? '' : String(reqPath || '');
   const canonicalUrl = `${hostUrl}${cleanPath || '/'}`;
-  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : (cleanPath.startsWith('/seo/') ? `${cleanPath}.md` : '/llms.txt');
+  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : (/^\/(seo|tools|compare)\//.test(cleanPath) ? `${cleanPath}.md` : '/llms.txt');
 
   // 1. Normalize any accidental http://127.0.0.1:<port> or http://localhost:<port> canonical/OG/schema URLs to production https://<domain>
   let out = String(html).replace(/http:\/\/(?:127\.0\.0\.1|localhost):\d+/g, hostUrl);
 
   // 2. Build unjs/unhead discovery tags + google/schema-dts & AgriciDaniel/claude-seo Unified @graph JSON-LD
   const entries = Array.isArray(cfg._cachedSeoCatalog) ? cfg._cachedSeoCatalog : [];
-  const slugName = cleanPath.startsWith('/seo/') ? cleanPath.replace('/seo/', '') : '';
-  const currentEntry = entries.find((e) => e.slug === slugName);
+  const gCfg = getGrowthConfig(cfg.moduleId);
+  const slugName = cleanPath.replace(/^\/(seo|tools|compare)\//, '');
+  const currentEntry = entries.find((e) => e.slug === slugName) || [...gCfg.tools, ...gCfg.comparisons].find((x) => x.slug === slugName);
   const pageTitle = currentEntry ? `${currentEntry.title} | ${cfg.brandName}` : `${cfg.brandName} — ${cfg.explainerText.slice(0, 70)}`;
   const pageDesc = currentEntry ? currentEntry.summary : cfg.explainerText;
 

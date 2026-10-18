@@ -14,10 +14,11 @@ const fs = require('fs');
 const path = require('path');
 const { renderExactBaselineEnhancements, renderEmbedWidgetHtml, renderSampleDossierHtml } = require('./exact-baseline-ui');
 const { CRAWLER_UA_REGEX, loadVerticalSeoCatalog, attachUniversalSeoAndAiRoutes } = require('./exact-baseline-seo');
+const { attachAutonomousGrowthEngine } = require('./autonomous-growth-engine');
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || 'b25e791e2b694f4c9c57d8e20ad8d904';
 const SOVRN_COMMERCE_KEY = process.env.SOVRN_COMMERCE_KEY || 'ea3d7b74c5752fd817f896be27cd1a01';
-const SOVRN_SECRET_KEY = process.env.SOVRN_SECRET_KEY || '1a197840836684eb17cfd7c5f714d7d840942538';
+const SOVRN_SECRET_KEY = process.env.SOVRN_SECRET_KEY || '';
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
 
 const VERTICAL_CONFIGS = {
@@ -422,7 +423,7 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const emailLower = String(extraEmail || '').toLowerCase();
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
-  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && req.path.startsWith('/seo/')));
+  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/'))));
   if (isHtmlRoute && !req.headers['accept-language']) isBurstScrape = true;
   if (isHtmlRoute && clientIp && !isOwnerIp) {
     const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 30000);
@@ -441,7 +442,8 @@ function createTelemetryStore(dataDir, moduleId) {
   const ledgerPath = path.join(dataDir, `eb_telemetry_${moduleId}.json`);
   let state = { events: [], leads: [], orders: [], impressions: 0, calculations: 0, checkout_intents: 0, crawler_hits: 0 };
   if (fs.existsSync(ledgerPath)) { try { state = { ...state, ...JSON.parse(fs.readFileSync(ledgerPath, 'utf8')) }; } catch (_) {} }
-  function save() { try { fs.writeFileSync(ledgerPath, JSON.stringify(state)); } catch (_) {} }
+  let savePending = false;
+  function save() { if (savePending) return; savePending = true; setImmediate(() => { savePending = false; fs.promises.writeFile(ledgerPath, JSON.stringify(state)).catch(() => {}); }); }
   let sanitized = false;
   for (let i = 0; i < state.events.length; i++) {
     const e = state.events[i];
@@ -549,7 +551,7 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/indexnow-key.txt', (req, res) => res.status(200).type('text/plain; charset=utf-8').send(INDEXNOW_KEY));
   attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, INDEXNOW_KEY, __dirname);
 
-  // 2. RSS 2.0 & JSON Feed 1.1 Syndication (Full 60+ pSEO Benchmarks + Presets)
+  // 2. RSS 2.0 (with Google WebSub Hub) & JSON Feed 1.1 Syndication
   app.get('/feed.xml', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.xml', isTest, isCrawler });
@@ -560,7 +562,7 @@ function attachExactBaselinePack(app, options = {}) {
       ...cfg.presets.map((p) => `    <item><title>${escX(cfg.brandName)} Scenario: ${escX(p.label)}</title><link>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</link><guid>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(cfg.explainerText)}</description></item>`),
       ...seoEntries.map((e) => `    <item><title>${escX(e.title)}</title><link>https://${cfg.domain}/seo/${escX(e.slug)}</link><guid>https://${cfg.domain}/seo/${escX(e.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(e.summary)}</description></item>`)
     ].join('\n');
-    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>${escX(cfg.brandName)} — Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>${escX(cfg.brandName)} — Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>\n    <atom:link href="https://${cfg.domain}/feed.xml" rel="self" type="application/rss+xml"/>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
     res.status(200).type('application/rss+xml; charset=utf-8').send(rss);
   });
 
@@ -697,6 +699,7 @@ function attachExactBaselinePack(app, options = {}) {
 
   // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
       schema_version: '2026-10-15', name: cfg.brandName, domain: cfg.domain,
       description: `${cfg.brandName} Deterministic Audit & Telemetry MCP Server (${cfg.githubRepo.name})`,
@@ -815,6 +818,7 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/tanstack-table-row-gate-qbar', (req, res) => res.json({ ok: true, iteration: 27, module_id: cfg.moduleId, repo: 'TanStack/table (★ 25,400) + TanStack/query (★ 43,800) + 47ng/nuqs (★ 6,200)', features: { symmetrical_2row_qbar_zero_truncation: true, word_boundary_pseo_entity_title: true, interactive_table_row4_unlock_banner: true, non_browser_polling_guard: true } }));
 
   // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher (/api/leads/capture, /api/leads/resend-backfill)
+  const escMailHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const buildBuyLinks = (email) => ({
     micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`,
     flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`,
@@ -823,8 +827,9 @@ function attachExactBaselinePack(app, options = {}) {
   });
   async function sendOneClickLeadEmail(email, summaryText, isTest) {
     const links = buildBuyLinks(email);
+    const safeSum = escMailHtml(summaryText);
     const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${links.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${links.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${links.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${links.pro_b2b}\n`;
-    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${cfg.brandName} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${summaryText}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${cfg.coreLabel} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${cfg.proLabel} →</strong></a></li></ul></div>`;
+    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${escMailHtml(cfg.brandName)} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${safeSum}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${escMailHtml(cfg.freeDeliverableName)}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${escMailHtml(cfg.coreLabel)} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${escMailHtml(cfg.proLabel)} →</strong></a></li></ul></div>`;
     const resendKey = process.env.RESEND_API_KEY || '';
     if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
       try {
@@ -852,8 +857,11 @@ function attachExactBaselinePack(app, options = {}) {
     res.json({ ok: true, email, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
   }
   app.post(['/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
+  let lastBackfillMs = 0;
   app.all('/api/leads/resend-backfill', async (req, res) => {
     const humanLeads = store.getHumanLeads();
+    if (Date.now() - lastBackfillMs < 60000) return res.json({ ok: true, module_id: cfg.moduleId, throttled: true, total_human_leads_scanned: humanLeads.length, emails_resent: 0, status: 'cooldown_active' });
+    lastBackfillMs = Date.now();
     let resentCount = 0;
     for (const l of humanLeads) {
       if (l.email && l.email.includes('@')) {
@@ -962,8 +970,8 @@ function attachExactBaselinePack(app, options = {}) {
     const origSend = res.send.bind(res);
     res.send = function patchedSend(body) {
       const isHtml = typeof body === 'string' && (String(res.getHeader('Content-Type') || '').includes('text/html') || body.trim().startsWith('<!DOCTYPE html>'));
-      if (isHtml && req.method === 'GET' && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || req.path.startsWith('/seo/')) && !body.includes('id="eb-bottom-conversion-suite"')) {
-        try { res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'); res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`); } catch (_) {}
+      if (isHtml && req.method === 'GET' && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/')) && !body.includes('id="eb-bottom-conversion-suite"')) {
+        try { res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'); res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/openapi.json>; rel="service-desc", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`); } catch (_) {}
         store.recordEvent({ eventType: 'visit', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || ''), utmCampaign: String(req.query?.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp });
         body = renderExactBaselineEnhancements(body, cfg, req.path);
       }
@@ -971,6 +979,7 @@ function attachExactBaselinePack(app, options = {}) {
     };
     next();
   });
+  attachAutonomousGrowthEngine(app, cfg, store, null);
   return { cfg, store };
 }
 module.exports = { INDEXNOW_KEY, VERTICAL_CONFIGS, attachExactBaselinePack };
