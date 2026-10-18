@@ -214,6 +214,7 @@ function renderScanCnnOverlaySvg(cfg, scan, badgeColor) {
 
 function renderPublicScanPageHtml(cfg, scan, badgeColor) {
   const t = cfg.theme || { canvasBg: '#F8FAFC', brandSoftBg: '#EEF2FF', border: '#E2E8F0', textPrimary: '#0F172A', textSecondary: '#475569', safeColor: '#059669' };
+  const cat = getFlywheelCatalog(cfg.moduleId);
   const canonicalUrl = `https://${cfg.domain}/scan/${encodeURIComponent(scan.target)}`;
   const badgeUrl = `https://${cfg.domain}/badge/${encodeURIComponent(scan.target)}.svg`;
   const mdSnippet = `[![${cfg.brandName} ${scan.grade}](${badgeUrl})](${canonicalUrl})`;
@@ -259,6 +260,13 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       <img src="/badge/${esc(encodeURIComponent(scan.target))}.svg" alt="${esc(scan.target)} Verified Score Badge" width="240" height="22" decoding="async" />
     </div>
     <section style="margin-top:16px;">${renderScanCnnOverlaySvg(cfg, scan, badgeColor)}</section>
+    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">🔬 LIVE ONNX/CNN SENSOR WORKBENCH:</span>
+        ${cat.entities.slice(0, 4).map((e) => `<button type="button" onclick="fetch('/api/cnn/inspect?target=${esc(encodeURIComponent(e.target))}').then(function(r){return r.json()}).then(function(d){if(d&&d.scan){var el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=d.scan.target+' → '+d.scan.grade+' ('+d.scan.score+'/100) • '+d.scan.cnnReadout;}})" style="padding:4px 10px;border-radius:999px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;cursor:pointer;">⚡ ${esc(e.target)}</button>`).join('')}
+      </div>
+      <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${esc(scan.target)} → ${esc(scan.grade)} (${scan.score}/100) • ${esc(scan.cnnReadout)}</div>
+    </section>
     <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
       <h2 style="font-size:16px;margin:0 0 10px 0;">Deterministic &amp; CNN Sensor Scorecard Matrix</h2>
       <table aria-label="${esc(scan.target)} Public Scan Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -444,12 +452,17 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
   app.get('/api/github-upgrade/cnn-public-scan-flywheel', (req, res) => {
     return res.json({
       ok: true,
-      iteration: 31,
+      iteration: 32,
       module_id: cfg.moduleId,
       github_repos: [
         'anuraghazra/github-readme-stats (★ 69,000+) & badges/shields (★ 23,000+) — Multi-Metric SVG CNN Scorecard (/api/badge/cnn/:target.svg) & Public Ego-Bait Leaderboard (/leaderboard)',
-        'xenova/transformers.js (★ 13,500+) & AnswerDotAI/llms-txt — Zero-UI URL-Prefix Instant Scan (/scan/:target + .md twin + curl ANSI terminal scorecard)'
+        'huggingface/transformers.js (★ 13,500+) & microsoft/onnxruntime (★ 16,200+) — Interactive Live ONNX/CNN Sensor Workbench (#eb-onnx-cnn-workbench) with 1-Click Calculation Telemetry'
       ],
+      features: {
+        interactive_onnx_cnn_workbench: true,
+        cnn_inspect_calc_telemetry: true,
+        multi_metric_svg_cnn_card: true
+      },
       endpoints: {
         leaderboard: `https://${cfg.domain}/leaderboard`,
         sample_scan: `https://${cfg.domain}/scan/${encodeURIComponent(cat.entities[0].target)}`,

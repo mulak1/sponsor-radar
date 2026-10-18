@@ -965,7 +965,7 @@ function attachExactBaselinePack(app, options = {}) {
       }
       store.recordEvent({ eventType: 'checkout_intent', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { plan: reqTier || 'host_checkout' } });
     }
-    if (req.method === 'POST' && !req.headers['x-auto-init'] && /^\/api\/(audit|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) store.recordEvent({ eventType: 'calculate', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || req.body?.utm_source || ''), isTest, isCrawler, isOwnerIp, clientIp });
+    if (!req.headers['x-auto-init'] && ((req.method === 'POST' && /^\/api\/(audit|cnn\/inspect|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) || (req.method === 'GET' && (req.path === '/api/cnn/inspect' || (req.path === '/scan' && (req.query?.q || req.query?.target)))))) store.recordEvent({ eventType: 'calculate', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || req.body?.utm_source || ''), isTest, isCrawler, isOwnerIp, clientIp });
     if (req.method === 'GET' && (req.path === '/sitemap.xml' || req.path === '/llms.txt') && isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp });
     const origSend = res.send.bind(res);
     res.send = function patchedSend(body) {
