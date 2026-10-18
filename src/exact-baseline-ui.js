@@ -178,38 +178,20 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   return `<section id="eb-bottom-conversion-suite" aria-label="${esc(cfg.brandName)} Export Passes, Comparisons & Partner Ecosystem">
   <div id="in-card-unlock-bar" class="eb-panel-card">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <div>
-        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">Instant Self-Serve Fulfillment • 30-Day Guarantee</span>
-        <h2 id="in-card-unlock-title" style="margin:4px 0 0 0;font-size:22px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">${esc(cfg.unlockBannerTitle)}</h2>
-      </div>
+      <div><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">Instant Self-Serve Fulfillment • 30-Day Guarantee</span><h2 id="in-card-unlock-title" style="margin:4px 0 0 0;font-size:22px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">${esc(cfg.unlockBannerTitle)}</h2></div>
       <div id="tab-btn-dossier" style="font-size:12px;font-weight:700;color:${t.safeColor};background:${t.safeSoftBg};border:1px solid ${t.safeBorder};padding:5px 12px;border-radius:999px;">Most Popular: $1.99 Single-Audit Pass (One-Time)</div>
     </div>
     <div class="eb-gbb-grid">
       <div class="eb-tier-card featured">
-        <div>
-          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Deliverable Dossier" class="eb-doppelrand-img" style="height:84px;object-position:center 35%;" loading="lazy" /></div></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.brandPrimary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier1Tag || `SINGLE-AUDIT PASS • SAVE ${savingsPct}% VS $${cfg.corePriceUsd}`)}</div>
-          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$1.99 <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">one-time • no subscription</span></div>
-          <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier1Desc || `Instantly unblurs ${cfg.deliverableName}, downloadable exports, and 24-hour recalculations.`)}</p>
-        </div>
+        <div><div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Deliverable Dossier" class="eb-doppelrand-img" style="height:84px;object-position:center 35%;" loading="lazy" /></div></div><div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.brandPrimary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier1Tag || `SINGLE-AUDIT PASS • SAVE ${savingsPct}% VS $${cfg.corePriceUsd}`)}</div><div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$1.99 <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">one-time • no subscription</span></div><p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier1Desc || `Instantly unblurs ${cfg.deliverableName}, downloadable exports, and 24-hour recalculations.`)}</p></div>
         <button type="button" id="btn-prog-flash-pass" class="cta-btn" style="width:100%;padding:11px 14px;border-radius:${t.radiusPill};background:${t.brandPrimary};color:#FFFFFF;font-weight:700;font-size:13.5px;border:none;" onclick="window.__ebCheckout('flash_pass')">Unlock Single-Audit Pass ($1.99) →</button>
       </div>
       <div class="eb-tier-card">
-        <div>
-          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-hero.jpg" alt="${esc(cfg.brandName)} Complete Pack" class="eb-doppelrand-img" style="height:84px;object-position:center 50%;" loading="lazy" /></div></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.textSecondary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier2Tag || 'COMPLETE PACK')}</div>
-          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.corePriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">complete pack</span></div>
-          <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier2Desc || cfg.coreLabel)}</p>
-        </div>
+        <div><div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-hero.jpg" alt="${esc(cfg.brandName)} Complete Pack" class="eb-doppelrand-img" style="height:84px;object-position:center 50%;" loading="lazy" /></div></div><div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.textSecondary};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier2Tag || 'COMPLETE PACK')}</div><div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.corePriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">complete pack</span></div><p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier2Desc || cfg.coreLabel)}</p></div>
         <button type="button" id="btn-prog-full-dossier" class="cta-btn" style="width:100%;padding:11px 14px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};font-weight:700;font-size:13.5px;border:1px solid ${t.border};" onclick="window.__ebCheckout('complete_dossier')">${esc(cfg.coreLabel)}</button>
       </div>
       <div class="eb-tier-card">
-        <div>
-          <div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Pro Tier" class="eb-doppelrand-img" style="height:84px;object-position:center 68%;" loading="lazy" /></div></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.safeColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier3Tag || 'PRO / UNLIMITED TIER')}</div>
-          <div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.proPriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">unlimited pro</span></div>
-          <p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier3Desc || cfg.proLabel)}</p>
-        </div>
+        <div><div class="eb-doppelrand-shell" style="margin:0 0 10px 0;"><div class="eb-doppelrand-inner"><img src="/public/editorial-dossier.jpg" alt="${esc(cfg.brandName)} Pro Tier" class="eb-doppelrand-img" style="height:84px;object-position:center 68%;" loading="lazy" /></div></div><div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:${t.safeColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(cfg.tier3Tag || 'PRO / UNLIMITED TIER')}</div><div class="matrix-price" style="font-family:${t.fontDisplay};font-size:30px;font-weight:700;margin:6px 0;color:${t.textPrimary};">$${esc(cfg.proPriceUsd)} <span style="font-family:${t.fontSans};font-size:12.5px;font-weight:500;color:${t.textMuted};">unlimited pro</span></div><p style="font-size:13px;color:${t.textSecondary};margin:0 0 14px 0;line-height:1.5;">${esc(cfg.tier3Desc || cfg.proLabel)}</p></div>
         <button type="button" id="btn-prog-pro-b2b" class="cta-btn" style="width:100%;padding:11px 14px;border-radius:${t.radiusPill};background:${t.textPrimary};color:#FFFFFF;font-weight:700;font-size:13.5px;border:none;" onclick="window.__ebCheckout('pro_b2b')">${esc(cfg.proLabel)}</button>
       </div>
     </div>
@@ -221,35 +203,20 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </div>
   <div id="eb-export-utility-bar" class="eb-panel-card">
     <div class="stat-pill-locked" id="summary-report-card" style="margin-bottom:12px;">
-      <div class="eb-locked-top">
-        <span style="font-size:12px;font-weight:700;color:${t.brandText};">✦ ${esc(cfg.lockedTitle)} — Channel &amp; Protocol Benchmarks</span>
-        <button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Toggle Insight ▾</button>
-      </div>
+      <div class="eb-locked-top"><span style="font-size:12px;font-weight:700;color:${t.brandText};">✦ ${esc(cfg.lockedTitle)} — Channel &amp; Protocol Benchmarks</span><button type="button" id="btn-inline-aisle-peek" class="store-preview-pill" onclick="window.__ebTogglePeekDrawer()">Toggle Insight ▾</button></div>
       <div class="eb-store-pills">${pillsHtml}</div>
       <div id="inline-aisle-peek-drawer"><div id="eb-peek-row-text" style="font-weight:500;">${esc(cfg.coMarketingPills[0].rowText)}</div></div>
     </div>
     <div id="lead-squeeze-card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div id="prog-instant-action-strip">${actionsHtml}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="prog-share-toolbar">
-          <button type="button" id="btn-copy-scenario-link" class="eb-action-btn" onclick="window.__ebCopyScenarioLink(this)">Copy Link</button>
-          <a id="btn-share-reddit" class="eb-action-btn" href="${esc(redditHref)}" target="_blank" rel="noopener">Share on r/${esc(cfg.redditSub)}</a>
-          <a id="btn-share-x" class="eb-action-btn" href="${esc(xHref)}" target="_blank" rel="noopener">Post on X</a>
-          <a id="btn-share-email" class="eb-action-btn" href="${esc(mailHref)}">Email</a>
-          <a class="eb-action-btn" href="/embed" target="_blank" rel="noopener">Embed</a>
-        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="prog-share-toolbar"><button type="button" id="btn-copy-scenario-link" class="eb-action-btn" onclick="window.__ebCopyScenarioLink(this)">Copy Link</button><a id="btn-share-reddit" class="eb-action-btn" href="${esc(redditHref)}" target="_blank" rel="noopener">Share on r/${esc(cfg.redditSub)}</a><a id="btn-share-x" class="eb-action-btn" href="${esc(xHref)}" target="_blank" rel="noopener">Post on X</a><a id="btn-share-email" class="eb-action-btn" href="${esc(mailHref)}">Email</a><a class="eb-action-btn" href="/embed" target="_blank" rel="noopener">Embed</a></div>
       </div>
-      <div id="tripwire-upsell-box">
-        <span>Need the full unblurred production deliverable &amp; multi-row exports? Unlock the <strong>Single-Audit Export Pass ($1.99)</strong> — one-time payment, no subscription.</span>
-        <button type="button" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;border-color:${t.brandPrimary};font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock $1.99 Pass →</button>
-      </div>
+      <div id="tripwire-upsell-box"><span>Need the full unblurred production deliverable &amp; multi-row exports? Unlock the <strong>Single-Audit Export Pass ($1.99)</strong> — one-time payment, no subscription.</span><button type="button" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;border-color:${t.brandPrimary};font-weight:700;" onclick="window.__ebCheckout('flash_pass')">Unlock $1.99 Pass →</button></div>
       <div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};border:1px solid ${t.border};color:${t.safeColor};font-family:monospace;font-size:11.5px;">[${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}</div>
     </div>
   </div>
-  <div id="eb-sovrn-affiliate-strip" class="eb-panel-card">
-    <div style="font-size:11px;font-weight:700;color:${t.textMuted};text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Curated Companion Products &amp; Verified Ecosystem</div>
-    <div class="eb-gbb-grid">${affiliatesHtml}</div>
-  </div>
+  <div id="eb-sovrn-affiliate-strip" class="eb-panel-card"><div style="font-size:11px;font-weight:700;color:${t.textMuted};text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Curated Companion Products &amp; Verified Ecosystem</div><div class="eb-gbb-grid">${affiliatesHtml}</div></div>
   ${buildMobileSeoCrawlMeshHtml(cfg, reqPath)}
 </section>
 
@@ -283,7 +250,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </div>
   <p id="eb-ouibounce-desc" style="font-size:12px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Reveal Row #4 on-screen + email your 1-Page Fix Checklist, or download the production file now (<strong>99¢ Single-File</strong> / <strong>$1.99 Bundle</strong>):</p>
   <form onsubmit="return window.__ebSendExitSummary(event)" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
-    <input type="email" id="eb-ouibounce-email" placeholder="Enter email to reveal Row #4 &amp; checklist..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
+    <input type="email" id="eb-ouibounce-email" placeholder="Work email (Reveal Row #4)..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:11.5px;" />
     <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandPrimary};font-size:11.5px;font-weight:700;border:1px solid ${t.accentBorder};">Reveal Row #4 →</button>
   </form>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
@@ -346,11 +313,11 @@ function buildClientRuntimeScript(cfg) {
   window.__ebActiveEntity = '';
   window.__ebUserInteracted = false;
   var PERSONA = ({
-    derm_logic: { leadBtn: '📩 Email My AM/PM Routine', leadPh: 'Email for AM/PM Routine + Conflict Fix...', microBtn: '⚡ 9:16 Wallet Card (99¢)', ctaTitle: '✦ Routine Safety Verdict Ready — Email AM/PM Split or Save Wallet Card:', heroTitle: 'Clinical Formulation Lab • pH 3.2 – 6.0', heroSub: 'Active Chelation, Hydrolysis & Barrier-Safety Telemetry', heroBadge: '✓ CosIng + pKa Verified', dossierTag: 'AM/PM Split & Wallet Card' },
-    sponsor_radar: { leadBtn: '📩 Send Pitch Template + Row #4', leadPh: 'Work email for Sponsor Pitch + Row #4...', microBtn: '⚡ Buyer Email + CSV (99¢)', ctaTitle: '✦ Sponsor ROI & Buyer Match Ready — Email Pitch or Unblur Direct Email:', heroTitle: 'Verified Creator Ad-Read Desk • 96 Placements', heroSub: '3x+ Renewal Signals, CPM Rate Cards & Buyer Contacts', heroBadge: '✓ 3x+ Renewal Audited', dossierTag: 'Verified Media Kit & Buyer CSV' },
-    citation_forge: { leadBtn: '📩 Send GEO Checklist + Row #4', leadPh: 'Work email for GEO Checklist + Row #4...', microBtn: '⚡ llms-full.txt (99¢)', ctaTitle: '✦ AI Citation Audit Ready — Email GEO Checklist or Download llms-full.txt:', heroTitle: 'AI Search Entity & Knowledge Graph Optical Prism', heroSub: 'ChatGPT Search, Perplexity & Gemini Citation Share-of-Voice', heroBadge: '✓ AnswerDotAI / llms.txt v2', dossierTag: 'llms-full.txt & JSON-LD Graph' },
-    abandon_alpha: { leadBtn: '📩 Send Retry Playbook + Row #4', leadPh: 'Work email for Retry Playbook + Row #4...', microBtn: '⚡ Bandit SDK + Worker (99¢)', ctaTitle: '✦ Recovery Audit Ready — Email Retry Playbook or Download Bandit SDK:', heroTitle: 'Autonomous FinOps Payment Routing & Bandit Core', heroSub: 'C1–C6 Exit-Intent Posteriors & Smart Decline Retry Windows', heroBadge: '✓ Beta-Bernoulli Bandit', dossierTag: 'Bandit SDK & Webhook Worker' }
-  })[CFG.moduleId] || { leadBtn: '📩 Send Fix Checklist + Row #4', leadPh: 'Work email for 1-Page Checklist...', microBtn: '⚡ Single-File (99¢)', ctaTitle: '✦ Deliverable Ready — Email Checklist or Unblur Output:', heroTitle: CFG.brandName + ' Studio Desk', heroSub: 'Deterministic Audit & Production Deliverable', heroBadge: '✓ Verified Engine', dossierTag: 'Production Deliverable' };
+    derm_logic: { leadBtn: '📩 Email AM/PM Routine', leadPh: 'Email for AM/PM Routine...', microBtn: '⚡ 9:16 Wallet Card (99¢)', ctaTitle: '✦ Routine Verdict Ready:', heroTitle: 'Clinical Formulation Lab • pH 3.2 – 6.0', heroSub: 'Active Chelation, Hydrolysis & Barrier-Safety Telemetry', heroBadge: '✓ CosIng + pKa Verified', dossierTag: 'AM/PM Split & Wallet Card' },
+    sponsor_radar: { leadBtn: '📩 Send Pitch + Row #4', leadPh: 'Work email for Pitch + Row #4...', microBtn: '⚡ Buyer Email + CSV (99¢)', ctaTitle: '✦ Sponsor Match Ready:', heroTitle: 'Verified Creator Ad-Read Desk • 96 Placements', heroSub: '3x+ Renewal Signals, CPM Rate Cards & Buyer Contacts', heroBadge: '✓ 3x+ Renewal Audited', dossierTag: 'Verified Media Kit & Buyer CSV' },
+    citation_forge: { leadBtn: '📩 Send GEO Checklist', leadPh: 'Work email for GEO Checklist...', microBtn: '⚡ llms-full.txt (99¢)', ctaTitle: '✦ AI Citation Audit Ready:', heroTitle: 'AI Search Entity & Knowledge Graph Optical Prism', heroSub: 'ChatGPT Search, Perplexity & Gemini Citation Share-of-Voice', heroBadge: '✓ AnswerDotAI / llms.txt v2', dossierTag: 'llms-full.txt & JSON-LD Graph' },
+    abandon_alpha: { leadBtn: '📩 Send Retry Playbook', leadPh: 'Work email for Retry Playbook...', microBtn: '⚡ Bandit SDK (99¢)', ctaTitle: '✦ Recovery Audit Ready:', heroTitle: 'Autonomous FinOps Payment Routing & Bandit Core', heroSub: 'C1–C6 Exit-Intent Posteriors & Smart Decline Retry Windows', heroBadge: '✓ Beta-Bernoulli Bandit', dossierTag: 'Bandit SDK & Webhook Worker' }
+  })[CFG.moduleId] || { leadBtn: '📩 Send Checklist', leadPh: 'Work email for Checklist...', microBtn: '⚡ Single-File (99¢)', ctaTitle: '✦ Deliverable Ready:', heroTitle: CFG.brandName + ' Studio Desk', heroSub: 'Deterministic Audit & Production Deliverable', heroBadge: '✓ Verified Engine', dossierTag: 'Production Deliverable' };
   ['pointerdown', 'keydown', 'input'].forEach(function(ev) { document.addEventListener(ev, function() { window.__ebUserInteracted = true; }, { passive: true, once: true }); });
   try {
     if (localStorage.getItem(STORAGE_KEY) === '1' || window.location.search.indexOf('checkout=success') !== -1 || window.location.search.indexOf('unlock=flash_pass') !== -1) {
@@ -397,7 +364,7 @@ function buildClientRuntimeScript(cfg) {
     if (pcBar) {
       pcBar.style.boxShadow = '0 0 0 3px ' + CFG.theme.accentBorder + ', 0 10px 26px rgba(15,23,42,0.10)';
       var pcTitle = document.getElementById('eb-postcalc-cta-title');
-      if (pcTitle) pcTitle.textContent = PERSONA.ctaTitle.replace('Ready', 'Ready' + label);
+      if (pcTitle) pcTitle.textContent = label ? ('✦ Audit Ready' + label + ':') : PERSONA.ctaTitle;
     }
     var toast = document.getElementById('eb-ouibounce-toast');
     if (toast && window.__ebUserInteracted) {
@@ -499,15 +466,23 @@ function buildClientRuntimeScript(cfg) {
         if (!trs[r0].hasAttribute('data-eb-live-row')) {
           trs[r0].setAttribute('data-eb-live-row', String(r0 + 1));
           trs[r0].title = 'Click row to benchmark & compile custom deliverable';
+          var tdFirst = trs[r0].querySelector('td, th');
+          if (tdFirst && !tdFirst.querySelector('.eb-row-sim-pill')) tdFirst.insertAdjacentHTML('beforeend', ' <span class="eb-row-sim-pill" style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:9.5px;font-weight:700;white-space:nowrap;vertical-align:middle;">⚡ Sim</span>');
           trs[r0].addEventListener('click', function(ev) {
             if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return;
             var td0 = this.querySelector('td, th');
-            var ent = td0 ? (td0.textContent || '').trim().slice(0, 36) : '';
+            var ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : '';
             if (ent) window.__ebCompileCustomCurtain(ent);
           });
         }
       }
       for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
+      if (trs.length > 3 && !document.getElementById('eb-table-row4-gate-tr')) {
+        var gateTr = document.createElement('tr'); gateTr.id = 'eb-table-row4-gate-tr'; gateTr.style.cssText = 'cursor:pointer;background:' + CFG.theme.brandSoftBg + ';';
+        gateTr.onclick = function() { window.__ebOpenFloatingGate(this); };
+        gateTr.innerHTML = '<td colspan="8" style="padding:7px 12px;border-top:1.5px dashed ' + CFG.theme.accentBorder + ';border-bottom:1.5px dashed ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';font-size:11.5px;color:' + CFG.theme.textPrimary + ';"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;"><span>🔒 <strong>Rows #4–#' + trs.length + ' Locked in Preview:</strong> Click to reveal Row #4 free via email or unblur all ' + trs.length + ' rows + CSV</span><span style="padding:2px 9px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;font-size:10.5px;font-weight:700;white-space:nowrap;">🔓 Reveal Row #4 / Unblur All (99¢) →</span></div></td>';
+        tbody.insertBefore(gateTr, trs[3]);
+      }
       var tblEl = tbody.closest('table');
       var tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
       if (tblWrap && tblWrap.parentNode && !document.getElementById('eb-tanstack-table-bar')) {
@@ -522,7 +497,11 @@ function buildClientRuntimeScript(cfg) {
 
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname === '/directory';
     var h1Node = document.querySelector('main h1, article h1, h1');
-    if (h1Node && !window.__ebActiveEntity && isPseoOrDir) window.__ebActiveEntity = (h1Node.textContent || '').trim().slice(0, 48);
+    if (h1Node && !window.__ebActiveEntity && isPseoOrDir) {
+      var rawH1 = (h1Node.textContent || '').replace(/\\s+/g, ' ').trim().split(/\\s*[—–|:]\\s*/)[0];
+      if (rawH1.length > 38) rawH1 = rawH1.slice(0, 38).replace(/\\s+\\S*$/, '');
+      window.__ebActiveEntity = rawH1.replace(/[,;:\\s]+$/, '');
+    }
     if (!document.getElementById('eb-entity-datalist')) document.body.insertAdjacentHTML('beforeend', '<datalist id="eb-entity-datalist">' + (CFG.presets || []).map(function(p) { return '<option value="' + p.key + '">' + p.label + '</option>'; }).join('') + '</datalist>');
     var sparkPillHtml = '<div id="eb-hero-sparkline-pill" onclick="window.__ebCycleHeroScenario(event)" title="Tap to simulate live scenario"><span style="width:6px;height:6px;border-radius:50%;background:' + CFG.theme.safeColor + ';box-shadow:0 0 0 3px ' + CFG.theme.safeSoftBg + ';"></span><svg width="42" height="14" viewBox="0 0 42 14" fill="none" style="overflow:visible;"><path id="eb-sparkline-path" d="M1 11 C 9 10, 14 4, 22 6 C 29 8, 34 2, 41 2" stroke="' + CFG.theme.brandPrimary + '" stroke-width="1.8" stroke-linecap="round"/><circle cx="41" cy="2" r="2.2" fill="' + CFG.theme.safeColor + '"/></svg><span id="eb-hero-sparkline-label" class="eb-tabular" style="font-size:10px !important;font-weight:700 !important;color:#0F172A;white-space:nowrap;">⚡ Tap to Sim</span></div>';
     var buildHeroCardEl = function(imgH, marginCss) {
@@ -533,12 +512,12 @@ function buildClientRuntimeScript(cfg) {
     };
     var existingHeroSplit = h1Node && h1Node.closest ? h1Node.closest('.hero-split, .hero-grid, .hero-editorial-grid') : null;
     var buildQBar = function(barId) {
-      var qChips = (CFG.presets || []).slice(0, 2).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
+      var qChips = (CFG.presets || []).slice(0, 3).map(function(p) { return '<button type="button" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:3px 8px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10.5px;font-weight:600;cursor:pointer;white-space:nowrap;">⚡ ' + p.label + '</button>'; }).join('');
       var qBar = document.createElement('div'); qBar.id = barId || 'eb-pseo-quick-bar';
       var inId = barId === 'eb-mobile-firstfold-bar' ? 'eb-mobile-quick-input' : 'eb-pseo-quick-input', emId = barId === 'eb-mobile-firstfold-bar' ? 'eb-mobile-quick-email' : 'eb-quick-inline-email', fmId = barId === 'eb-mobile-firstfold-bar' ? 'eb-mobile-quick-form' : 'eb-quick-inline-form';
-      qBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:9px 11px;margin:0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-      qBar.innerHTML = '<div style="display:flex;align-items:center;gap:5px;flex:1;min-width:190px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '<input type="text" id="' + inId + '" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:115px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" onclick="var v=document.getElementById(\\\'' + inId + '\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;"></span></div>'
-        + '<form id="' + fmId + '" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'' + emId + '\\\', \\\'' + fmId + '\\\')" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;margin:0;"><input type="email" id="' + emId + '" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:155px;" /><button type="submit" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + ' →</button></form>';
+      qBar.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:9px 11px;margin:0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+      qBar.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;gap:5px;width:100%;flex-wrap:wrap;"><div style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;"><span style="font-size:11px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Instant Benchmark:</span>' + qChips + '</div><div style="display:inline-flex;align-items:center;gap:5px;flex:1;min-width:165px;"><input type="text" id="' + inId + '" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:115px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11.5px;" /><button type="button" onclick="var v=document.getElementById(\\\'' + inId + '\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:4px 9px;border-radius:6px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">Run ↵</button><span id="eb-quick-live-readout" style="display:none;font-size:10.5px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;white-space:nowrap;"></span></div></div>'
+        + '<form id="' + fmId + '" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'' + emId + '\\\', \\\'' + fmId + '\\\')" style="display:flex;justify-content:space-between;align-items:center;gap:5px;width:100%;flex-wrap:wrap;margin:0;padding-top:6px;border-top:1px dashed ' + CFG.theme.accentBorder + ';"><div style="display:inline-flex;align-items:center;gap:4px;flex:1;min-width:175px;"><input type="email" id="' + emId + '" placeholder="' + PERSONA.leadPh + '" required style="flex:1;min-width:135px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;" /><button type="button" onclick="window.__ebFillEmailDomain(\\\'' + emId + '\\\', \\\'@gmail.com\\\', \\\'' + fmId + '\\\')" style="padding:3px 6px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:9.5px;font-weight:600;cursor:pointer;">@gmail</button></div><div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;"><button type="submit" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;white-space:nowrap;">' + PERSONA.leadBtn + '</button><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:10.5px;font-weight:700;cursor:pointer;white-space:nowrap;">' + PERSONA.microBtn + ' →</button></div></form>';
       if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       return qBar;
     };
@@ -577,10 +556,9 @@ function buildClientRuntimeScript(cfg) {
       if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
       if (!document.getElementById('eb-postcalc-inline-cta')) {
         var pcCta = document.createElement('div'); pcCta.id = 'eb-postcalc-inline-cta';
-        pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:11.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span>'
-          + '<div style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap;"><form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:inline-flex;gap:4px;align-items:center;margin:0;"><input type="email" id="eb-postcalc-email-input" placeholder="' + PERSONA.leadPh + '" required style="padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;width:165px;" /><button type="submit" id="btn-postcalc-email-submit" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;">' + PERSONA.leadBtn + '</button></form>'
-          + '<button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:5px 10px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:11px;font-weight:700;cursor:pointer;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:5px 11px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:11px;font-weight:700;cursor:pointer;">3-File Bundle ($1.99) →</button></div>';
+        pcCta.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+        pcCta.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;width:100%;"><span id="eb-postcalc-cta-title" style="font-size:11.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span><div style="display:inline-flex;gap:5px;align-items:center;"><button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;white-space:nowrap;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:4px 10px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:10.5px;font-weight:700;cursor:pointer;white-space:nowrap;">3-File Bundle ($1.99) →</button></div></div>'
+          + '<form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:flex;gap:5px;align-items:center;width:100%;margin:0;padding-top:5px;border-top:1px dashed ' + CFG.theme.accentBorder + ';"><input type="email" id="eb-postcalc-email-input" placeholder="' + PERSONA.leadPh + '" required style="flex:1;min-width:140px;padding:4px 8px;border-radius:6px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:11px;" /><button type="button" onclick="window.__ebFillEmailDomain(\\\'eb-postcalc-email-input\\\',\\\'@gmail.com\\\',\\\'eb-postcalc-email-form\\\')" style="padding:3px 7px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;">@gmail</button><button type="submit" id="btn-postcalc-email-submit" style="padding:4px 10px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:10.5px;font-weight:700;cursor:pointer;white-space:nowrap;">' + PERSONA.leadBtn + ' →</button></form>';
         if (scoreAnchor && scoreAnchor.parentNode) scoreAnchor.parentNode.insertBefore(pcCta, scoreAnchor.nextSibling);
         else if (targetEl && targetEl.parentNode) targetEl.parentNode.insertBefore(pcCta, targetEl);
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
@@ -591,9 +569,10 @@ function buildClientRuntimeScript(cfg) {
     var seoTargetEl = isPseoOrDir ? (existingHeroSplit || document.getElementById('eb-pseo-hero-split') || document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || tBarAnchor || targetEl) : null;
     var mountAnchor = isPseoOrDir ? seoTargetEl : (homeFullGrid || tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card'));
     if (!mountAnchor) return;
-    var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Topic Deliverable: ' + (window.__ebActiveEntity || CFG.brandName));
+    var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' }, f1 = (CFG.deliverableFiles && CFG.deliverableFiles[1]) || fInit, f2 = (CFG.deliverableFiles && CFG.deliverableFiles[2]) || fInit;
+    var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Target Benchmark: ' + (window.__ebActiveEntity || CFG.brandName) + ' • Deliverable: ' + fInit.file + ' (' + fInit.size + ')\\n// Status: Rows #1–#3 Verified | Rows #4+ & Raw File Ready (Reveal Row #4 via Email or 99¢ Pass)');
     var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
-    if (previewLines.length > 200) previewLines = previewLines.slice(0, 200) + ' ...';
+    if (previewLines.length > 220) previewLines = previewLines.slice(0, 220) + ' ...';
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
@@ -614,7 +593,6 @@ function buildClientRuntimeScript(cfg) {
     var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
       return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="padding:2px 7px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:10px;font-weight:600;cursor:pointer;">' + d + '</button>';
     }).join('');
-    var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' }, f1 = (CFG.deliverableFiles && CFG.deliverableFiles[1]) || fInit, f2 = (CFG.deliverableFiles && CFG.deliverableFiles[2]) || fInit;
     var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;align-items:stretch;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' (99¢)"><div class="eb-doppelrand-inner" style="height:100%;"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' • ' + fInit.size + '</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:132px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:4px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:10px;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:10px;flex-shrink:0;">99¢ →</span></div></div></div><div id="eb-prism-proof-frame" style="display:flex;flex-direction:column;justify-content:space-between;border-radius:11px;border:1px solid ' + CFG.theme.border + ';background:' + CFG.theme.subtleBg + ';overflow:hidden;"><pre id="eb-prism-proof-preview" style="margin:0;border:none;border-radius:0;flex:1;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized deterministic output ready') + '</pre><div id="eb-prism-proof-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.88);border-top:1px solid ' + CFG.theme.border + ';font-size:10.5px;"><div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;"><strong style="color:' + CFG.theme.textPrimary + ';">⚡ Inspect File:</strong><button type="button" onclick="window.__ebSelectManifestFile(0)" style="padding:1px 7px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textSecondary + ';font-size:10px;font-weight:600;cursor:pointer;">1. ' + fInit.file + '</button><button type="button" onclick="window.__ebSelectManifestFile(1)" style="padding:1px 7px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textSecondary + ';font-size:10px;font-weight:600;cursor:pointer;">2. ' + f1.file + '</button><button type="button" onclick="window.__ebSelectManifestFile(2)" style="padding:1px 7px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textSecondary + ';font-size:10px;font-weight:600;cursor:pointer;">3. ' + f2.file + '</button></div><div style="display:inline-flex;align-items:center;gap:6px;"><button type="button" id="btn-nuqs-share-url" onclick="window.__ebCopyScenarioLink(this)" style="padding:2px 8px;border-radius:999px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:10px;font-weight:700;cursor:pointer;">🔗 Share Audit URL</button><button type="button" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:2px 8px;border-radius:999px;border:1px solid ' + CFG.theme.accentBorder + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';font-size:10px;font-weight:700;cursor:pointer;">⚡ Raw File (99¢) →</button></div></div></div></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
@@ -683,7 +661,7 @@ function buildClientRuntimeScript(cfg) {
   };
 
   window.__ebSelectManifestFile = function(idx, pillEl) {
-    var f = (CFG.deliverableFiles && CFG.deliverableFiles[idx]) || { file: 'deliverable.txt', size: '4.2 KB', desc: 'Verified export' };
+    var f = (CFG.deliverableFiles && CFG.deliverableFiles[idx]) || { file: 'deliverable.txt', size: '4.2 KB', schema: 'Verified Schema' };
     var allPills = document.querySelectorAll('#eb-zod-manifest-pills .eb-manifest-pill');
     for (var p = 0; p < allPills.length; p++) {
       var active = p === idx;
@@ -694,14 +672,15 @@ function buildClientRuntimeScript(cfg) {
     var dPill = document.getElementById('eb-dossier-format-pill');
     if (dPill) { dPill.textContent = '📄 ' + f.file + ' • ' + f.size; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
     var prevBox = document.getElementById('eb-prism-proof-preview');
-    if (prevBox) prevBox.textContent = '// [ACTIVE TAB: ' + f.file + ' (' + f.size + ') — ' + f.desc + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// ... [Lines 5–68 ready — Click "⚡ Download ' + f.file + ' (99¢)" or reveal Row #4 below]';
+    if (prevBox) prevBox.textContent = '// [ACTIVE DELIVERABLE: ' + f.file + ' (' + f.size + ') • ' + (f.schema || 'Verified Contract') + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Target: ' + (window.__ebActiveEntity || CFG.brandName) + ' — Click "⚡ Raw File (99¢)" or enter email below to reveal Row #4';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
     if (microBtn) microBtn.textContent = '⚡ Download ' + f.file + ' (99¢)';
     var popMicroBtn = document.getElementById('btn-popover-micro-pass');
     if (popMicroBtn) popMicroBtn.textContent = '⚡ Unblur + Download ' + f.file + ' — 99¢ →';
     var emIn = document.getElementById('eb-inline-scorecard-email');
-    if (emIn) emIn.placeholder = 'Email to reveal Row #4 + ' + f.file + ' checklist...';
+    if (emIn) emIn.placeholder = 'Email for Row #4 + ' + f.file + '...';
     window.__ebLogEvent('tab_switch', { store_pill: 'file_' + f.file });
+    window.__ebLogEvent('calculate', { source: 'manifest_file_inspect', file: f.file });
   };
 
   window.__ebSaveInlineScorecard = function(ev, inputId, formId) {
@@ -711,6 +690,8 @@ function buildClientRuntimeScript(cfg) {
     if (!email || email.indexOf('@') <= 0) return false;
     var r4 = document.querySelector('tr.eb-blurred-deliverable');
     if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
+    var gTr = document.getElementById('eb-table-row4-gate-tr');
+    if (gTr) gTr.innerHTML = '<td colspan="8" style="padding:7px 12px;background:' + CFG.theme.safeSoftBg + ';color:' + CFG.theme.safeColor + ';font-weight:700;font-size:11.5px;">✓ Row #4 Revealed! <a href="/buy/micro_pass" onclick="window.__ebCheckout(\\\'micro_pass\\\');return false;" style="color:' + CFG.theme.brandPrimary + ';margin-left:8px;">Unblur all remaining rows + CSV for 99¢ →</a></td>';
     var prevBox = document.getElementById('eb-prism-proof-preview');
     if (prevBox) prevBox.textContent += '\\n// ✓ [ROW #4 REVEALED FOR ' + email.replace(/</g, '') + '] — Remaining rows & 3 files ready below';
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'zeigarnik_row4_reveal' }) })
@@ -724,6 +705,8 @@ function buildClientRuntimeScript(cfg) {
   window.__ebApplyUnblurState = function() {
     window.__ebIsUnlocked = true;
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
+    var gTr = document.getElementById('eb-table-row4-gate-tr');
+    if (gTr && gTr.parentNode) gTr.parentNode.removeChild(gTr);
     var blurred = document.querySelectorAll('.eb-blurred-deliverable');
     for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
     Array.prototype.slice.call(document.querySelectorAll('[data-raw-email]')).forEach(function(nd) { nd.textContent = nd.getAttribute('data-raw-email'); });

@@ -422,10 +422,12 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const emailLower = String(extraEmail || '').toLowerCase();
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
-  if (req.method === 'GET' && clientIp && !isOwnerIp && !isPlaywrightHeader && (req.path === '/' || req.path === '/directory' || (req.path && req.path.startsWith('/seo/')))) {
-    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((t) => now - t < 3000);
-    recent.push(now); ipBurstWindow.set(clientIp, recent);
-    if (recent.length >= 3) isBurstScrape = true;
+  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && req.path.startsWith('/seo/')));
+  if (isHtmlRoute && !req.headers['accept-language']) isBurstScrape = true;
+  if (isHtmlRoute && clientIp && !isOwnerIp) {
+    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 30000);
+    recent.push({ ts: now, path: req.path }); ipBurstWindow.set(clientIp, recent);
+    if (recent.length >= 3 || recent.filter((x) => x.path === req.path && now - x.ts < 15000).length >= 2) isBurstScrape = true;
   }
   const isSearchOrAiCrawler = CRAWLER_UA_REGEX.test(ua) || isPrefetch || isBurstScrape;
   if (isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua || ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') || ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') || ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') || ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') || emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')) {
@@ -445,10 +447,12 @@ function createTelemetryStore(dataDir, moduleId) {
     const e = state.events[i];
     if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (!e.client_ip && e.created_at >= '2026-10-17T09:18:00Z' && e.created_at <= '2026-10-17T09:55:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
       e.is_test = 1; e.is_owner = 1; sanitized = true;
-    } else if (Number(e.is_test) === 0 && e.event_type === 'visit' && (String(e.page_url || '').startsWith('/seo/') || String(e.page_url || '').startsWith('/?preset='))) {
-      const t0 = new Date(e.created_at).getTime();
-      const burstCount = state.events.slice(Math.max(0, i - 5), Math.min(state.events.length, i + 6)).filter((x) => x.event_type === 'visit' && (String(x.page_url || '').startsWith('/seo/') || String(x.page_url || '').startsWith('/?preset=')) && Math.abs(new Date(x.created_at).getTime() - t0) <= 3000).length;
-      if (burstCount >= 3) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
+    } else if (Number(e.is_test) === 0 && e.event_type === 'visit') {
+      const t0 = new Date(e.created_at).getTime(), win = state.events.slice(Math.max(0, i - 6), Math.min(state.events.length, i + 7));
+      const samePathQuick = win.filter((x) => x.event_type === 'visit' && x.page_url === e.page_url && (!e.client_ip || x.client_ip === e.client_ip) && Math.abs(new Date(x.created_at).getTime() - t0) <= 15000).length;
+      const hasJs = win.some((x) => x.event_type !== 'visit' && (!e.client_ip || x.client_ip === e.client_ip) && Math.abs(new Date(x.created_at).getTime() - t0) <= 20000);
+      const seoBurst = (String(e.page_url || '').startsWith('/seo/') || String(e.page_url || '').startsWith('/?preset=')) && win.filter((x) => x.event_type === 'visit' && Math.abs(new Date(x.created_at).getTime() - t0) <= 4000).length >= 3;
+      if (seoBurst || (samePathQuick >= 2 && !hasJs)) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
     }
   }
   for (const l of state.leads) { if (Number(l.is_test) === 0 && (isExcludedOwnerIp(l.client_ip) || l.is_owner)) { l.is_test = 1; l.is_owner = 1; sanitized = true; } }
@@ -805,29 +809,10 @@ function attachExactBaselinePack(app, options = {}) {
     res.json(store.getPstReport(Number(req.query.hours || 3)));
   });
 
-  app.get('/api/github-upgrade/stripe-express-vaul-dock', (req, res) => {
-    res.json({
-      ok: true, iteration: 24, module_id: cfg.moduleId,
-      repo: 'stripe/stripe-js (★ 4,200) + emilkowalski/vaul (★ 15,800) + floating-ui/floating-ui (★ 31,400)',
-      features: { native_checkout_stripe_redirect: true, live_stripe_session_reconciliation: true, symmetrical_3_zone_vaul_dock: true, pseo_lead_card_eyebrow_symmetry: true }
-    });
-  });
-
-  app.get('/api/github-upgrade/observable-plot-radar-symmetry', (req, res) => {
-    res.json({
-      ok: true, iteration: 25, module_id: cfg.moduleId,
-      repo: 'observablehq/plot (★ 4,400) + FormKit/auto-animate (★ 13,100) + shadcn-ui/ui (★ 81,000)',
-      features: { stealth_burst_crawler_telemetry_guard: true, symmetrical_manifest_svg_telemetry_bar: true, full_native_control_telemetry_capture: true }
-    });
-  });
-
-  app.get('/api/github-upgrade/nuqs-deeplink-mobile-firstfold', (req, res) => {
-    res.json({
-      ok: true, iteration: 26, module_id: cfg.moduleId,
-      repo: '47ng/nuqs (★ 6,200) + PrismJS/prism (★ 12,300) + observablehq/plot (★ 4,400)',
-      features: { url_query_state_deeplink_hydration: true, mobile_firstfold_interactive_presets: true, symmetrical_doppelrand_diff_inspector_footer: true }
-    });
-  });
+  app.get('/api/github-upgrade/stripe-express-vaul-dock', (req, res) => res.json({ ok: true, iteration: 24, module_id: cfg.moduleId, repo: 'stripe/stripe-js (★ 4,200) + emilkowalski/vaul (★ 15,800) + floating-ui/floating-ui (★ 31,400)', features: { native_checkout_stripe_redirect: true, live_stripe_session_reconciliation: true, symmetrical_3_zone_vaul_dock: true, pseo_lead_card_eyebrow_symmetry: true } }));
+  app.get('/api/github-upgrade/observable-plot-radar-symmetry', (req, res) => res.json({ ok: true, iteration: 25, module_id: cfg.moduleId, repo: 'observablehq/plot (★ 4,400) + FormKit/auto-animate (★ 13,100) + shadcn-ui/ui (★ 81,000)', features: { stealth_burst_crawler_telemetry_guard: true, symmetrical_manifest_svg_telemetry_bar: true, full_native_control_telemetry_capture: true } }));
+  app.get('/api/github-upgrade/nuqs-deeplink-mobile-firstfold', (req, res) => res.json({ ok: true, iteration: 26, module_id: cfg.moduleId, repo: '47ng/nuqs (★ 6,200) + PrismJS/prism (★ 12,300) + observablehq/plot (★ 4,400)', features: { url_query_state_deeplink_hydration: true, mobile_firstfold_interactive_presets: true, symmetrical_doppelrand_diff_inspector_footer: true } }));
+  app.get('/api/github-upgrade/tanstack-table-row-gate-qbar', (req, res) => res.json({ ok: true, iteration: 27, module_id: cfg.moduleId, repo: 'TanStack/table (★ 25,400) + TanStack/query (★ 43,800) + 47ng/nuqs (★ 6,200)', features: { symmetrical_2row_qbar_zero_truncation: true, word_boundary_pseo_entity_title: true, interactive_table_row4_unlock_banner: true, non_browser_polling_guard: true } }));
 
   // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher (/api/leads/capture, /api/leads/resend-backfill)
   const buildBuyLinks = (email) => ({
