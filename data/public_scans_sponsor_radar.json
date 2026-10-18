@@ -1,18 +1,5 @@
 [
   {
-    "target": "stripe.com",
-    "grade": "B",
-    "score": 79,
-    "status": "WATCHLIST",
-    "kpi1": "$460K/mo Spend",
-    "kpi2": "4x Renewal Signal",
-    "cnnReadout": "81.3% Acoustic Confidence • 14ms ONNX Inference",
-    "issue": "Optimization Gap Detected — Unlock Direct Media-Buyer Email & 3-Flight Pitch Deck (99¢ Pass)",
-    "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.187Z"
-  },
-  {
     "target": "AG1",
     "grade": "A+",
     "score": 97,
@@ -22,8 +9,8 @@
     "cnnReadout": "99.1% Host-Voiced Mid-Roll Retention • -14.1 LUFS",
     "issue": "Proven 3x+ ROI Across 24 Flagship Shows",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.191Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.268Z"
   },
   {
     "target": "Ramp",
@@ -35,8 +22,8 @@
     "cnnReadout": "97.4% B2B Decision-Maker Acoustic Attention",
     "issue": "$34.20 Cleared Net eCPM Benchmark",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.195Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.272Z"
   },
   {
     "target": "Deel",
@@ -48,8 +35,8 @@
     "cnnReadout": "95.0% Vanity URL + QR Frame Salience",
     "issue": "High-Converting Newsletter + Podcast Stack",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.198Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.276Z"
   },
   {
     "target": "Linear",
@@ -61,8 +48,8 @@
     "cnnReadout": "93.2% Developer Podcast Host-Trust Score",
     "issue": "Top DevTools Sponsorship Efficiency",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.201Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.280Z"
   },
   {
     "target": "Eight-Sleep",
@@ -74,8 +61,8 @@
     "cnnReadout": "91.8% Biohacking Mid-Roll Completion Rate",
     "issue": "Strong Promo-Code Attribution",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.204Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.284Z"
   },
   {
     "target": "Notion",
@@ -87,8 +74,8 @@
     "cnnReadout": "82.4% YouTube Integrated Segment Saliency",
     "issue": "Shifting Spend to Creator Mid-Rolls",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.208Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.289Z"
   },
   {
     "target": "OneShot-Crypto-App",
@@ -100,8 +87,8 @@
     "cnnReadout": "49.2% Pre-Roll Skip Spike (+38% Listener Drop)",
     "issue": "Overpaid $68 CPM without Promo Landing Page",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.213Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.292Z"
   },
   {
     "target": "Generic-VPN-Flight",
@@ -113,8 +100,8 @@
     "cnnReadout": "46.5% Scripted Ad-Read Fatigue Detected",
     "issue": "High Ad-Block / SponsorBlock Skip Rate (74%)",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.217Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.296Z"
   },
   {
     "target": "Unverified-SaaS-Ad",
@@ -126,7 +113,7 @@
     "cnnReadout": "38.1% Dead Homepage CTA (No UTM/Vanity Slug)",
     "issue": "62% Attribution Leakage — Fix Pitch & Offer",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
-    "cnnSensorLabel": "Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor",
-    "scannedAt": "2026-10-18T22:03:22.220Z"
+    "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
+    "scannedAt": "2026-10-18T23:20:33.301Z"
   }
 ]

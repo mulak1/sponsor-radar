@@ -14,70 +14,70 @@
 const GROWTH_CATALOG = {
   citation_forge: {
     badgeLabel: 'CitationForge GEO',
-    defaultMetric: '89/100 (Grade A) • llms.txt v2',
+    defaultMetric: '89/100 (Grade A) • llms.txt Ready',
     badgeColor: '#4F46E5',
-    categoryTag: 'AI Search & GEO Visibility',
+    categoryTag: 'AI Search & ChatGPT Visibility',
     githubTopics: ['llms-txt', 'generative-engine-optimization', 'ai-seo', 'perplexity-seo', 'chatgpt-search', 'json-ld', 'schema-org', 'mcp-server', 'seo-audit', 'answer-engine-optimization'],
     tools: [
-      { slug: 'llms-txt-validator-and-compiler', title: 'Free llms.txt & llms-full.txt Validator and Auto-Compiler (2026)', summary: 'Validate your root /llms.txt and /llms-full.txt against the AnswerDotAI v2 specification and auto-compile agent-readable Markdown indexes in 10 seconds.', metricA: '2.4x Rank #1 Citation Lift', metricB: '68% Token Bloat Reduction', target: 'stripe.com' },
-      { slug: 'chatgpt-perplexity-citation-share-calculator', title: 'ChatGPT Search & Perplexity Citation Share-of-Voice (cSoV) Calculator', summary: 'Calculate position-weighted Citation Share-of-Voice across 25 commercial buyer prompts in ChatGPT Search, Perplexity, Gemini, and Claude.', metricA: '36.4% Top Leader cSoV', metricB: '+1.4 Avg Rank Position Gain', target: 'linear.app' },
-      { slug: 'json-ld-schema-graph-generator', title: 'AI-Ready @graph JSON-LD & Speakable Schema Generator for SaaS', summary: 'Compile deterministic Organization, SoftwareApplication, Dataset, FAQPage, and SpeakableSpecification @graph JSON-LD for Google AI Overviews and RAG crawlers.', metricA: '94/100 Entity Disambiguation', metricB: '100% Rich Result Eligibility', target: 'supabase.com' }
+      { slug: 'llms-txt-validator-and-compiler', title: 'Free llms.txt & llms-full.txt Checker and Generator (2026)', summary: 'Check your website’s /llms.txt and /llms-full.txt files and generate clean AI-readable site guides for ChatGPT and Perplexity in 10 seconds.', metricA: '2.4x More #1 AI Mentions', metricB: '68% Cleaner Page Structure', target: 'stripe.com' },
+      { slug: 'chatgpt-perplexity-citation-share-calculator', title: 'ChatGPT Search & Perplexity Brand Mention Calculator', summary: 'Measure how often ChatGPT Search, Perplexity, Gemini, and Claude recommend your brand across 25 high-intent buyer questions.', metricA: '36.4% Top Brand Mention Share', metricB: '+1.4 Avg Rank Improvement', target: 'linear.app' },
+      { slug: 'json-ld-schema-graph-generator', title: 'AI-Ready JSON-LD Schema Generator for Websites & SaaS', summary: 'Generate copy-paste Organization, Product, FAQ, and Article JSON-LD schema markup so Google AI Overviews and AI assistants cite your site accurately.', metricA: '94/100 AI Clarity Score', metricB: '100% Rich Result Ready', target: 'supabase.com' }
     ],
     comparisons: [
-      { slug: 'stripe-vs-adyen-ai-search-citation-audit', title: 'Stripe vs. Adyen: AI Search Citation Share-of-Voice & llms.txt Teardown (2026)', summary: 'Head-to-head Generative Engine Optimization (GEO) benchmark comparing Stripe (41.2% cSoV) against Adyen (24.8% cSoV) across 25 payment gateway buyer prompts.', entityA: 'Stripe (stripe.com)', scoreA: '41.2% cSoV (94/100)', entityB: 'Adyen (adyen.com)', scoreB: '24.8% cSoV (76/100)', winnerLift: '+16.4% Citation Advantage for Stripe via /llms-full.txt & @graph Schema', target: 'stripe.com' },
-      { slug: 'supabase-vs-firebase-llms-txt-readiness', title: 'Supabase vs. Firebase: AI Coding Agent & Perplexity Citation Benchmark', summary: 'Why Supabase captures 38.6% of AI coding assistant recommendations vs. Firebase (27.1%) through clean Markdown twins and high token-to-HTML readability.', entityA: 'Supabase (supabase.com)', scoreA: '38.6% cSoV (91/100)', entityB: 'Firebase (firebase.google.com)', scoreB: '27.1% cSoV (79/100)', winnerLift: '+11.5% Developer Prompt Citation Lead', target: 'supabase.com' },
-      { slug: 'linear-vs-jira-perplexity-seo-benchmark', title: 'Linear vs. Jira: B2B Issue Tracker AI Search Visibility & Entity Graph Audit', summary: 'Empirical comparison of Linear vs. Atlassian Jira across ChatGPT Search and Perplexity buyer-intent prompts for modern product management teams.', entityA: 'Linear (linear.app)', scoreA: '33.8% cSoV (89/100)', entityB: 'Jira (atlassian.com)', scoreB: '29.4% cSoV (74/100)', winnerLift: '+4.4% High-Intent Startup Recommendation Lead', target: 'linear.app' }
+      { slug: 'stripe-vs-adyen-ai-search-citation-audit', title: 'Stripe vs. Adyen: ChatGPT & Perplexity Brand Visibility Comparison (2026)', summary: 'Side-by-side AI search comparison showing why Stripe captures 41.2% of payment gateway recommendations vs. Adyen (24.8%) across 25 buyer prompts.', entityA: 'Stripe (stripe.com)', scoreA: '41.2% AI Share (94/100)', entityB: 'Adyen (adyen.com)', scoreB: '24.8% AI Share (76/100)', winnerLift: '+16.4% More AI Recommendations for Stripe via /llms-full.txt & Schema', target: 'stripe.com' },
+      { slug: 'supabase-vs-firebase-llms-txt-readiness', title: 'Supabase vs. Firebase: AI Coding Assistant Recommendation Benchmark', summary: 'Why Supabase captures 38.6% of AI coding assistant recommendations vs. Firebase (27.1%) through clean Markdown docs and structured guides.', entityA: 'Supabase (supabase.com)', scoreA: '38.6% AI Share (91/100)', entityB: 'Firebase (firebase.google.com)', scoreB: '27.1% AI Share (79/100)', winnerLift: '+11.5% Developer Recommendation Lead', target: 'supabase.com' },
+      { slug: 'linear-vs-jira-perplexity-seo-benchmark', title: 'Linear vs. Jira: AI Search Visibility & Recommendation Comparison', summary: 'Side-by-side comparison of Linear vs. Atlassian Jira across ChatGPT Search and Perplexity buyer questions for software teams.', entityA: 'Linear (linear.app)', scoreA: '33.8% AI Share (89/100)', entityB: 'Jira (atlassian.com)', scoreB: '29.4% AI Share (74/100)', winnerLift: '+4.4% Startup Recommendation Lead', target: 'linear.app' }
     ]
   },
   sponsor_radar: {
     badgeLabel: 'SponsorRadar 3x+',
-    defaultMetric: '3x+ Renewed • $38.50 Net eCPM',
+    defaultMetric: '3x+ Renewed • $38.50 Net CPM',
     badgeColor: '#E84E36',
     categoryTag: 'Verified Podcast & Newsletter Ad Spend',
     githubTopics: ['podcast-sponsorship', 'newsletter-ads', 'creator-economy', 'media-buying', 'cpm-calculator', 'ad-spend', 'youtube-sponsorships', 'sponsorblock', 'b2b-marketing', 'mcp-server'],
     tools: [
-      { slug: 'podcast-sponsorship-cpm-roi-calculator', title: 'Podcast Sponsorship CPM, Promo-Code Decay & 3x-Renewal ROI Calculator', summary: 'Benchmark host-read pre-roll and mid-roll podcast CPM rates against verified 3x+ renewed sponsor flights and calculate net customer acquisition cost (CAC).', metricA: '$38.50 Cleared Mid-Roll eCPM', metricB: '84% 3x+ Renewal Retention', target: 'AG1' },
-      { slug: 'newsletter-ad-spend-renewal-estimator', title: 'B2B Newsletter Sponsorship Spend, Click-Through & Renewal Rate Estimator', summary: 'Estimate verified newsletter sponsorship pricing, dedicated send vs. primary placement CPC, and multi-flight renewal probability across 46+ flagship shows.', metricA: '2.8% Avg Verified CTR', metricB: '16.7x Warm Pitch Reply Lift', target: 'Deel' },
-      { slug: 'b2b-sponsor-outbound-pitch-generator', title: 'Autonomous 3x-Renewal Sponsor Outbound Pitch & Media Buyer Matcher', summary: 'Generate data-backed sponsorship pitch emails anchored to a brand’s existing 3x+ renewed podcast and newsletter placements with verified media-buyer routing.', metricA: '18.4% Outbound Reply Rate', metricB: '96 Verified Flights Indexed', target: 'Linear' }
+      { slug: 'podcast-sponsorship-cpm-roi-calculator', title: 'Podcast Sponsorship CPM Pricing & Renewal ROI Calculator', summary: 'Compare podcast host-read ad rates against verified 3x+ renewed sponsor campaigns and estimate your true cost per customer.', metricA: '$38.50 Verified Mid-Roll CPM', metricB: '84% 3x+ Renewal Rate', target: 'AG1' },
+      { slug: 'newsletter-ad-spend-renewal-estimator', title: 'B2B Newsletter Sponsorship Cost, Clicks & Renewal Estimator', summary: 'Estimate real newsletter sponsorship pricing, expected click-through rates, and repeat booking rates across 46+ top newsletters.', metricA: '2.8% Avg Verified Click Rate', metricB: '16.7x Higher Warm Reply Rate', target: 'Deel' },
+      { slug: 'b2b-sponsor-outbound-pitch-generator', title: 'Proven Sponsor Outbound Pitch & Media-Buyer Finder', summary: 'Generate ready-to-send sponsorship pitch emails matched to brands already renewing 3x+ on similar podcasts and newsletters.', metricA: '18.4% Outbound Reply Rate', metricB: '96 Verified Campaigns Indexed', target: 'Linear' }
     ],
     comparisons: [
-      { slug: 'podcast-ad-reads-vs-newsletter-sponsorship-roi', title: 'Host-Read Podcast Ads vs. B2B Newsletter Sponsorships: 2026 CPM & Renewal ROI Matrix', summary: 'Empirical comparison of 60-second host-voiced podcast mid-rolls vs. B2B tech newsletter primary placements across 96 verified sponsor flights.', entityA: 'Host-Voiced Podcast Mid-Roll', scoreA: '$38.50 eCPM (78% 3x Renewal)', entityB: 'B2B Newsletter Primary Slot', scoreB: '$52.00 eCPM (71% 3x Renewal)', winnerLift: '+1.42x Pyannote Host-Trust Conversion Multiplier on Mid-Rolls', target: 'AG1' },
-      { slug: 'ag1-vs-eight-sleep-creator-sponsorship-strategy', title: 'AG1 vs. Eight Sleep: Creator Sponsorship Spend, Vanity URLs & Renewal Velocity', summary: 'How AG1 ($1.42M/mo) and Eight Sleep ($620K/mo) structure multi-flight podcast and YouTube creator partnerships, promo codes, and attribution windows.', entityA: 'AG1 (Athletic Greens)', scoreA: '$1.42M/mo • 88% 3x+ Renewal', entityB: 'Eight Sleep', scoreB: '$620K/mo • 82% 3x+ Renewal', winnerLift: '18x Consecutive Flight Streak on Flagship Health Shows', target: 'AG1' },
-      { slug: 'deel-vs-ramp-b2b-podcast-cpm-benchmarks', title: 'Deel vs. Ramp: B2B SaaS Podcast & Newsletter Sponsorship Spend Breakdown', summary: 'Side-by-side ledger of Deel ($680K/mo) and Ramp ($790K/mo) across Acquired, Lenny’s Podcast, TLDR, and Pragmatic Engineer.', entityA: 'Ramp Financial', scoreA: '$790K/mo • 100/100 ROI Score', entityB: 'Deel HR & Payroll', scoreB: '$680K/mo • 98/100 ROI Score', winnerLift: '$31.6K Avg Flight Value with 12x+ Renewal Streak', target: 'Deel' }
+      { slug: 'podcast-ad-reads-vs-newsletter-sponsorship-roi', title: 'Podcast Host-Read Ads vs. B2B Newsletter Sponsorships: 2026 Price & ROI Comparison', summary: 'Real-world comparison of 60-second podcast mid-roll ads vs. B2B newsletter primary sponsorships across 96 verified campaigns.', entityA: 'Podcast Host-Read Mid-Roll', scoreA: '$38.50 CPM (78% 3x Renewal)', entityB: 'B2B Newsletter Primary Slot', scoreB: '$52.00 CPM (71% 3x Renewal)', winnerLift: '+1.42x Higher Listener Trust & Conversion on Host Mid-Rolls', target: 'AG1' },
+      { slug: 'ag1-vs-eight-sleep-creator-sponsorship-strategy', title: 'AG1 vs. Eight Sleep: Creator Sponsorship Spend & Repeat Booking Breakdown', summary: 'How AG1 ($1.42M/mo) and Eight Sleep ($620K/mo) price, track, and renew long-term podcast and YouTube creator partnerships.', entityA: 'AG1 (Athletic Greens)', scoreA: '$1.42M/mo • 88% 3x+ Renewal', entityB: 'Eight Sleep', scoreB: '$620K/mo • 82% 3x+ Renewal', winnerLift: '18x Consecutive Renewals on Top Health Shows', target: 'AG1' },
+      { slug: 'deel-vs-ramp-b2b-podcast-cpm-benchmarks', title: 'Deel vs. Ramp: B2B SaaS Podcast & Newsletter Ad Spend Comparison', summary: 'Side-by-side sponsorship breakdown of Deel ($680K/mo) and Ramp ($790K/mo) across Acquired, Lenny’s Podcast, TLDR, and Pragmatic Engineer.', entityA: 'Ramp Financial', scoreA: '$790K/mo • 100/100 ROI Score', entityB: 'Deel HR & Payroll', scoreB: '$680K/mo • 98/100 ROI Score', winnerLift: '$31.6K Avg Campaign Size with 12x+ Repeat Bookings', target: 'Deel' }
     ]
   },
   derm_logic: {
-    badgeLabel: 'DermLogic Clinical',
-    defaultMetric: 'Barrier-Safe 96/100 • ΔpH Verified',
+    badgeLabel: 'DermLogic Safe',
+    defaultMetric: 'Routine Safety 96/100 • pH Checked',
     badgeColor: '#C85A70',
-    categoryTag: 'Clinical INCI & ΔpH Skincare Compatibility',
+    categoryTag: 'Skincare Ingredient Conflict & Routine Checker',
     githubTopics: ['skincare-routine', 'inci-decoder', 'cosmetic-chemistry', 'dermatology', 'retinol', 'vitamin-c', 'skin-barrier', 'ph-balance', 'fungal-acne', 'mcp-server'],
     tools: [
-      { slug: 'inci-ph-conflict-and-neutralization-calculator', title: 'Clinical INCI Active Conflict & Henderson-Hasselbalch ΔpH Neutralization Calculator', summary: 'Check any skincare combination for |ΔpH| > 1.8 acid-peptide hydrolysis, L-Ascorbic Acid + Copper Peptide chelation, and Benzoyl Peroxide retinoid oxidation.', metricA: '0.87ms Deterministic Audit', metricB: 'Saves $182/yr in Ruined Serums', target: 'VitC+Cu' },
-      { slug: 'am-pm-skincare-skin-cycling-scheduler', title: 'Autonomous AM/PM Skincare Layering & 4-Night Skin-Cycling Calendar Compiler', summary: 'Automatically partition conflicting exfoliants, retinoids, antioxidants, and barrier peptides into a safe AM/PM and 4-night skin-cycling schedule (.ICS + 9:16 Wallet Card).', metricA: '96/100 Harmony Score Lift', metricB: 'Zero Barrier Delipidation', target: 'Tret+BPO' },
-      { slug: 'comedogenic-pore-clogging-ingredient-checker', title: 'Comedogenic Load (0–5), 500-Dalton Penetration & Fungal-Acne (Malassezia) Checker', summary: 'Paste any product INCI list to flag pore-clogging esters (Isopropyl Myristate, Ethylhexyl Palmitate), Malassezia lipid triggers, and molecular weight barriers.', metricA: '65+ Clinical Actives Indexed', metricB: '100% EU CosIng + pKa Grounded', target: 'TikTok' }
+      { slug: 'inci-ph-conflict-and-neutralization-calculator', title: 'Skincare Ingredient Conflict & pH Safety Checker', summary: 'Check any skincare combination for pH clashes, Vitamin C + Copper Peptide cancellation, and Benzoyl Peroxide + Retinoid irritation.', metricA: 'Instant Safety Check', metricB: 'Saves $182/yr in Wasted Serums', target: 'VitC+Cu' },
+      { slug: 'am-pm-skincare-skin-cycling-scheduler', title: 'AM/PM Skincare Routine & 4-Night Skin-Cycling Planner', summary: 'Automatically split conflicting acids, retinoids, Vitamin C, and peptides into a safe Morning/Evening and 4-night schedule (.ICS + Phone Card).', metricA: '96/100 Routine Safety Score', metricB: 'Protects Skin Moisture Barrier', target: 'Tret+BPO' },
+      { slug: 'comedogenic-pore-clogging-ingredient-checker', title: 'Pore-Clogging (0–5) & Fungal-Acne Safe Ingredient Checker', summary: 'Paste any skincare product ingredient list to spot pore-clogging oils, fungal-acne triggers, and heavy barrier ingredients.', metricA: '65+ Active Ingredients Checked', metricB: 'Dermatologist-Referenced Rules', target: 'TikTok' }
     ],
     comparisons: [
-      { slug: 'retinol-vs-tretinoin-irritation-and-ph-matrix', title: 'Retinol vs. Rx Tretinoin 0.05%: Conversion Kinetics, Barrier Stress & Layering Rules', summary: 'Clinical comparison of OTC Retinol (2-step retinaldehyde oxidation) vs. Rx Tretinoin (direct retinoic acid receptor binding), optimal pH windows, and buffer techniques.', entityA: 'Rx Tretinoin 0.05%', scoreA: 'pH 5.5–6.2 • 10x Potency', entityB: 'Encapsulated Retinol 1.0%', scoreB: 'pH 5.6–6.5 • Lower Irritation', winnerLift: '20-Minute Ceramide Sandwich Buffer Cuts Erythema by 64%', target: 'Tret+BPO' },
-      { slug: 'copper-peptides-vs-vitamin-c-layering-conflict', title: 'Copper Peptides (GHK-Cu) vs. L-Ascorbic Acid (Vitamin C): Oxidation & AM/PM Split', summary: 'Why layering GHK-Cu Copper Peptides (pH 6.0) with L-Ascorbic Acid (pH 3.2) triggers Cu2+-catalyzed redox inactivation and how to split them across AM and PM.', entityA: 'L-Ascorbic Acid 15% (AM Slot)', scoreA: 'pH 3.2 • pKa 4.2 Antioxidant', entityB: 'GHK-Cu Copper Peptides (PM Slot)', scoreB: 'pH 6.0 • Collagen Remodeling', winnerLift: '96/100 Harmony When Partitioned into AM Vitamin C + PM Peptides', target: 'VitC+Cu' },
-      { slug: 'glycolic-acid-vs-salicylic-acid-barrier-safety', title: 'Glycolic Acid 7% (AHA) vs. Salicylic Acid 2% (BHA): Molecular Weight & Barrier Load', summary: 'Comparing water-soluble Glycolic Acid (76.05 Da, pKa 3.83) against lipid-soluble Salicylic Acid (138.12 Da, pKa 2.97) for corneocyte desquamation vs. sebaceous pore clearing.', entityA: 'Glycolic Acid 7% (AHA)', scoreA: '76 Da • Surface Renewal', entityB: 'Salicylic Acid 2% (BHA)', scoreB: '138 Da • Lipid Pore Penetration', winnerLift: 'Alternating Nights Prevents Dual-Acid Stratum Corneum Stripping', target: 'TikTok' }
+      { slug: 'retinol-vs-tretinoin-irritation-and-ph-matrix', title: 'Retinol vs. Prescription Tretinoin 0.05%: Strength, Irritation & Layering Guide', summary: 'Clear comparison of over-the-counter Retinol vs. prescription Tretinoin, ideal pH levels, and moisturizer buffering tips to prevent peeling.', entityA: 'Prescription Tretinoin 0.05%', scoreA: 'pH 5.5–6.2 • Full Strength', entityB: 'Gentle Retinol 1.0%', scoreB: 'pH 5.6–6.5 • Lower Irritation', winnerLift: '20-Minute Moisturizer Sandwich Cuts Redness & Peeling by 64%', target: 'Tret+BPO' },
+      { slug: 'copper-peptides-vs-vitamin-c-layering-conflict', title: 'Copper Peptides vs. Vitamin C Serum: Why They Clash & How to Split AM/PM', summary: 'Why layering Copper Peptides (pH 6.0) right on top of pure Vitamin C (pH 3.2) cancels out both serums—and how to use Vitamin C in the morning and Peptides at night.', entityA: 'Vitamin C 15% (Use Morning)', scoreA: 'pH 3.2 • Brightening & Protection', entityB: 'Copper Peptides (Use Night)', scoreB: 'pH 6.0 • Barrier Repair', winnerLift: '96/100 Safety Score When Split into Morning Vitamin C + Night Peptides', target: 'VitC+Cu' },
+      { slug: 'glycolic-acid-vs-salicylic-acid-barrier-safety', title: 'Glycolic Acid 7% (AHA) vs. Salicylic Acid 2% (BHA): Which Exfoliant Fits Your Skin?', summary: 'Comparing surface-smoothing Glycolic Acid (AHA) against pore-clearing Salicylic Acid (BHA), and how to alternate nights without over-exfoliating.', entityA: 'Glycolic Acid 7% (AHA)', scoreA: 'Surface Glow & Texture', entityB: 'Salicylic Acid 2% (BHA)', scoreB: 'Deep Pore & Blemish Clearing', winnerLift: 'Alternating Nights Prevents Redness & Over-Exfoliation', target: 'TikTok' }
     ]
   },
   abandon_alpha: {
-    badgeLabel: 'AbandonAlpha FinOps',
-    defaultMetric: '+62.4% Smart Retry & Bandit Lift',
+    badgeLabel: 'AbandonAlpha Recovery',
+    defaultMetric: '+62.4% Smart Retry & Checkout Lift',
     badgeColor: '#4F46E5',
-    categoryTag: 'Checkout Bandit & Stripe Decline Recovery',
+    categoryTag: 'Failed-Payment & Checkout Drop-Off Recovery',
     githubTopics: ['stripe-dunning', 'cart-abandonment', 'checkout-recovery', 'thompson-sampling', 'multi-armed-bandit', 'finops', 'saas-metrics', 'churn-reduction', 'payment-retries', 'mcp-server'],
     tools: [
-      { slug: 'stripe-decline-code-retry-window-calculator', title: 'Stripe Decline-Code Smart Retry Window & Payday Liquidity Calculator (2026)', summary: 'Calculate optimal off-session PaymentIntent retry timestamps for insufficient_funds, do_not_honor, generic_decline, and expired_card without triggering Visa/Mastercard excessive-retry fines.', metricA: '+62.4% insufficient_funds Lift', metricB: '0% Revenue-Share Tax', target: 'Shopify' },
-      { slug: 'checkout-abandonment-recoverable-mrr-calculator', title: 'SaaS & E-Commerce Checkout Abandonment Recoverable MRR & Leakage Grader', summary: 'Quantify monthly leaked checkout revenue and model net recovered cashflow from C1–C6 behavioral exit-intent counter-offers + automated Stripe webhook dunning.', metricA: '18%–31% Net Checkout Recovery', metricB: '749x Average Return on Pass', target: 'B2B SaaS' },
-      { slug: 'thompson-sampling-exit-intent-bandit-simulator', title: 'Beta-Bernoulli Thompson Sampling Exit-Intent Objection Bandit Simulator', summary: 'Simulate real-time alpha/beta posterior convergence across C1–C6 buyer objections (Price, Browsing, Team Approval, Competitor Comparison, Subscription Fatigue, Missing Feature).', metricA: '+16.4% Margin-Safe Conversion Lift', metricB: 'Zero Blanket Coupon Cannibalization', target: 'Creator' }
+      { slug: 'stripe-decline-code-retry-window-calculator', title: 'Stripe Failed-Payment Smart Retry & Payday Timing Calculator (2026)', summary: 'Find the best retry times for insufficient_funds, do_not_honor, generic_decline, and expired_card declines without triggering card-network retry penalties.', metricA: '+62.4% insufficient_funds Recovery', metricB: '0% Revenue-Share Fees', target: 'Shopify' },
+      { slug: 'checkout-abandonment-recoverable-mrr-calculator', title: 'Checkout Drop-Off & Failed-Payment Revenue Recovery Calculator', summary: 'See how much monthly revenue you can win back using tailored exit offers and payday-timed Stripe payment retries.', metricA: '18%–31% Net Checkout Recovery', metricB: 'Zero Blanket Discount Loss', target: 'B2B SaaS' },
+      { slug: 'thompson-sampling-exit-intent-bandit-simulator', title: 'Smart Exit-Offer vs. Static 10% Discount Margin Calculator', summary: 'Compare tailored exit offers (pause plan, trial extension, annual split, fast checkout) against generic 10% discount popups to protect your profit margins.', metricA: '+16.4% Margin-Safe Recovery', metricB: 'No Coupon Abuse Training', target: 'Creator' }
     ],
     comparisons: [
-      { slug: 'insufficient-funds-vs-do-not-honor-stripe-recovery', title: 'Stripe insufficient_funds vs. do_not_honor: ISO-8583 Decline Recovery Playbook', summary: 'Why insufficient_funds requires payday-aligned liquidity windows (1st/15th 06:00 local) whereas do_not_honor requires 3DS authentication fallback or issuer-cooldown spacing.', entityA: 'insufficient_funds (Liquidity)', scoreA: '62.4% Recovery via Payday Sync', entityB: 'do_not_honor (Issuer Risk)', scoreB: '47.8% Recovery via +48h Cooldown + 3DS', winnerLift: '+38.2% Higher Recovery vs. Naive 24h Cron Retries', target: 'Shopify' },
-      { slug: 'thompson-bandit-vs-static-10-percent-discount-popup', title: 'C1–C6 Thompson Sampling Bandit vs. Static 10% Discount Popups: Margin Preservation Audit', summary: 'Static 10% exit popups train full-price buyers to abandon for coupons. See how C1–C6 objection routing (pause, trial extension, annual split) preserves gross margin.', entityA: 'C1–C6 Thompson Bandit', scoreA: '+16.4% Lift • 94% Margin Retained', entityB: 'Static 10% Off Popup', scoreB: '+6.1% Lift • -10% Margin Erosion', winnerLift: '+$34,521/mo Net Margin-Adjusted Cashflow on $85K Store', target: 'B2B SaaS' },
-      { slug: 'smart-payday-dunning-vs-naive-24h-stripe-retries', title: 'Smart Payday-Window Dunning vs. Naive 24-Hour Stripe Retries: Involuntary Churn Benchmark', summary: 'Benchmarking issuer approval rates, card network retry penalties, and net MRR retention across 20 Stripe decline codes.', entityA: 'AbandonAlpha Payday + Webhook Worker', scoreA: '56.2% Blended Dunning Recovery', entityB: 'Naive 24h Cron Retry Schedule', scoreB: '19.4% Blended Dunning Recovery', winnerLift: '+36.8% Net Involuntary Churn Reduction', target: 'Creator' }
+      { slug: 'insufficient-funds-vs-do-not-honor-stripe-recovery', title: 'Stripe insufficient_funds vs. do_not_honor: How to Recover Each Decline Code', summary: 'Why insufficient_funds needs payday-timed retries (1st & 15th at 6:00 AM) while do_not_honor needs a 48-hour bank cooldown or 1-tap customer verification.', entityA: 'insufficient_funds (Low Balance)', scoreA: '62.4% Recovery via Payday Timing', entityB: 'do_not_honor (Bank Hold)', scoreB: '47.8% Recovery via 48h Cooldown', winnerLift: '+38.2% Higher Recovery vs. Standard 24-Hour Retries', target: 'Shopify' },
+      { slug: 'thompson-bandit-vs-static-10-percent-discount-popup', title: 'Tailored Exit Offers vs. Static 10% Discount Popups: Profit Margin Comparison', summary: 'Generic 10% off popups train full-price buyers to abandon just for a coupon. See how matching the offer to why the shopper is leaving keeps 94% of your margin.', entityA: 'Tailored Exit Offers', scoreA: '+16.4% Recovery • 94% Margin Kept', entityB: 'Generic 10% Off Popup', scoreB: '+6.1% Recovery • -10% Margin Lost', winnerLift: '+$34,521/mo Extra Profit Kept on an $85K/mo Store', target: 'B2B SaaS' },
+      { slug: 'smart-payday-dunning-vs-naive-24h-stripe-retries', title: 'Payday-Timed Retries vs. Standard 24-Hour Stripe Retries: Recovery Comparison', summary: 'Comparing bank approval rates, retry limits, and recovered subscription revenue across 20 common Stripe decline codes.', entityA: 'Payday-Timed Smart Retries', scoreA: '56.2% Average Card Recovery', entityB: 'Standard 24-Hour Retries', scoreB: '19.4% Average Card Recovery', winnerLift: '+36.8% More Failed Payments Recovered Automatically', target: 'Creator' }
     ]
   }
 };
@@ -153,12 +153,12 @@ function renderDynamicScorecardOgSvg(cfg, rawTarget) {
   <rect x="44" y="44" width="1112" height="542" rx="28" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="3"/>
   <rect x="76" y="78" width="380" height="40" rx="20" fill="#EEF2FF"/>
   <text x="98" y="104" font-family="Inter, sans-serif" font-size="17" font-weight="700" fill="${escXml(g.badgeColor)}">✦ ${escXml(g.categoryTag.toUpperCase())}</text>
-  <text x="76" y="182" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#0F172A">${escXml(cfg.brandName)} Live Audit: ${escXml(info.target.slice(0, 26))}</text>
-  <text x="76" y="236" font-family="Inter, sans-serif" font-size="24" fill="#475569">Deterministic Benchmark • Verified Deliverable Bundle &amp; 1-Click Instant Export</text>
+  <text x="76" y="182" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#0F172A">${escXml(cfg.brandName)} Report: ${escXml(info.target.slice(0, 26))}</text>
+  <text x="76" y="236" font-family="Inter, sans-serif" font-size="24" fill="#475569">Verified Scorecard • Ready-to-Use Action Pack &amp; 1-Click Export</text>
   <rect x="76" y="278" width="1048" height="176" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-  <text x="112" y="334" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#64748B">VERIFIED TELEMETRY READOUT</text>
+  <text x="112" y="334" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#64748B">VERIFIED SCORE &amp; IMPACT</text>
   <text x="112" y="402" font-family="JetBrains Mono, monospace" font-size="48" font-weight="800" fill="${escXml(g.badgeColor)}">${escXml(info.message)}</text>
-  <text x="76" y="528" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0F172A">https://${escXml(cfg.domain)}/?q=${escXml(encodeURIComponent(info.target))} • Free Interactive Audit &amp; 99¢ Single-File Export</text>
+  <text x="76" y="528" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0F172A">https://${escXml(cfg.domain)}/?q=${escXml(encodeURIComponent(info.target))} • Free Interactive Check &amp; 99¢ Single-File Export</text>
 </svg>`;
 }
 
@@ -170,18 +170,18 @@ function renderGrowthPageHtml(cfg, item, kind) {
   const mdBadgeSnippet = `[![${cfg.brandName} Verified](${badgeSvgUrl})](${canonicalUrl})`;
   const rows = kind === 'compare'
     ? [
-        { name: item.entityA, kpi: item.scoreA, action: 'Verified Leader • Primary Benchmark', status: 'OPTIMAL (Rank #1)' },
-        { name: item.entityB, kpi: item.scoreB, action: 'Baseline Challenger • Secondary Benchmark', status: 'GAP DETECTED' },
-        { name: 'Net Differential & Lift', kpi: item.winnerLift, action: `Deploy ${cfg.freeDeliverableName}`, status: 'VERIFIED LIFT' },
-        { name: 'Row #4 Deep-Dive Attribution Matrix', kpi: 'Locked in Preview', action: 'Reveal via Email or 99¢ Single-File Pass', status: 'LOCKED_PREVIEW' },
-        { name: 'Row #5 Full Raw Export & Action Script', kpi: 'Locked in Preview', action: 'Unlock 3-File Bundle ($1.99)', status: 'LOCKED_PREVIEW' }
+        { name: item.entityA, kpi: item.scoreA, action: 'Top Rated • Leading Option', status: 'RECOMMENDED (#1)' },
+        { name: item.entityB, kpi: item.scoreB, action: 'Alternative • Comparison Baseline', status: 'GAP FOUND' },
+        { name: 'Key Difference & Gain', kpi: item.winnerLift, action: `Use ${cfg.freeDeliverableName}`, status: 'VERIFIED GAIN' },
+        { name: 'Row #4 Step-by-Step Comparison Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
+        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ]
     : [
-        { name: `${item.target} — Baseline Diagnostic`, kpi: item.metricA, action: 'Run Live Custom Simulation', status: 'VERIFIED' },
-        { name: `${cfg.freeDeliverableName} Impact`, kpi: item.metricB, action: 'Auto-Compiled Production Deliverable', status: 'READY' },
-        { name: 'Implementation Time-to-Value', kpi: '< 10 Seconds', action: 'Zero-Wrapper Deterministic Engine', status: 'INSTANT' },
-        { name: 'Row #4 Granular Parameter Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
-        { name: 'Row #5 Complete Production Bundle', kpi: 'Locked in Preview', action: 'Unlock 3-File Bundle ($1.99)', status: 'LOCKED_PREVIEW' }
+        { name: `${item.target} — Baseline Check`, kpi: item.metricA, action: 'Test Your Own Above', status: 'VERIFIED' },
+        { name: `${cfg.freeDeliverableName} Impact`, kpi: item.metricB, action: 'Ready-to-Use Action File', status: 'READY' },
+        { name: 'Setup Time', kpi: '< 10 Seconds', action: 'Instant Browser Calculation', status: 'INSTANT' },
+        { name: 'Row #4 Step-by-Step Fix Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
+        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ];
 
   const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};">${escXml(r.kpi)}</td><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-size:11.5px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
@@ -207,13 +207,13 @@ function renderGrowthPageHtml(cfg, item, kind) {
   <header style="border-bottom:1px solid ${escXml(t.border)};background:#FFFFFF;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="/" style="font-weight:800;font-size:18px;color:${escXml(t.textPrimary)};text-decoration:none;">${escXml(cfg.brandName)}</a>
-      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'HEAD-TO-HEAD BENCHMARK' : 'INTERACTIVE MICRO-TOOL')}</span>
+      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'SIDE-BY-SIDE COMPARISON' : 'FREE INTERACTIVE TOOL')}</span>
     </div>
     <nav aria-label="Primary" style="display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600;">
-      <a href="/" style="color:${escXml(t.textSecondary)};text-decoration:none;">Interactive Workbench</a>
-      <a href="/directory" style="color:${escXml(t.textSecondary)};text-decoration:none;">60+ Benchmarks</a>
+      <a href="/" style="color:${escXml(t.textSecondary)};text-decoration:none;">Home Calculator</a>
+      <a href="/directory" style="color:${escXml(t.textSecondary)};text-decoration:none;">All Guides</a>
       <a href="/llms.txt" style="color:${escXml(t.textSecondary)};text-decoration:none;">/llms.txt</a>
-      <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pass ($1.99) ↗</a>
+      <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
     </nav>
   </header>
   <main style="max-width:1240px;margin:0 auto;padding:24px;">
@@ -222,42 +222,44 @@ function renderGrowthPageHtml(cfg, item, kind) {
     </nav>
     <h1>${escXml(item.title)}</h1>
     <p class="pseo-lead">${escXml(item.summary)}</p>
-    <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' — Live Diagnostic';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
+    <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' — Live Check';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
     <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">🔬 LIVE ONNX/CNN CALCULATOR:</span>
-        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Custom target..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:135px;" />
-        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Calculate Live ↗</button>
-        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;text-decoration:none;">Open Permalink (/scan) ↗</a>
+        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">⚡ LIVE INTERACTIVE CALCULATOR:</span>
+        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:135px;" />
+        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Check Score ↗</button>
+        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="font-size:11px;font-weight:600;color:#94A3B8;text-decoration:underline;padding:2px 6px;">Full Report ↗</a>
       </div>
       <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
     </section>
     <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:14px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-        <h2 style="font-size:16px;margin:0;">Verified Telemetry &amp; Deliverable Benchmark Matrix</h2>
+        <h2 style="font-size:16px;margin:0;">Side-by-Side Results &amp; Action Plan</h2>
         <img id="eb-growth-badge-img" src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
       </div>
       <table aria-label="${escXml(item.title)} Benchmark Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Entity / Parameter</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Verified Readout</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Action</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
+        <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Option / Check</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Measured Result</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Step</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
       <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span style="font-size:12px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
           <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:12px;width:185px;" />
-          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Verified Patch Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Action Plan Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">⚡ 99¢ Single-File Pass ↗</a>
-          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${escXml(g.badgeColor)};color:${escXml(g.badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">📦 $1.99 3-File Bundle ↗</a>
+          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${escXml(g.badgeColor)};color:${escXml(g.badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">99¢ Single File</a>
+          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">Unlock 3-File Pack ($1.99) ↗</a>
         </div>
       </div>
     </section>
-    <section style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
-      <h2 style="font-size:15px;margin:0 0 6px 0;">🔗 Embed Live Verified SVG Badge &amp; 1-Line Interactive Widget (Free Backlink Badge)</h2>
-      <p style="font-size:12.5px;color:${escXml(t.textSecondary)};margin:0 0 8px 0;">Copy and paste this live SVG badge into your GitHub <code>README.md</code>, documentation, or media kit:</p>
-      <pre style="background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};border-radius:8px;padding:9px 12px;font-size:11.5px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
-    </section>
+    <details style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:12px 16px;margin-top:16px;">
+      <summary style="cursor:pointer;font-size:13px;font-weight:700;color:${escXml(t.textPrimary)};">🔗 Embed Live Verified Badge &amp; Technical Specs (Layer-3)</summary>
+      <div style="margin-top:10px;">
+        <p style="font-size:12.5px;color:${escXml(t.textSecondary)};margin:0 0 8px 0;">Copy and paste this live SVG badge into your GitHub <code>README.md</code>, documentation, or media kit:</p>
+        <pre style="background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};border-radius:8px;padding:9px 12px;font-size:11.5px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
+      </div>
+    </details>
   </main>
 </body>
 </html>`;

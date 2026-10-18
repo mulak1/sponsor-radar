@@ -43,46 +43,46 @@ const VERTICAL_CONFIGS = {
     proPriceEnv: 'STRIPE_PRICE_PRO_99',
     proPriceUsd: 99,
     proLabel: 'B2B Agency Continuous Radar ($99/mo)',
-    lockedTitle: 'Competitor Prompt Steal Matrix',
-    deliverableName: 'Full /llms-full.txt Manifest + schema-dts JSON-LD @graph + 25-Prompt Matrix',
-    freeDeliverableName: 'Compiled /llms-full.txt & JSON-LD @graph Bundle',
-    unlockBannerTitle: 'Export Your Production /llms-full.txt, JSON-LD Graph & 50-Prompt Matrix',
-    explainerText: 'Deterministic 25-prompt cSoV benchmark, /llms-full.txt corpus & JSON-LD entity graph',
+    lockedTitle: 'Competitor AI Visibility Comparison',
+    deliverableName: 'Complete AI Search Fix Pack (/llms-full.txt + Structured Data + 25 Buyer Questions)',
+    freeDeliverableName: 'Ready-to-Use AI Search Fix Files (/llms.txt & Schema)',
+    unlockBannerTitle: 'Get Your Ready-to-Use AI Search Fix Files & 50-Question Competitor Report',
+    explainerText: 'See how often ChatGPT, Perplexity & Google AI recommend your brand across 25 buyer questions',
     hudLabel: 'GEO Crawl HUD',
     redditSub: 'SEO',
     sliderLabel: 'Prompts', sliderMin: 10, sliderMax: 250, sliderVal: 50,
-    searchPlaceholder: 'Filter domain (e.g. figma.com)...',
-    tier1Tag: 'SINGLE-DOMAIN EXPORT PASS • SAVE 96% VS $49',
-    tier1Desc: 'Instantly unblurs your compiled /llms-full.txt, schema-dts JSON-LD @graph, all 25 buyer-intent prompt rows, and 1-click .CSV/.TXT exports.',
-    tier2Tag: 'COMPLETE 50-PROMPT GEO PACK',
-    tier2Desc: 'Full 50-Prompt Competitor Citation Steal Matrix, Answer-First H2 copy rewrites, and ready-to-merge GitHub PR patch.',
-    tier3Tag: 'AGENCY CONTINUOUS RADAR',
-    tier3Desc: 'Weekly automated cSoV tracking across Perplexity Pro, ChatGPT Search & Gemini Overviews for up to 10 client domains.',
+    searchPlaceholder: 'Check any website (e.g. figma.com)...',
+    tier1Tag: 'SINGLE-SITE FIX PASS • SAVE 96% VS $49',
+    tier1Desc: 'Instantly unlocks your ready-to-upload AI crawler file (/llms-full.txt), structured data code, and all 25 buyer-question rankings (.CSV).',
+    tier2Tag: 'COMPLETE 50-QUESTION AI SEO PACK',
+    tier2Desc: 'Full 50-question competitor comparison, copy-paste page improvements, and a ready-to-merge GitHub update.',
+    tier3Tag: 'AGENCY WEEKLY TRACKING',
+    tier3Desc: 'Automated weekly AI recommendation tracking across ChatGPT, Perplexity & Google AI for up to 10 client websites.',
     battlecard: {
-      heading: 'Why Growth & SEO Teams Choose CitationForge Over Legacy Suites',
-      colLegacy: 'Legacy $299/mo SEO Suites',
-      colManual: 'Manual Prompt Checking',
+      heading: 'Why Marketing & SEO Teams Choose CitationForge Over Traditional SEO Tools',
+      colLegacy: 'Traditional $299/mo SEO Tools',
+      colManual: 'Checking ChatGPT by Hand',
       rows: [
-        ['AI Search Citation Scoring', 'Weighted 25-Prompt cSoV + Bot Audit in <15ms', 'Traditional Blue-Link Keyword Rank Only', 'Hours of Manual Copy-Pasting in ChatGPT'],
-        ['Production Deliverable', 'Auto-Compiled /llms-full.txt + JSON-LD @graph', 'Generic Site-Crawl Warnings Without Code', 'Hand-Written Markdown Prone to Schema Errors'],
-        ['Pricing & Access', '$1.99 Single-Domain Export or $49 Full Pack', '$299–$499/mo Annual Contract Lock-In', 'High Engineering Opportunity Cost']
+        ['AI Search Visibility Check', 'Checks 25 buyer questions across ChatGPT, Perplexity & Google AI in 10s', 'Tracks old Google blue links only', 'Hours of manual copy-pasting'],
+        ['Ready-to-Use Fix Files', 'Generates your /llms.txt & structured data files automatically', 'Shows vague warnings without fix files', 'Error-prone manual setup'],
+        ['Simple Pricing', '$1.99 Single-Site Pass or $49 Complete Pack', '$299–$499/mo annual contracts', 'High team time cost']
       ]
     },
     exportActions: [
-      { id: 'btn-copy-shopping-list', label: 'Copy GEO Summary', type: 'copy' },
-      { id: 'btn-export-csv', label: 'Export 25-Prompt .CSV', href: '/api/github-upgrade/export.csv' },
+      { id: 'btn-copy-shopping-list', label: 'Copy Summary', type: 'copy' },
+      { id: 'btn-export-csv', label: 'Export 25 Questions (.CSV)', href: '/api/github-upgrade/export.csv' },
       { id: 'btn-export-llms', label: 'Download /llms-bundle.txt', href: '/api/github-upgrade/llms-bundle.txt' },
-      { id: 'btn-export-ics', label: 'Audit Reminder (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
-      { id: 'btn-print-summary', label: 'Print Executive PDF', type: 'print' },
+      { id: 'btn-export-ics', label: 'Monthly Check Reminder (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
+      { id: 'btn-print-summary', label: 'Print Report PDF', type: 'print' },
       { id: 'btn-showroom-hud', label: 'GEO Crawl HUD', type: 'hud' },
       { id: 'btn-cmdk-trigger', label: '⌘K Actions', type: 'cmdk' },
-      { id: 'btn-reddit-share', label: 'Copy Reddit MD', type: 'reddit' }
+      { id: 'btn-reddit-share', label: 'Copy Reddit Post', type: 'reddit' }
     ],
     kpis: [
-      { label: 'Citation Share (cSoV)', val: '22.9%', sub: '25 Buyer Prompts' },
-      { label: 'Agent Readability', val: '83/100', sub: 'llms.txt + Readability' },
-      { label: 'Entity Graph Density', val: '70/100', sub: '@graph + sameAs' },
-      { label: 'Projected Post-Patch', val: '29.2%', sub: '+6.3% cSoV Lift' }
+      { label: 'AI Mention Share', val: '22.9%', sub: 'Across 25 Buyer Questions' },
+      { label: 'AI Crawler Access', val: '83/100', sub: 'Bot Permissions & Files' },
+      { label: 'Structured Data Score', val: '70/100', sub: 'Product & Pricing Clarity' },
+      { label: 'Expected Score After Fix', val: '29.2%', sub: '+6.3% More Mentions' }
     ],
     presetKpis: {
       'linear.app': ['22.9%', '83/100', '70/100', '29.2%'],
@@ -96,14 +96,14 @@ const VERTICAL_CONFIGS = {
       { key: 'supabase.com', label: 'Supabase' }, { key: 'notion.so', label: 'Notion' }, { key: 'vercel.com', label: 'Vercel' }
     ],
     coMarketingPills: [
-      { key: 'perplexity', label: 'Perplexity Pro', rowText: 'Perplexity Pro Insight: Rank #1 Citation requires Answer-First 48-word H2 block + /llms-full.txt' },
-      { key: 'chatgpt', label: 'SearchGPT', rowText: 'SearchGPT Insight: OAI-SearchBot requires explicit Allow: / in robots.txt + Organization sameAs JSON-LD' },
-      { key: 'gemini', label: 'Gemini Overviews', rowText: 'Gemini Overviews Insight: Google-Extended index weight increases +34% with FAQPage @graph schema' }
+      { key: 'perplexity', label: 'Perplexity', rowText: 'Perplexity Tip: Adding a clear 50-word summary at the top of key pages + /llms-full.txt boosts #1 citations.' },
+      { key: 'chatgpt', label: 'ChatGPT Search', rowText: 'ChatGPT Tip: Make sure OAI-SearchBot is allowed in robots.txt and your pricing page has clear structured data.' },
+      { key: 'gemini', label: 'Google AI Overviews', rowText: 'Google AI Tip: Adding FAQ structured data increases how often Google AI quotes your product pages by +34%.' }
     ],
     affiliates: [
-      { title: 'Semrush AI SEO & Citation Tracker', badge: 'Verified GEO Partner', cpa: 'Explore 7-Day Trial', url: 'https://www.semrush.com/' },
-      { title: 'Ahrefs Brand Radar for LLMs', badge: 'Share-of-Voice Feed', cpa: 'Compare Domain Radar', url: 'https://ahrefs.com/brand-radar' },
-      { title: 'Cloudflare AI Bot & Crawl Audit', badge: 'Edge Crawler Control', cpa: 'Inspect Bot Telemetry', url: 'https://www.cloudflare.com/' }
+      { title: 'Semrush AI SEO & Visibility Tracker', badge: 'Verified SEO Partner', cpa: 'Explore 7-Day Trial', url: 'https://www.semrush.com/' },
+      { title: 'Ahrefs Brand Radar for AI Search', badge: 'Brand Mention Tracker', cpa: 'Compare Domain Radar', url: 'https://ahrefs.com/brand-radar' },
+      { title: 'Cloudflare AI Bot & Crawler Control', badge: 'Bot Access Manager', cpa: 'Inspect Bot Traffic', url: 'https://www.cloudflare.com/' }
     ],
     githubRepo: {
       name: 'AnswerDotAI/llms-txt + colinhacks/zod + kpdecker/jsdiff',
@@ -113,14 +113,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Compiles spec-compliant /llms-full.txt manifests and schema-dts @graph blocks with Zod contract verification.'
     },
     deliverableFiles: [
-      { file: 'llms-full.txt', size: '18.4 KB', schema: 'AnswerDotAI/llms-txt v1.0', status: 'VALID' },
-      { file: 'schema-graph.jsonld', size: '3.2 KB', schema: 'schema-dts @graph', status: 'VALID' },
-      { file: '25-buyer-prompts.csv', size: '6.1 KB', schema: 'RFC-4180 cSoV Matrix', status: 'VALID' }
+      { file: 'llms-full.txt', size: '18.4 KB', schema: 'AI Crawler Guide File', status: 'VALID' },
+      { file: 'schema-graph.jsonld', size: '3.2 KB', schema: 'Structured Data Code', status: 'VALID' },
+      { file: '25-buyer-prompts.csv', size: '6.1 KB', schema: '25 Buyer Questions Table', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [CURRENT] robots.txt: Missing OAI-SearchBot/PerplexityBot | /llms-full.txt: Missing | Baseline cSoV: 22.9%',
-      afterLine: '+ [PATCHED] robots.txt: 6/6 AI Bots Allowed + /llms-full.txt + @graph JSON-LD | Projected cSoV: 29.2% (+6.3% Lift)',
-      roiBadge: '+6.3% to +27.0% Citation Lift'
+      beforeLine: '- [BEFORE] AI crawlers blocked or missing /llms.txt guide | Current AI Mention Rate: 22.9%',
+      afterLine: '+ [AFTER]  All 6 AI crawlers enabled + /llms-full.txt + FAQ schema | Expected Mention Rate: 29.2% (+6.3%)',
+      roiBadge: '+6.3% to +27% More AI Mentions'
     }
   },
   sponsor_radar: {
@@ -134,46 +134,46 @@ const VERTICAL_CONFIGS = {
       radiusCard: '14px', radiusPill: '8px', shadow: '0 14px 34px -12px rgba(24, 20, 16, 0.07), 0 2px 6px rgba(24, 20, 16, 0.03)'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
-    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 49, coreLabel: 'Complete Creator Sponsor Ledger ($49/mo)',
-    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'B2B Agency Media-Buyer Feed ($199/mo)',
-    lockedTitle: 'Verified Sponsor Buyer Emails',
-    deliverableName: 'Verified Decision-Maker Email + 3-Flight Pilot Pitch + All Placement Rows',
-    freeDeliverableName: 'Direct Media-Buyer Email & 3-Flight Pitch Deck',
-    unlockBannerTitle: 'Unlock Verified Sponsor Decision-Maker Emails, Net CPM Floors & Pitch Deck',
-    explainerText: 'Verified media-buyer emails, net CPM floor rates, and 3x-renewal flight calendars',
+    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 49, coreLabel: 'Complete Creator Sponsor Database ($49/mo)',
+    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'Agency & Media-Buyer Pro Feed ($199/mo)',
+    lockedTitle: 'Verified Sponsor Partnership Contacts',
+    deliverableName: 'Verified Sponsor Contact Email + Ready-to-Send Pitch + Full Ad Rate Table',
+    freeDeliverableName: 'Verified Sponsor Contact & Ready-to-Send Pitch Email',
+    unlockBannerTitle: 'Get Verified Sponsor Contact Emails, Real Ad Rates (CPM) & Pitch Templates',
+    explainerText: 'See which sponsors booked 3+ repeat ads, what they paid, and who to email on their partnerships team',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
-    sliderLabel: 'Flights', sliderMin: 1, sliderMax: 30, sliderVal: 14,
-    searchPlaceholder: 'Filter sponsor (e.g. HubSpot)...',
-    tier1Tag: 'SINGLE-BRAND PITCH PASS • SAVE 96% VS $49',
-    tier1Desc: 'Instantly unblurs the verified sponsorship buyer email, ready-to-send 3-flight pilot pitch (.EML), and full show placement table (.CSV).',
-    tier2Tag: 'CREATOR PRO OUTBOUND ENGINE',
-    tier2Desc: 'Full 42+ sponsor brand & 46+ show 3x-renewal ledger, verified partnership contacts, and unlimited outbound pitch generation.',
+    sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
+    searchPlaceholder: 'Search sponsor or show (e.g. HubSpot)...',
+    tier1Tag: 'SINGLE-SPONSOR PITCH PASS • SAVE 96% VS $49',
+    tier1Desc: 'Instantly unlocks the verified partnerships contact email, ready-to-send 3-ad pilot pitch (.EML), and full show rate table (.CSV).',
+    tier2Tag: 'CREATOR PRO SPONSOR DATABASE',
+    tier2Desc: 'Full access to 42+ active sponsor brands, 46+ top shows, verified partnership contacts, and unlimited pitch templates.',
     tier3Tag: 'AGENCY & MEDIA BUYER FEED',
-    tier3Desc: '5 team seats, competitor promo-code attribution decay curves, negotiated net eCPM floor benchmarks, and Clay/Apollo CSV sync.',
+    tier3Desc: '5 team seats, competitor promo-code tracking, negotiated ad rate benchmarks, and instant CSV exports for your CRM.',
     battlecard: {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
-      colLegacy: '25%-Commission Ad Networks', colManual: 'Cold-Guessing Media Kits',
+      colLegacy: '25%-Fee Ad Networks', colManual: 'Guessing from Media Kits',
       rows: [
-        ['ROI Proof Signal', ' Tracks Verified 3x–24x Renewal Flights', 'Pushes Unproven 1x Test Inventory', 'No Visibility Into Sponsor Retention'],
-        ['Buyer Outreach', 'Direct Partnerships Email + 3-Flight Anchor Pitch', 'Middleman Gatekeeping & 25% Take Rate', 'Generic Cold Emails to info@brand.com'],
-        ['Access & Pricing', '$1.99 Single-Brand Pass or $49/mo Creator Pro', '15%–30% Cut of Every Sponsorship Deal', 'Weeks of Manual Podcast Listening']
+        ['Proof That Ads Actually Convert', 'Shows sponsors that renewed 3 to 24 times on the same show', 'Pushes untested 1-time ad slots', 'No way to know if a sponsor lost money'],
+        ['Direct Sponsor Outreach', 'Verified partnerships email + ready-to-send pitch email', 'Takes 20%–30% commission middleman cut', 'Cold emailing generic info@ addresses'],
+        ['Simple Pricing', '$1.99 Single-Sponsor Pass or $49/mo Creator Pro', 'Takes thousands in commission fees', 'Weeks of listening to episodes by hand']
       ]
     },
     exportActions: [
       { id: 'btn-copy-shopping-list', label: 'Copy Pitch Summary', type: 'copy' },
-      { id: 'btn-export-csv', label: 'Export Flights .CSV', href: '/api/github-upgrade/export.csv' },
-      { id: 'btn-export-llms', label: 'Download Pitch .EML', href: '/api/github-upgrade/pitch.eml' },
-      { id: 'btn-export-ics', label: 'Flight Follow-Up (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
-      { id: 'btn-print-summary', label: 'Print Media Kit PDF', type: 'print' },
+      { id: 'btn-export-csv', label: 'Export Ad Rates (.CSV)', href: '/api/github-upgrade/export.csv' },
+      { id: 'btn-export-llms', label: 'Download Pitch Email (.EML)', href: '/api/github-upgrade/pitch.eml' },
+      { id: 'btn-export-ics', label: 'Follow-Up Reminder (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
+      { id: 'btn-print-summary', label: 'Print Rate Card PDF', type: 'print' },
       { id: 'btn-showroom-hud', label: 'Media Buyer HUD', type: 'hud' },
       { id: 'btn-cmdk-trigger', label: '⌘K Actions', type: 'cmdk' },
-      { id: 'btn-reddit-share', label: 'Copy Creator MD', type: 'reddit' }
+      { id: 'btn-reddit-share', label: 'Copy Creator Post', type: 'reddit' }
     ],
     kpis: [
-      { label: '3x+ Renewal Score', val: '95/100', sub: 'Verified ROI Signal' },
-      { label: 'Est. Monthly Spend', val: '$680,000', sub: 'Across Proven Shows' },
-      { label: 'Cleared Net eCPM', val: '$46.50', sub: '60s Host Mid-Roll' },
-      { label: 'Host Diarization Lift', val: '1.44x', sub: 'vs. Spliced DAI' }
+      { label: 'Repeat Renewal Score', val: '95/100', sub: '3+ Repeat Bookings' },
+      { label: 'Est. Monthly Ad Spend', val: '$680,000', sub: 'Across Tracked Shows' },
+      { label: 'Avg Ad Rate (CPM)', val: '$46.50', sub: 'Cost Per 1,000 Listeners' },
+      { label: 'Host-Read Lift', val: '1.44x', sub: 'vs. Pre-Recorded Ads' }
     ],
     presetKpis: {
       'ag1': ['98/100', '$1,420,000', '$42.00', '1.48x'],
@@ -187,14 +187,14 @@ const VERTICAL_CONFIGS = {
       { key: 'linear', label: 'Linear' }, { key: 'ramp', label: 'Ramp' }, { key: 'eight-sleep', label: '8Sleep' }
     ],
     coMarketingPills: [
-      { key: 'spotify', label: 'Spotify Ad Studio', rowText: 'Spotify Ad Studio: Host-Read Mid-Roll 60s clears $38.50 net CPM with 4.2x renewal rate' },
-      { key: 'youtube', label: 'YouTube BrandConnect', rowText: 'YouTube BrandConnect: 90s Native Integration w/ pinned comment vanity URL converts at 2.8% CTR' },
-      { key: 'beehiiv', label: 'Beehiiv Ad Network', rowText: 'Beehiiv Ad Network: Primary Top-Slot Newsletter Sponsor averages $42 CPC / $65 eCPM on B2B lists' }
+      { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Benchmark: 60-second host-read mid-roll ads average $38.50 CPM with a 4.2x repeat booking rate.' },
+      { key: 'youtube', label: 'YouTube Creators', rowText: 'YouTube Benchmark: 90-second creator integrations with a pinned link in comments average 2.8% click-through.' },
+      { key: 'beehiiv', label: 'Newsletters', rowText: 'Newsletter Benchmark: Top-banner B2B newsletter sponsorships average $42 per click ($65 CPM).' }
     ],
     affiliates: [
-      { title: 'Riverside.fm 4K Studio Ad-Read Recorder', badge: 'Creator Studio Standard', cpa: 'Explore Creator Studio', url: 'https://riverside.fm/' },
-      { title: 'Descript AI Transcript & Sponsor Editor', badge: 'Instant Ad-Read Cut', cpa: 'Compare Transcript Tool', url: 'https://www.descript.com/' },
-      { title: 'Beehiiv Newsletter Ad Network', badge: 'Verified CPC Sponsors', cpa: 'Explore Newsletter Ads', url: 'https://www.beehiiv.com/' }
+      { title: 'Riverside.fm 4K Podcast & Video Studio', badge: 'Creator Studio Pick', cpa: 'Explore Creator Studio', url: 'https://riverside.fm/' },
+      { title: 'Descript AI Video & Podcast Editor', badge: 'Fast Ad-Read Editing', cpa: 'Compare Transcript Tool', url: 'https://www.descript.com/' },
+      { title: 'Beehiiv Newsletter Platform & Ad Network', badge: 'Verified Newsletter Ads', cpa: 'Explore Newsletter Ads', url: 'https://www.beehiiv.com/' }
     ],
     githubRepo: {
       name: 'pyannote/pyannote-audio + colinhacks/zod + parallax/jsPDF',
@@ -204,13 +204,13 @@ const VERTICAL_CONFIGS = {
       summary: 'Verifies host-voiced ad reads vs. spliced dynamic insertions and compiles 3x-renewal anchored sponsorship pitches.'
     },
     deliverableFiles: [
-      { file: 'verified-buyer-contacts.csv', size: '3.8 KB', schema: 'Direct Partnerships Ledger', status: 'VALID' },
-      { file: '3-flight-anchor-pitch.eml', size: '2.5 KB', schema: 'RFC-822 Outreach Deck', status: 'VALID' },
-      { file: '96-flight-cpm-decay.csv', size: '14.2 KB', schema: 'Pyannote 1.44x Diarization', status: 'VALID' }
+      { file: 'verified-buyer-contacts.csv', size: '3.8 KB', schema: 'Sponsor Contact Emails', status: 'VALID' },
+      { file: '3-flight-anchor-pitch.eml', size: '2.5 KB', schema: 'Ready-to-Send Pitch Email', status: 'VALID' },
+      { file: '96-flight-cpm-decay.csv', size: '14.2 KB', schema: '96 Ad Placements & Rates', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [COLD PITCH] Generic email to info@brand.com | Unverified CPM | Avg Reply Rate: 1.1%',
-      afterLine: '+ [3x ANCHOR]  Verified Buyer (partnerships@) + 14x Renewal Proof @ $38.50 Net eCPM | Reply Rate: 18.4%',
+      beforeLine: '- [BEFORE] Cold-emailing generic info@brand.com without rate proof | Avg Reply Rate: 1.1%',
+      afterLine: '+ [AFTER]  Emailing verified partnerships lead with 14x repeat-booking proof | Avg Reply Rate: 18.4%',
       roiBadge: '16.7x Higher Sponsor Reply Rate'
     }
   },
@@ -225,46 +225,46 @@ const VERTICAL_CONFIGS = {
       radiusCard: '20px', radiusPill: '999px', shadow: '0 14px 36px -14px rgba(110, 98, 89, 0.12), 0 2px 8px rgba(110, 98, 89, 0.04)'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMsIaoGnkXxS8ru7bwyQe',
-    corePriceEnv: 'STRIPE_PRICE_VANITY_499', corePriceUsd: 4.99, coreLabel: 'Complete AM/PM Vanity Rescue Card ($4.99)',
-    proPriceEnv: 'STRIPE_PRICE_ANNUAL_1999', proPriceUsd: 19.99, proLabel: 'Unlimited Vanity Shelf & Esthetician Pass ($19.99/yr)',
-    lockedTitle: 'pH Wait-Time & Barrier Split',
-    deliverableName: '4-Night Skin-Cycling Calendar + 9:16 Apple-Wallet Ritual Card + Safe Swaps',
-    freeDeliverableName: '9:16 Apple-Wallet Ritual Card & 4-Night Calendar',
-    unlockBannerTitle: 'Save Your Personalized 4-Night Skin-Cycling Calendar & 9:16 Vanity Card',
-    explainerText: 'Cosmetic-chemist ΔpH wait times, 4-night skin-cycling calendar & barrier-safe swaps',
+    corePriceEnv: 'STRIPE_PRICE_VANITY_499', corePriceUsd: 4.99, coreLabel: 'Complete Morning & Night Routine Kit ($4.99)',
+    proPriceEnv: 'STRIPE_PRICE_ANNUAL_1999', proPriceUsd: 19.99, proLabel: 'Unlimited Skincare Shelf & Esthetician Pass ($19.99/yr)',
+    lockedTitle: 'Morning vs. Night Layering Order',
+    deliverableName: '4-Night Skincare Schedule + 9:16 Phone Wallpaper Card + Pore-Safe Swaps',
+    freeDeliverableName: '9:16 Morning/Night Routine Card & 4-Night Schedule',
+    unlockBannerTitle: 'Save Your Personalized Morning & Night Skincare Schedule & Phone Card',
+    explainerText: 'See which products clash, how long to wait between steps, and your safe Morning & Night order',
     hudLabel: 'Vanity Shelf HUD', redditSub: 'SkincareAddiction',
-    sliderLabel: 'Actives', sliderMin: 2, sliderMax: 8, sliderVal: 4,
-    searchPlaceholder: 'Search active (e.g. Azelaic Acid)...',
-    tier1Tag: 'SINGLE-ROUTINE RITUAL PASS • SAVE 60% VS $4.99',
-    tier1Desc: 'Instantly unblurs your 9:16 Apple-Wallet lockscreen card, exact minute-by-minute AM/PM wait times, and 4-Night Skin-Cycling .ICS calendar.',
-    tier2Tag: 'COMPLETE AM/PM VANITY RESCUE KIT',
-    tier2Desc: 'High-resolution printable AM/PM Vanity Card PDF, Henderson-Hasselbalch free-acid table, and dermatologist-verified non-comedogenic swaps.',
+    sliderLabel: 'Products', sliderMin: 2, sliderMax: 8, sliderVal: 4,
+    searchPlaceholder: 'Search ingredient or product (e.g. Retinol)...',
+    tier1Tag: 'SINGLE-ROUTINE PASS • SAVE 60% VS $4.99',
+    tier1Desc: 'Instantly unlocks your 9:16 phone lockscreen routine card, exact wait times between serums, and 4-Night Skin-Cycling calendar (.ICS).',
+    tier2Tag: 'COMPLETE AM/PM ROUTINE RESCUE KIT',
+    tier2Desc: 'Printable Morning & Night Vanity Card PDF, full ingredient compatibility chart, and gentle pore-safe product swaps.',
     tier3Tag: 'UNLIMITED SHELF & ESTHETICIAN PASS',
-    tier3Desc: 'Full year of unlimited INCI label scans, fungal-acne (Malassezia) ester screening, pregnancy-safe filters, and seasonal barrier adjustments.',
+    tier3Desc: 'Full year of unlimited ingredient checks, fungal-acne safe screening, pregnancy-safe filters, and seasonal routine updates.',
     battlecard: {
-      heading: 'Why Skincare Enthusiasts & Estheticians Choose DermLogic Over Generic Apps',
-      colLegacy: '$150 Derm Consult / Trial-and-Error', colManual: 'Generic Barcode Scanner Apps',
+      heading: 'Why Skincare Lovers & Estheticians Choose DermLogic Over Generic Apps',
+      colLegacy: '$150 Derm Visit / Guesswork', colManual: 'Single-Product Barcode Apps',
       rows: [
-        ['Active Layering & ΔpH Math', 'Exact |ΔpH| > 1.8 Peptide & Vitamin C Oxidation Detection', 'Weeks of Wait Time for a Single Routine Check', 'Scores Single Products in Isolation (Misses Layering Clashes)'],
-        ['Pore & Fungal-Acne Safety', 'Flags Hidden Esters (Isopropyl Myristate) & 500-Dalton Order', 'Rarely Audits Inactive Vehicle Esters in Creams', 'Generic "Clean/Dirty" Fear-Mongering Labels'],
-        ['AM/PM Rescue Schedule', 'Instant 4-Night Skin-Cycling Calendar & 9:16 Wallet Card ($1.99)', '$150+ Out-of-Pocket Per Visit', 'No AM/PM Conflict Split or Wait-Time Calendar']
+        ['Checks How Products Layer Together', 'Spots Vitamin C + Copper Peptide & Retinol clashes in 5 seconds', 'Weeks of waiting for a routine check', 'Only scores 1 bottle at a time (misses clashes)'],
+        ['Pore-Clogging & Fungal-Acne Check', 'Flags hidden pore-clogging oils & tells you which serum goes first', 'Rarely checks base cream ingredients', 'Confusing "clean/dirty" labels without context'],
+        ['Step-by-Step Morning & Night Plan', 'Instant 4-Night Schedule & Phone Lockscreen Card ($1.99)', '$150+ per consultation', 'No Morning vs. Night layering order']
       ]
     },
     exportActions: [
-      { id: 'btn-copy-shopping-list', label: 'Copy Routine Summary', type: 'copy' },
+      { id: 'btn-copy-shopping-list', label: 'Copy Routine Steps', type: 'copy' },
       { id: 'btn-export-ics', label: '4-Night Calendar (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
-      { id: 'btn-export-csv', label: 'Ingredient Table (.CSV)', href: '/api/github-upgrade/export.csv' },
-      { id: 'btn-export-llms', label: 'Download Ritual Notes (.TXT)', href: '/api/github-upgrade/llms-bundle.txt' },
-      { id: 'btn-print-summary', label: 'Print Vanity Sheet', type: 'print' },
+      { id: 'btn-export-csv', label: 'Ingredient Chart (.CSV)', href: '/api/github-upgrade/export.csv' },
+      { id: 'btn-export-llms', label: 'Download Routine Notes (.TXT)', href: '/api/github-upgrade/llms-bundle.txt' },
+      { id: 'btn-print-summary', label: 'Print Vanity Card', type: 'print' },
       { id: 'btn-showroom-hud', label: 'Vanity Shelf HUD', type: 'hud' },
       { id: 'btn-cmdk-trigger', label: '⌘K Quick Menu', type: 'cmdk' },
       { id: 'btn-reddit-share', label: 'Share to r/SkincareAddiction', type: 'reddit' }
     ],
     kpis: [
-      { label: 'Routine Safety Score', val: '20/100', sub: 'Critical ΔpH Clash' },
-      { label: 'Max pH Shock (ΔpH)', val: '2.8 pH', sub: 'Threshold > 1.8' },
-      { label: '500-Dalton Penetration', val: '84% Pass', sub: 'MW <= 500 Da Rule' },
-      { label: 'Malassezia / Fungal', val: '1 Trigger', sub: 'Ester Detected' }
+      { label: 'Routine Harmony Score', val: '20/100', sub: 'Ingredient Clash Found' },
+      { label: 'Acid vs. Peptide Gap', val: '2.8 pH', sub: 'Separate into AM / PM' },
+      { label: 'Absorption Order', val: '84% Pass', sub: 'Lightest to Richest' },
+      { label: 'Pore & Fungal Check', val: '1 Trigger', sub: 'Heavy Ester Found' }
     ],
     presetKpis: {
       'preset-tiktok-destroyer': ['20/100', '2.8 pH', '76% Pass', '1 Trigger'],
@@ -278,14 +278,14 @@ const VERTICAL_CONFIGS = {
       { key: 'preset-acne-rx-bpo-tret', label: 'Tret+BPO' }, { key: 'preset-fungal-safe-barrier', label: 'Fungal' }, { key: 'preset-glass-skin', label: 'Barrier' }
     ],
     coMarketingPills: [
-      { key: 'sephora', label: 'Sephora Clean', rowText: 'Sephora Clean Ritual: Move L-Ascorbic Acid (pH 3.2) to AM; keep Copper Peptides in PM to prevent Cu2+ oxidation' },
-      { key: 'dermstore', label: 'Dermstore Rx', rowText: 'Dermstore Clinical Ritual: Wait 20 mins after 0.05% Tretinoin before applying Ceramide cream to prevent retinoid pooling' },
-      { key: 'ultrasun', label: 'Ultrasun / CosIng', rowText: 'CosIng Photoprotection: Pair morning Vitamin C with Broad-Spectrum UVA1 filter (PA++++) for 4x photoprotection' }
+      { key: 'sephora', label: 'Morning vs. Night Split', rowText: 'Layering Tip: Use Vitamin C in the morning and Copper Peptides at night so they never cancel each other out.' },
+      { key: 'dermstore', label: 'Retinol Comfort Tip', rowText: 'Retinol Tip: Wait 15–20 minutes after applying Retinol or Tretinoin before sealing with your ceramide moisturizer.' },
+      { key: 'ultrasun', label: 'Morning SPF Pairing', rowText: 'Morning Glow Tip: Pairing Vitamin C under daily broad-spectrum SPF boosts antioxidant protection 4x.' }
     ],
     affiliates: [
-      { title: 'SkinCeuticals C E Ferulic (Dermstore)', badge: 'Gold-Standard pH 3.2', cpa: 'Shop Authorized Clinical', url: 'https://www.dermstore.com/p/skinceuticals-c-e-ferulic-with-15-l-ascorbic-acid-vitamin-c-serum-30ml/11289609/' },
-      { title: "Paula's Choice 2% BHA Liquid (Sephora)", badge: 'pH 3.5 Salicylic Acid', cpa: 'Shop Verified Formula', url: 'https://www.sephora.com/product/skin-perfecting-2-bha-liquid-exfoliant-P469502' },
-      { title: 'La Roche-Posay Cicaplast Baume B5+', badge: 'Night 4 Barrier Seal', cpa: 'Shop Dermatologist Pick', url: 'https://www.ulta.com/p/cicaplast-baume-b5-soothing-therapeutic-multi-purpose-cream-pimprod2018267' }
+      { title: 'SkinCeuticals C E Ferulic (Dermstore)', badge: 'Morning Vitamin C Pick', cpa: 'Shop Authorized Clinical', url: 'https://www.dermstore.com/p/skinceuticals-c-e-ferulic-with-15-l-ascorbic-acid-vitamin-c-serum-30ml/11289609/' },
+      { title: "Paula's Choice 2% BHA Liquid (Sephora)", badge: 'Exfoliating Night Pick', cpa: 'Shop Verified Formula', url: 'https://www.sephora.com/product/skin-perfecting-2-bha-liquid-exfoliant-P469502' },
+      { title: 'La Roche-Posay Cicaplast Baume B5+', badge: 'Recovery Night Cream', cpa: 'Shop Dermatologist Pick', url: 'https://www.ulta.com/p/cicaplast-baume-b5-soothing-therapeutic-multi-purpose-cream-pimprod2018267' }
     ],
     githubRepo: {
       name: 'rdkit/rdkit + EU CosIng pKa Matrix + adamgibbons/ics',
@@ -295,14 +295,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Calculates free-acid bio-availability, Cu2+/Retinoid redox inactivation, and 4-night skin-cycling schedules.'
     },
     deliverableFiles: [
-      { file: 'am-pm-vanity-card-9x16.pdf', size: '48.2 KB', schema: '9:16 Lockscreen & Print Card', status: 'VALID' },
-      { file: '4-night-skin-cycling.ics', size: '3.1 KB', schema: 'RFC-5545 Apple/Google Calendar', status: 'VALID' },
-      { file: 'non-comedogenic-swaps.csv', size: '5.5 KB', schema: 'EU CosIng ΔpH & Ester Table', status: 'VALID' }
+      { file: 'am-pm-vanity-card-9x16.pdf', size: '48.2 KB', schema: '9:16 Phone & Print Card', status: 'VALID' },
+      { file: '4-night-skin-cycling.ics', size: '3.1 KB', schema: 'Apple & Google Calendar', status: 'VALID' },
+      { file: 'non-comedogenic-swaps.csv', size: '5.5 KB', schema: 'Pore-Safe Product Swaps', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [CLASH]  Same-Night Layering: L-Ascorbic Acid (pH 3.2) + Copper Peptides (pH 6.0) -> ΔpH 2.8 Oxidation',
-      afterLine: '+ [RESCUE] AM: Vitamin C (pH 3.2 + 15m wait) | PM Night 3: Copper Peptides -> Harmony Score: 96/100',
-      roiBadge: 'Saves $182+ in Neutralized Serums'
+      beforeLine: '- [BEFORE] Layering Vitamin C + Copper Peptides in the same routine -> Serums cancel out & sting',
+      afterLine: '+ [AFTER]  Morning: Vitamin C + SPF | Night: Copper Peptides + Barrier Cream -> Harmony: 96/100',
+      roiBadge: 'Saves $182+ in Wasted Serums'
     }
   },
   abandon_alpha: {
@@ -316,29 +316,29 @@ const VERTICAL_CONFIGS = {
       radiusCard: '16px', radiusPill: '999px', shadow: '0 12px 32px -8px rgba(10, 37, 64, 0.06), 0 2px 6px rgba(10, 37, 64, 0.03)'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMtIaoGnkXxS8fAEYjqnp',
-    corePriceEnv: 'STRIPE_PRICE_STARTER_49', corePriceUsd: 49, coreLabel: 'Complete Starter Recovery Engine ($49/mo)',
-    proPriceEnv: 'STRIPE_PRICE_GROWTH_149', proPriceUsd: 149, proLabel: 'B2B Growth Autonomous Dunning ($149/mo)',
-    lockedTitle: 'Stripe Decline-Code Retry Matrix',
-    deliverableName: 'Production C1-C6 Bandit SDK + Stripe Webhook Worker (.JS) + SMS Recovery Sequence',
-    freeDeliverableName: 'Production C1–C6 Bandit SDK & Stripe Retry Worker',
-    unlockBannerTitle: 'Deploy the C1–C6 Exit-Intent Bandit SDK & Stripe Smart Dunning Worker',
-    explainerText: 'Decline-code retry windows (insufficient_funds Friday 06:00 local), C1–C6 SDK & SMS recovery flows',
+    corePriceEnv: 'STRIPE_PRICE_STARTER_49', corePriceUsd: 49, coreLabel: 'Complete Store Recovery Suite ($49/mo)',
+    proPriceEnv: 'STRIPE_PRICE_GROWTH_149', proPriceUsd: 149, proLabel: 'Multi-Store & SMS Recovery Pro ($149/mo)',
+    lockedTitle: 'Stripe Decline-Code Retry Schedule',
+    deliverableName: 'Smart Exit-Offer Script + Stripe Retry Webhook (.JS) + Recovery Email/SMS Templates',
+    freeDeliverableName: 'Smart Exit-Offer Script & Stripe Retry Schedule',
+    unlockBannerTitle: 'Get Your Smart Checkout Exit-Offer Script & Failed-Payment Retry Schedule',
+    explainerText: 'Recover leaving shoppers and retry failed Stripe cards on the exact day & hour banks approve them',
     hudLabel: 'Checkout Ops HUD', redditSub: 'SaaS',
-    sliderLabel: 'GMV ($k)', sliderMin: 15, sliderMax: 500, sliderVal: 85,
-    searchPlaceholder: 'Filter decline code or store...',
-    tier1Tag: 'SINGLE-STORE SDK & WORKER PASS • SAVE 96% VS $49',
-    tier1Desc: 'Instantly unblurs the production C1–C6 Bandit SDK snippet, Cloudflare/Stripe webhook worker (.JS), and decline-code retry schedule (.CSV).',
-    tier2Tag: 'STARTER AUTONOMOUS RECOVERY',
-    tier2Desc: 'Live Beta-Bernoulli C1–C6 exit-intent bandit + automated Stripe insufficient_funds Friday 06:00 payday retry scheduling with 0% revenue tax.',
-    tier3Tag: 'GROWTH DUNNING & SMS SUITE',
-    tier3Desc: 'Multi-store Thompson Sampling bandit, 1-Tap Apple Pay card-update SMS links, and native PostHog/Klaviyo webhook sync.',
+    sliderLabel: 'Monthly Sales ($k)', sliderMin: 15, sliderMax: 500, sliderVal: 85,
+    searchPlaceholder: 'Search decline code or store type...',
+    tier1Tag: 'SINGLE-STORE RECOVERY PASS • SAVE 96% VS $49',
+    tier1Desc: 'Instantly unlocks the 1-click checkout recovery script, Stripe webhook retry worker (.JS), and bank decline retry schedule (.CSV).',
+    tier2Tag: 'STARTER STORE RECOVERY ($49/MO)',
+    tier2Desc: 'Automated checkout exit-offer matching + Friday payday retry scheduling for failed Stripe renewals with 0% commission.',
+    tier3Tag: 'GROWTH & 1-TAP SMS SUITE ($149/MO)',
+    tier3Desc: 'Multi-store recovery, 1-Tap Apple Pay card-update SMS links, and direct Klaviyo & PostHog integration.',
     battlecard: {
-      heading: 'Why Stripe Merchants & Shopify Founders Switch to AbandonAlpha',
-      colLegacy: '15%-Revenue-Tax Recovery Tools', colManual: 'Static 10%-Off Exit Popups',
+      heading: 'Why Stripe & Shopify Founders Switch to AbandonAlpha',
+      colLegacy: '15%-Commission Recovery Apps', colManual: 'Generic 10%-Off Popups',
       rows: [
-        ['Exit-Intent Conversion', 'Beta-Bernoulli C1–C6 Bandit Matches Exact Buyer Objection', 'Generic Popups With 10%–15% Take-Rate Commission', 'Trains Customers to Abandon Just to Get a Coupon'],
-        ['Failed Stripe Renewals', 'Decline-Code Aware Retries (Friday 06:00 Payday Window)', 'Blind 24h Retries That Burn Visa/Mastercard Auth Limits', 'Manual Dunning Emails Ignored in Promotions Tab'],
-        ['Pricing & Margin Keep', 'Flat $1.99 SDK Pass or $49/mo (Keep 100% of Recovered MRR)', '$500–$2,500+/mo in Revenue-Share Fees', '$15k–$75k/mo in Unrecovered Checkout Leakage']
+        ['Abandoned Checkout Recovery', 'Matches the right offer to why the shopper is leaving (shipping, price, trust)', 'Charges 10%–15% commission on recovered sales', 'Trains every customer to leave just to get a coupon'],
+        ['Failed Stripe Card Recovery', 'Retries cards on payday mornings when bank balances replenish', 'Blind daily retries that trigger bank fraud blocks', 'Generic "card declined" emails buyers ignore'],
+        ['Flat, Predictable Pricing', '$1.99 Single-Store Pass or $49/mo flat (0% commission)', '$500–$2,500+/mo in revenue-share fees', '$15k–$75k/mo in lost sales']
       ]
     },
     exportActions: [

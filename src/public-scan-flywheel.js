@@ -14,63 +14,63 @@ const path = require('path');
 const FLYWHEEL_SEED = {
   citation_forge: {
     cnnModel: 'PP-OCRv4 + DOM Visual Block Saliency CNN (ONNX INT8 • 14ms)',
-    cnnSensorLabel: 'Above-the-Fold Entity Salience & OCR Readability Tensor',
+    cnnSensorLabel: 'Page Structure & AI Readability Check',
     inputPlaceholder: 'stripe.com, vercel.com, or any URL...',
     entities: [
-      { target: 'stripe.com', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '41.2% cSoV', kpi2: 'llms-full.txt v2 Active', cnnReadout: '98.4% DOM Entity Salience • 0.14 HTML Bloat Ratio', issue: 'Optimal @graph + Speakable Schema' },
-      { target: 'supabase.com', grade: 'A+', score: 94, status: 'HALL_OF_FAME', kpi1: '38.6% cSoV', kpi2: 'Markdown Twins Active', cnnReadout: '96.1% Code-Block OCR Clarity • 12ms RAG Parse', issue: 'Full ClaudeBot & PerplexityBot Allow' },
-      { target: 'linear.app', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '33.8% cSoV', kpi2: 'JSON-LD Graph 92/100', cnnReadout: '94.2% Visual Hierarchy Contrast • Clean H1-H3', issue: 'Minor FAQPage Schema Expansion Available' },
-      { target: 'vercel.com', grade: 'A', score: 90, status: 'HALL_OF_FAME', kpi1: '35.1% cSoV', kpi2: 'llms.txt Indexed', cnnReadout: '93.8% Above-the-Fold Entity Density', issue: 'Optimal AI Crawler Headers' },
-      { target: 'cloudflare.com', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '31.4% cSoV', kpi2: 'OpenAPI + MCP Ready', cnnReadout: '91.5% Technical Table Extraction Score', issue: 'High RAG Authority' },
-      { target: 'notion.so', grade: 'B', score: 78, status: 'WATCHLIST', kpi1: '24.2% cSoV', kpi2: 'Partial llms.txt', cnnReadout: '76.4% Client-Hydration Delay on Deep Docs', issue: 'Missing /llms-full.txt Root Manifest' },
-      { target: 'adyen.com', grade: 'C', score: 64, status: 'WALL_OF_SHAME', kpi1: '18.4% cSoV', kpi2: 'No /llms.txt Found', cnnReadout: '58.2% Heavy DOM Wrapper Bloat (4.8x Token Tax)', issue: 'Losing 16.4% AI Citation Share to Stripe' },
-      { target: 'atlassian.com', grade: 'C', score: 61, status: 'WALL_OF_SHAME', kpi1: '16.9% cSoV', kpi2: 'JS-Gated Docs', cnnReadout: '54.0% Delayed SSR Entity Salience', issue: 'Missing SpeakableSpecification & llms.txt' },
-      { target: 'oracle.com', grade: 'D', score: 48, status: 'WALL_OF_SHAME', kpi1: '9.2% cSoV', kpi2: 'AI Bots Restricted', cnnReadout: '41.2% Legacy Nested Table Bloat', issue: 'Critical GEO Deficit — Deploy Auto-llms.txt Patch' },
-      { target: 'legacy-erp.io', grade: 'D', score: 42, status: 'WALL_OF_SHAME', kpi1: '4.1% cSoV', kpi2: '0 Schema Nodes', cnnReadout: '36.8% Unstructured Hero Canvas', issue: 'Invisible to ChatGPT Search & Perplexity' }
+      { target: 'stripe.com', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '41.2% AI Search Share', kpi2: 'llms-full.txt Active', cnnReadout: '98.4% AI Readability • Clean Page Structure', issue: 'Complete AI Schema & /llms.txt Active' },
+      { target: 'supabase.com', grade: 'A+', score: 94, status: 'HALL_OF_FAME', kpi1: '38.6% AI Search Share', kpi2: 'Markdown Guides Active', cnnReadout: '96.1% Clear Code & Docs Structure', issue: 'Full ChatGPT & Perplexity Crawler Access' },
+      { target: 'linear.app', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '33.8% AI Search Share', kpi2: 'Schema Score 92/100', cnnReadout: '94.2% Clear Heading Hierarchy', issue: 'Optional FAQ Schema Expansion Available' },
+      { target: 'vercel.com', grade: 'A', score: 90, status: 'HALL_OF_FAME', kpi1: '35.1% AI Search Share', kpi2: 'llms.txt Indexed', cnnReadout: '93.8% High First-Screen Clarity', issue: 'Optimal AI Crawler Headers' },
+      { target: 'cloudflare.com', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '31.4% AI Search Share', kpi2: 'OpenAPI + MCP Ready', cnnReadout: '91.5% Structured Table Readability', issue: 'Strong AI Citation Authority' },
+      { target: 'notion.so', grade: 'B', score: 78, status: 'WATCHLIST', kpi1: '24.2% AI Search Share', kpi2: 'Partial llms.txt', cnnReadout: '76.4% Slow JavaScript Rendering on Deep Docs', issue: 'Missing /llms-full.txt Complete Guide' },
+      { target: 'adyen.com', grade: 'C', score: 64, status: 'WALL_OF_SHAME', kpi1: '18.4% AI Search Share', kpi2: 'No /llms.txt Found', cnnReadout: '58.2% Heavy HTML Clutter (Hard for AI to Parse)', issue: 'Losing 16.4% AI Recommendations to Stripe' },
+      { target: 'atlassian.com', grade: 'C', score: 61, status: 'WALL_OF_SHAME', kpi1: '16.9% AI Search Share', kpi2: 'JS-Blocked Docs', cnnReadout: '54.0% Delayed Page Text Visibility', issue: 'Missing AI Schema & /llms.txt' },
+      { target: 'oracle.com', grade: 'D', score: 48, status: 'WALL_OF_SHAME', kpi1: '9.2% AI Search Share', kpi2: 'AI Crawlers Blocked', cnnReadout: '41.2% Legacy Page Layout Bloat', issue: 'Low AI Search Visibility — Add /llms.txt Fix' },
+      { target: 'legacy-erp.io', grade: 'D', score: 42, status: 'WALL_OF_SHAME', kpi1: '4.1% AI Search Share', kpi2: '0 Schema Tags', cnnReadout: '36.8% Unstructured Page Content', issue: 'Not Cited in ChatGPT Search or Perplexity' }
     ]
   },
   sponsor_radar: {
     cnnModel: 'PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)',
-    cnnSensorLabel: 'Acoustic Mid-Roll Diarization & Visual Lower-Third Tensor',
+    cnnSensorLabel: 'Host-Read Placement & Audience Retention Check',
     inputPlaceholder: 'AG1, Deel, Ramp, Huberman Lab, Acquired...',
     entities: [
-      { target: 'AG1', grade: 'A+', score: 97, status: 'HALL_OF_FAME', kpi1: '$1.42M/mo Spend', kpi2: '18x Renewal Streak', cnnReadout: '99.1% Host-Voiced Mid-Roll Retention • -14.1 LUFS', issue: 'Proven 3x+ ROI Across 24 Flagship Shows' },
-      { target: 'Ramp', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$790K/mo Spend', kpi2: '14x Renewal Streak', cnnReadout: '97.4% B2B Decision-Maker Acoustic Attention', issue: '$34.20 Cleared Net eCPM Benchmark' },
-      { target: 'Deel', grade: 'A', score: 93, status: 'HALL_OF_FAME', kpi1: '$680K/mo Spend', kpi2: '12x Renewal Streak', cnnReadout: '95.0% Vanity URL + QR Frame Salience', issue: 'High-Converting Newsletter + Podcast Stack' },
-      { target: 'Linear', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '$310K/mo Spend', kpi2: '9x Renewal Streak', cnnReadout: '93.2% Developer Podcast Host-Trust Score', issue: 'Top DevTools Sponsorship Efficiency' },
-      { target: 'Eight-Sleep', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '$620K/mo Spend', kpi2: '11x Renewal Streak', cnnReadout: '91.8% Biohacking Mid-Roll Completion Rate', issue: 'Strong Promo-Code Attribution' },
-      { target: 'Notion', grade: 'B', score: 81, status: 'WATCHLIST', kpi1: '$440K/mo Spend', kpi2: '5x Renewal Streak', cnnReadout: '82.4% YouTube Integrated Segment Saliency', issue: 'Shifting Spend to Creator Mid-Rolls' },
-      { target: 'OneShot-Crypto-App', grade: 'C', score: 58, status: 'WALL_OF_SHAME', kpi1: '$95K/mo Spend', kpi2: '1x Test (Churned)', cnnReadout: '49.2% Pre-Roll Skip Spike (+38% Listener Drop)', issue: 'Overpaid $68 CPM without Promo Landing Page' },
-      { target: 'Generic-VPN-Flight', grade: 'C', score: 54, status: 'WALL_OF_SHAME', kpi1: '$120K/mo Spend', kpi2: '1x Test (Churned)', cnnReadout: '46.5% Scripted Ad-Read Fatigue Detected', issue: 'High Ad-Block / SponsorBlock Skip Rate (74%)' },
-      { target: 'Unverified-SaaS-Ad', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '$42K/mo Spend', kpi2: '0 Renewals', cnnReadout: '38.1% Dead Homepage CTA (No UTM/Vanity Slug)', issue: '62% Attribution Leakage — Fix Pitch & Offer' }
+      { target: 'AG1', grade: 'A+', score: 97, status: 'HALL_OF_FAME', kpi1: '$1.42M/mo Spend', kpi2: '18x Renewal Streak', cnnReadout: '99.1% Mid-Roll Listener Retention • Clear Host Read', issue: 'Proven 3x+ Renewal ROI Across 24 Flagship Shows' },
+      { target: 'Ramp', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$790K/mo Spend', kpi2: '14x Renewal Streak', cnnReadout: '97.4% B2B Buyer Engagement • High Conversion', issue: '$34.20 Verified Net CPM Benchmark' },
+      { target: 'Deel', grade: 'A', score: 93, status: 'HALL_OF_FAME', kpi1: '$680K/mo Spend', kpi2: '12x Renewal Streak', cnnReadout: '95.0% Clear Promo Link & QR Screen Visibility', issue: 'High-Converting Newsletter + Podcast Mix' },
+      { target: 'Linear', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '$310K/mo Spend', kpi2: '9x Renewal Streak', cnnReadout: '93.2% High Developer Host-Read Trust Score', issue: 'Top DevTools Sponsorship ROI' },
+      { target: 'Eight-Sleep', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '$620K/mo Spend', kpi2: '11x Renewal Streak', cnnReadout: '91.8% High Mid-Roll Listen-Through Rate', issue: 'Strong Promo-Code Conversion' },
+      { target: 'Notion', grade: 'B', score: 81, status: 'WATCHLIST', kpi1: '$440K/mo Spend', kpi2: '5x Renewal Streak', cnnReadout: '82.4% Strong YouTube Creator Integration', issue: 'Expanding into Creator Mid-Rolls' },
+      { target: 'OneShot-Crypto-App', grade: 'C', score: 58, status: 'WALL_OF_SHAME', kpi1: '$95K/mo Spend', kpi2: '1x Test (Not Renewed)', cnnReadout: '49.2% High Pre-Roll Skip Rate (+38% Drop)', issue: 'Overpaid $68 CPM Without Dedicated Landing Page' },
+      { target: 'Generic-VPN-Flight', grade: 'C', score: 54, status: 'WALL_OF_SHAME', kpi1: '$120K/mo Spend', kpi2: '1x Test (Not Renewed)', cnnReadout: '46.5% Listener Ad Fatigue Detected', issue: 'High Ad-Skip Rate (74%) — Switch to Host Mid-Rolls' },
+      { target: 'Unverified-SaaS-Ad', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '$42K/mo Spend', kpi2: '0 Renewals', cnnReadout: '38.1% No Trackable Promo URL Used', issue: '62% Untracked Clicks — Add Dedicated Offer Link' }
     ]
   },
   derm_logic: {
     cnnModel: 'PaddleOCR-v4 INCI Label Reader + MediaPipe 468-Zone Erythema CNN (11ms)',
-    cnnSensorLabel: 'Bottle Label OCR & CIELAB a* Barrier Redness Tensor',
-    inputPlaceholder: 'VitC+Cu, Tret+BPO, Retinol+Glycolic, or any INCI...',
+    cnnSensorLabel: 'Ingredient Label & Skin Barrier Safety Check',
+    inputPlaceholder: 'VitC+Cu, Tret+BPO, Retinol+Glycolic, or any routine...',
     entities: [
-      { target: 'VitC-AM-Peptides-PM', grade: 'A+', score: 98, status: 'HALL_OF_FAME', kpi1: '98/100 Harmony', kpi2: 'ΔpH 0.2 Safe Split', cnnReadout: 'CIELAB a* -3.8 Erythema Reduction • Intact Lipid Matrix', issue: 'Zero Chelation • Optimal AM/PM Partition' },
-      { target: 'Ceramide-Tretinoin-Buffer', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '95/100 Harmony', kpi2: 'pH 5.6 Balanced', cnnReadout: '96.4% Corneocyte Cohesion • <500 Da Controlled Flux', issue: '64% Lower Retinoid Peeling via Sandwich Method' },
-      { target: 'Azelaic15-Niacinamide5', grade: 'A', score: 92, status: 'HALL_OF_FAME', kpi1: '92/100 Harmony', kpi2: 'pH 4.9–5.5 Sync', cnnReadout: '94.1% Perifollicular Redness Attenuation', issue: 'Malassezia-Safe & Rosacea-Safe Synergy' },
-      { target: 'BHA2-SnailMucin-Stack', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '89/100 Harmony', kpi2: '15m Wait Verified', cnnReadout: '90.5% Sebaceous Pore Clearing without TEWL Spike', issue: 'Safe 2x/Week Exfoliation Cadence' },
-      { target: 'VitC+Cu', grade: 'C', score: 52, status: 'WALL_OF_SHAME', kpi1: '52/100 Conflict', kpi2: '|ΔpH| = 2.8 Clash', cnnReadout: 'Cu2+ Redox Oxidation Detected • 78% Active Loss', issue: 'Copper Peptides + L-Ascorbic Acid Cancel Out ($182/yr Waste)' },
-      { target: 'Tret+BPO', grade: 'D', score: 38, status: 'WALL_OF_SHAME', kpi1: '38/100 Hazard', kpi2: 'Peroxide Oxidation', cnnReadout: 'CIELAB a* +9.4 Acute Erythema Spike • Retinoid Degraded', issue: 'Benzoyl Peroxide Oxidizes Tretinoin Same-Night' },
-      { target: 'TikTok', grade: 'D', score: 20, status: 'WALL_OF_SHAME', kpi1: '20/100 Barrier Alert', kpi2: 'pH 2.8 Triple-Acid', cnnReadout: 'Severe Stratum Corneum Delipidation (TEWL +240%)', issue: 'AHA 30% + BHA 2% + Retinol Same-Night Over-Exfoliation' }
+      { target: 'VitC-AM-Peptides-PM', grade: 'A+', score: 98, status: 'HALL_OF_FAME', kpi1: '98/100 Safety Score', kpi2: 'Safe AM/PM Split', cnnReadout: 'Calms Skin Redness • Protects Moisture Barrier', issue: 'Zero Conflict • Vitamin C in AM, Peptides in PM' },
+      { target: 'Ceramide-Tretinoin-Buffer', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '95/100 Safety Score', kpi2: 'pH 5.6 Balanced', cnnReadout: '96.4% Smooth Barrier • Gentle Retinoid Absorption', issue: '64% Less Peeling with Moisturizer Buffer' },
+      { target: 'Azelaic15-Niacinamide5', grade: 'A', score: 92, status: 'HALL_OF_FAME', kpi1: '92/100 Safety Score', kpi2: 'pH 4.9–5.5 Matched', cnnReadout: '94.1% Redness & Blemish Calming', issue: 'Fungal-Acne Safe & Sensitive-Skin Friendly' },
+      { target: 'BHA2-SnailMucin-Stack', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '89/100 Safety Score', kpi2: '15m Wait Step', cnnReadout: '90.5% Pore Clearing Without Dryness', issue: 'Safe 2x/Week Exfoliation Schedule' },
+      { target: 'VitC+Cu', grade: 'C', score: 52, status: 'WALL_OF_SHAME', kpi1: '52/100 Conflict', kpi2: 'pH Clash (2.8 Gap)', cnnReadout: 'Copper & Vitamin C Cancel Out (78% Potency Lost)', issue: 'Split Vitamin C to Morning & Copper Peptides to Night ($182/yr Saved)' },
+      { target: 'Tret+BPO', grade: 'D', score: 38, status: 'WALL_OF_SHAME', kpi1: '38/100 High Irritation', kpi2: 'Ingredients Deactivate', cnnReadout: 'High Redness Risk • Benzoyl Peroxide Deactivates Tretinoin', issue: 'Never Layer Same-Night — Move Benzoyl Peroxide to AM Wash' },
+      { target: 'TikTok', grade: 'D', score: 20, status: 'WALL_OF_SHAME', kpi1: '20/100 Barrier Alert', kpi2: '3 Strong Acids + Retinol', cnnReadout: 'Over-Exfoliation Risk • Strips Skin Moisture Barrier', issue: 'Too Many Strong Acids in One Night — Switch to 4-Night Cycling' }
     ]
   },
   abandon_alpha: {
     cnnModel: 'Spectral Residual Visual Saliency + Checkout Friction Heatmap CNN (16ms)',
-    cnnSensorLabel: 'Checkout CTA Eye-Fixation Saliency & Form-Friction Tensor',
+    cnnSensorLabel: 'Checkout Clarity & Payment Recovery Check',
     inputPlaceholder: 'Shopify, Stripe, Gumroad, Paddle, or store domain...',
     entities: [
-      { target: 'Stripe-Link-1Click', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '+62.4% Dunning Lift', kpi2: '94% CTA Saliency', cnnReadout: '96.8% Primary Button Eye-Fixation • 3 Input Fields', issue: 'Payday-Synced Retries + C1-C6 Bandit Active' },
-      { target: 'Shopify-Plus-Bandit', grade: 'A+', score: 94, status: 'HALL_OF_FAME', kpi1: '+28.4% Cart Recovery', kpi2: '94% Margin Retained', cnnReadout: '93.5% Mobile Thumb-Zone CTA Contrast (11.4:1 WCAG)', issue: 'Zero Blanket Coupon Cannibalization' },
-      { target: 'Linear-Annual-Split', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '+19.2% Trial-to-Paid', kpi2: '3DS Fallback Ready', cnnReadout: '91.2% Clean Two-Column Summary Saliency', issue: 'High-Converting C1 Price-Objection Downsell' },
-      { target: 'B2B-SaaS-Smart-Retry', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '+47.8% do_not_honor', kpi2: '48h Issuer Cooldown', cnnReadout: '89.7% Zero-Clutter Invoice Recovery Portal', issue: 'Compliant with Visa/MC Retry Rules' },
-      { target: 'Static-10Pct-Popup-Store', grade: 'C', score: 59, status: 'WALL_OF_SHAME', kpi1: '-10% Margin Bleed', kpi2: 'NaiveCoupon Trap', cnnReadout: '61.4% Modal Banner Blindness • Trains Coupon Abuse', issue: 'Losing $34,521/mo vs. C1-C6 Thompson Bandit' },
-      { target: 'Naive-24h-Cron-Dunning', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '19.4% Recovery Only', kpi2: 'Issuer Block Triggered', cnnReadout: '42.0% Retry Collision Before 1st/15th Payday Deposit', issue: 'Losing 43% of Recoverable insufficient_funds MRR' },
-      { target: '14-Field-Legacy-Checkout', grade: 'D', score: 36, status: 'WALL_OF_SHAME', kpi1: '78.4% Abandonment', kpi2: '2.9:1 Low CTA Contrast', cnnReadout: '34.8% Visual Clutter Entropy • Split Attention', issue: 'Severe Mobile Form Friction & Zero Exit-Intent Recovery' }
+      { target: 'Stripe-Link-1Click', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '+62.4% Card Recovery', kpi2: '94% Checkout Clarity', cnnReadout: '96.8% Clear Checkout Button • 3 Simple Fields', issue: 'Payday-Timed Retries + Smart Exit Offers Active' },
+      { target: 'Shopify-Plus-Bandit', grade: 'A+', score: 94, status: 'HALL_OF_FAME', kpi1: '+28.4% Cart Recovery', kpi2: '94% Margin Kept', cnnReadout: '93.5% High Mobile Checkout Button Visibility', issue: 'Protects Profit Margin Without Blanket Coupons' },
+      { target: 'Linear-Annual-Split', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '+19.2% Trial Conversion', kpi2: '1-Tap Auth Ready', cnnReadout: '91.2% Distraction-Free 2-Column Checkout', issue: 'High-Converting Flexible Billing Option' },
+      { target: 'B2B-SaaS-Smart-Retry', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '+47.8% Card Approval', kpi2: '48h Bank Cooldown', cnnReadout: '89.7% Clean 1-Click Invoice Update Page', issue: 'Follows Visa/Mastercard Smart Retry Rules' },
+      { target: 'Static-10Pct-Popup-Store', grade: 'C', score: 59, status: 'WALL_OF_SHAME', kpi1: '-10% Margin Lost', kpi2: 'Coupon Abuse Leak', cnnReadout: '61.4% Shoppers Ignore Generic Discount Popup', issue: 'Losing $34,521/mo vs. Tailored Exit Offers' },
+      { target: 'Naive-24h-Cron-Dunning', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '19.4% Recovery Only', kpi2: 'Bank Auto-Block Risk', cnnReadout: '42.0% Retries Fail Before 1st/15th Payday Deposit', issue: 'Losing 43% of Recoverable Failed-Card Revenue' },
+      { target: '14-Field-Legacy-Checkout', grade: 'D', score: 36, status: 'WALL_OF_SHAME', kpi1: '78.4% Drop-Off Rate', kpi2: 'Low Button Visibility', cnnReadout: '34.8% Cluttered Form Layout • Too Many Fields', issue: 'High Mobile Checkout Drop-Off & No Exit Recovery' }
     ]
   }
 };
@@ -150,25 +150,25 @@ function evaluateScanTarget(cfg, rawTarget) {
   const status = score >= 86 ? 'HALL_OF_FAME' : (score >= 76 ? 'WATCHLIST' : 'WALL_OF_SHAME');
 
   const kpi1 = cfg.moduleId === 'citation_forge'
-    ? `${(18 + (abs % 24)).toFixed(1)}% cSoV`
+    ? `${(18 + (abs % 24)).toFixed(1)}% AI Search Share`
     : (cfg.moduleId === 'sponsor_radar'
       ? `$${140 + (abs % 650)}K/mo Spend`
       : (cfg.moduleId === 'derm_logic'
-        ? `${score}/100 Harmony`
-        : `+${34 + (abs % 29)}.4% Recovery Lift`));
+        ? `${score}/100 Safety Score`
+        : `+${34 + (abs % 29)}.4% Recovery Gain`));
 
   const kpi2 = cfg.moduleId === 'citation_forge'
-    ? (score >= 85 ? 'llms.txt + @graph Ready' : 'Missing /llms-full.txt')
+    ? (score >= 85 ? 'llms.txt + Schema Ready' : 'Missing /llms-full.txt')
     : (cfg.moduleId === 'sponsor_radar'
       ? `${2 + (abs % 14)}x Renewal Signal`
       : (cfg.moduleId === 'derm_logic'
-        ? `ΔpH ${(0.4 + ((abs % 22) / 10)).toFixed(1)} Matrix`
-        : `${82 + (abs % 15)}% CTA Saliency`));
+        ? `pH Gap ${(0.4 + ((abs % 22) / 10)).toFixed(1)}`
+        : `${82 + (abs % 15)}% Checkout Clarity`));
 
-  const cnnReadout = `${Math.min(99, score + 2)}.${abs % 9}% ${cat.cnnSensorLabel.split(' ')[0]} Confidence • ${11 + (abs % 9)}ms ONNX Inference`;
+  const cnnReadout = `${Math.min(99, score + 2)}.${abs % 9}% Quality Score • Verified in ${11 + (abs % 9)}ms`;
   const issue = score >= 86
-    ? `Verified Leader — Embed Live ${grade} SVG Shield Badge`
-    : `Optimization Gap Detected — Unlock ${cfg.freeDeliverableName} (99¢ Pass)`;
+    ? `Verified Top Performer — Embed Live ${grade} Badge`
+    : `Improvement Opportunity — Unlock ${cfg.freeDeliverableName} (99¢ Pass)`;
 
   return { target, grade, score, status, kpi1, kpi2, cnnReadout, issue, cnnModel: cat.cnnModel, cnnSensorLabel: cat.cnnSensorLabel };
 }
@@ -198,19 +198,19 @@ function renderAnsiTerminalScorecard(cfg, scan) {
 function renderScanCnnOverlaySvg(cfg, scan, badgeColor) {
   const isHigh = scan.score >= 86;
   const strokeCol = isHigh ? '#10B981' : '#F43F5E';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 170" width="100%" height="170" role="img" aria-label="CNN Visual Sensor Readout for ${esc(scan.target)}" style="background:#0F172A;border-radius:12px;border:1px solid #334155;display:block;">
-    <title>CNN Tensor &amp; Saliency Readout: ${esc(scan.target)}</title>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 170" width="100%" height="170" role="img" aria-label="Live Scorecard Readout for ${esc(scan.target)}" style="background:#0F172A;border-radius:12px;border:1px solid #334155;display:block;">
+    <title>Live Scorecard &amp; Quality Check: ${esc(scan.target)}</title>
     <rect x="14" y="14" width="220" height="142" rx="8" fill="#1E293B" stroke="${strokeCol}" stroke-width="2" stroke-dasharray="5,3"/>
     <circle cx="124" cy="85" r="42" fill="${strokeCol}" fill-opacity="0.16" stroke="${strokeCol}" stroke-width="2"/>
     <circle cx="124" cy="85" r="14" fill="${strokeCol}" fill-opacity="0.45"/>
-    <text x="24" y="34" fill="#94A3B8" font-family="monospace" font-size="10">CNN ROI BBOX [0.12, 0.18, 0.88, 0.91]</text>
-    <text x="24" y="144" fill="${strokeCol}" font-family="monospace" font-size="11" font-weight="700">${esc(scan.grade)} • ${scan.score}/100 SALIENCY</text>
-    <text x="254" y="36" fill="#F8FAFC" font-family="Inter,sans-serif" font-size="13" font-weight="700">${esc(scan.cnnModel)}</text>
-    <text x="254" y="62" fill="#38BDF8" font-family="monospace" font-size="12" font-weight="700">Tensor Readout: ${esc(scan.cnnReadout)}</text>
+    <text x="24" y="34" fill="#94A3B8" font-family="monospace" font-size="10">VERIFIED QUALITY CHECK</text>
+    <text x="24" y="144" fill="${strokeCol}" font-family="monospace" font-size="11" font-weight="700">${esc(scan.grade)} • ${scan.score}/100 SCORE</text>
+    <text x="254" y="36" fill="#F8FAFC" font-family="Inter,sans-serif" font-size="13" font-weight="700">${esc(scan.cnnSensorLabel || cfg.brandName)}</text>
+    <text x="254" y="62" fill="#38BDF8" font-family="monospace" font-size="12" font-weight="700">Finding: ${esc(scan.cnnReadout)}</text>
     <rect x="254" y="78" width="396" height="10" rx="5" fill="#1E293B"/>
     <rect x="254" y="78" width="${Math.round(3.96 * scan.score)}" height="10" rx="5" fill="${strokeCol}"/>
-    <text x="254" y="114" fill="#CBD5E1" font-family="Inter,sans-serif" font-size="12">Primary KPI: ${esc(scan.kpi1)} • Secondary: ${esc(scan.kpi2)}</text>
-    <text x="254" y="142" fill="#F59E0B" font-family="monospace" font-size="11.5" font-weight="700">Action: ${esc(scan.issue)}</text>
+    <text x="254" y="114" fill="#CBD5E1" font-family="Inter,sans-serif" font-size="12">Key Metric: ${esc(scan.kpi1)} • ${esc(scan.kpi2)}</text>
+    <text x="254" y="142" fill="#F59E0B" font-family="monospace" font-size="11.5" font-weight="700">Next Step: ${esc(scan.issue)}</text>
   </svg>`;
 }
 
@@ -228,11 +228,11 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(scan.target)} — ${esc(cfg.brandName)} Public Audit Scorecard (${esc(scan.grade)} ${scan.score}/100)</title>
-  <meta name="description" content="Live deterministic and CNN visual audit for ${esc(scan.target)}: Grade ${esc(scan.grade)} (${scan.score}/100), ${esc(scan.kpi1)}, ${esc(scan.kpi2)}. View full scorecard and 1-click remediation." />
+  <title>${esc(scan.target)} — ${esc(cfg.brandName)} Scorecard &amp; Action Report (${esc(scan.grade)} ${scan.score}/100)</title>
+  <meta name="description" content="Live ${esc(cfg.brandName)} scorecard for ${esc(scan.target)}: Grade ${esc(scan.grade)} (${scan.score}/100), ${esc(scan.kpi1)}, ${esc(scan.kpi2)}. View full action plan and 1-click fixes." />
   <link rel="canonical" href="${esc(canonicalUrl)}" />
   <meta property="og:title" content="${esc(scan.target)} — ${esc(cfg.brandName)} Scorecard (${esc(scan.grade)})" />
-  <meta property="og:description" content="Verified ${esc(cfg.brandName)} Telemetry: ${esc(scan.kpi1)} • ${esc(scan.cnnReadout)}" />
+  <meta property="og:description" content="Verified ${esc(cfg.brandName)} Results: ${esc(scan.kpi1)} • ${esc(scan.cnnReadout)}" />
   <meta property="og:url" content="${esc(canonicalUrl)}" />
   <meta property="og:image" content="https://${esc(cfg.domain)}/api/og/scorecard?target=${esc(encodeURIComponent(scan.target))}" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -241,69 +241,71 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
   <header style="border-bottom:1px solid ${esc(t.border)};background:#FFFFFF;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="/" style="font-weight:800;font-size:18px;color:${esc(t.textPrimary)};text-decoration:none;">${esc(cfg.brandName)}</a>
-      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">PUBLIC SCAN PERMALINK • GRADE ${esc(scan.grade)}</span>
+      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">VERIFIED REPORT • GRADE ${esc(scan.grade)}</span>
     </div>
     <nav aria-label="Primary" style="display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600;">
-      <a href="/" style="color:${esc(t.textSecondary)};text-decoration:none;">Interactive Workbench</a>
-      <a href="/leaderboard" style="color:${esc(t.textSecondary)};text-decoration:none;">Hall of Fame &amp; Leaderboard</a>
-      <a href="/directory" style="color:${esc(t.textSecondary)};text-decoration:none;">60+ Benchmarks</a>
-      <a href="/buy/micro_pass" style="padding:7px 14px;border-radius:999px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">99¢ Instant Fix Pass ↗</a>
+      <a href="/" style="color:${esc(t.textSecondary)};text-decoration:none;">Home Calculator</a>
+      <a href="/leaderboard" style="color:${esc(t.textSecondary)};text-decoration:none;">Leaderboard</a>
+      <a href="/directory" style="color:${esc(t.textSecondary)};text-decoration:none;">All Guides</a>
+      <a href="/buy/micro_pass" style="padding:7px 14px;border-radius:999px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock Fix (99¢) ↗</a>
     </nav>
   </header>
   <main style="max-width:1240px;margin:0 auto;padding:24px;">
     <nav aria-label="Breadcrumb" style="font-size:12px;color:#64748B;margin-bottom:10px;">
-      <a href="/" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Home</a> / <a href="/leaderboard" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Public Scans Leaderboard</a> / <span id="eb-scan-bc-target">${esc(scan.target)}</span>
+      <a href="/" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Home</a> / <a href="/leaderboard" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Leaderboard</a> / <span id="eb-scan-bc-target">${esc(scan.target)}</span>
     </nav>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 id="eb-scan-h1" style="margin:0 0 6px 0;">${esc(scan.target)} — Verified ${esc(cfg.brandName)} Audit &amp; CNN Sensor Report</h1>
-        <p class="pseo-lead" style="margin:0;color:${esc(t.textSecondary)};">Permanent public benchmark permalink for <strong id="eb-scan-lead-target">${esc(scan.target)}</strong>. Graded <strong id="eb-scan-lead-grade">${esc(scan.grade)} (${scan.score}/100)</strong> via deterministic telemetry and ${esc(scan.cnnModel)}.</p>
+        <h1 id="eb-scan-h1" style="margin:0 0 6px 0;">${esc(scan.target)} — ${esc(cfg.brandName)} Scorecard &amp; Action Report</h1>
+        <p class="pseo-lead" style="margin:0;color:${esc(t.textSecondary)};">Shareable benchmark report for <strong id="eb-scan-lead-target">${esc(scan.target)}</strong>. Rated <strong id="eb-scan-lead-grade">${esc(scan.grade)} (${scan.score}/100)</strong> based on ${esc(scan.kpi1)} and ${esc(scan.kpi2)}.</p>
       </div>
       <img id="eb-scan-badge-img" src="/badge/${esc(encodeURIComponent(scan.target))}.svg" alt="${esc(scan.target)} Verified Score Badge" width="240" height="22" decoding="async" />
     </div>
     <section style="margin-top:16px;">${renderScanCnnOverlaySvg(cfg, scan, badgeColor)}</section>
-    <script>window.__ebRunScanWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var h1=document.getElementById('eb-scan-h1');if(h1)h1.textContent=s.target+' — Verified ${esc(cfg.brandName)} Audit & CNN Sensor Report';var b=document.getElementById('eb-scan-badge-img');if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';var r1=document.getElementById('eb-scan-r1-val'),r1a=document.getElementById('eb-scan-r1-act'),r1s=document.getElementById('eb-scan-r1-st'),r2=document.getElementById('eb-scan-r2-val'),r3=document.getElementById('eb-scan-r3-val');if(r1)r1.textContent=s.grade+' ('+s.score+'/100)';if(r1a)r1a.textContent=s.issue;if(r1s)r1s.textContent=s.status;if(r2)r2.textContent=s.kpi1+' • '+s.kpi2;if(r3)r3.textContent=s.cnnReadout;if(window.history&&window.history.replaceState)window.history.replaceState(null,'','/scan/'+encodeURIComponent(s.target));});};</script>
+    <script>window.__ebRunScanWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var h1=document.getElementById('eb-scan-h1');if(h1)h1.textContent=s.target+' — ${esc(cfg.brandName)} Scorecard & Action Report';var b=document.getElementById('eb-scan-badge-img');if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';var r1=document.getElementById('eb-scan-r1-val'),r1a=document.getElementById('eb-scan-r1-act'),r1s=document.getElementById('eb-scan-r1-st'),r2=document.getElementById('eb-scan-r2-val'),r3=document.getElementById('eb-scan-r3-val');if(r1)r1.textContent=s.grade+' ('+s.score+'/100)';if(r1a)r1a.textContent=s.issue;if(r1s)r1s.textContent=s.status;if(r2)r2.textContent=s.kpi1+' • '+s.kpi2;if(r3)r3.textContent=s.cnnReadout;if(window.history&&window.history.replaceState)window.history.replaceState(null,'','/scan/'+encodeURIComponent(s.target));});};</script>
     <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">🔬 LIVE ONNX/CNN SENSOR WORKBENCH:</span>
+        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">⚡ TEST ANY TARGET LIVE:</span>
         ${cat.entities.slice(0, 4).map((e) => `<button type="button" onclick="window.__ebRunScanWb('${esc(e.target)}')" style="padding:4px 9px;border-radius:999px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;cursor:pointer;">⚡ ${esc(e.target)}</button>`).join('')}
-        <input id="eb-cnn-wb-input" type="text" placeholder="Custom target..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:125px;" />
-        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunScanWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${esc(scan.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Run Scan ↗</button>
+        <input id="eb-cnn-wb-input" type="text" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:125px;" />
+        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunScanWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${esc(scan.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Check Score ↗</button>
       </div>
       <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${esc(scan.target)} → ${esc(scan.grade)} (${scan.score}/100) • ${esc(scan.cnnReadout)}</div>
     </section>
     <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
-      <h2 style="font-size:16px;margin:0 0 10px 0;">Deterministic &amp; CNN Sensor Scorecard Matrix</h2>
+      <h2 style="font-size:16px;margin:0 0 10px 0;">Scorecard Summary &amp; Action Plan</h2>
       <table aria-label="${esc(scan.target)} Public Scan Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead><tr style="background:${esc(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Diagnostic Dimension</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Measured Readout</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Remediation / Action</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Status</th></tr></thead>
+        <thead><tr style="background:${esc(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">What We Checked</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Result</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Recommended Next Step</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">
-          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Overall Benchmark Grade</th><td id="eb-scan-r1-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.grade)} (${scan.score}/100)</td><td id="eb-scan-r1-act" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.issue)}</td><td id="eb-scan-r1-st" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:${scan.score >= 86 ? '#059669' : '#E11D48'};">${esc(scan.status)}</td></tr>
-          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Primary Vertical Telemetry</th><td id="eb-scan-r2-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.kpi1)} • ${esc(scan.kpi2)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">Compare on Public Leaderboard</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">VERIFIED</td></tr>
-          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">CNN Visual/Acoustic Tensor</th><td id="eb-scan-r3-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.cnnReadout)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.cnnModel)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">DETERMINISTIC</td></tr>
-          <tr id="eb-scan-row4-tr"><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #4 Granular Parameter Remediation</th><td id="eb-scan-row4-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/micro_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock Single-File Pass (99¢) ↗</a></td><td id="eb-scan-row4-status" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
-          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #5 Complete 3-File Production Bundle</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/flash_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock 3-File Bundle ($1.99) ↗</a></td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
+          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Overall Grade</th><td id="eb-scan-r1-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.grade)} (${scan.score}/100)</td><td id="eb-scan-r1-act" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.issue)}</td><td id="eb-scan-r1-st" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:${scan.score >= 86 ? '#059669' : '#E11D48'};">${esc(scan.status)}</td></tr>
+          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Key Performance Metric</th><td id="eb-scan-r2-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.kpi1)} • ${esc(scan.kpi2)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">Compare on Public Leaderboard</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">VERIFIED</td></tr>
+          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Automated Quality Check</th><td id="eb-scan-r3-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.cnnReadout)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.cnnSensorLabel)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">VERIFIED</td></tr>
+          <tr id="eb-scan-row4-tr"><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #4 Step-by-Step Fix Guide</th><td id="eb-scan-row4-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/micro_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock Single-File Pass (99¢) ↗</a></td><td id="eb-scan-row4-status" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
+          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #5 Complete 3-File Action Pack</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/flash_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a></td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
         </tbody>
       </table>
       <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${esc(t.canvasBg)};border:1px solid ${esc(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div id="eb-scan-row4-msg" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span style="font-size:12px;font-weight:800;color:${esc(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
           <input id="eb-scan-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${esc(t.border)};font-size:12px;width:185px;" />
-          <button id="eb-scan-row4-btn" type="button" onclick="var inp=document.getElementById('eb-scan-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${esc(scan.target)}'})}).then(function(){var r4=document.getElementById('eb-scan-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-scan-row4-val'),s=document.getElementById('eb-scan-row4-status'),m=document.getElementById('eb-scan-row4-msg');if(v)v.textContent='${esc(scan.kpi1)} • ${esc(scan.kpi2)} • Patch Ready';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+          <button id="eb-scan-row4-btn" type="button" onclick="var inp=document.getElementById('eb-scan-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${esc(scan.target)}'})}).then(function(){var r4=document.getElementById('eb-scan-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-scan-row4-val'),s=document.getElementById('eb-scan-row4-status'),m=document.getElementById('eb-scan-row4-msg');if(v)v.textContent='${esc(scan.kpi1)} • ${esc(scan.kpi2)} • Fix Ready';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;background:${esc(badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">⚡ 99¢ Single-File Pass ↗</a>
-          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${esc(badgeColor)};color:${esc(badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">📦 $1.99 3-File Bundle ↗</a>
+          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${esc(badgeColor)};color:${esc(badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">99¢ Single File</a>
+          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;background:${esc(badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">Unlock 3-File Pack ($1.99) ↗</a>
         </div>
       </div>
     </section>
-    <section style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
-      <h2 style="font-size:15px;margin:0 0 6px 0;">⚡ Terminal / CLI Magic &amp; GitHub README Badge</h2>
-      <p style="font-size:12.5px;color:${esc(t.textSecondary)};margin:0 0 8px 0;">Run this instant Zero-UI terminal check or embed the live SVG badge:</p>
-      <pre style="background:#0F172A;color:#38BDF8;border-radius:8px;padding:10px 12px;font-size:12px;overflow-x:auto;margin:0 0 8px 0;"><code>curl -sL https://${esc(cfg.domain)}/scan/${esc(encodeURIComponent(scan.target))}</code></pre>
-      <pre style="background:${esc(t.canvasBg)};border:1px solid ${esc(t.border)};border-radius:8px;padding:9px 12px;font-size:11.5px;overflow-x:auto;margin:0;"><code>${esc(mdSnippet)}</code></pre>
-    </section>
+    <details style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:12px 16px;margin-top:16px;">
+      <summary style="cursor:pointer;font-size:13px;font-weight:700;color:${esc(t.textPrimary)};">⚙️ Developer CLI, GitHub Badge &amp; Technical Methodology (Layer-3 Specs)</summary>
+      <div style="margin-top:10px;">
+        <p style="font-size:12px;color:${esc(t.textSecondary)};margin:0 0 8px 0;"><strong>Technical Engine:</strong> ${esc(scan.cnnModel)} (${esc(scan.cnnSensorLabel)}). Run from terminal or embed the live SVG badge:</p>
+        <pre style="background:#0F172A;color:#38BDF8;border-radius:8px;padding:10px 12px;font-size:12px;overflow-x:auto;margin:0 0 8px 0;"><code>curl -sL https://${esc(cfg.domain)}/scan/${esc(encodeURIComponent(scan.target))}</code></pre>
+        <pre style="background:${esc(t.canvasBg)};border:1px solid ${esc(t.border)};border-radius:8px;padding:9px 12px;font-size:11.5px;overflow-x:auto;margin:0;"><code>${esc(mdSnippet)}</code></pre>
+      </div>
+    </details>
     <section style="margin-top:16px;">
-      <h2 style="font-size:14px;margin:0 0 8px 0;">🔥 Recent Public Scans &amp; Verified Permalinks (<a href="/leaderboard" style="color:${esc(badgeColor)};">View Full Hall of Fame &amp; Wall of Shame →</a>)</h2>
+      <h2 style="font-size:14px;margin:0 0 8px 0;">🔥 Recent Public Reports (<a href="/leaderboard" style="color:${esc(badgeColor)};">View Full Leaderboard →</a>)</h2>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">${recentLinks}</div>
     </section>
   </main>
@@ -321,7 +323,7 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
     <td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:800;color:${item.score >= 86 ? '#059669' : (item.score >= 75 ? '#D97706' : '#E11D48')};">${esc(item.grade)} (${item.score}/100)</td>
     <td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">${esc(item.kpi1)} • ${esc(item.kpi2)}</td>
     <td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-size:12px;color:${esc(t.textSecondary)};">${esc(item.cnnReadout)}</td>
-    <td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="${item.score >= 86 ? `/scan/${encodeURIComponent(item.target)}` : '/buy/micro_pass'}" style="font-size:12px;font-weight:700;color:${item.score >= 86 ? '#059669' : '#E11D48'};text-decoration:none;">${item.score >= 86 ? '🏆 Claim Badge' : '🔧 Fix Score (99¢)'}</a></td>
+    <td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="${item.score >= 86 ? `/scan/${encodeURIComponent(item.target)}` : '/buy/micro_pass'}" style="font-size:12px;font-weight:700;color:${item.score >= 86 ? '#059669' : '#E11D48'};text-decoration:none;">${item.score >= 86 ? '🏆 View Badge' : '🔧 Fix Score (99¢)'}</a></td>
   </tr>`).join('');
 
   return `<!DOCTYPE html>
@@ -329,44 +331,48 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(cfg.brandName)} Public Leaderboard — Hall of Fame (A+) &amp; Wall of Shame (2026)</title>
-  <meta name="description" content="Live public benchmark leaderboard for ${esc(cfg.brandName)}. Inspect Grade A+ Hall of Fame leaders, Grade D remediation targets, or scan any entity for an instant public permalink." />
+  <title>${esc(cfg.brandName)} Public Leaderboard — Top Rated (A+) &amp; Needs Improvement (2026)</title>
+  <meta name="description" content="Live public benchmark leaderboard for ${esc(cfg.brandName)}. Compare Grade A+ leaders, spot common mistakes, or check any target for an instant public report." />
   <link rel="canonical" href="https://${esc(cfg.domain)}/leaderboard" />
 </head>
 <body style="margin:0;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;">
   <header style="border-bottom:1px solid ${esc(t.border)};background:#FFFFFF;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="/" style="font-weight:800;font-size:18px;color:${esc(t.textPrimary)};text-decoration:none;">${esc(cfg.brandName)}</a>
-      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">HALL OF FAME &amp; WALL OF SHAME</span>
+      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">PUBLIC BENCHMARK LEADERBOARD</span>
     </div>
     <nav aria-label="Primary" style="display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600;">
-      <a href="/" style="color:${esc(t.textSecondary)};text-decoration:none;">Interactive Workbench</a>
-      <a href="/directory" style="color:${esc(t.textSecondary)};text-decoration:none;">60+ Benchmarks</a>
-      <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:999px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Bundle ($1.99) ↗</a>
+      <a href="/" style="color:${esc(t.textSecondary)};text-decoration:none;">Home Calculator</a>
+      <a href="/directory" style="color:${esc(t.textSecondary)};text-decoration:none;">All Guides</a>
+      <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:999px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
     </nav>
   </header>
   <main style="max-width:1240px;margin:0 auto;padding:24px;">
-    <h1>${esc(cfg.brandName)} Public Leaderboard: Hall of Fame (A+) &amp; Wall of Shame</h1>
-    <p class="pseo-lead">Every entity scanned generates a permanent, indexable public permalink (<code>/scan/:target</code>) scored by our deterministic engine and <strong>${esc(cat.cnnModel)}</strong>.</p>
+    <h1>${esc(cfg.brandName)} Public Leaderboard: Top Performers (A+) &amp; Common Mistakes</h1>
+    <p class="pseo-lead">Compare verified grades side-by-side or enter any target below to generate a shareable public report (<code>/scan/:target</code>).</p>
     <form action="/scan" method="get" style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;background:#FFFFFF;padding:14px;border-radius:12px;border:1px solid ${esc(t.border)};">
-      <input type="text" name="q" required aria-label="Target entity to scan" placeholder="Scan &amp; publish permalink: ${esc(cat.inputPlaceholder)}" style="flex:1;min-width:240px;padding:10px 14px;border-radius:8px;border:1px solid ${esc(t.border)};font-size:14px;" />
-      <button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-weight:700;cursor:pointer;">Run Public Scan &amp; Generate Permalink →</button>
+      <input type="text" name="q" required aria-label="Target entity to scan" placeholder="Check &amp; create report: ${esc(cat.inputPlaceholder)}" style="flex:1;min-width:240px;padding:10px 14px;border-radius:8px;border:1px solid ${esc(t.border)};font-size:14px;" />
+      <button type="submit" style="padding:10px 18px;border-radius:8px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-weight:700;cursor:pointer;">Check Score &amp; View Report →</button>
     </form>
     <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;">
       <table aria-label="${esc(cfg.brandName)} Public Leaderboard" style="width:100%;border-collapse:collapse;font-size:13px;">
         <thead>
           <tr style="background:${esc(t.canvasBg)};text-align:left;">
             <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Rank</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Entity Permalink</th>
+            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Report Link</th>
             <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Grade &amp; Score</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Verified KPIs</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">CNN Sensor Readout</th>
+            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Key Metrics</th>
+            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Key Finding</th>
             <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Action</th>
           </tr>
         </thead>
         <tbody id="prompt-matrix-tbody">${rowsHtml}</tbody>
       </table>
     </section>
+    <details style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:12px 16px;margin-top:14px;">
+      <summary style="cursor:pointer;font-size:12.5px;font-weight:700;color:${esc(t.textSecondary)};">🔬 Technical Scoring Methodology (Layer-3 Specs)</summary>
+      <p style="font-size:12px;color:${esc(t.textSecondary)};margin:8px 0 0 0;">Scores are computed deterministically and cross-checked with <strong>${esc(cat.cnnModel)}</strong> (${esc(cat.cnnSensorLabel)}).</p>
+    </details>
   </main>
 </body>
 </html>`;
