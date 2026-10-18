@@ -417,6 +417,49 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
     });
   });
 
+  app.get('/api/badge/cnn/:target', (req, res) => {
+    const rawTarget = String(req.params.target || '').replace(/\.svg$/i, '');
+    const scan = evaluateScanTarget(cfg, rawTarget);
+    const isGood = scan.score >= 86;
+    const accent = isGood ? '#10B981' : scan.score >= 70 ? '#F59E0B' : '#F43F5E';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="440" height="128" viewBox="0 0 440 128" role="img" aria-label="${esc(cfg.brandName)} CNN Scorecard for ${esc(scan.target)}">
+  <rect width="440" height="128" rx="12" fill="#0B1120" stroke="#1E293B" stroke-width="2"/>
+  <rect x="6" y="6" width="428" height="116" rx="9" fill="#0F172A" stroke="${accent}" stroke-width="1" stroke-opacity="0.45"/>
+  <text x="18" y="28" fill="#94A3B8" font-family="ui-monospace,monospace" font-size="10" font-weight="700">${esc(cfg.brandName.toUpperCase())} • ${esc(scan.cnnModel)}</text>
+  <text x="18" y="50" fill="#F8FAFB" font-family="system-ui,sans-serif" font-size="16" font-weight="800">${esc(scan.target.slice(0, 28))}</text>
+  <rect x="344" y="16" width="76" height="36" rx="8" fill="${accent}" fill-opacity="0.16" stroke="${accent}" stroke-width="1.2"/>
+  <text x="382" y="39" text-anchor="middle" fill="${accent}" font-family="ui-monospace,monospace" font-size="15" font-weight="800">${esc(scan.grade)} ${scan.score}</text>
+  <text x="18" y="76" fill="#38BDF8" font-family="ui-monospace,monospace" font-size="11" font-weight="700">KPI: ${esc(scan.kpi1)} • ${esc(scan.kpi2)}</text>
+  <text x="18" y="96" fill="#E2E8F0" font-family="ui-monospace,monospace" font-size="10.5">CNN: ${esc(scan.cnnReadout.slice(0, 56))}</text>
+  <text x="18" y="114" fill="#64748B" font-family="ui-monospace,monospace" font-size="9.5">https://${esc(cfg.domain)}/scan/${esc(encodeURIComponent(scan.target))}</text>
+</svg>`;
+    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'");
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=86400');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    return res.status(200).send(svg);
+  });
+
+  app.get('/api/github-upgrade/cnn-public-scan-flywheel', (req, res) => {
+    return res.json({
+      ok: true,
+      iteration: 31,
+      module_id: cfg.moduleId,
+      github_repos: [
+        'anuraghazra/github-readme-stats (★ 69,000+) & badges/shields (★ 23,000+) — Multi-Metric SVG CNN Scorecard (/api/badge/cnn/:target.svg) & Public Ego-Bait Leaderboard (/leaderboard)',
+        'xenova/transformers.js (★ 13,500+) & AnswerDotAI/llms-txt — Zero-UI URL-Prefix Instant Scan (/scan/:target + .md twin + curl ANSI terminal scorecard)'
+      ],
+      endpoints: {
+        leaderboard: `https://${cfg.domain}/leaderboard`,
+        sample_scan: `https://${cfg.domain}/scan/${encodeURIComponent(cat.entities[0].target)}`,
+        cnn_inspect: `https://${cfg.domain}/api/cnn/inspect?target=${encodeURIComponent(cat.entities[0].target)}`,
+        cnn_svg_card: `https://${cfg.domain}/api/badge/cnn/${encodeURIComponent(cat.entities[0].target)}.svg`,
+        sitemap_scans: `https://${cfg.domain}/sitemap-scans.xml`
+      }
+    });
+  });
+
   app.get('/api/growth/github-action.yml', (req, res) => {
     const t = cleanTargetInput(req.query.target, cat.entities[0].target);
     res.setHeader('Content-Type', 'text/yaml; charset=utf-8');

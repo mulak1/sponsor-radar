@@ -797,7 +797,8 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
   if (entries.length === 0) return '';
   const publicScans = loadPublicScanLedger(cfg).slice(0, 8);
-  const scanPillsHtml = publicScans.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#FFFFFF;border:1px solid ${t.border};font-size:11.5px;font-weight:700;color:${t.textPrimary};text-decoration:none;"><span>${escHtml(s.target)}</span><span style="color:${s.score >= 86 ? t.safeColor : '#E11D48'};">${escHtml(s.grade)} (${s.score})</span></a>`).join('');
+  const firstScanTarget = publicScans[0] ? publicScans[0].target : 'stripe.com';
+  const scanPillsHtml = publicScans.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'public_scan_pill',target:'${escHtml(s.target)}'})" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#FFFFFF;border:1px solid ${t.border};font-size:11.5px;font-weight:700;color:${t.textPrimary};text-decoration:none;"><span>${escHtml(s.target)}</span><span style="color:${s.score >= 86 ? t.safeColor : '#E11D48'};">${escHtml(s.grade)} (${s.score})</span></a>`).join('');
   const pillsHtml = entries.map((item) => {
     const active = reqPath === `/seo/${item.slug}`;
     return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:11.5px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.3;"><span>${escHtml(item.title)}</span></a>`;
@@ -807,6 +808,7 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed ${t.border};">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <a href="/leaderboard" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:${t.brandSoftBg};color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-size:11.5px;font-weight:800;text-decoration:none;">🏆 Hall of Fame &amp; Wall of Shame Leaderboard →</a>
+        <a href="/api/badge/cnn/${escHtml(encodeURIComponent(firstScanTarget))}.svg" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:#0F172A;color:#38BDF8;border:1px solid #1E293B;font-size:11.5px;font-weight:700;text-decoration:none;">🔬 CNN SVG Scorecard ↗</a>
         ${scanPillsHtml}
       </div>
     </div>
