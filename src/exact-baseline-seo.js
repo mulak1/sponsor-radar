@@ -3,6 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const { getGrowthConfig, getAllGrowthUrls } = require('./autonomous-growth-engine');
+const { loadPublicScanLedger } = require('./public-scan-flywheel');
+
 
 /**
  * ExactBaseline Universal Search Engine, Mobile-First Indexing & AI Answer-Engine (GEO/AEO) Suite
@@ -794,12 +796,20 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const t = cfg.theme;
   const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
   if (entries.length === 0) return '';
+  const publicScans = loadPublicScanLedger(cfg).slice(0, 8);
+  const scanPillsHtml = publicScans.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#FFFFFF;border:1px solid ${t.border};font-size:11.5px;font-weight:700;color:${t.textPrimary};text-decoration:none;"><span>${escHtml(s.target)}</span><span style="color:${s.score >= 86 ? t.safeColor : '#E11D48'};">${escHtml(s.grade)} (${s.score})</span></a>`).join('');
   const pillsHtml = entries.map((item) => {
     const active = reqPath === `/seo/${item.slug}`;
     return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:11.5px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.3;"><span>${escHtml(item.title)}</span></a>`;
   }).join('');
 
   return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:16px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed ${t.border};">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <a href="/leaderboard" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:${t.brandSoftBg};color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-size:11.5px;font-weight:800;text-decoration:none;">🏆 Hall of Fame &amp; Wall of Shame Leaderboard →</a>
+        ${scanPillsHtml}
+      </div>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
       <div>
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${t.brandPrimary};">✦ Complete ${entries.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
@@ -815,7 +825,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const hostUrl = `https://${cfg.domain}`;
   const cleanPath = reqPath === '/' ? '' : String(reqPath || '');
   const canonicalUrl = `${hostUrl}${cleanPath || '/'}`;
-  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : (/^\/(seo|tools|compare)\//.test(cleanPath) ? `${cleanPath}.md` : '/llms.txt');
+  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : ((/^\/(seo|tools|compare|scan|report)\//.test(cleanPath) || cleanPath === '/leaderboard') ? `${cleanPath}.md` : '/llms.txt');
 
   // 1. Normalize any accidental http://127.0.0.1:<port> or http://localhost:<port> canonical/OG/schema URLs to production https://<domain>
   let out = String(html).replace(/http:\/\/(?:127\.0\.0\.1|localhost):\d+/g, hostUrl);

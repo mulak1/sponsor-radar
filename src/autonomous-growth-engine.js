@@ -82,6 +82,8 @@ const GROWTH_CATALOG = {
   }
 };
 
+const { attachPublicScanFlywheel, getAllPublicScanUrls, evaluateScanTarget } = require('./public-scan-flywheel');
+
 function escXml(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
@@ -93,11 +95,12 @@ function getGrowthConfig(moduleId) {
 function getAllGrowthUrls(cfg) {
   const g = getGrowthConfig(cfg.moduleId);
   const base = `https://${cfg.domain}`;
-  const urls = [];
+  const urls = [...getAllPublicScanUrls(cfg)];
   for (const t of g.tools) urls.push(`${base}/tools/${t.slug}`);
   for (const c of g.comparisons) urls.push(`${base}/compare/${c.slug}`);
   return urls;
 }
+
 
 function computeTargetBadgeMetric(cfg, rawTarget) {
   const g = getGrowthConfig(cfg.moduleId);
@@ -334,6 +337,9 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
         },
         '/api/growth/embed-snippet': {
           get: { operationId: 'getEmbedSnippet', summary: 'Get copy-paste Markdown SVG badge and 1-line JS widget', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'Embed snippets' } } }
+        },
+        '/api/cnn/inspect': {
+          get: { operationId: 'inspectCnnSensor', summary: 'Run deterministic + CNN visual/acoustic sensor audit and generate public /scan/:target permalink', parameters: [{ name: 'target', in: 'query', required: true, schema: { type: 'string' } }], responses: { '200': { description: 'CNN tensor readout and public scan permalink' } } }
         }
       }
     });
@@ -361,12 +367,13 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
       schema: 'https://registry.modelcontextprotocol.io/v1/server.json',
       name: `io.${cfg.domain.replace(/^www\./, '').replace(/\./g, '-')}/${cfg.moduleId.replace(/_/g, '-')}`,
       title: `${cfg.brandName} MCP Server`,
-      version: '2.8.0',
+      version: '3.0.0',
       homepage: `https://${cfg.domain}`,
       repository: `https://github.com/mulak1/${cfg.moduleId.replace(/_/g, '-')}`,
       transport: { type: 'http-json-rpc', endpoint: `https://${cfg.domain}/api/mcp/rpc` },
       tools: [
-        { name: `audit_${cfg.moduleId}`, description: `Run deterministic ${g.categoryTag} audit and return canonical report URL + KPIs`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } }
+        { name: `audit_${cfg.moduleId}`, description: `Run deterministic ${g.categoryTag} audit and return canonical report URL + KPIs`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run deterministic CNN visual/acoustic sensor inspection and create a permanent /scan/:target public permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } }
       ]
     });
   });
@@ -383,15 +390,18 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
     const body = req.body || {};
     const id = body.id !== undefined ? body.id : 1;
     if (body.method === 'tools/list') {
-      return res.json({ jsonrpc: '2.0', id, result: { tools: [{ name: `audit_${cfg.moduleId}`, description: `Run ${cfg.brandName} deterministic benchmark`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } }] } });
+      return res.json({ jsonrpc: '2.0', id, result: { tools: [
+        { name: `audit_${cfg.moduleId}`, description: `Run ${cfg.brandName} deterministic benchmark`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run CNN sensor inspection and publish /scan/:target permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } }
+      ] } });
     }
-    const q = String(body.params?.arguments?.query || cfg.presets[0]?.key || 'verified');
-    const info = computeTargetBadgeMetric(cfg, q);
+    const q = String(body.params?.arguments?.target || body.params?.arguments?.query || cfg.presets[0]?.key || 'verified');
+    const scan = evaluateScanTarget(cfg, q);
     return res.json({
       jsonrpc: '2.0',
       id,
       result: {
-        content: [{ type: 'text', text: `${cfg.brandName} Audit (${info.target}): ${info.message} | Live Interactive Report: https://${cfg.domain}/?q=${encodeURIComponent(info.target)} | 1-Click Export ($1.99): https://${cfg.domain}/buy/flash_pass` }]
+        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encodeURIComponent(scan.target)} | 1-Click Export ($1.99): https://${cfg.domain}/buy/flash_pass` }]
       }
     });
   });
@@ -417,19 +427,25 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
     return res.status(200).type('html').send(renderHtmlFn ? renderHtmlFn(rawHtml) : rawHtml);
   });
 
-  // 7. Iteration 28 Verification & Multi-Engine Autonomous Syndication Endpoint
+  // 6B. Phase A Public Scan Permalink, Leaderboard, Terminal curl & CNN Visual Sensor Flywheel
+  attachPublicScanFlywheel(app, cfg, g.badgeColor, renderHtmlFn);
+
+  // 7. Iteration 28/30 Verification & Multi-Engine Autonomous Syndication Endpoint
   app.get('/api/github-upgrade/autonomous-growth-engine', (req, res) => {
     res.json({
       ok: true,
-      iteration: 28,
+      iteration: 30,
       module_id: cfg.moduleId,
-      repo: 'anuraghazra/github-readme-stats (★ 79,843) + badges/shields (★ 27,271) + vercel/satori (★ 14,099) + modelcontextprotocol/servers (★ 91,340)',
+      repo: 'anuraghazra/github-readme-stats (★ 79,843) + badges/shields (★ 27,271) + vercel/satori (★ 14,099) + modelcontextprotocol/servers (★ 91,340) + onnxruntime-web / PP-OCRv4 CNN Sensor',
       features: {
         dynamic_svg_score_badges: true,
         shields_io_json_endpoint: true,
         one_line_embed_js_widget: true,
         openapi_3_1_and_mcp_registry: true,
         interactive_tools_and_compare_routes: g.tools.length + g.comparisons.length,
+        public_scan_permalinks_and_leaderboard: true,
+        curl_ansi_terminal_scorecard: true,
+        cnn_visual_sensor_endpoint: true,
         websub_and_indexnow_multiplexer: true
       },
       github_topics: g.githubTopics,
