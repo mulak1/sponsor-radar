@@ -111,17 +111,8 @@ function computeTargetBadgeMetric(cfg, rawTarget) {
   if (Array.isArray(kpiArr) && kpiArr.length > 0) {
     return { target: clean, label: `${g.badgeLabel} (${clean.slice(0, 18)})`, message: String(kpiArr.slice(0, 2).join(' • ')).slice(0, 34), color: g.badgeColor };
   }
-  let hash = 0;
-  for (let i = 0; i < clean.length; i++) hash = ((hash << 5) - hash + clean.charCodeAt(i)) | 0;
-  const score = 82 + (Math.abs(hash) % 16);
-  const msg = cfg.moduleId === 'citation_forge'
-    ? `GEO ${score}/100 • llms.txt Ready`
-    : (cfg.moduleId === 'sponsor_radar'
-      ? `3x+ Renewed • $${32 + (Math.abs(hash) % 18)} eCPM`
-      : (cfg.moduleId === 'derm_logic'
-        ? `Harmony ${score}/100 • ΔpH Safe`
-        : `+${48 + (Math.abs(hash) % 19)}.4% Recovery Lift`));
-  return { target: clean, label: `${g.badgeLabel} (${clean.slice(0, 18)})`, message: msg, color: g.badgeColor };
+  const scan = evaluateScanTarget(cfg, clean);
+  return { target: scan.target, label: `${g.badgeLabel} (${scan.target.slice(0, 18)})`, message: `${scan.grade} (${scan.score}/100) • ${scan.kpi1}`.slice(0, 36), color: g.badgeColor };
 }
 
 function renderShieldSvg({ label, message, color }) {
@@ -193,7 +184,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
         { name: 'Row #5 Complete Production Bundle', kpi: 'Locked in Preview', action: 'Unlock 3-File Bundle ($1.99)', status: 'LOCKED_PREVIEW' }
       ];
 
-  const trsHtml = rows.map((r) => `<tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;">${escXml(r.name)}</th><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};">${escXml(r.kpi)}</td><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};">${escXml(r.action)}</td><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-size:11.5px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
+  const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};">${escXml(r.kpi)}</td><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-size:11.5px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -231,20 +222,30 @@ function renderGrowthPageHtml(cfg, item, kind) {
     </nav>
     <h1>${escXml(item.title)}</h1>
     <p class="pseo-lead">${escXml(item.summary)}</p>
-    <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:18px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
+    <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' — Live Diagnostic';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
+    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">🔬 LIVE ONNX/CNN CALCULATOR:</span>
+        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Custom target..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:135px;" />
+        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Calculate Live ↗</button>
+        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;text-decoration:none;">Open Permalink (/scan) ↗</a>
+      </div>
+      <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
+    </section>
+    <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:14px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
         <h2 style="font-size:16px;margin:0;">Verified Telemetry &amp; Deliverable Benchmark Matrix</h2>
-        <img src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
+        <img id="eb-growth-badge-img" src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
       </div>
       <table aria-label="${escXml(item.title)} Benchmark Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
         <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Entity / Parameter</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Verified Readout</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Action</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
       <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span style="font-size:12px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
           <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:12px;width:185px;" />
-          <button id="eb-growth-row4-btn" type="button" onclick="var em=(document.getElementById('eb-growth-row4-email')||{}).value||'';if(em.indexOf('@')===-1){alert('Enter a valid email to unlock Row #4');return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(r){if(r.ok)alert('Row #4 & Free Deliverable sent to '+em);})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Verified Patch Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">⚡ 99¢ Single-File Pass ↗</a>
