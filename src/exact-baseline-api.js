@@ -423,19 +423,12 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
   if (req.method === 'GET' && clientIp && !isOwnerIp && !isPlaywrightHeader && (req.path === '/' || req.path === '/directory' || (req.path && req.path.startsWith('/seo/')))) {
-    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((t) => now - t < 4000);
+    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((t) => now - t < 3000);
     recent.push(now); ipBurstWindow.set(clientIp, recent);
-    if (recent.length >= 4) isBurstScrape = true;
+    if (recent.length >= 3) isBurstScrape = true;
   }
   const isSearchOrAiCrawler = CRAWLER_UA_REGEX.test(ua) || isPrefetch || isBurstScrape;
-  if (
-    isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua ||
-    ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') ||
-    ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') ||
-    ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') ||
-    ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') ||
-    emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')
-  ) {
+  if (isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua || ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') || ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') || ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') || ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') || emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')) {
     return { isTest: 1, isCrawler: isSearchOrAiCrawler ? 1 : 0, isOwnerIp: isOwnerIp ? 1 : 0, clientIp };
   }
   return { isTest: 0, isCrawler: 0, isOwnerIp: 0, clientIp };
@@ -445,21 +438,17 @@ function createTelemetryStore(dataDir, moduleId) {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   const ledgerPath = path.join(dataDir, `eb_telemetry_${moduleId}.json`);
   let state = { events: [], leads: [], orders: [], impressions: 0, calculations: 0, checkout_intents: 0, crawler_hits: 0 };
-  if (fs.existsSync(ledgerPath)) {
-    try { state = { ...state, ...JSON.parse(fs.readFileSync(ledgerPath, 'utf8')) }; } catch (_) {}
-  }
-  function save() {
-    try { fs.writeFileSync(ledgerPath, JSON.stringify(state)); } catch (_) {}
-  }
+  if (fs.existsSync(ledgerPath)) { try { state = { ...state, ...JSON.parse(fs.readFileSync(ledgerPath, 'utf8')) }; } catch (_) {} }
+  function save() { try { fs.writeFileSync(ledgerPath, JSON.stringify(state)); } catch (_) {} }
   let sanitized = false;
   for (let i = 0; i < state.events.length; i++) {
     const e = state.events[i];
     if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (!e.client_ip && e.created_at >= '2026-10-17T09:18:00Z' && e.created_at <= '2026-10-17T09:55:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
       e.is_test = 1; e.is_owner = 1; sanitized = true;
-    } else if (Number(e.is_test) === 0 && e.event_type === 'visit' && String(e.page_url || '').startsWith('/seo/')) {
+    } else if (Number(e.is_test) === 0 && e.event_type === 'visit' && (String(e.page_url || '').startsWith('/seo/') || String(e.page_url || '').startsWith('/?preset='))) {
       const t0 = new Date(e.created_at).getTime();
-      const burstCount = state.events.slice(Math.max(0, i - 5), Math.min(state.events.length, i + 6)).filter((x) => x.event_type === 'visit' && String(x.page_url || '').startsWith('/seo/') && Math.abs(new Date(x.created_at).getTime() - t0) <= 3500).length;
-      if (burstCount >= 4) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
+      const burstCount = state.events.slice(Math.max(0, i - 5), Math.min(state.events.length, i + 6)).filter((x) => x.event_type === 'visit' && (String(x.page_url || '').startsWith('/seo/') || String(x.page_url || '').startsWith('/?preset=')) && Math.abs(new Date(x.created_at).getTime() - t0) <= 3000).length;
+      if (burstCount >= 3) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
     }
   }
   for (const l of state.leads) { if (Number(l.is_test) === 0 && (isExcludedOwnerIp(l.client_ip) || l.is_owner)) { l.is_test = 1; l.is_owner = 1; sanitized = true; } }
@@ -829,6 +818,14 @@ function attachExactBaselinePack(app, options = {}) {
       ok: true, iteration: 25, module_id: cfg.moduleId,
       repo: 'observablehq/plot (★ 4,400) + FormKit/auto-animate (★ 13,100) + shadcn-ui/ui (★ 81,000)',
       features: { stealth_burst_crawler_telemetry_guard: true, symmetrical_manifest_svg_telemetry_bar: true, full_native_control_telemetry_capture: true }
+    });
+  });
+
+  app.get('/api/github-upgrade/nuqs-deeplink-mobile-firstfold', (req, res) => {
+    res.json({
+      ok: true, iteration: 26, module_id: cfg.moduleId,
+      repo: '47ng/nuqs (★ 6,200) + PrismJS/prism (★ 12,300) + observablehq/plot (★ 4,400)',
+      features: { url_query_state_deeplink_hydration: true, mobile_firstfold_interactive_presets: true, symmetrical_doppelrand_diff_inspector_footer: true }
     });
   });
 
