@@ -1,12 +1,22 @@
 # SponsorRadar — Verified Podcast & Newsletter Ad Spend
 
-[![SponsorRadar ag1](https://www.sponsorradar.io/badge/ag1.svg)](https://www.sponsorradar.io/?q=ag1&utm_source=github_readme) [![SponsorRadar deel](https://www.sponsorradar.io/badge/deel.svg)](https://www.sponsorradar.io/?q=deel&utm_source=github_readme) [![SponsorRadar linear](https://www.sponsorradar.io/badge/linear.svg)](https://www.sponsorradar.io/?q=linear&utm_source=github_readme)
+[![SponsorRadar ag1](https://www.sponsorradar.io/badge/ag1.svg)](https://www.sponsorradar.io/scan/ag1?utm_source=github_readme) [![SponsorRadar deel](https://www.sponsorradar.io/badge/deel.svg)](https://www.sponsorradar.io/scan/deel?utm_source=github_readme) [![SponsorRadar linear](https://www.sponsorradar.io/badge/linear.svg)](https://www.sponsorradar.io/scan/linear?utm_source=github_readme)
+
+[![SponsorRadar CNN Scorecard](https://www.sponsorradar.io/api/badge/cnn/ag1.svg)](https://www.sponsorradar.io/leaderboard?utm_source=github_cnn_card)
 
 > **Live Interactive Benchmark & Deliverable Compiler**: **[https://www.sponsorradar.io](https://www.sponsorradar.io/?utm_source=github_repo)**  
+> **Public Hall of Fame & Wall of Shame Leaderboard**: **[https://www.sponsorradar.io/leaderboard](https://www.sponsorradar.io/leaderboard)** ([Markdown](https://www.sponsorradar.io/leaderboard.md))  
 > **60-Page Programmatic Benchmark Directory**: **[https://www.sponsorradar.io/directory](https://www.sponsorradar.io/directory)**  
 > **AI Agent / LLM Manifest (`llms.txt`)**: **[https://www.sponsorradar.io/llms.txt](https://www.sponsorradar.io/llms.txt)** • **[OpenAPI 3.1 Spec](https://www.sponsorradar.io/openapi.json)** • **[MCP Server Registry](https://www.sponsorradar.io/.well-known/mcp-registry.json)**
 
 ---
+
+## 🏆 Live Public Scan Permalinks (`/scan/:target`) & Leaderboard
+
+- **[Public Scan: ag1](https://www.sponsorradar.io/scan/ag1)** ([Markdown Twin](https://www.sponsorradar.io/scan/ag1.md) • [CNN SVG Card](https://www.sponsorradar.io/api/badge/cnn/ag1.svg))
+- **[Public Scan: deel](https://www.sponsorradar.io/scan/deel)** ([Markdown Twin](https://www.sponsorradar.io/scan/deel.md) • [CNN SVG Card](https://www.sponsorradar.io/api/badge/cnn/deel.svg))
+- **[Public Scan: linear](https://www.sponsorradar.io/scan/linear)** ([Markdown Twin](https://www.sponsorradar.io/scan/linear.md) • [CNN SVG Card](https://www.sponsorradar.io/api/badge/cnn/linear.svg))
+- **[View Full Public Leaderboard (Hall of Fame A+ & Wall of Shame)](https://www.sponsorradar.io/leaderboard)**
 
 ## ⚡ Free Interactive Calculators & Micro-Tools (`/tools/:slug`)
 
@@ -22,11 +32,16 @@
 
 ---
 
-## 🛡️ Embed a Live SponsorRadar SVG Score Badge in Your README or Docs
+## 🛡️ Embed a Live SponsorRadar SVG Score Badge or CNN Scorecard in Your README
 
-Inspired by [`anuraghazra/github-readme-stats`](https://github.com/anuraghazra/github-readme-stats) and [`badges/shields`](https://github.com/badges/shields), you can embed a live, deterministic SponsorRadar badge for any domain, brand, ingredient, or store:
+Inspired by [`anuraghazra/github-readme-stats`](https://github.com/anuraghazra/github-readme-stats) and [`badges/shields`](https://github.com/badges/shields), you can embed a live, deterministic SponsorRadar badge or multi-metric CNN scorecard for any domain, brand, ingredient, or store:
 
-### Markdown Badge Snippet
+### Multi-Metric CNN Scorecard SVG (`440x128`)
+```markdown
+[![SponsorRadar CNN Scorecard](https://www.sponsorradar.io/api/badge/cnn/ag1.svg)](https://www.sponsorradar.io/scan/ag1?utm_source=readme_cnn_card)
+```
+
+### Compact Shield Badge (`240x20`)
 ```markdown
 [![Verified by SponsorRadar](https://www.sponsorradar.io/badge/ag1.svg)](https://www.sponsorradar.io/?q=ag1&utm_source=readme_badge)
 ```
@@ -51,6 +66,8 @@ SponsorRadar implements the **Machine-Actionable Agent Discovery Triad** for zer
 | :--- | :--- | :--- |
 | **AnswerDotAI `llms.txt`** | [`https://www.sponsorradar.io/llms.txt`](https://www.sponsorradar.io/llms.txt) | Compact Markdown index of all 60+ benchmarks & tools |
 | **Full Corpus `llms-full.txt`** | [`https://www.sponsorradar.io/llms-full.txt`](https://www.sponsorradar.io/llms-full.txt) | Full deterministic benchmark corpus for RAG ingestion |
+| **Public Scan Sitemap** | [`https://www.sponsorradar.io/sitemap-scans.xml`](https://www.sponsorradar.io/sitemap-scans.xml) | Live XML sitemap of all public `/scan/:target` permalinks |
+| **CNN Sensor Inspection API** | [`https://www.sponsorradar.io/api/cnn/inspect`](https://www.sponsorradar.io/api/cnn/inspect) | Deterministic + CNN visual/acoustic sensor inspection |
 | **OpenAPI 3.1.0 Specification** | [`https://www.sponsorradar.io/openapi.json`](https://www.sponsorradar.io/openapi.json) | Public REST API schema for Custom GPTs & agent tool-calling |
 | **AI Plugin Manifest** | [`https://www.sponsorradar.io/.well-known/ai-plugin.json`](https://www.sponsorradar.io/.well-known/ai-plugin.json) | Standard agent plugin discovery manifest |
 | **MCP Server Registry** | [`https://www.sponsorradar.io/.well-known/mcp-registry.json`](https://www.sponsorradar.io/.well-known/mcp-registry.json) | Model Context Protocol JSON-RPC server (`POST /api/mcp/rpc`) |
