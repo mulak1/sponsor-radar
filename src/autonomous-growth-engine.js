@@ -237,16 +237,20 @@ function renderGrowthPageHtml(cfg, item, kind) {
         <img src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
       </div>
       <table aria-label="${escXml(item.title)} Benchmark Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead>
-          <tr style="background:${escXml(t.canvasBg)};text-align:left;">
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Entity / Parameter</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Verified Readout</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Action</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th>
-          </tr>
-        </thead>
+        <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Entity / Parameter</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Verified Readout</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Action</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
+      <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:12px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
+          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:12px;width:185px;" />
+          <button id="eb-growth-row4-btn" type="button" onclick="var em=(document.getElementById('eb-growth-row4-email')||{}).value||'';if(em.indexOf('@')===-1){alert('Enter a valid email to unlock Row #4');return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(r){if(r.ok)alert('Row #4 & Free Deliverable sent to '+em);})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">⚡ 99¢ Single-File Pass ↗</a>
+          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${escXml(g.badgeColor)};color:${escXml(g.badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">📦 $1.99 3-File Bundle ↗</a>
+        </div>
+      </div>
     </section>
     <section style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
       <h2 style="font-size:15px;margin:0 0 6px 0;">🔗 Embed Live Verified SVG Badge &amp; 1-Line Interactive Widget (Free Backlink Badge)</h2>

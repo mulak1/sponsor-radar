@@ -260,32 +260,38 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       <img src="/badge/${esc(encodeURIComponent(scan.target))}.svg" alt="${esc(scan.target)} Verified Score Badge" width="240" height="22" decoding="async" />
     </div>
     <section style="margin-top:16px;">${renderScanCnnOverlaySvg(cfg, scan, badgeColor)}</section>
-    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:14px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
         <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">🔬 LIVE ONNX/CNN SENSOR WORKBENCH:</span>
-        ${cat.entities.slice(0, 4).map((e) => `<button type="button" onclick="fetch('/api/cnn/inspect?target=${esc(encodeURIComponent(e.target))}').then(function(r){return r.json()}).then(function(d){if(d&&d.scan){var el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=d.scan.target+' → '+d.scan.grade+' ('+d.scan.score+'/100) • '+d.scan.cnnReadout;}})" style="padding:4px 10px;border-radius:999px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;cursor:pointer;">⚡ ${esc(e.target)}</button>`).join('')}
+        ${cat.entities.slice(0, 4).map((e) => `<button type="button" onclick="fetch('/api/cnn/inspect?target=${esc(encodeURIComponent(e.target))}').then(function(r){return r.json()}).then(function(d){if(d&&d.scan){var el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=d.scan.target+' → '+d.scan.grade+' ('+d.scan.score+'/100) • '+d.scan.cnnReadout;}})" style="padding:4px 9px;border-radius:999px;border:1px solid #334155;background:#1E293B;color:#E2E8F0;font-size:11px;font-weight:700;cursor:pointer;">⚡ ${esc(e.target)}</button>`).join('')}
+        <input id="eb-cnn-wb-input" type="text" placeholder="Custom target..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:125px;" />
+        <button id="eb-cnn-wb-submit" type="button" onclick="var v=(document.getElementById('eb-cnn-wb-input')||{}).value||'${esc(scan.target)}';fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(d&&d.scan){var el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=d.scan.target+' → '+d.scan.grade+' ('+d.scan.score+'/100) • '+d.scan.cnnReadout;}})" style="padding:4px 10px;border-radius:8px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Run Scan ↗</button>
       </div>
       <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${esc(scan.target)} → ${esc(scan.grade)} (${scan.score}/100) • ${esc(scan.cnnReadout)}</div>
     </section>
     <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
       <h2 style="font-size:16px;margin:0 0 10px 0;">Deterministic &amp; CNN Sensor Scorecard Matrix</h2>
       <table aria-label="${esc(scan.target)} Public Scan Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead>
-          <tr style="background:${esc(t.canvasBg)};text-align:left;">
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Diagnostic Dimension</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Measured Readout</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Remediation / Action</th>
-            <th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Status</th>
-          </tr>
-        </thead>
+        <thead><tr style="background:${esc(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Diagnostic Dimension</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Measured Readout</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Remediation / Action</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${esc(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">
           <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Overall Benchmark Grade</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.grade)} (${scan.score}/100)</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.issue)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:${scan.score >= 86 ? '#059669' : '#E11D48'};">${esc(scan.status)}</td></tr>
           <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Primary Vertical Telemetry</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.kpi1)} • ${esc(scan.kpi2)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">Compare on Public Leaderboard</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">VERIFIED</td></tr>
           <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">CNN Visual/Acoustic Tensor</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;font-weight:700;">${esc(scan.cnnReadout)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};">${esc(scan.cnnModel)}</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;color:#059669;">DETERMINISTIC</td></tr>
-          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #4 Granular Parameter Remediation</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/micro_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock Single-File Pass (99¢) ↗</a></td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
+          <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #4 Granular Parameter Remediation</th><td id="eb-scan-row4-val" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/micro_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock Single-File Pass (99¢) ↗</a></td><td id="eb-scan-row4-status" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
           <tr><th scope="row" style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};text-align:left;">Row #5 Complete 3-File Production Bundle</th><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-family:monospace;">Locked in Preview</td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};"><a href="/buy/flash_pass" style="color:${esc(badgeColor)};font-weight:700;">Unlock 3-File Bundle ($1.99) ↗</a></td><td style="padding:10px 12px;border-bottom:1px solid ${esc(t.border)};font-weight:700;">LOCKED_PREVIEW</td></tr>
         </tbody>
       </table>
+      <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${esc(t.canvasBg)};border:1px solid ${esc(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:12px;font-weight:800;color:${esc(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
+          <input id="eb-scan-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${esc(t.border)};font-size:12px;width:185px;" />
+          <button id="eb-scan-row4-btn" type="button" onclick="var em=(document.getElementById('eb-scan-row4-email')||{}).value||'';if(em.indexOf('@')===-1){alert('Enter a valid email to unlock Row #4');return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${esc(scan.target)}'})}).then(function(){var v=document.getElementById('eb-scan-row4-val'),s=document.getElementById('eb-scan-row4-status');if(v)v.textContent='${esc(scan.kpi1)} • Verified Patch Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;background:${esc(badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">⚡ 99¢ Single-File Pass ↗</a>
+          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${esc(badgeColor)};color:${esc(badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">📦 $1.99 3-File Bundle ↗</a>
+        </div>
+      </div>
     </section>
     <section style="background:#FFFFFF;border:1px solid ${esc(t.border)};border-radius:14px;padding:16px;margin-top:16px;">
       <h2 style="font-size:15px;margin:0 0 6px 0;">⚡ Terminal / CLI Magic &amp; GitHub README Badge</h2>
@@ -452,24 +458,15 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
   app.get('/api/github-upgrade/cnn-public-scan-flywheel', (req, res) => {
     return res.json({
       ok: true,
-      iteration: 32,
+      iteration: 33,
       module_id: cfg.moduleId,
       github_repos: [
         'anuraghazra/github-readme-stats (★ 69,000+) & badges/shields (★ 23,000+) — Multi-Metric SVG CNN Scorecard (/api/badge/cnn/:target.svg) & Public Ego-Bait Leaderboard (/leaderboard)',
-        'huggingface/transformers.js (★ 13,500+) & microsoft/onnxruntime (★ 16,200+) — Interactive Live ONNX/CNN Sensor Workbench (#eb-onnx-cnn-workbench) with 1-Click Calculation Telemetry'
+        'huggingface/transformers.js (★ 13,500+) & microsoft/onnxruntime (★ 16,200+) — Interactive Live ONNX/CNN Sensor Workbench (#eb-onnx-cnn-workbench) with Custom Scan Input',
+        'react-hook-form/react-hook-form (★ 42,000+) & emilkowalski/vaul (★ 7,500+) — Inline Row #4 Instant Email Reveal + 99¢ Micro-Pass Strip (#eb-inline-row4-unlock)'
       ],
-      features: {
-        interactive_onnx_cnn_workbench: true,
-        cnn_inspect_calc_telemetry: true,
-        multi_metric_svg_cnn_card: true
-      },
-      endpoints: {
-        leaderboard: `https://${cfg.domain}/leaderboard`,
-        sample_scan: `https://${cfg.domain}/scan/${encodeURIComponent(cat.entities[0].target)}`,
-        cnn_inspect: `https://${cfg.domain}/api/cnn/inspect?target=${encodeURIComponent(cat.entities[0].target)}`,
-        cnn_svg_card: `https://${cfg.domain}/api/badge/cnn/${encodeURIComponent(cat.entities[0].target)}.svg`,
-        sitemap_scans: `https://${cfg.domain}/sitemap-scans.xml`
-      }
+      features: { interactive_onnx_cnn_workbench: true, cnn_inspect_calc_telemetry: true, multi_metric_svg_cnn_card: true, inline_row4_email_reveal_and_custom_scan: true },
+      endpoints: { leaderboard: `https://${cfg.domain}/leaderboard`, sample_scan: `https://${cfg.domain}/scan/${encodeURIComponent(cat.entities[0].target)}`, cnn_inspect: `https://${cfg.domain}/api/cnn/inspect?target=${encodeURIComponent(cat.entities[0].target)}`, cnn_svg_card: `https://${cfg.domain}/api/badge/cnn/${encodeURIComponent(cat.entities[0].target)}.svg`, sitemap_scans: `https://${cfg.domain}/sitemap-scans.xml` }
     });
   });
 
