@@ -447,10 +447,11 @@ function attachMissionControlRoutes(app, cfg, store) {
   app.get('/api/github-upgrade/mission-control-podium-telemetry', (req, res) => {
     res.json({
       ok: true,
-      iteration: 37,
+      iteration: 38,
+      cron_iteration: 7,
       module_id: cfg.moduleId,
-      github_repos: ['observablehq/plot (★ 4,400+)', 'TanStack/table (★ 25,400+)', 'anuraghazra/github-readme-stats (★ 69,000+)'],
-      features: { unified_4_product_mission_control: true, podium_leaderboard_calc_telemetry: true, live_indexnow_websub_push: true, purest_path_cta_consolidation: true, mirofish_swarm_segmentation: true },
+      github_repos: ['observablehq/plot (★ 4,400+)', 'TanStack/table (★ 25,400+)', 'anuraghazra/github-readme-stats (★ 69,000+)', 'stripe/stripe-js (★ 4,100+)'],
+      features: { unified_4_product_mission_control: true, podium_leaderboard_calc_telemetry: true, live_indexnow_websub_push: true, purest_path_cta_consolidation: true, mirofish_swarm_segmentation: true, scan_first_fold_purest_cta: true, verified_referer_checkout_attribution: true },
       mission_control_url: `https://${cfg.domain}/admin/mission-control?key=ExactBaseline2026!`
     });
   });

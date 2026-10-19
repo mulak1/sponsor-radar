@@ -514,7 +514,7 @@ function createTelemetryStore(dataDir, moduleId) {
     getPstReport(windowHours = 3) {
       const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
-      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && !isExcludedOwnerIp(e.client_ip) && (e.event_type === 'visit' || Boolean(e.client_ip)) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET');
+      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && !isExcludedOwnerIp(e.client_ip) && (e.event_type === 'visit' || Boolean(e.client_ip)) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer);
       const humanEvents = state.events.filter(isHumanEvent), testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
       const mirofishEventsCount = state.events.filter((e) => e.is_mirofish || e.utm_source === 'mirofish_swarm' || (e.meta && String(e.meta.source || '').includes('mirofish'))).length;
       const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), prevEventsList = humanEvents.filter((e) => { const t = new Date(e.created_at).getTime(); return t >= prevCutMs && t < cutoffMs; });
@@ -899,8 +899,8 @@ function attachExactBaselinePack(app, options = {}) {
 
     const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     let { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
-    const ref = String(req.headers.referer || '');
-    if (req.method === 'GET' && !ref.includes(cfg.domain.replace(/^www\./, ''))) { isTest = 1; isCrawler = 1; }
+    const ref = String(req.headers.referer || ''), hasSameRef = ref.includes(cfg.domain.replace(/^www\./, ''));
+    if (req.method === 'GET' && !hasSameRef) { isTest = 1; isCrawler = 1; }
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
 
     if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
@@ -909,7 +909,7 @@ function attachExactBaselinePack(app, options = {}) {
       sendOneClickLeadEmail(userEmail, `${cfg.brandName} Checkout Summary (${tierName})`, isTest).catch(() => {});
     }
 
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method } });
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: req.query?.target || '' } });
 
     const baseUrl = `https://${cfg.domain}`;
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
@@ -969,7 +969,7 @@ function attachExactBaselinePack(app, options = {}) {
       }
       store.recordEvent({ eventType: 'checkout_intent', pageUrl: req.originalUrl || req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { plan: reqTier || 'host_checkout' } });
     }
-    if (!req.headers['x-auto-init'] && ((req.method === 'POST' && /^\/api\/(audit|cnn\/inspect|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) || (req.method === 'GET' && (req.path === '/api/cnn/inspect' || (req.path === '/scan' && (req.query?.q || req.query?.target)))))) store.recordEvent({ eventType: 'calculate', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || req.body?.utm_source || ''), isTest, isCrawler, isOwnerIp, clientIp });
+    if (!req.headers['x-auto-init'] && ((req.method === 'POST' && /^\/api\/(audit|cnn\/inspect|analyze-sponsor|analyze-routine|audit-leakage|bandit-select|webhook-simulate)/.test(req.path)) || (req.method === 'GET' && (req.path === '/api/cnn/inspect' || (req.path === '/scan' && (req.query?.q || req.query?.target)) || (/^\/(scan|report)\/[^/]+$/.test(req.path) && !req.path.endsWith('.md') && !isCrawler) || (req.path === '/' && Boolean(req.query?.preset || req.query?.q || req.query?.target)))))) store.recordEvent({ eventType: 'calculate', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || req.body?.utm_source || ''), isTest, isCrawler, isOwnerIp, clientIp });
     if (req.method === 'GET' && (req.path === '/sitemap.xml' || req.path === '/llms.txt') && isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, deviceType, isTest, isCrawler, isOwnerIp, clientIp });
     const origSend = res.send.bind(res);
     res.send = function patchedSend(body) {
