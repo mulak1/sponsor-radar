@@ -763,7 +763,16 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           r.style.display = 'none';
         }
       });
+      if (window.__ebLogEvent) window.__ebLogEvent('tab_switch', { store_pill: 'ledger_' + filterKey });
     }
+    var __srLiveTimer = null;
+    ['lookup-query', 'sender-reach'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function() {
+        if (__srLiveTimer) clearTimeout(__srLiveTimer);
+        __srLiveTimer = setTimeout(function() { if (document.getElementById('lookup-query')?.value?.trim().length >= 2) runBrandLookup(); }, 520);
+      });
+    });
 
     async function startStripeCheckout(planTier, amountUsd, emailInputId, hpInputId) {
       const emailEl = document.getElementById(emailInputId);
