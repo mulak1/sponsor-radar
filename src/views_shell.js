@@ -476,11 +476,12 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       line-height: 1.65;
     }
     @media (max-width: 767px) {
-      .nav-inner { min-height: 52px; padding: 6px 0; gap: 8px; }
-      .nav-links { gap: 10px; font-size: 13px; }
-      .hero-section { padding: 16px 0 24px; }
-      .headline-xl { font-size: 27px; margin: 8px 0; }
-      .subhead { font-size: 14.5px; line-height: 1.5; margin-bottom: 10px; }
+      .ticker-bar { display: none; }
+      .nav-inner { min-height: 48px; padding: 4px 0; gap: 6px; }
+      .nav-links { gap: 8px; font-size: 13px; }
+      .hero-section { padding: 12px 0 20px; }
+      .headline-xl { font-size: 25px; margin: 6px 0; }
+      .subhead { font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
     }
 
     /* Mode Tabs */

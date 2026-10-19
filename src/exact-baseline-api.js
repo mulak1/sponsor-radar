@@ -491,32 +491,32 @@ function createTelemetryStore(dataDir, moduleId) {
     },
     getIntentOrders: () => state.orders.filter((o) => o.status === 'intent' && o.session_id && o.session_id.startsWith('cs_')),
     getPstReport(windowHours = 3) {
-      const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000;
+      const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
       const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !isExcludedOwnerIp(e.client_ip);
-      const humanEvents = state.events.filter(isHumanEvent);
-      const testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
-      const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs);
-      const winTestList = testEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs);
-      const winCrawlerHits = state.events.filter((e) => Number(e.is_crawler) === 1 && new Date(e.created_at).getTime() >= cutoffMs).length;
-      const winCounts = {}, winTestCounts = {}, cumCounts = {};
-      for (const e of winEventsList) winCounts[e.event_type] = (winCounts[e.event_type] || 0) + 1;
+      const humanEvents = state.events.filter(isHumanEvent), testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
+      const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), prevEventsList = humanEvents.filter((e) => { const t = new Date(e.created_at).getTime(); return t >= prevCutMs && t < cutoffMs; });
+      const winTestList = testEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), winCrawlerHits = state.events.filter((e) => Number(e.is_crawler) === 1 && new Date(e.created_at).getTime() >= cutoffMs).length;
+      const winCounts = {}, prevCounts = {}, winTestCounts = {}, cumCounts = {}, winDevices = { desktop: 0, mobile: 0 }, winSources = {};
+      for (const e of winEventsList) { winCounts[e.event_type] = (winCounts[e.event_type] || 0) + 1; if (e.event_type === 'visit') { winDevices[e.device_type === 'mobile' ? 'mobile' : 'desktop'] += 1; const s = e.utm_source || 'direct'; winSources[s] = (winSources[s] || 0) + 1; } }
+      for (const e of prevEventsList) prevCounts[e.event_type] = (prevCounts[e.event_type] || 0) + 1;
       for (const e of winTestList) winTestCounts[e.event_type] = (winTestCounts[e.event_type] || 0) + 1;
       for (const e of humanEvents) cumCounts[e.event_type] = (cumCounts[e.event_type] || 0) + 1;
-      const recentRows = winEventsList.slice(-5).reverse().map((e) => ({ pst_ts: toPstString(e.created_at), event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type, utm_source: e.utm_source || 'direct' }));
-      const humanLeads = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)).length;
-      const testLeads = state.leads.length - humanLeads;
+      const recentRows = winEventsList.slice(-15).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || 'direct', is_test: 0, is_crawler: 0, meta: e.meta || {} }));
+      const recentAllRows = state.events.slice(-20).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || (e.is_crawler ? 'ai_search_crawler' : 'direct'), is_test: e.is_test, is_crawler: e.is_crawler, meta: e.meta || {} }));
+      const humanLeadsList = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)), humanLeads = humanLeadsList.length, winLeads = humanLeadsList.filter((l) => new Date(l.created_at).getTime() >= cutoffMs).length, testLeads = state.leads.length - humanLeads;
       const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
       const paidOrders = paidOrdersList.length, paidRevUsd = paidOrdersList.reduce((acc, o) => acc + (Number(o.amount_usd) || 0), 0);
       return {
-        ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()),
+        ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()), pst_prev_window_start: toPstString(new Date(prevCutMs).toISOString()),
         window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1'],
-        window_events: winCounts, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, recent_pst_events: recentRows,
+        window_events: winCounts, prior_window_events: prevCounts, window_devices: winDevices, window_sources: winSources, window_leads: winLeads, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, recent_pst_events: recentRows, recent_all_events: recentAllRows,
         all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
         server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: state.crawler_hits || 0, total_events_logged: state.events.length }
       };
     },
-    getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip))
+    getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)),
+    getRawState: () => state
   };
 }
 

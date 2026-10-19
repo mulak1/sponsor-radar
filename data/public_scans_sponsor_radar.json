@@ -10,7 +10,7 @@
     "issue": "Proven 3x+ ROI Across 24 Flagship Shows",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.464Z"
+    "scannedAt": "2026-10-19T00:46:31.585Z"
   },
   {
     "target": "Ramp",
@@ -23,7 +23,7 @@
     "issue": "$34.20 Cleared Net eCPM Benchmark",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.467Z"
+    "scannedAt": "2026-10-19T00:46:31.589Z"
   },
   {
     "target": "Deel",
@@ -36,7 +36,7 @@
     "issue": "High-Converting Newsletter + Podcast Stack",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.472Z"
+    "scannedAt": "2026-10-19T00:46:31.593Z"
   },
   {
     "target": "Linear",
@@ -49,7 +49,7 @@
     "issue": "Top DevTools Sponsorship Efficiency",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.476Z"
+    "scannedAt": "2026-10-19T00:46:31.596Z"
   },
   {
     "target": "Eight-Sleep",
@@ -62,7 +62,7 @@
     "issue": "Strong Promo-Code Attribution",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.479Z"
+    "scannedAt": "2026-10-19T00:46:31.600Z"
   },
   {
     "target": "Notion",
@@ -75,7 +75,7 @@
     "issue": "Shifting Spend to Creator Mid-Rolls",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.484Z"
+    "scannedAt": "2026-10-19T00:46:31.604Z"
   },
   {
     "target": "OneShot-Crypto-App",
@@ -88,7 +88,7 @@
     "issue": "Overpaid $68 CPM without Promo Landing Page",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.488Z"
+    "scannedAt": "2026-10-19T00:46:31.608Z"
   },
   {
     "target": "Generic-VPN-Flight",
@@ -101,7 +101,7 @@
     "issue": "High Ad-Block / SponsorBlock Skip Rate (74%)",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.493Z"
+    "scannedAt": "2026-10-19T00:46:31.612Z"
   },
   {
     "target": "Unverified-SaaS-Ad",
@@ -114,6 +114,6 @@
     "issue": "62% Attribution Leakage : Fix Pitch & Offer",
     "cnnModel": "PANNs CNN14 2D Mel-Spectrogram + Sponsor Frame QR/OCR Detector (19ms)",
     "cnnSensorLabel": "Host-Read Placement & Audience Retention Check",
-    "scannedAt": "2026-10-19T00:36:07.497Z"
+    "scannedAt": "2026-10-19T00:46:31.617Z"
   }
 ]

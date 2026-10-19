@@ -488,6 +488,8 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
     lastSyndicateRes = results;
     res.json({ ok: true, syndicated_urls: urls.length, results });
   });
+  const { attachMissionControlRoutes } = require('./mission-control');
+  attachMissionControlRoutes(app, cfg, store);
 }
 
 module.exports = { attachAutonomousGrowthEngine, getAllGrowthUrls, getGrowthConfig };
