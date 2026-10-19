@@ -320,9 +320,16 @@ function buildClientRuntimeScript(cfg) {
     }
   } catch (_) {}
 
+  try {
+    window.__ebVid = localStorage.getItem('vs_vid') || ('v_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36));
+    localStorage.setItem('vs_vid', window.__ebVid);
+    window.__ebSid = sessionStorage.getItem('vs_sid') || ('s_' + Math.random().toString(36).slice(2, 10));
+    sessionStorage.setItem('vs_sid', window.__ebSid);
+  } catch (_) { window.__ebVid = 'v_anon'; window.__ebSid = 's_anon'; }
   window.__ebLogEvent = function(eventType, meta) {
     try {
-      fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: meta || {} }) }).catch(function(){});
+      var m = Object.assign({ vid: window.__ebVid, sid: window.__ebSid, js_hydrated: 1 }, meta || {});
+      fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: m }) }).catch(function(){});
     } catch (_) {}
   };
 
@@ -524,7 +531,6 @@ function buildClientRuntimeScript(cfg) {
       qBar.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:9px 12px;margin:0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
       qBar.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;flex-wrap:wrap;"><div style="display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;"><span style="font-size:12.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Try Sample:</span>' + qChips + '</div><div style="display:inline-flex;align-items:center;gap:6px;flex:1;min-width:170px;"><input type="text" id="' + inId + '" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '" onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain(this.value);}" style="flex:1;min-width:120px;padding:5px 9px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13px;" /><button type="button" onclick="var v=document.getElementById(\\\'' + inId + '\\\').value;window.__ebCompileCustomCurtain(v||window.__ebActiveEntity);var c=document.getElementById(\\\'eb-deliverable-curtain\\\');if(c&&c.scrollIntoView)c.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});" style="padding:5px 11px;border-radius:7px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Check ↵</button><span id="' + rdId + '" style="display:none;font-size:13px;font-weight:700;color:' + CFG.theme.safeColor + ';background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:2px 8px;border-radius:999px;white-space:nowrap;"></span></div></div>'
         + '<form id="' + fmId + '" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'' + emId + '\\\', \\\'' + fmId + '\\\')" style="display:none;"><input type="email" id="' + emId + '" placeholder="' + PERSONA.leadPh + '" /><button type="submit">' + PERSONA.leadBtn + '</button></form>';
-      if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(qBar);
       return qBar;
     };
     if (isPseoOrDir) {
@@ -833,14 +839,13 @@ function buildClientRuntimeScript(cfg) {
   };
 
   try {
-    var paywallLogged = false;
     if ('IntersectionObserver' in window) {
       var obs = window.__ebPaywallObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-          if (entry.isIntersecting && !paywallLogged) { paywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
+          if (entry.isIntersecting && !window.__ebPaywallLogged) { window.__ebPaywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
         });
       }, { threshold: 0.15 });
-      ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-pseo-quick-bar', 'eb-postcalc-inline-cta'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
+      ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-postcalc-inline-cta'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
     }
   } catch (_) {}
 
@@ -935,10 +940,11 @@ function buildClientRuntimeScript(cfg) {
   };
   window.__ebCheckout = function(tier) {
     var cleanTier = typeof tier === 'string' ? tier : 'flash_pass';
-    var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname };
+    var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname, vid: window.__ebVid, sid: window.__ebSid };
     origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); window.location.href = targetUrl || ('/buy/' + encodeURIComponent(cleanTier)); }).catch(function(){ window.location.href = '/buy/' + encodeURIComponent(cleanTier); });
   };
   var __ebBootAll = function() {
+    if (!window.__ebHydratedSent) { window.__ebHydratedSent = true; window.__ebLogEvent('visit_hydrated', { vw: window.innerWidth || 0, vh: window.innerHeight || 0, ref: document.referrer || '' }); }
     window.__ebMountDeliverableCurtain();
     try { var sp = new URLSearchParams(window.location.search || ''), qp = sp.get('q') || sp.get('preset') || sp.get('domain') || sp.get('brand') || sp.get('active'); if (qp) setTimeout(function() { window.__ebCompileCustomCurtain(qp); }, 110); } catch (_) {}
   };

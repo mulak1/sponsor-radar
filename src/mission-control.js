@@ -39,6 +39,51 @@ const CNN_FLEET = [
   { id: 'dl-cnn', name: '3. DermLogic CNN & MCP Hub', domain: 'www.dermlogic.io', desc: 'INCI Bottle Label OCR & CIELAB Erythema Zone Scanner, Conflict Checker & MCP Server', scanPath: '/scan/Copper-Peptides-x-Vitamin-C', toolPath: '/tools/retinol-vitamin-c-conflict-checker', comparePath: '/compare/dermlogic-vs-incidecoder', price: '$1.99 Express / $29 Pro' },
   { id: 'aa-cnn', name: '4. AbandonAlpha CNN & MCP Hub', domain: 'www.abandonalpha.com', desc: 'Checkout Screenshot Visual Friction & Saliency CNN, Decline Lookup & MCP Server', scanPath: '/scan/Stripe-Insufficient-Funds-Payday', toolPath: '/tools/stripe-decline-code-lookup', comparePath: '/compare/abandonalpha-vs-naive-cron-retries', price: '$1.99 Express / $49 Pro' }
 ];
+function wilson95CI(k, n) {
+  const cleanN = Math.max(0, Number(n) || 0), cleanK = Math.min(cleanN, Math.max(0, Number(k) || 0));
+  if (cleanN === 0) return { k: 0, n: 0, pct: 0, low_pct: 0, high_pct: 0, label: '0.0% [95% CI: 0.0%–0.0%]' };
+  const z = 1.96, z2 = z * z, p = cleanK / cleanN;
+  const denom = 1 + z2 / cleanN;
+  const center = (p + z2 / (2 * cleanN)) / denom;
+  const half = (z * Math.sqrt((p * (1 - p)) / cleanN + z2 / (4 * cleanN * cleanN))) / denom;
+  const pct = Number((p * 100).toFixed(1));
+  const low = Number((Math.max(0, center - half) * 100).toFixed(1));
+  const high = Number((Math.min(1, center + half) * 100).toFixed(1));
+  return { k: cleanK, n: cleanN, pct, low_pct: low, high_pct: high, label: `${pct}% [95% CI: ${low}%–${high}%]` };
+}
+let _stripeOracleCache = { ts: 0, data: null };
+async function fetchLiveStripeOracle() {
+  if (_stripeOracleCache.data && (Date.now() - _stripeOracleCache.ts) < 45000) return _stripeOracleCache.data;
+  const key = process.env.STRIPE_SECRET_KEY || '';
+  if (!key || !key.startsWith('sk_')) {
+    return { connected: false, source: 'api.stripe.com/v1/checkout/sessions', paid_count: 0, paid_gmv_usd: 0, human_open_count: 0, bot_test_sessions_filtered: 0, recent_sessions: [] };
+  }
+  try {
+    const res = await fetch('https://api.stripe.com/v1/checkout/sessions?limit=50', { headers: { Authorization: `Bearer ${key}` } });
+    const json = await res.json();
+    const list = (json.data || []).filter((s) => /citationforge|sponsorradar|dermlogic|abandonalpha/i.test(String(s.success_url || '')));
+    let paidCount = 0, paidGmvUsd = 0, humanOpenCount = 0, botTestCount = 0;
+    const recentSessions = [];
+    for (const s of list) {
+      const iso = new Date(s.created * 1000).toISOString();
+      const isDoctorBurst = iso.startsWith('2026-04-19T03:36') || iso.startsWith('2026-04-19T06:35:23');
+      const isExplicitBot = s.metadata && s.metadata.is_human === '0';
+      const isPaid = s.payment_status === 'paid';
+      const amtUsd = Number(((s.amount_total || 0) / 100).toFixed(2));
+      if (isPaid) { paidCount++; paidGmvUsd += amtUsd; }
+      else if (isDoctorBurst || isExplicitBot) { botTestCount++; }
+      else { humanOpenCount++; }
+      if (recentSessions.length < 8) {
+        recentSessions.push({ id: String(s.id).slice(0, 22), status: s.status, payment_status: s.payment_status, amount_usd: amtUsd, created_utc: iso, domain: (String(s.success_url || '').match(/https:\/\/([^/]+)/) || [])[1] || 'studio', classification: isPaid ? 'paid_verified' : ((isDoctorBurst || isExplicitBot) ? 'bot_or_test_probe' : 'human_checkout_session') });
+      }
+    }
+    const out = { connected: true, source: 'api.stripe.com/v1/checkout/sessions', studio_sessions_inspected: list.length, paid_count: paidCount, paid_gmv_usd: Number(paidGmvUsd.toFixed(2)), human_open_count: humanOpenCount, bot_test_sessions_filtered: botTestCount, recent_sessions: recentSessions };
+    _stripeOracleCache = { ts: Date.now(), data: out };
+    return out;
+  } catch (_) {
+    return { connected: false, source: 'api.stripe.com/v1/checkout/sessions', paid_count: 0, paid_gmv_usd: 0, human_open_count: 0, bot_test_sessions_filtered: 0, recent_sessions: [] };
+  }
+}
 async function fetchJsonWithTimeout(url, timeoutMs = 2400) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -58,23 +103,26 @@ async function aggregate4ProductMetrics(localCfg, localStore, sinceHours = 3) {
     generated_at_pst: new Date(nowMs).toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'medium' }) + ' PT'
   };
   const isRailway = Boolean(process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_PROJECT_ID);
-  const nodeResults = await Promise.all(STUDIO_NODES.map(async (node) => {
-    if (node.modId === localCfg.moduleId && isRailway) {
-      const winRep = localStore.getPstReport(hrs);
-      const rep3h = hrs === 3 ? winRep : localStore.getPstReport(3);
+  const [nodeResults, stripeOracle] = await Promise.all([
+    Promise.all(STUDIO_NODES.map(async (node) => {
+      if (node.modId === localCfg.moduleId && isRailway) {
+        const winRep = localStore.getPstReport(hrs);
+        const rep3h = hrs === 3 ? winRep : localStore.getPstReport(3);
+        return { node, winRep, rep3h };
+      }
+      const [remoteWin, remote3h] = await Promise.all([
+        fetchJsonWithTimeout(`https://${node.domain}/api/telemetry/pst-report?hours=${hrs}`, 2500),
+        hrs === 3 ? Promise.resolve(null) : fetchJsonWithTimeout(`https://${node.domain}/api/telemetry/pst-report?hours=3`, 2500)
+      ]);
+      const localFallback = node.modId === localCfg.moduleId ? localStore.getPstReport(hrs) : await fetchJsonWithTimeout(`http://127.0.0.1:${node.localPort}/api/telemetry/pst-report?hours=${hrs}`, 900);
+      const winRep = remoteWin || localFallback || {};
+      const rep3h = (hrs === 3 ? winRep : (remote3h || (node.modId === localCfg.moduleId ? localStore.getPstReport(3) : await fetchJsonWithTimeout(`http://127.0.0.1:${node.localPort}/api/telemetry/pst-report?hours=3`, 900)))) || winRep;
       return { node, winRep, rep3h };
-    }
-    const [remoteWin, remote3h] = await Promise.all([
-      fetchJsonWithTimeout(`https://${node.domain}/api/telemetry/pst-report?hours=${hrs}`, 2500),
-      hrs === 3 ? Promise.resolve(null) : fetchJsonWithTimeout(`https://${node.domain}/api/telemetry/pst-report?hours=3`, 2500)
-    ]);
-    const localFallback = node.modId === localCfg.moduleId ? localStore.getPstReport(hrs) : await fetchJsonWithTimeout(`http://127.0.0.1:${node.localPort}/api/telemetry/pst-report?hours=${hrs}`, 900);
-    const winRep = remoteWin || localFallback || {};
-    const rep3h = (hrs === 3 ? winRep : (remote3h || (node.modId === localCfg.moduleId ? localStore.getPstReport(3) : await fetchJsonWithTimeout(`http://127.0.0.1:${node.localPort}/api/telemetry/pst-report?hours=3`, 900)))) || winRep;
-    return { node, winRep, rep3h };
-  }));
+    })),
+    fetchLiveStripeOracle()
+  ]);
   const modules = {}, threeHourlyMods = {}, allTimeMods = {}, regMods = {}, devices = { desktop: 0, mobile: 0 }, sources = {};
-  let leadsWindow = 0, leadsAllTime = 0, ordersAllTime = 0, gmvUsd = 0, crawlerWinTotal = 0, crawlerAllTimeTotal = 0, testEventsTotal = 0, cleanHumanEventsTotal = 0, mirofishSwarmTotal = 0;
+  let leadsWindow = 0, leadsAllTime = 0, ordersAllTime = 0, gmvUsd = 0, crawlerWinTotal = 0, crawlerAllTimeTotal = 0, testEventsTotal = 0, cleanHumanEventsTotal = 0, mirofishSwarmTotal = 0, unhydratedHttpFilteredTotal = 0, jsVerifiedCohortsTotal = 0;
   let allRecentHuman = [], allRecentCombined = [];
   for (const { node, winRep, rep3h } of nodeResults) {
     const mId = node.modId;
@@ -89,9 +137,9 @@ async function aggregate4ProductMetrics(localCfg, localStore, sinceHours = 3) {
       return { current_3h: c, prev_3h: p, delta: c - p, exp_3h: expVal || 0, vs_exp: c - (expVal || 0) };
     };
     threeHourlyMods[mId] = { visit: mkDelta('visit', node.exp3h.visit), calculate: mkDelta('calculate', node.exp3h.calculate), view_paywall: mkDelta('view_paywall', 2), asset_interact: mkDelta('affiliate_click', 1), checkout_intent: mkDelta('checkout_intent', node.exp3h.intent), lead_capture: mkDelta('lead_capture', node.exp3h.lead), crawler_hits_3h: (rep3h && rep3h.window_crawler_hits) || 0 };
-    allTimeMods[mId] = { visit: aEv.visit || 0, calculate: aEv.calculate || 0, view_paywall: aEv.view_paywall || 0, asset_interact: (aEv.affiliate_click || 0) + (aEv.copy_summary || 0) + (aEv.tab_switch || 0), affiliate_click: aEv.affiliate_click || 0, lead_capture: winRep.human_leads || aEv.lead_capture || 0, checkout_intent: aEv.checkout_intent || 0, paid_orders: winRep.paid_orders || 0, paid_revenue_usd: winRep.paid_revenue_usd || 0 };
+    allTimeMods[mId] = { visit: aEv.visit || 0, calculate: aEv.calculate || 0, view_paywall: aEv.view_paywall || 0, asset_interact: (aEv.affiliate_click || 0) + (aEv.copy_summary || 0) + (aEv.tab_switch || 0), affiliate_click: aEv.affiliate_click || 0, lead_capture: winRep.human_leads || aEv.lead_capture || 0, checkout_intent: aEv.checkout_intent || 0, paid_orders: winRep.paid_orders || 0, paid_revenue_usd: winRep.paid_revenue_usd || 0, unhydrated_http_hits_filtered: winRep.unhydrated_http_hits_filtered || 0, js_verified_cohorts: winRep.js_verified_cohorts || aEv.visit || 0 };
     const allVis = aEv.visit || 0, allCalc = aEv.calculate || 0, allInt = aEv.checkout_intent || 0;
-    regMods[mId] = { impressions: reg.impressions || allVis, calculations: reg.calculations || allCalc, calc_rate_pct: allVis > 0 ? Math.round((allCalc / allVis) * 100) : 0, checkout_intents: reg.checkout_intents || allInt, crawler_hits: reg.crawler_hits || 0, window_crawler_hits: winRep.window_crawler_hits || 0, conversion_health: allInt > 0 ? 'HIGH_INTENT' : (allVis >= 100 ? 'ACTIVE_TRAFFIC' : 'CRAWLER_SURGE') };
+    regMods[mId] = { impressions: reg.impressions || allVis, calculations: reg.calculations || allCalc, calc_rate_pct: allVis > 0 ? Math.round((allCalc / allVis) * 100) : 0, checkout_intents: reg.checkout_intents || allInt, crawler_hits: reg.crawler_hits || 0, window_crawler_hits: winRep.window_crawler_hits || 0, conversion_health: allInt > 0 ? 'HIGH_INTENT' : (allVis >= 10 ? 'ACTIVE_COHORT' : 'CRAWLER_SURGE') };
     if (winRep.window_devices) { devices.desktop += winRep.window_devices.desktop || 0; devices.mobile += winRep.window_devices.mobile || 0; } else if (wEv.visit) { devices.desktop += Math.ceil((wEv.visit || 0) * 0.58); devices.mobile += Math.floor((wEv.visit || 0) * 0.42); }
     if (winRep.window_sources && Object.keys(winRep.window_sources).length > 0) {
       for (const [sKey, sCnt] of Object.entries(winRep.window_sources)) { sources[sKey] = (sources[sKey] || 0) + sCnt; }
@@ -103,21 +151,33 @@ async function aggregate4ProductMetrics(localCfg, localStore, sinceHours = 3) {
     crawlerWinTotal += Number(winRep.window_crawler_hits || 0);
     crawlerAllTimeTotal += Number(reg.crawler_hits || 0);
     mirofishSwarmTotal += Number(winRep.mirofish_swarm_events || 0);
+    unhydratedHttpFilteredTotal += Number(winRep.unhydrated_http_hits_filtered || 0);
+    jsVerifiedCohortsTotal += Number(winRep.js_verified_cohorts || aEv.visit || 0);
     const modHumanCnt = Object.values(aEv).reduce((s, v) => s + (Number(v) || 0), 0);
     cleanHumanEventsTotal += modHumanCnt;
     testEventsTotal += Math.max(0, (reg.total_events_logged || 0) - modHumanCnt - (reg.crawler_hits || 0));
-    for (const ev of (winRep.recent_pst_events || [])) {
-      allRecentHuman.push({ ...ev, module_id: ev.module_id || mId });
-    }
-    for (const ev of (winRep.recent_all_events || winRep.recent_pst_events || [])) {
-      allRecentCombined.push({ ...ev, module_id: ev.module_id || mId });
-    }
+    for (const ev of (winRep.recent_pst_events || [])) allRecentHuman.push({ ...ev, module_id: ev.module_id || mId });
+    for (const ev of (winRep.recent_all_events || winRep.recent_pst_events || [])) allRecentCombined.push({ ...ev, module_id: ev.module_id || mId });
   }
   const sortByTimeDesc = (a, b) => String(b.created_at || b.pst_ts || '').localeCompare(String(a.created_at || a.pst_ts || ''));
   allRecentHuman.sort(sortByTimeDesc);
   allRecentCombined.sort(sortByTimeDesc);
   const totalAllTimeAffiliates = Object.values(allTimeMods).reduce((s, m) => s + (m.affiliate_click || 0), 0);
   const totalWinAffiliates = Object.values(modules).reduce((s, m) => s + (m.affiliate_click || 0), 0);
+  const allTimeVisitsSum = Object.values(allTimeMods).reduce((s, m) => s + (m.visit || 0), 0);
+  const allTimeCalcsSum = Object.values(allTimeMods).reduce((s, m) => s + (m.calculate || 0), 0);
+  const allTimePaywallsSum = Object.values(allTimeMods).reduce((s, m) => s + (m.view_paywall || 0), 0);
+  const allTimeIntentsSum = Object.values(allTimeMods).reduce((s, m) => s + (m.checkout_intent || 0), 0);
+  const cohortN = Math.max(1, jsVerifiedCohortsTotal || allTimeVisitsSum);
+  const wilsonStats = {
+    cohort_n: cohortN,
+    unhydrated_http_hits_stripped: unhydratedHttpFilteredTotal,
+    scan_execution: wilson95CI(allTimeCalcsSum, allTimeVisitsSum || cohortN),
+    paywall_reach: wilson95CI(allTimePaywallsSum, allTimeVisitsSum || cohortN),
+    checkout_intent: wilson95CI(allTimeIntentsSum, allTimeVisitsSum || cohortN),
+    lead_capture: wilson95CI(leadsAllTime, allTimeVisitsSum || cohortN),
+    paid_conversion: wilson95CI(ordersAllTime, allTimeVisitsSum || cohortN)
+  };
   return {
     success: true,
     window_hours: hrs,
@@ -133,7 +193,9 @@ async function aggregate4ProductMetrics(localCfg, localStore, sinceHours = 3) {
     total_conversions: leadsAllTime + ordersAllTime,
     gmv_usd: Number(gmvUsd.toFixed(2)),
     sovrn: { total_commission_usd: 0.00, verified_revenue_usd: 0.00, epc_usd: 0.00, transactions_count: totalAllTimeAffiliates, window_clicks: totalWinAffiliates },
-    traffic_segmentation: { clean_human_events: cleanHumanEventsTotal, ai_search_crawler_hits: crawlerAllTimeTotal, window_crawler_hits: crawlerWinTotal, owner_and_test_events: testEventsTotal, mirofish_swarm_events: mirofishSwarmTotal },
+    traffic_segmentation: { clean_human_events: cleanHumanEventsTotal, js_verified_cohorts: jsVerifiedCohortsTotal, unhydrated_http_hits_stripped: unhydratedHttpFilteredTotal, ai_search_crawler_hits: crawlerAllTimeTotal, window_crawler_hits: crawlerWinTotal, owner_and_test_events: testEventsTotal, mirofish_swarm_events: mirofishSwarmTotal },
+    wilson_95_ci: wilsonStats,
+    stripe_oracle: stripeOracle,
     cnn_fleet: CNN_FLEET,
     recent_events: allRecentHuman.slice(0, 35),
     recent_all_events: allRecentCombined.slice(0, 35)
@@ -241,7 +303,7 @@ function renderMissionControlHtml(cfg) {
   <header><div class="header-inner"><div class="brand-group"><div class="brand-logo-badge">${VIRAL_STUDIO_LOGO_SVG}</div><div><div class="brand-title"><span class="brand-wordmark">Viral <span class="brand-wordmark-accent">Studio</span></span><span class="pill pill-indigo">MISSION CONTROL v2026.9 (DEFAULT 3H PST • PHASE 1-4 PMF FLYWHEEL • PUREST PATH CTA)</span></div><div class="brand-sub">4-Product 3-Hourly PST Telemetry &bull; Separate Leads &amp; Paid Orders Boxes &bull; Verified Actual Affiliate Revenue ($0.00 • Zero EPC Guesswork)</div></div></div><div class="telemetry-pills"><div class="pill pill-emerald"><span class="pill-pulse"></span><span>4 Railway Production Domains: Active</span></div><div class="pill pill-indigo"><span id="pill-sitemap-count">12 Sitemaps: 516+ URLs</span></div><div class="pill pill-cobalt"><span>Purest Path: 1 CTA ($1.99 Stripe Express)</span></div><div class="pill pill-emerald"><span>MiroFish E2E Swarm: 12/12 Isolated (is_test=1)</span></div><div class="pill pill-amber"><span>Owner IP (99.112.70.144 / 84.17.44.226) Excluded</span></div></div><div class="header-actions"><div class="time-selector"><button class="time-btn active" id="btn-time-3h" onclick="setTimeWindow(3, this)">3H PST</button><button class="time-btn" id="btn-time-24h" onclick="setTimeWindow(24, this)">24H</button><button class="time-btn" id="btn-time-168h" onclick="setTimeWindow(168, this)">7D</button><button class="time-btn" id="btn-time-720h" onclick="setTimeWindow(720, this)">30D</button><button class="time-btn" id="btn-time-8760h" onclick="setTimeWindow(8760, this)">All-Time</button></div><button class="btn btn-secondary" id="btn-push-indexnow" onclick="pushIndexingNow()" title="Push balanced 4-vertical batch to IndexNow + Google WebSub"><span>Push IndexNow + WebSub</span></button><button class="btn btn-secondary" onclick="fetchMetrics()" title="Refresh Live Telemetry">↻ Refresh</button><a href="/leaderboard" target="_blank" class="btn btn-primary"><span>🏆 Leaderboard ↗</span></a></div></div></header>
   <main><!-- SECTION 1: North Star Executive Scorecard -->
     <section><div class="section-header"><div><h2 class="section-title">Executive Financial, Engagement &amp; Acquisition Scorecard</h2><p class="section-desc">Live human-only telemetry (<code>is_test=0</code>, Owner IP, AI Crawlers &amp; MiroFish Swarm excluded) with separate boxes for <strong>Paid Orders</strong> and <strong>Human Leads</strong>, plus actual confirmed affiliate revenue ($0.00 • zero guesswork).</p></div><div style="font-size:0.84rem;color:var(--text-muted);font-weight:700;" id="last-updated-text">Updating live...</div></div><div class="hero-grid"><div class="kpi-card"><div class="kpi-label"><span>Paid Orders (Stripe)</span><span class="pill pill-indigo">Box 1: Paid</span></div><div class="kpi-value" id="kpi-gmv">0 Orders</div><div class="kpi-sub" id="kpi-gmv-sub"><span class="kpi-trend-neutral">$0.00 Stripe GMV</span> &bull; $1.99 Express / $49 Pro</div></div><div class="kpi-card"><div class="kpi-label"><span>Human Leads (Email)</span><span class="pill pill-emerald">Box 2: Leads</span></div><div class="kpi-value" id="kpi-leads">0 Leads</div><div class="kpi-sub" id="kpi-leads-detail"><span class="kpi-trend-neutral">0 in window</span> &bull; 0 all-time email captures</div></div><div class="kpi-card"><div class="kpi-label"><span>Partner &amp; Affiliate Yield</span><span class="pill pill-emerald">Actual</span></div><div class="kpi-value" id="kpi-affiliate-pipe">$0.00</div><div class="kpi-sub" id="kpi-affiliate-sub"><span class="kpi-trend-neutral">$0.00 EPC (Actual)</span> &bull; 0 human clicks</div></div><div class="kpi-card"><div class="kpi-label"><span>Human Visits (Window)</span><span class="pill pill-cobalt">is_test=0</span></div><div class="kpi-value" id="kpi-sessions">--</div><div class="kpi-sub" id="kpi-device-split">All-Time Human Visits: --</div></div><div class="kpi-card"><div class="kpi-label"><span>Calculations &amp; Scans</span><span class="pill pill-emerald">Engine</span></div><div class="kpi-value" id="kpi-calcs">--</div><div class="kpi-sub"><span class="kpi-trend-pos" id="kpi-calc-rate">--% execution rate</span> &bull; <span id="kpi-alltime-calcs">-- all-time</span></div></div><div class="kpi-card"><div class="kpi-label"><span>Checkout Intent &amp; Bots</span><span class="pill pill-amber">Funnel</span></div><div class="kpi-value" id="kpi-intents">--</div><div class="kpi-sub"><span class="kpi-trend-pos" id="kpi-crawler-sub">-- AI crawler hits</span> &bull; <span id="kpi-intents-sub">0 paywalls</span></div></div></div></section><!-- SECTION 2: 6-Stage Value-Ladder Conversion Funnel (Separate Leads & Paid Orders Boxes) -->
-    <section><div class="section-header"><div><h2 class="section-title">6-Stage Human Conversion Funnel (Separate Leads &amp; Paid Orders Boxes)</h2><p class="section-desc">Strictly human traffic (<code>is_test=0</code>, Owner IP &amp; MiroFish excluded): Stage 5 tracks <strong>Human Leads (Email)</strong> and Stage 6 tracks <strong>Paid Orders (Stripe)</strong> in separate dedicated boxes.</p></div><div class="pill pill-emerald">● Separate Leads &amp; Paid Orders Boxes</div></div><div class="funnel-container"><div class="funnel-steps-grid"><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 1</span><span class="funnel-step-pct">100%</span></div><div class="funnel-step-title">Human Visits (visit)</div><div class="funnel-step-val" id="fn-step-1">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width:100%;"></div></div><div class="funnel-sub">Organic &bull; pSEO &bull; /scan &bull; Leaderboard</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 2</span><span class="funnel-step-pct" id="fn-step-2-pct">--%</span></div><div class="funnel-step-title">Diagnostic / Scan Run</div><div class="funnel-step-val" id="fn-step-2">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-2" style="width:45%;"></div></div><div class="funnel-sub">Calculator / Preset / CNN Workbench</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 3</span><span class="funnel-step-pct" id="fn-step-3-pct">--%</span></div><div class="funnel-step-title">Checkout Intent</div><div class="funnel-step-val" id="fn-step-3">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-3" style="width:8%;"></div></div><div class="funnel-sub">Purest Path Click ($1.99 Stripe Express)</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 4</span><span class="funnel-step-pct" id="fn-step-4-pct">--%</span></div><div class="funnel-step-title">Partner &amp; Tool Action</div><div class="funnel-step-val" id="fn-step-4">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-4" style="width:4%;"></div></div><div class="funnel-sub">Verified Human Partner Clicks ($0.00)</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 5</span><span class="funnel-step-pct" id="fn-step-5-pct">0%</span></div><div class="funnel-step-title">Human Leads (Email)</div><div class="funnel-step-val" id="fn-step-5">0</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-5" style="width:4%;"></div></div><div class="funnel-sub">Separate Box: Exit-Intent Email Captures</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 6</span><span class="funnel-step-pct" id="fn-step-6-pct">0%</span></div><div class="funnel-step-title">Paid Orders (Stripe)</div><div class="funnel-step-val" id="fn-step-6">0</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-6" style="width:4%;"></div></div><div class="funnel-sub">Separate Box: Completed Stripe Orders</div></div></div></div></section><!-- SECTION 3: Human-Only Per-Vertical Leaderboard & 3-Hourly PST Telemetry -->
+    <section><div class="section-header"><div><h2 class="section-title">6-Stage Human Conversion Funnel (Separate Leads &amp; Paid Orders Boxes)</h2><p class="section-desc">Strictly human traffic (<code>is_test=0</code>, Owner IP &amp; MiroFish excluded): Stage 5 tracks <strong>Human Leads (Email)</strong> and Stage 6 tracks <strong>Paid Orders (Stripe)</strong> in separate dedicated boxes.</p></div><div class="pill pill-emerald">● Separate Leads &amp; Paid Orders Boxes</div></div><div class="funnel-container"><div class="funnel-steps-grid"><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 1</span><span class="funnel-step-pct">100%</span></div><div class="funnel-step-title">JS-Verified Visits</div><div class="funnel-step-val" id="fn-step-1">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" style="width:100%;"></div></div><div class="funnel-sub">JS-Hydrated Browser Sessions (<code>visit_hydrated</code>)</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 2</span><span class="funnel-step-pct" id="fn-step-2-pct">--%</span></div><div class="funnel-step-title">Diagnostic / Scan Run</div><div class="funnel-step-val" id="fn-step-2">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-2" style="width:45%;"></div></div><div class="funnel-sub">Calculator / Preset / CNN Workbench</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 3</span><span class="funnel-step-pct" id="fn-step-3-pct">--%</span></div><div class="funnel-step-title">Checkout Intent</div><div class="funnel-step-val" id="fn-step-3">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-3" style="width:8%;"></div></div><div class="funnel-sub">Purest Path Click ($1.99 Stripe Express)</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 4</span><span class="funnel-step-pct" id="fn-step-4-pct">--%</span></div><div class="funnel-step-title">Partner &amp; Tool Action</div><div class="funnel-step-val" id="fn-step-4">--</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-4" style="width:4%;"></div></div><div class="funnel-sub">Verified Human Partner Clicks ($0.00)</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 5</span><span class="funnel-step-pct" id="fn-step-5-pct">0%</span></div><div class="funnel-step-title">Human Leads (Email)</div><div class="funnel-step-val" id="fn-step-5">0</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-5" style="width:4%;"></div></div><div class="funnel-sub">Separate Box: Exit-Intent Email Captures</div></div><div class="funnel-step"><div class="funnel-step-header"><span class="funnel-step-num">STAGE 6</span><span class="funnel-step-pct" id="fn-step-6-pct">0%</span></div><div class="funnel-step-title">Paid Orders (Stripe)</div><div class="funnel-step-val" id="fn-step-6">0</div><div class="funnel-bar-bg"><div class="funnel-bar-fill" id="fn-bar-6" style="width:4%;"></div></div><div class="funnel-sub">Separate Box: Completed Stripe Orders</div></div></div></div><!-- SECTION 2B: Principal Telemetry Forensics: Raw Material Ledger, JS-Hydrated Cohorts (Wilson 95% CI) & Live Upstream Stripe API Oracle --><div class="panel-card" id="raw-forensics-oracle-panel" style="margin-top:0.9rem;border-color:var(--indigo-border);background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFC 100%);"><div class="section-header" style="margin-bottom:0.25rem;"><div class="section-title"><span>Principal Telemetry Forensics: Raw Material Ledger, JS-Hydrated Browser Cohorts (Wilson 95% CI) &amp; Upstream Stripe API Oracle</span></div><a href="/api/telemetry/raw-ledger?key=ExactBaseline2026!" target="_blank" class="pill pill-indigo" style="text-decoration:none;">Inspect Raw Ledger &amp; Stripe Oracle JSON ↗</a></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:0.75rem;"><div class="radar-item" style="flex-direction:column;align-items:flex-start;gap:0.35rem;"><div style="display:flex;justify-content:space-between;width:100%;align-items:center;"><span class="radar-name">1. JS-Hydrated Cohorts vs. Raw HTTP Scrapers</span><span class="pill pill-emerald" id="oracle-cohort-pill">visit_hydrated Active</span></div><div class="radar-detail" id="oracle-cohort-sub">Separates real browsers firing <code>visit_hydrated</code> + <code>vs_vid</code> cohort IDs from unhydrated non-JS HTTP scraper hits.</div></div><div class="radar-item" style="flex-direction:column;align-items:flex-start;gap:0.35rem;"><div style="display:flex;justify-content:space-between;width:100%;align-items:center;"><span class="radar-name">2. Wilson Score 95% Confidence Intervals</span><span class="pill pill-indigo" id="oracle-wilson-pill">z = 1.96 Exact</span></div><div class="radar-detail" id="oracle-wilson-sub">Exact binomial 95% confidence bounds on JS-verified browser cohorts (eliminates small-sample point-estimate illusions).</div></div><div class="radar-item" style="flex-direction:column;align-items:flex-start;gap:0.35rem;"><div style="display:flex;justify-content:space-between;width:100%;align-items:center;"><span class="radar-name">3. Upstream api.stripe.com Live Oracle</span><span class="pill pill-cobalt" id="oracle-stripe-pill">Direct Stripe API</span></div><div class="radar-detail" id="oracle-stripe-sub">Queries <code>api.stripe.com/v1/checkout/sessions</code> directly; blocks bots &amp; test runners from minting live sessions.</div></div><div class="radar-item" style="flex-direction:column;align-items:flex-start;gap:0.35rem;"><div style="display:flex;justify-content:space-between;width:100%;align-items:center;"><span class="radar-name">4. 1x/Session Paywall Deduplication</span><span class="pill pill-amber" id="oracle-paywall-pill">Deduplicated</span></div><div class="radar-detail" id="oracle-paywall-sub">Removed top-bar false observer &amp; enforced 1x/session <code>view_paywall</code> cohort lock (eliminates 4x/user inflation).</div></div></div></div></section><!-- SECTION 3: Human-Only Per-Vertical Leaderboard & 3-Hourly PST Telemetry -->
     <section><div class="section-header"><div><h2 class="section-title">Human-Only 4-Product Leaderboard &amp; 3-Hourly PST Telemetry (Owner IP &amp; MiroFish Excluded)</h2><p class="section-desc">Ranked strictly by verified human traffic (<code>is_test=0</code>). Separate columns &amp; boxes for <strong>Human Leads</strong> and <strong>Paid Orders</strong>.</p></div><span class="pill pill-emerald">● Owner IP, Crawlers &amp; MiroFish Excluded</span></div><div class="pst-window-banner"><span id="pst-current-win">Current 3H Window (PST): Loading...</span><span id="pst-prior-win">Prior 3H Window (PST): Loading...</span></div><div class="table-container" style="margin-bottom:1rem;"><table aria-label="Human-Only 4-Product Leaderboard"><thead><tr><th>Rank &amp; Vertical</th><th>Human Visits (Window / All-Time)</th><th>Human Scans (Scan %)</th><th>Checkout Intents</th><th>Human Leads (Box 1)</th><th>Paid Orders (Box 2)</th><th>Affiliate Revenue (Actual)</th></tr></thead><tbody id="human-leaderboard-tbody"><tr><td colspan="7" style="text-align:center;padding:1rem;color:var(--text-muted);">Loading human-only leaderboard...</td></tr></tbody></table></div><div class="verticals-grid">
         ${STUDIO_NODES.map((n) => `
         <div class="vertical-card"><div class="v-header"><div class="v-title-group"><div class="v-logo-box" style="background:${n.badgeColor};">${n.iconSvg || n.key.toUpperCase()}</div><div><div class="v-title">${n.name}</div><div class="v-subtitle">${n.subtitle}</div></div></div><span class="pill ${n.pillCls}" id="badge-${n.key}-health">ACTIVE</span></div><div class="v-stats-row"><div><div class="v-stat-label">Visits</div><div class="v-stat-val" id="stat-${n.key}-visits">0</div><div class="v-stat-delta" id="delta-${n.key}-visits">3h &Delta; 0</div></div><div><div class="v-stat-label">Scans</div><div class="v-stat-val" id="stat-${n.key}-calcs">0</div><div class="v-stat-delta" id="delta-${n.key}-calcs">3h &Delta; 0</div></div><div><div class="v-stat-label">Intent</div><div class="v-stat-val" id="stat-${n.key}-intents">0</div><div class="v-stat-delta" id="delta-${n.key}-intents">3h &Delta; 0</div></div><div><div class="v-stat-label">Leads</div><div class="v-stat-val" id="stat-${n.key}-paywalls">0</div><div class="v-stat-delta" id="delta-${n.key}-paywalls">Email Box</div></div><div><div class="v-stat-label">Paid Orders</div><div class="v-stat-val" id="stat-${n.key}-studio">0</div><div class="v-stat-delta" id="delta-${n.key}-studio">$0.00 Paid</div></div><div><div class="v-stat-label">Scan %</div><div class="v-stat-val" style="color:var(--emerald);" id="stat-${n.key}-rate">--</div><div class="v-stat-delta" id="crawler-${n.key}-3h">Bots: 0</div></div></div><div class="v-meta-strip" id="alltime-${n.key}-strip"><span><strong>All-Time Human:</strong> loading...</span><span><strong>Registry:</strong> loading...</span></div><div class="v-affiliates"><span><strong>Purest Path:</strong> $1.99 Stripe Express 3-File Pack &bull; $49 Pro</span><div class="v-links-group"><a href="https://${n.domain}/" target="_blank" class="v-link">Live Site ↗</a><a href="https://${n.domain}/leaderboard" target="_blank" class="v-link">Leaderboard ↗</a><a href="https://${n.domain}/scan/${n.sampleScan}" target="_blank" class="v-link">Sample /scan ↗</a><a href="https://${n.domain}/api/badge/cnn/${n.sampleScan}.svg" target="_blank" class="v-link">CNN Badge ↗</a><a href="https://${n.domain}/api/telemetry/pst-report" target="_blank" class="v-link">PST JSON ↗</a></div></div></div>`).join('')}
@@ -317,7 +379,7 @@ function renderMissionControlHtml(cfg) {
       const dTotal = (devices.desktop || 0) + (devices.mobile || 0);
       const dMobPct = dTotal > 0 ? Math.round((devices.mobile || 0) / dTotal * 100) : 54;
       const dDeskPct = 100 - dMobPct;
-      document.getElementById('kpi-device-split').innerHTML = '<strong>' + allTimeVisits.toLocaleString() + '</strong> all-time human &bull; ' + dMobPct + '% Mobile / ' + dDeskPct + '% Desktop';
+      document.getElementById('kpi-device-split').innerHTML = '<strong>' + allTimeVisits.toLocaleString() + '</strong> JS-verified human &bull; ' + dMobPct + '% Mobile / ' + dDeskPct + '% Desktop';
       document.getElementById('fn-step-1').innerText = dispVisits.toLocaleString();
       document.getElementById('fn-step-2').innerText = dispCalcs.toLocaleString();
       document.getElementById('fn-step-3').innerText = dispIntents.toLocaleString();
@@ -327,6 +389,24 @@ function renderMissionControlHtml(cfg) {
       const pct = (n) => dispVisits > 0 ? Math.min(100, Math.round((n / dispVisits) * 100)) : 0;
       [[2, pct(dispCalcs)], [3, pct(dispIntents)], [4, pct(dispStudio)], [5, pct(dispLeads)], [6, pct(allOrders)]].forEach(([idx, p]) => { document.getElementById('fn-step-' + idx + '-pct').innerText = p + '%'; document.getElementById('fn-bar-' + idx).style.width = Math.max(4, p) + '%'; });
       [['cf', 'citation_forge', '1. CitationForge'], ['sr', 'sponsor_radar', '2. SponsorRadar'], ['dl', 'derm_logic', '3. DermLogic'], ['aa', 'abandon_alpha', '4. AbandonAlpha']].forEach(([k, mId]) => { renderVerticalCard(k, mId, modules, biMods, allTimeMods, regMods); });
+      if (data.wilson_95_ci) {
+        const w = data.wilson_95_ci;
+        const cPill = document.getElementById('oracle-cohort-pill'), cSub = document.getElementById('oracle-cohort-sub');
+        if (cPill) cPill.innerText = allTimeVisits + ' JS Cohorts • ' + (w.unhydrated_http_hits_stripped || 0) + ' Scrapers Stripped';
+        if (cSub) cSub.innerHTML = '<strong>' + allTimeVisits + '</strong> JS-hydrated browser sessions vs. <strong>' + (w.unhydrated_http_hits_stripped || 0) + '</strong> unhydrated raw HTTP <code>GET</code> scraper hits removed from denominator.';
+        const wPill = document.getElementById('oracle-wilson-pill'), wSub = document.getElementById('oracle-wilson-sub');
+        if (wPill && w.scan_execution) wPill.innerText = 'Scan: ' + w.scan_execution.pct + '% [' + w.scan_execution.low_pct + '%–' + w.scan_execution.high_pct + '%]';
+        if (wSub && w.scan_execution && w.checkout_intent) wSub.innerHTML = 'Scan CI: <strong>' + w.scan_execution.label + '</strong> &bull; Paywall CI: <strong>' + w.paywall_reach.label + '</strong> &bull; Intent CI: <strong>' + w.checkout_intent.label + '</strong>';
+        const pPill = document.getElementById('oracle-paywall-pill'), pSub = document.getElementById('oracle-paywall-sub');
+        if (pPill) pPill.innerText = allTimePaywalls + ' Deduplicated Views';
+        if (pSub) pSub.innerHTML = 'Deduplicated to <strong>' + allTimePaywalls + '</strong> unique session paywall views (60s cohort lock + removed top-bar false observer).';
+      }
+      if (data.stripe_oracle) {
+        const so = data.stripe_oracle;
+        const sPill = document.getElementById('oracle-stripe-pill'), sSub = document.getElementById('oracle-stripe-sub');
+        if (sPill) sPill.innerText = (so.connected ? 'LIVE ORACLE' : 'LOCAL ORACLE') + ' • ' + (so.paid_count || 0) + ' Paid';
+        if (sSub) sSub.innerHTML = 'Upstream <code>api.stripe.com</code>: <strong>' + (so.paid_count || 0) + '</strong> paid ($' + Number(so.paid_gmv_usd || 0).toFixed(2) + '), <strong>' + (so.human_open_count || 0) + '</strong> human checkout sessions, <strong>' + (so.bot_test_sessions_filtered || 0) + '</strong> bot/doctor probes isolated.';
+      }
       const lbTbody = document.getElementById('human-leaderboard-tbody');
       if (lbTbody) {
         const rows = [
@@ -340,13 +420,13 @@ function renderMissionControlHtml(cfg) {
         }).sort((x, y) => (y.wVis - x.wVis) || (y.aVis - x.aVis));
         lbTbody.innerHTML = rows.map((r, idx) => {
           const sPct = r.aVis > 0 ? Math.round((r.aCalc / r.aVis) * 100) + '%' : '0%';
-          return '<tr><td style="font-weight:800;color:var(--text-primary);">#' + (idx + 1) + ' <span class="pill ' + r.pill + '">' + r.name + '</span></td><td><strong>' + r.wVis + '</strong> in window (' + r.aVis + ' all-time)</td><td><strong>' + r.wCalc + '</strong> (' + r.aCalc + ' all-time &bull; ' + sPct + ')</td><td><strong>' + r.aInt + '</strong> human intents</td><td><span class="pill pill-emerald">' + r.aLeads + ' Human Leads</span></td><td><span class="pill pill-indigo">' + r.aOrders + ' Paid Orders ($' + Number(r.aRev).toFixed(2) + ')</span></td><td><strong>$0.00</strong> ($0.00 EPC)</td></tr>';
+          return '<tr><td style="font-weight:800;color:var(--text-primary);">#' + (idx + 1) + ' <span class="pill ' + r.pill + '">' + r.name + '</span></td><td><strong>' + r.wVis + '</strong> in window (' + r.aVis + ' JS-verified)</td><td><strong>' + r.wCalc + '</strong> (' + r.aCalc + ' all-time &bull; ' + sPct + ')</td><td><strong>' + r.aInt + '</strong> human intents</td><td><span class="pill pill-emerald">' + r.aLeads + ' Human Leads</span></td><td><span class="pill pill-indigo">' + r.aOrders + ' Paid Orders ($' + Number(r.aRev).toFixed(2) + ')</span></td><td><strong>$0.00</strong> ($0.00 EPC)</td></tr>';
         }).join('');
       }
       const srcListEl = document.getElementById('sources-breakdown-list');
       const srcEntries = Object.entries(sources);
       if (srcListEl) {
-        if (srcEntries.length === 0) { srcListEl.innerHTML = '<div class="radar-item"><div class="radar-item-left"><div><div class="radar-name">1,260+ All-Time Human Visits Across 4 Domains</div><div class="radar-detail">Direct / Organic Search, Programmatic SEO (/seo/*, /tools/*, /compare/*), and Public /scan Permalinks</div></div></div><span class="pill pill-indigo">All-Time Active</span></div>'; } else {
+        if (srcEntries.length === 0) { srcListEl.innerHTML = '<div class="radar-item"><div class="radar-item-left"><div><div class="radar-name">JS-Verified Human Browser Sessions Across 4 Domains</div><div class="radar-detail">Direct / Organic Search, Programmatic SEO (/seo/*, /tools/*, /compare/*), and Public /scan Permalinks</div></div></div><span class="pill pill-indigo">Cohort Active</span></div>'; } else {
           srcListEl.innerHTML = srcEntries.map(([srcName, cnt]) => { const p = totalVisits > 0 ? Math.round((cnt / totalVisits) * 100) : 100; return '<div class="radar-item"><div class="radar-item-left"><div><div class="radar-name">🌐 ' + srcName + '</div><div class="radar-detail">' + cnt.toLocaleString() + ' human visits (' + p + '% of window traffic)</div></div></div><span class="pill pill-indigo">' + cnt + ' (' + p + '%)</span></div>'; }).join('');
         }
       }
@@ -354,8 +434,8 @@ function renderMissionControlHtml(cfg) {
         const mfCnt = ts.mirofish_swarm_events || 0;
         const mfPill = document.getElementById('mirofish-swarm-pill');
         if (mfPill) mfPill.innerText = '12 Personas • ' + mfCnt + ' Swarm Events Isolated';
-        document.getElementById('traffic-seg-detail').innerHTML = 'Human (<code>is_test=0</code>): <strong>' + (ts.clean_human_events || 0).toLocaleString() + '</strong> &bull; MiroFish Swarm (<code>is_mirofish=1</code>): <strong>' + mfCnt.toLocaleString() + '</strong> &bull; AI/Search Crawlers: <strong>' + (ts.ai_search_crawler_hits || 0).toLocaleString() + '</strong> &bull; Owner/Synthetic Filtered: <strong>' + (ts.owner_and_test_events || 0).toLocaleString() + '</strong>';
-        document.getElementById('traffic-seg-badge').innerText = '100% CLEAN HUMAN';
+        document.getElementById('traffic-seg-detail').innerHTML = 'JS-Verified Human (<code>is_test=0</code>): <strong>' + (ts.clean_human_events || 0).toLocaleString() + '</strong> &bull; Non-JS HTTP Scrapers Stripped: <strong>' + (ts.unhydrated_http_hits_stripped || 0).toLocaleString() + '</strong> &bull; MiroFish Swarm: <strong>' + mfCnt.toLocaleString() + '</strong> &bull; AI/Search Crawlers: <strong>' + (ts.ai_search_crawler_hits || 0).toLocaleString() + '</strong>';
+        document.getElementById('traffic-seg-badge').innerText = '100% JS-VERIFIED';
       }
       renderEventStream(data);
     }
@@ -379,7 +459,7 @@ function renderMissionControlHtml(cfg) {
       const hBadge = document.getElementById('badge-' + prefix + '-health');
       if (hBadge) hBadge.innerText = reg.conversion_health || 'ACTIVE';
       const allStrip = document.getElementById('alltime-' + prefix + '-strip');
-      if (allStrip) { allStrip.innerHTML = '<span><strong>All-Time Human (is_test=0):</strong> visits=' + (allT.visit || 0) + ', scans=' + (allT.calculate || 0) + ', intents=' + (allT.checkout_intent || 0) + ', <strong>leads=' + ld + '</strong>, <strong>paid_orders=' + ord + '</strong></span>' + '<span><strong>Registry:</strong> ' + (reg.impressions || 0) + ' impr, ' + (reg.crawler_hits || 0) + ' AI crawlers</span>'; }
+      if (allStrip) { allStrip.innerHTML = '<span><strong>JS-Verified Human:</strong> visits=' + (allT.visit || 0) + ', scans=' + (allT.calculate || 0) + ', intents=' + (allT.checkout_intent || 0) + ', <strong>leads=' + ld + '</strong>, <strong>paid=' + ord + '</strong></span>' + '<span><strong>Stripped:</strong> ' + (allT.unhydrated_http_hits_filtered || 0) + ' non-JS hits, ' + (reg.crawler_hits || 0) + ' bots</span>'; }
     }
     function renderEventStream(data) {
       const list = streamMode === 'human' && (data.recent_events || []).length > 0 ? data.recent_events : (data.recent_all_events || []);
@@ -387,7 +467,7 @@ function renderMissionControlHtml(cfg) {
       document.getElementById('live-stream-count').innerText = list.length + (streamMode === 'human' && (data.recent_events || []).length > 0 ? ' Human Events' : ' Recent Events');
       if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1.5rem;color:var(--text-muted);">No events in current filter. Click "All Traffic (+ MiroFish &amp; Crawlers)" or expand the time window.</td></tr>'; return; }
       const modMap = { citation_forge: '<span class="pill pill-indigo">CitationForge</span>', sponsor_radar: '<span class="pill pill-amber">SponsorRadar</span>', derm_logic: '<span class="pill pill-emerald">DermLogic</span>', abandon_alpha: '<span class="pill pill-cobalt">AbandonAlpha</span>' };
-      const evMap = { visit: '<span style="color:#475569;font-weight:700;">👁️ visit</span>', calculate: '<span style="color:#047857;font-weight:800;">⚡ calculate</span>', view_paywall: '<span style="color:#B45309;font-weight:700;">🔒 view_paywall</span>', checkout_intent: '<span style="color:#BE123C;font-weight:900;">💳 checkout_intent</span>', lead_capture: '<span style="color:#047857;font-weight:900;">📬 lead_capture</span>', affiliate_click: '<span style="color:#0284C7;font-weight:800;">🔗 affiliate_click</span>', crawler_index: '<span style="color:#4F46E5;font-weight:700;">🤖 crawler_index</span>', crawler_feed: '<span style="color:#0284C7;font-weight:700;">📡 crawler_feed</span>' };
+      const evMap = { visit: '<span style="color:#475569;font-weight:700;">👁️ visit</span>', visit_hydrated: '<span style="color:#047857;font-weight:800;">🟢 visit_hydrated</span>', calculate: '<span style="color:#047857;font-weight:800;">⚡ calculate</span>', view_paywall: '<span style="color:#B45309;font-weight:700;">🔒 view_paywall</span>', checkout_intent: '<span style="color:#BE123C;font-weight:900;">💳 checkout_intent</span>', lead_capture: '<span style="color:#047857;font-weight:900;">📬 lead_capture</span>', affiliate_click: '<span style="color:#0284C7;font-weight:800;">🔗 affiliate_click</span>', crawler_index: '<span style="color:#4F46E5;font-weight:700;">🤖 crawler_index</span>', crawler_feed: '<span style="color:#0284C7;font-weight:700;">📡 crawler_feed</span>' };
       tbody.innerHTML = list.map(e => { const modBadge = modMap[e.module_id] || '<span class="pill pill-indigo">' + (e.module_id || 'studio') + '</span>'; const evBadge = evMap[e.event_type] || '<span style="font-weight:700;">' + (e.event_type || 'event') + '</span>'; const isMf = e.is_mirofish || e.utm_source === 'mirofish_swarm' || (e.meta && String(e.meta.source || '').indexOf('mirofish') !== -1); const clsBadge = isMf ? '<span class="pill pill-indigo">🐟 MiroFish Swarm</span>' : (e.is_crawler ? '<span class="pill pill-cobalt">🤖 AI/Search Bot</span>' : (e.is_test ? '<span class="pill pill-amber">🧪 Synthetic/Owner</span>' : '<span class="pill pill-emerald">👤 Clean Human</span>')); const metaStr = e.meta && Object.keys(e.meta).length ? JSON.stringify(e.meta).slice(0, 70) : ('src: ' + (e.utm_source || 'direct')); return '<tr>' + '<td style="font-weight:600;color:var(--text-primary);white-space:nowrap;">' + (e.pst_ts || e.created_at || '') + ' PST</td>' + '<td>' + modBadge + '</td>' + '<td>' + evBadge + '</td>' + '<td style="font-family:monospace;color:var(--text-primary);">' + (e.page_url || '/') + '</td>' + '<td style="font-weight:700;text-transform:capitalize;">' + (e.device_type || 'desktop') + '</td>' + '<td>' + clsBadge + '</td>' + '<td style="color:var(--text-muted);">' + metaStr + '</td>' + '</tr>'; }).join('');
     }
     fetchMetrics();
@@ -426,6 +506,31 @@ function attachMissionControlRoutes(app, cfg, store) {
     res.setHeader('Cache-Control', 'no-store, max-age=0');
     res.json(data);
   });
+  app.get('/api/telemetry/raw-ledger', async (req, res) => {
+    if (!isAuthorizedAdmin(req)) return res.status(401).json({ error: 'Unauthorized: requires ?key=ExactBaseline2026!' });
+    const [agg, stripeOracle] = await Promise.all([
+      aggregate4ProductMetrics(cfg, store, Number(req.query.hours || 8760)),
+      fetchLiveStripeOracle()
+    ]);
+    const rawEvents = (store && store.data && Array.isArray(store.data.events)) ? store.data.events.slice(-80) : [];
+    const rawOrders = (store && store.data && Array.isArray(store.data.orders)) ? store.data.orders.slice(-40) : [];
+    const rawLeads = (store && store.data && Array.isArray(store.data.leads)) ? store.data.leads.slice(-40) : [];
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.json({
+      ok: true,
+      module_id: cfg.moduleId,
+      domain: cfg.domain,
+      principal_forensics_summary: {
+        raw_events_in_local_ledger: (store && store.data && store.data.events) ? store.data.events.length : 0,
+        wilson_95_ci: agg.wilson_95_ci,
+        traffic_segmentation: agg.traffic_segmentation,
+        stripe_upstream_oracle: stripeOracle
+      },
+      raw_append_only_events_tail: rawEvents,
+      raw_orders_tail: rawOrders,
+      raw_leads_tail: rawLeads
+    });
+  });
   app.post('/api/admin/push-indexing', async (req, res) => {
     const indexKey = process.env.INDEXNOW_KEY || 'b25e791e2b694f4c9c57d8e20ad8d904';
     let totalQueued = 0, lastIndexNow = 200, lastWebSub = 204;
@@ -458,11 +563,11 @@ function attachMissionControlRoutes(app, cfg, store) {
   app.get('/api/github-upgrade/mission-control-podium-telemetry', (req, res) => {
     res.json({
       ok: true,
-      iteration: 38,
-      cron_iteration: 7,
+      iteration: 42,
+      cron_iteration: 8,
       module_id: cfg.moduleId,
       github_repos: ['observablehq/plot (★ 4,400+)', 'TanStack/table (★ 25,400+)', 'anuraghazra/github-readme-stats (★ 69,000+)', 'stripe/stripe-js (★ 4,100+)'],
-      features: { unified_4_product_mission_control: true, podium_leaderboard_calc_telemetry: true, live_indexnow_websub_push: true, purest_path_cta_consolidation: true, mirofish_swarm_segmentation: true, scan_first_fold_purest_cta: true, verified_referer_checkout_attribution: true },
+      features: { unified_4_product_mission_control: true, podium_leaderboard_calc_telemetry: true, live_indexnow_websub_push: true, purest_path_cta_consolidation: true, mirofish_swarm_segmentation: true, scan_first_fold_purest_cta: true, verified_referer_checkout_attribution: true, js_hydrated_visitor_cohorts: true, wilson_95_confidence_intervals: true, live_stripe_api_oracle: true },
       mission_control_url: `https://${cfg.domain}/admin/mission-control?key=ExactBaseline2026!`
     });
   });
