@@ -488,9 +488,10 @@ function createTelemetryStore(dataDir, moduleId) {
       const isApiProbeRef = refStr.includes('/api/telemetry') || refStr.includes('/api/meta-capi');
       const mfFlag = (isMirofish || utmSource === 'mirofish_swarm' || String(meta?.source || '').includes('mirofish')) ? 1 : 0;
       const forceTest = (isTest || mfFlag || isOwnerIp || isExcludedOwnerIp(clientIp) || isApiProbeRef) ? 1 : 0;
+      const resolvedDev = (Number(meta?.vw) > 0 && Number(meta?.vw) <= 768) ? 'mobile' : deviceType;
       const inferredSrc = utmSource || (mfFlag ? 'mirofish_swarm' : (refStr.includes('google.') ? 'google_organic' : (refStr.includes('bing.') ? 'bing_organic' : (refStr.includes('chatgpt.') || refStr.includes('openai.') ? 'chatgpt_ai' : (refStr.includes('perplexity.') ? 'perplexity_ai' : (refStr.includes('reddit.') ? 'reddit_social' : (refStr.includes('github.') ? 'github_dev' : '')))))));
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
-      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: inferredSrc, utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
+      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: resolvedDev, utm_source: inferredSrc, utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
       if (state.events.length > 5000) state.events = state.events.slice(-4000);
       if (eventType === 'visit') state.impressions += 1;
       if (eventType === 'calculate') state.calculations += 1;
@@ -519,9 +520,9 @@ function createTelemetryStore(dataDir, moduleId) {
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
       const inferRefSrc = (r) => r.includes('google.') ? 'google_organic' : (r.includes('bing.') ? 'bing_organic' : (r.includes('chatgpt.') || r.includes('openai.') ? 'chatgpt_ai' : (r.includes('perplexity.') ? 'perplexity_ai' : (r.includes('reddit.') ? 'reddit_social' : (r.includes('github.') ? 'github_dev' : '')))));
       const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
-      const jsVerifiedIps = new Set(baseClean.filter((e) => e.event_type !== 'visit' || (e.meta && e.meta.js_hydrated)).map((e) => e.client_ip));
-      const isJsVerifiedHuman = (e) => e.event_type !== 'visit' || jsVerifiedIps.has(e.client_ip) || (nowMs - new Date(e.created_at).getTime() <= 20000);
-      const unhydratedAll = baseClean.filter((e) => e.event_type === 'visit' && !isJsVerifiedHuman(e));
+      const jsVerifiedIps = new Set(baseClean.filter((e) => Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid))).map((e) => e.client_ip));
+      const isJsVerifiedHuman = (e) => (e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)) || (nowMs - new Date(e.created_at).getTime() <= 20000)) : true;
+      const unhydratedAll = baseClean.filter((e) => (e.event_type === 'visit' || e.event_type === 'calculate') && !isJsVerifiedHuman(e));
       const rawCandidates = baseClean.filter(isJsVerifiedHuman);
       const humanEvents = []; const seenPw = new Map(), seenVis = new Map();
       for (const e of rawCandidates) {
@@ -530,12 +531,14 @@ function createTelemetryStore(dataDir, moduleId) {
           const prevEntry = (seenVis.has(ck) && Math.abs(ts - seenVis.get(ck).ts) <= 20000) ? seenVis.get(ck) : ((ipKey && seenVis.has(ipKey) && Math.abs(ts - seenVis.get(ipKey).ts) <= 20000) ? seenVis.get(ipKey) : null);
           if (prevEntry) {
             if (e.meta && Object.keys(e.meta).length > 0) prevEntry.row.meta = { ...(prevEntry.row.meta || {}), ...e.meta };
+            if (Number(e.meta && e.meta.vw) > 0 && Number(e.meta.vw) <= 768) prevEntry.row.device_type = 'mobile';
             const rLower = String((e.meta && e.meta.ref) || '').toLowerCase();
             if ((!prevEntry.row.utm_source || prevEntry.row.utm_source === 'direct') && (e.utm_source || rLower)) prevEntry.row.utm_source = e.utm_source || inferRefSrc(rLower) || prevEntry.row.utm_source;
             continue;
           }
           const rLow = String((e.meta && e.meta.ref) || '').toLowerCase();
-          const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), utm_source: e.utm_source || inferRefSrc(rLow) };
+          const dev = (Number(e.meta && e.meta.vw) > 0 && Number(e.meta.vw) <= 768) ? 'mobile' : e.device_type;
+          const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), device_type: dev, utm_source: e.utm_source || inferRefSrc(rLow) };
           const rec = { ts, row }; seenVis.set(ck, rec); if (ipKey) seenVis.set(ipKey, rec);
           humanEvents.push(row); continue;
         }
@@ -824,6 +827,7 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/nuqs-deeplink-mobile-firstfold', (req, res) => res.json({ ok: true, iteration: 26, module_id: cfg.moduleId, repo: '47ng/nuqs (★ 6,200) + PrismJS/prism (★ 12,300) + observablehq/plot (★ 4,400)', features: { url_query_state_deeplink_hydration: true, mobile_firstfold_interactive_presets: true, symmetrical_doppelrand_diff_inspector_footer: true } }));
   app.get('/api/github-upgrade/tanstack-table-row-gate-qbar', (req, res) => res.json({ ok: true, iteration: 27, module_id: cfg.moduleId, repo: 'TanStack/table (★ 25,400) + TanStack/query (★ 43,800) + 47ng/nuqs (★ 6,200)', features: { symmetrical_2row_qbar_zero_truncation: true, word_boundary_pseo_entity_title: true, interactive_table_row4_unlock_banner: true, non_browser_polling_guard: true } }));
   app.get('/api/github-upgrade/reactive-live-calc-dual-pass', (req, res) => res.json({ ok: true, iteration: 49, module_id: cfg.moduleId, repo: 'hotwired/stimulus (★ 12,400) + alpinejs/alpine (★ 28,900) + stripe/stripe-js (★ 4,200)', features: { reactive_input_auto_calculation: true, visible_99c_micro_pass_anchoring: true, visible_inline_scorecard_email_bar: true, scroll_and_exit_rescue_toast: true } }));
+  app.get('/api/github-upgrade/floating-ui-firstfold-pill', (req, res) => res.json({ ok: true, iteration: 51, module_id: cfg.moduleId, repo: 'floating-ui/floating-ui (★ 31,400) + zenorocha/clipboard.js (★ 34,200) + stripe/stripe-js (★ 4,200)', features: { default_visible_firstfold_score_pill: true, one_tap_firstfold_99c_199_unlock: true, js_hydrated_calculate_bot_guard: true, mobile_viewport_device_attribution: true } }));
 
   // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher (/api/leads/capture, /api/leads/resend-backfill)
   const escMailHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
