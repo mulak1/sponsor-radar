@@ -1,4 +1,5 @@
 const { escapeHtml, renderShell } = require('./views_shell');
+const { maskSponsorEmail } = require('./engine');
 
 function renderDirectoryPage({ brands, shows, seoPages }) {
   const brandPages = seoPages.filter(p => p.page_type === 'brand_breakdown');
@@ -121,6 +122,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
 
 function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPitch }) {
   const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
+  const workbenchQuery = show ? show.name : (brand ? brand.name : page.category);
   const faqItems = [
     {
       q: `How much does ${brand ? brand.name : (show ? show.name : page.category)} spend on podcast and newsletter sponsorships in 2026?`,
@@ -132,7 +134,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
     },
     {
       q: `How do I pitch or buy media based on this ledger?`,
-      a: `Use the pre-built 3-flight pilot email template on this page to contact the partnerships team directly with verified CPM arbitrage and vanity-slug attribution.`
+      a: `Use the pre-built 3-flight pilot quote on this page or open the interactive Audience Reach calculator to price your show and unlock the verified partnerships buyer email ($1.99).`
     }
   ];
 
@@ -151,7 +153,10 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         name: 'SponsorRadar Ad-Spend & 3x-Renewal Analyzer',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
-        offers: { '@type': 'Offer', price: '49.00', priceCurrency: 'USD' }
+        offers: [
+          { '@type': 'Offer', name: '3-File Sponsor Email & Pitch Pack', price: '1.99', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Creator Pro', price: '49.00', priceCurrency: 'USD' }
+        ]
       },
       {
         '@type': 'FAQPage',
@@ -198,7 +203,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
         <div class="kpi-box">
           <div class="kpi-label">PARTNERSHIP CONTACT</div>
-          <div class="kpi-val" style="font-size:14px; color:var(--cyan-info);">${escapeHtml(brand ? brand.sponsor_email : 'partnerships@sponsorradar.io')}</div>
+          <div class="kpi-val mono" style="font-size:13.5px; color:var(--amber-gold);">🔒 ${escapeHtml(brand ? maskSponsorEmail(brand.sponsor_email) : 'Verified Email Locked ($1.99)')}</div>
         </div>
       </div>
 
@@ -206,8 +211,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="panel" style="margin-bottom:28px;">
         <div class="panel-header">
           <span style="font-weight:800;">Verified Ad-Read Timestamps, Promo Codes &amp; 3x-Renewal Velocity</span>
-          <a href="/#radar-tool" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:12.5px;">
-            <span>Open in Live Workbench</span>
+          <a href="/?q=${encodeURIComponent(workbenchQuery)}#radar-tool" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:12.5px;">
+            <span>Calculate Your Show Quote in Live Workbench</span>
             <span class="btn-icon-circle" aria-hidden="true">↗</span>
           </a>
         </div>
@@ -254,10 +259,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="pitch-box" style="margin-bottom:28px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <div>
-            <span class="pill-emerald">READY-TO-SEND 3-FLIGHT PILOT PITCH</span>
+            <span class="pill-emerald">DIAGNOSTIC 3-FLIGHT PILOT QUOTE &amp; LOCKED PITCH PACK</span>
             <span class="mono" style="font-size:13px; color:var(--text-secondary); margin-left:8px;">To: ${escapeHtml(outboundPitch.to_email)} (${escapeHtml(outboundPitch.decision_maker_role)})</span>
           </div>
-          <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier');return false;}" class="btn btn-emerald" style="padding:7px 14px; min-height:36px; font-size:12.5px;">Unlock Full Contact Vault ($49/mo) →</a>
+          <a href="/buy/flash_pass?brand=${encodeURIComponent(brand ? brand.slug : page.slug)}" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass');return false;}" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:12.5px; text-decoration:none;">
+            <span>Unlock Buyer Email &amp; 3-File Pitch Pack ($1.99 Stripe Express) ↗</span>
+          </a>
         </div>
         <pre class="pitch-pre">${escapeHtml('Subject: ' + outboundPitch.subject + '\n\n' + outboundPitch.body)}</pre>
       </div>

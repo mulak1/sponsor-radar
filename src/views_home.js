@@ -1,6 +1,13 @@
 const { escapeHtml, renderBrandLogoSvg, renderShell } = require('./views_shell');
 
-function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts, defaultAnalysis }) {
+function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts, defaultAnalysis, initialQuery = 'Deel', initialReach = 75000 }) {
+  const displayEntity = defaultAnalysis.display_entity || {
+    type: 'brand',
+    name: defaultAnalysis.brand.name,
+    subtitle: `${defaultAnalysis.brand.domain} • ${defaultAnalysis.brand.category}`,
+    lead_role: defaultAnalysis.brand.decision_maker_role,
+    table_title: `VERIFIED SPONSORSHIP PLACEMENTS FOR ${defaultAnalysis.brand.name.toUpperCase()}`
+  };
   const proven3xPlacements = placements.filter(p => p.flights >= 3).slice(0, 12);
   const testPlacements = placements.filter(p => p.flights < 3).slice(0, 6);
   const topPlacements = [...proven3xPlacements, ...testPlacements];
@@ -20,6 +27,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         operatingSystem: 'Web',
         description: 'Autonomous Podcast, Newsletter & YouTube Ad-Read Spend Ledger, 3x-Renewal ROI Detector & Outbound Media-Buying Engine.',
         offers: [
+          { '@type': 'Offer', name: '3-File Sponsor Email & Pitch Pack', price: '1.99', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Creator Pro', price: '49.00', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Media Buyer & Agency Feed', price: '199.00', priceCurrency: 'USD' }
         ]
@@ -66,8 +74,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                 <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Search any brand or show to see monthly ad spend &amp; 3x+ renewal score.</div>
               </div>
               <div class="panel" style="padding:12px;">
-                <div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700; margin-bottom:3px;">STEP 2 • VERIFY ROI</div>
-                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Filter out 1-time test ads and see where brands book 3 to 18 episodes in a row.</div>
+                <div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700; margin-bottom:3px;">STEP 2 • PRICE YOUR SHOW</div>
+                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Click your audience size (10K–500K) to calculate your 3-episode pilot quote.</div>
               </div>
               <div class="panel" style="padding:12px;">
                 <div class="mono" style="font-size:13px; color:var(--text-primary); font-weight:700; margin-bottom:3px;">STEP 3 • UNLOCK PACK</div>
@@ -90,34 +98,34 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               </button>
             </div>
             <pre class="pitch-pre" id="res-pitch-body" style="margin-top:8px;">${escapeHtml(
-              "# SponsorRadar Diagnostic Summary (" + defaultAnalysis.brand.name + ")\n" +
-              "• Verified 3x+ Renewal Score: " + defaultAnalysis.metrics.renewal_velocity_score + "/100 (" + defaultAnalysis.metrics.proven_3x_shows_count + " Proven Shows)\n" +
-              "• Recommended 3-Episode Pilot Quote: $" + defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString() + " ($" + defaultAnalysis.outbound_pitch.effective_cpm_usd + " Effective CPM)\n" +
-              "• Target Buyer Role: " + defaultAnalysis.brand.decision_maker_role + "\n" +
+              "# SponsorRadar Diagnostic Summary (" + displayEntity.name + ")\n" +
+              "• Verified 3x+ Renewal Score: " + defaultAnalysis.metrics.renewal_velocity_score + "/100 (" + defaultAnalysis.metrics.proven_3x_shows_count + " Proven 3x+ Placements)\n" +
+              "• Recommended 3-Episode Pilot Quote (" + (initialReach / 1000).toFixed(0) + "K Reach): $" + defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString() + " ($" + defaultAnalysis.outbound_pitch.effective_cpm_usd + " Effective CPM)\n" +
+              "• Target Buyer Role: " + defaultAnalysis.brand.decision_maker_role + " (" + defaultAnalysis.outbound_pitch.to_email + ")\n" +
               "• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]"
             )}</pre>
           </div>
         </div>
 
-        <!-- Right Column: Clean 1-Input Sponsor & Show Lookup Workbench -->
+        <!-- Right Column: Clean Two-Sided Sponsor & Show Lookup Workbench -->
         <div class="double-bezel" style="display:flex; flex-direction:column; height:100%;">
           <div class="panel" style="display:flex; flex-direction:column; flex:1; height:100%;">
             <div class="panel-header">
               <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                 <span class="pill-vermilion">LIVE SPONSORSHIP CHECKER</span>
-                <span style="font-weight:700; font-size:14.5px;">Search 42+ Brands &amp; 46+ Shows</span>
+                <span style="font-weight:700; font-size:14.5px;">Search Any Brand, Podcast, Newsletter or YouTube Channel</span>
               </div>
-              <span class="pill-emerald">VERIFIED 3x+ LEDGER</span>
+              <span class="pill-emerald" id="res-match-pill">${defaultAnalysis.matched_type === 'show' ? 'SHOW ROSTER MATCH' : (defaultAnalysis.matched_type === 'dynamic_brand' ? 'LIVE DOMAIN MODEL' : 'VERIFIED 3x+ LEDGER')}</span>
             </div>
 
             <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:space-between;">
               <div>
-                <!-- MODE A: CLEAN 1-INPUT BRAND / SHOW LOOKUP -->
+                <!-- MODE A: CLEAN BRAND / SHOW LOOKUP + VISIBLE AUDIENCE REACH QUOTE BAR -->
                 <div id="mode-lookup-pane">
                   <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
                     <div style="flex:1; min-width:220px;">
-                      <label for="lookup-query" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:5px;">ENTER SPONSOR BRAND OR PODCAST / NEWSLETTER</label>
-                      <input id="lookup-query" type="text" class="input-field" value="Deel" required placeholder="e.g. AG1, Deel, Ramp, Linear, Lenny's Podcast..." />
+                      <label for="lookup-query" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:5px;">ENTER SPONSOR BRAND OR PODCAST / NEWSLETTER / YOUTUBE SHOW</label>
+                      <input id="lookup-query" type="text" class="input-field" value="${escapeHtml(initialQuery)}" required placeholder="e.g. AG1, Deel, Lenny's Podcast, Huberman Lab, Stripe..." onkeydown="if(event.key==='Enter'){event.preventDefault();runBrandLookup();}" />
                     </div>
                     <button type="button" id="btn-run-lookup" class="btn btn-vermilion" onclick="runBrandLookup()">
                       <span>Check Sponsor Spend</span>
@@ -127,26 +135,37 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   <div id="lookup-error-msg" class="mono" style="display:none; color:#B9311C; font-size:13px; margin-top:6px;"></div>
 
                   <div class="preset-row" aria-label="1-Click Brand & Show Presets">
-                    <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-muted); align-self:center;">Try Example:</span>
+                    <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted); align-self:center;">Brands:</span>
                     <button type="button" class="preset-chip" onclick="selectBrandPreset('AG1')">AG1 ($1.42M/mo)</button>
                     <button type="button" class="preset-chip" onclick="selectBrandPreset('Deel')">Deel ($680K/mo)</button>
                     <button type="button" class="preset-chip" onclick="selectBrandPreset('Ramp')">Ramp ($790K/mo)</button>
+                    <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted); align-self:center; margin-left:4px;">Shows:</span>
+                    <button type="button" class="preset-chip" onclick="selectBrandPreset('Lenny\\'s Podcast')">🎙️ Lenny's Podcast</button>
+                    <button type="button" class="preset-chip" onclick="selectBrandPreset('Huberman Lab')">🎙️ Huberman Lab</button>
+                    <button type="button" class="preset-chip" onclick="selectBrandPreset('My First Million')">🎙️ My First Million</button>
                   </div>
 
-                  <!-- Progressive Disclosure: Custom Show Reach & Transcript Extractor tucked inside <details> -->
-                  <details style="margin-top:10px; padding:10px 12px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-hairline);">
-                    <summary style="cursor:pointer; font-size:13px; font-weight:700; color:var(--text-secondary);">⚙️ Optional: Customize Your Audience Size or Paste an Ad Transcript ▾</summary>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-                      <div>
-                        <label for="sender-show" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">YOUR SHOW / BRAND</label>
-                        <input id="sender-show" type="text" class="input-field" value="AI & SaaS Builders Weekly" />
-                      </div>
-                      <div>
-                        <label for="sender-reach" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">AUDIENCE REACH</label>
-                        <input id="sender-reach" type="number" class="input-field mono" value="75000" min="500" />
-                      </div>
+                  <!-- Visible 1-Click Creator Audience Size & 3-Flight Pilot Quote Calculator Bar -->
+                  <div style="margin-top:10px; padding:10px 12px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-hairline); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                      <label for="sender-reach" class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary);">YOUR AUDIENCE REACH (3-FLIGHT QUOTE):</label>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(10000)">10K</button>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(25000)">25K</button>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(50000)">50K</button>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(75000)">75K</button>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(150000)">150K</button>
+                      <button type="button" class="preset-chip reach-chip" onclick="setAudienceReach(500000)">500K</button>
                     </div>
-                    <div class="mode-tabs" role="tablist" style="margin-top:10px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <input id="sender-reach" type="number" class="input-field mono" value="${initialReach}" min="500" step="1000" style="width:105px; min-height:32px; padding:4px 8px; font-size:13px;" onchange="runBrandLookup()" />
+                      <input id="sender-show" type="hidden" value="Creator Media Network" />
+                    </div>
+                  </div>
+
+                  <!-- Progressive Disclosure: Transcript Ad-Read Extractor Mode -->
+                  <details style="margin-top:8px; padding:8px 12px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-hairline);">
+                    <summary style="cursor:pointer; font-size:12.5px; font-weight:700; color:var(--text-secondary);">⚙️ Switch to Mode B: Extract Sponsor Reads from Raw Podcast / YouTube Transcript ▾</summary>
+                    <div class="mode-tabs" role="tablist" style="margin-top:8px;">
                       <button type="button" id="tab-mode-lookup" class="mode-tab active" onclick="switchToolMode('lookup')">Mode A: Brand / Show Radar</button>
                       <button type="button" id="tab-mode-transcript" class="mode-tab" onclick="switchToolMode('transcript')">Mode B: Ad-Read Extractor</button>
                     </div>
@@ -181,9 +200,9 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <div id="radar-results-container" style="margin-top:14px; border-top:1px solid var(--border-hairline); padding-top:14px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
                 <div class="kpi-grid">
                   <div class="kpi-box">
-                    <div class="kpi-label">SPONSOR / SHOW</div>
-                    <div class="kpi-val" id="res-brand-name" style="color:var(--text-primary); font-size:18px;">${escapeHtml(defaultAnalysis.brand.name)}</div>
-                    <div class="mono" id="res-brand-domain" style="font-size:13px; color:var(--vermilion);">${escapeHtml(defaultAnalysis.brand.domain)} • ${escapeHtml(defaultAnalysis.brand.category)}</div>
+                    <div class="kpi-label" id="res-entity-label">${displayEntity.type === 'show' ? 'MATCHED CREATOR SHOW' : 'SPONSOR / ENTITY'}</div>
+                    <div class="kpi-val" id="res-brand-name" style="color:var(--text-primary); font-size:18px;">${escapeHtml(displayEntity.name)}</div>
+                    <div class="mono" id="res-brand-domain" style="font-size:13px; color:var(--vermilion);">${escapeHtml(displayEntity.subtitle)}</div>
                   </div>
                   <div class="kpi-box">
                     <div class="kpi-label">EST. MONTHLY AD SPEND</div>
@@ -193,25 +212,25 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   <div class="kpi-box">
                     <div class="kpi-label">3x+ RENEWAL SCORE</div>
                     <div class="kpi-val" id="res-renewal-score" style="color:var(--emerald-roi);">${defaultAnalysis.metrics.renewal_velocity_score}/100</div>
-                    <div class="mono" id="res-flights-summary" style="font-size:13px; color:var(--emerald-roi);">${defaultAnalysis.metrics.proven_3x_shows_count} Proven 3x+ Shows (${defaultAnalysis.metrics.verified_total_flights} Flights)</div>
+                    <div class="mono" id="res-flights-summary" style="font-size:13px; color:var(--emerald-roi);">${defaultAnalysis.metrics.proven_3x_shows_count} Proven 3x+ (${defaultAnalysis.metrics.verified_total_flights} Flights)</div>
                   </div>
                   <div class="kpi-box">
                     <div class="kpi-label">PARTNERSHIPS LEAD</div>
-                    <div class="kpi-val" id="res-dm-role" style="font-size:14.5px; color:var(--text-primary);">${escapeHtml(defaultAnalysis.brand.decision_maker_role)}</div>
-                    <div class="mono" id="res-dm-email" style="font-size:13px; color:var(--amber-gold);">🔒 Verified Email Locked ($1.99)</div>
+                    <div class="kpi-val" id="res-dm-role" style="font-size:14.5px; color:var(--text-primary);">${escapeHtml(displayEntity.lead_role)}</div>
+                    <div class="mono" id="res-dm-email" style="font-size:13px; color:var(--amber-gold);">🔒 ${escapeHtml(defaultAnalysis.outbound_pitch.to_email)}</div>
                   </div>
                 </div>
 
                 <!-- Verified Placements Sub-Table -->
                 <div style="margin:10px 0 8px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                  <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);" id="res-table-title">VERIFIED SPONSORSHIP PLACEMENTS &amp; PROMO CODES</span>
+                  <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);" id="res-table-title">${escapeHtml(displayEntity.table_title)}</span>
                   <span class="pill-emerald" id="res-engine-badge">VERIFIED 3x+ LEDGER</span>
                 </div>
                 <div class="table-wrap" style="margin-top:auto;">
                   <table class="ledger-table">
                     <thead>
                       <tr>
-                        <th>Show / Publication</th>
+                        <th>${displayEntity.type === 'show' ? 'Sponsor Brand → Show' : 'Show / Publication'}</th>
                         <th>Renewal Signal</th>
                         <th>Placement &amp; Timestamp</th>
                         <th>Vanity URL &amp; Code</th>
@@ -222,7 +241,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                       ${defaultAnalysis.placements.map(p => `
                         <tr>
                           <td>
-                            <div style="font-weight:700;">${escapeHtml(p.show_name)}</div>
+                            <div style="font-weight:700;">${displayEntity.type === 'show' && p.brand_name ? `${escapeHtml(p.brand_name)} → ${escapeHtml(p.show_name)}` : escapeHtml(p.show_name)}</div>
                             <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type)} • ${(p.audience_size / 1000).toFixed(0)}K reach</div>
                           </td>
                           <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
@@ -427,6 +446,12 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       document.getElementById('radar-tool').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function setAudienceReach(reachVal) {
+      const reachInput = document.getElementById('sender-reach');
+      if (reachInput) reachInput.value = Number(reachVal) || 75000;
+      runBrandLookup();
+    }
+
     function loadTranscriptPreset(presetId) {
       const found = SAMPLE_TRANSCRIPTS_MAP.find(item => item.id === presetId);
       if (!found) return;
@@ -449,8 +474,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       }
       if (errEl) errEl.style.display = 'none';
 
-      const senderShow = document.getElementById('sender-show').value;
-      const senderReach = document.getElementById('sender-reach').value;
+      const senderShowEl = document.getElementById('sender-show');
+      const senderReachEl = document.getElementById('sender-reach');
+      const senderShow = senderShowEl ? senderShowEl.value : 'Creator Media Network';
+      const senderReach = Math.max(500, Number(senderReachEl ? senderReachEl.value : 75000) || 75000);
       const btn = document.getElementById('btn-run-lookup');
       btn.textContent = 'Scanning...';
       try {
@@ -461,37 +488,66 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             mode: 'lookup',
             query,
             sender_show_name: senderShow,
-            sender_audience_size: Number(senderReach) || 75000
+            sender_audience_size: senderReach
           })
         });
         const data = await res.json();
-        renderLookupResults(data);
-        fireMetaEvent('Lead', 0, { tool_mode: 'lookup', query });
+        renderLookupResults(data, senderReach);
+        try {
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', '/?q=' + encodeURIComponent(query) + '&reach=' + encodeURIComponent(senderReach));
+          }
+          fetch('/api/telemetry/event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_type: 'calculate', route: window.location.pathname, target: query + ' (' + senderReach + ' reach)' })
+          }).catch(() => {});
+        } catch (_) {}
+        fireMetaEvent('Lead', 0, { tool_mode: 'lookup', query, reach: senderReach });
       } catch (e) {
         console.error(e);
       } finally {
-        btn.innerHTML = '<span>Analyze Spend</span><span class="btn-icon-circle" aria-hidden="true">↗</span>';
+        btn.innerHTML = '<span>Check Sponsor Spend</span><span class="btn-icon-circle" aria-hidden="true">↗</span>';
       }
     }
 
-    function renderLookupResults(data) {
+    function renderLookupResults(data, senderReach) {
       if (!data || !data.brand) return;
-      document.getElementById('res-brand-name').textContent = data.brand.name;
-      document.getElementById('res-brand-domain').textContent = data.brand.domain + ' • ' + data.brand.category;
+      const entity = data.display_entity || {
+        type: data.matched_type === 'show' ? 'show' : 'brand',
+        name: data.brand.name,
+        subtitle: data.brand.domain + ' • ' + data.brand.category,
+        lead_role: data.brand.decision_maker_role,
+        table_title: 'VERIFIED AD-READ PLACEMENTS FOR ' + data.brand.name.toUpperCase()
+      };
+      const labelEl = document.getElementById('res-entity-label');
+      if (labelEl) labelEl.textContent = entity.type === 'show' ? 'MATCHED CREATOR SHOW' : 'SPONSOR / ENTITY';
+      const matchPillEl = document.getElementById('res-match-pill');
+      if (matchPillEl) {
+        matchPillEl.textContent = data.matched_type === 'show'
+          ? 'SHOW ROSTER MATCH'
+          : (data.matched_type === 'dynamic_brand' ? 'LIVE DOMAIN MODEL' : 'VERIFIED 3x+ LEDGER');
+      }
+      document.getElementById('res-brand-name').textContent = entity.name;
+      document.getElementById('res-brand-domain').textContent = entity.subtitle;
       document.getElementById('res-monthly-spend').textContent = '$' + Number(data.metrics.est_monthly_spend_usd).toLocaleString();
       document.getElementById('res-avg-cpm').textContent = 'Avg Effective CPM: $' + data.metrics.avg_cpm_usd;
       document.getElementById('res-renewal-score').textContent = data.metrics.renewal_velocity_score + '/100';
-      document.getElementById('res-flights-summary').textContent = data.metrics.proven_3x_shows_count + ' Proven 3x+ Shows (' + data.metrics.verified_total_flights + ' Flights)';
-      document.getElementById('res-dm-role').textContent = data.brand.decision_maker_role;
-      document.getElementById('res-dm-email').textContent = '🔒 Verified Email Locked ($1.99)';
-      document.getElementById('res-table-title').textContent = 'VERIFIED AD-READ PLACEMENTS FOR ' + data.brand.name.toUpperCase();
+      document.getElementById('res-flights-summary').textContent = data.metrics.proven_3x_shows_count + ' Proven 3x+ (' + data.metrics.verified_total_flights + ' Flights)';
+      document.getElementById('res-dm-role').textContent = entity.lead_role;
+      document.getElementById('res-dm-email').textContent = '🔒 ' + (data.outbound_pitch && data.outbound_pitch.to_email ? data.outbound_pitch.to_email : 'Verified Email Locked ($1.99)');
+      document.getElementById('res-table-title').textContent = entity.table_title;
 
       const tbody = document.getElementById('res-placements-tbody');
-      tbody.innerHTML = (data.placements || []).map(p => \`
+      tbody.innerHTML = (data.placements || []).map(p => {
+        const rowTitle = entity.type === 'show' && p.brand_name
+          ? (p.brand_name + ' → ' + p.show_name)
+          : p.show_name;
+        return \`
         <tr>
           <td>
-            <div style="font-weight:700;">\${p.show_name}</div>
-            <div class="mono" style="font-size:13px; color:var(--text-muted);">\${p.channel_type} • \${Math.round(p.audience_size / 1000)}K reach</div>
+            <div style="font-weight:700;">\${rowTitle}</div>
+            <div class="mono" style="font-size:13px; color:var(--text-muted);">\${p.channel_type} • \${Math.round((Number(p.audience_size) || 75000) / 1000)}K reach</div>
           </td>
           <td><span class="\${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${p.renewal_badge}</span></td>
           <td class="mono" style="font-size:13px;">
@@ -507,16 +563,18 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             <div style="font-size:13px; color:var(--text-muted); font-weight:400;">$\${p.cpm_usd} CPM</div>
           </td>
         </tr>
-      \`).join('');
+      \`;
+      }).join('');
 
       if (data.outbound_pitch) {
+        const reachK = Math.round((Number(senderReach) || 75000) / 1000);
         document.getElementById('res-pitch-meta').textContent =
-          'Pilot Quote: $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + data.outbound_pitch.effective_cpm_usd + ' CPM)';
+          'Pilot Quote (' + reachK + 'K Reach): $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + data.outbound_pitch.effective_cpm_usd + ' CPM)';
         document.getElementById('res-pitch-body').textContent =
-          '# SponsorRadar Diagnostic Summary (' + data.brand.name + ')\\n' +
-          '• Verified 3x+ Renewal Score: ' + data.metrics.renewal_velocity_score + '/100 (' + data.metrics.proven_3x_shows_count + ' Proven Shows)\\n' +
-          '• Recommended 3-Episode Pilot Quote: $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' ($' + data.outbound_pitch.effective_cpm_usd + ' Effective CPM)\\n' +
-          '• Target Buyer Role: ' + data.brand.decision_maker_role + '\\n' +
+          '# SponsorRadar Diagnostic Summary (' + entity.name + ')\\n' +
+          '• Verified 3x+ Renewal Score: ' + data.metrics.renewal_velocity_score + '/100 (' + data.metrics.proven_3x_shows_count + ' Proven 3x+ Placements)\\n' +
+          '• Recommended 3-Episode Pilot Quote (' + reachK + 'K Reach): $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' ($' + data.outbound_pitch.effective_cpm_usd + ' Effective CPM)\\n' +
+          '• Target Buyer Role: ' + data.brand.decision_maker_role + ' (' + data.outbound_pitch.to_email + ')\\n' +
           '• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]';
       }
     }
@@ -697,7 +755,7 @@ function renderLandingPage({ defaultAnalysis }) {
           </div>
           <div class="panel-body">
             <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-              <input id="lp-query" type="text" class="input-field" value="AG1" placeholder="Type any brand or show (e.g. AG1, Deel, Ramp, HubSpot)..." style="flex:1; min-width:210px;" />
+              <input id="lp-query" type="text" class="input-field" value="AG1" placeholder="Type any brand or show (e.g. AG1, Deel, Ramp, Lenny's Podcast)..." style="flex:1; min-width:210px;" />
               <button type="button" class="btn btn-vermilion" onclick="runLpLookup()">
                 <span>Reveal 3x+ Renewals</span>
                 <span class="btn-icon-circle" aria-hidden="true">↗</span>
@@ -707,13 +765,13 @@ function renderLandingPage({ defaultAnalysis }) {
               <button type="button" class="preset-chip" onclick="setLpPreset('AG1')">AG1 ($1.42M/mo)</button>
               <button type="button" class="preset-chip" onclick="setLpPreset('Deel')">Deel ($680K/mo)</button>
               <button type="button" class="preset-chip" onclick="setLpPreset('Ramp')">Ramp ($790K/mo)</button>
-              <button type="button" class="preset-chip" onclick="setLpPreset('Eight Sleep')">Eight Sleep ($620K/mo)</button>
-              <button type="button" class="preset-chip" onclick="setLpPreset('Linear')">Linear ($310K/mo)</button>
+              <button type="button" class="preset-chip" onclick="setLpPreset('Lenny\\'s Podcast')">🎙️ Lenny's Podcast</button>
+              <button type="button" class="preset-chip" onclick="setLpPreset('Huberman Lab')">🎙️ Huberman Lab</button>
             </div>
 
             <div class="kpi-grid" style="margin-top:16px;">
               <div class="kpi-box">
-                <div class="kpi-label">MATCHED BRAND</div>
+                <div class="kpi-label">MATCHED ENTITY</div>
                 <div class="kpi-val" id="lp-brand-name" style="font-size:18px;">${escapeHtml(defaultAnalysis.brand.name)}</div>
               </div>
               <div class="kpi-box">
@@ -733,19 +791,24 @@ function renderLandingPage({ defaultAnalysis }) {
         </div>
       </div>
 
-      <!-- Direct Conversion CTA Box with 30-Day Guarantee -->
+      <!-- Direct Conversion CTA Box with $1.99 Express Pass + 30-Day Guarantee -->
       <div class="panel" style="padding:28px; text-align:center; border-color:var(--emerald-border); background:var(--bg-elevated);">
-        <span class="pill-emerald">30-DAY 100% ROI GUARANTEE</span>
-        <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin-top:10px;">Unlock All 42+ Sponsor Ledgers, Decision-Maker Emails &amp; 1-Click Outbound Pitches</h2>
+        <span class="pill-emerald">INSTANT STRIPE EXPRESS • 30-DAY 100% ROI GUARANTEE</span>
+        <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin-top:10px;">Unlock All 42+ Verified Sponsor Emails, CPM Rate Cards &amp; 3-Flight Pitches ($1.99)</h2>
         <p style="color:var(--text-secondary); max-width:600px; margin:8px auto 20px;">
-          If SponsorRadar doesn't help you land a sponsor pilot or eliminate a losing media buy within 30 days, click one button for a full refund.
+          Get the 3-File Sponsor Email &amp; Pitch Pack for a one-time $1.99 micro-pass, or start continuous Creator Pro access below.
         </p>
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+          <a href="/buy/flash_pass?source=lp_express" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass');return false;}" class="btn btn-vermilion" style="padding:12px 22px; font-size:15px; text-decoration:none;">
+            <span>Unlock 3-File Sponsor Pack ($1.99 Stripe Express)</span>
+            <span class="btn-icon-circle" aria-hidden="true">↗</span>
+          </a>
+        </div>
         <input type="text" id="lp-hp-field" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; max-width:560px; margin:0 auto;">
           <input id="lp-lead-email" type="email" class="input-field" required placeholder="Enter your work email..." style="flex:1; min-width:220px;" />
-          <button type="button" class="btn btn-vermilion" onclick="submitLpLeadAndCheckout()">
-            <span>Start Instant Access ($49/mo)</span>
-            <span class="btn-icon-circle" aria-hidden="true">↗</span>
+          <button type="button" class="btn btn-ghost" onclick="submitLpLeadAndCheckout()">
+            <span>Or Start Creator Pro Subscription ($49/mo) ↗</span>
           </button>
         </div>
         <div id="lp-confirm-msg" class="mono" style="margin-top:12px; font-size:13px; color:var(--emerald-roi); display:none;"></div>
@@ -767,7 +830,8 @@ function renderLandingPage({ defaultAnalysis }) {
       });
       const data = await res.json();
       if (data && data.brand) {
-        document.getElementById('lp-brand-name').textContent = data.brand.name;
+        const entity = data.display_entity || { name: data.brand.name };
+        document.getElementById('lp-brand-name').textContent = entity.name;
         document.getElementById('lp-spend').textContent = '$' + Number(data.metrics.est_monthly_spend_usd).toLocaleString();
         document.getElementById('lp-score').textContent = data.metrics.renewal_velocity_score + '/100';
         document.getElementById('lp-email').textContent = '🔒 Locked in Free Preview ($1.99)';
