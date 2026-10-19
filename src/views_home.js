@@ -44,9 +44,9 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   const bodyHtml = `
   <section class="hero-section" id="radar-tool">
     <div class="container">
-      <div class="hero-grid" style="align-items:stretch;">
+      <div class="hero-grid" style="align-items:start;">
         <!-- Left Column: Crisp Layperson Value Proposition + Redacted Outbound Pitch Preview -->
-        <div id="home-executive-brief" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
+        <div id="home-executive-brief" style="display:flex; flex-direction:column; justify-content:flex-start; gap:14px;">
           <div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
               <span class="pill-vermilion">PODCAST, NEWSLETTER &amp; YOUTUBE SPONSOR CHECKER</span>
@@ -55,12 +55,12 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             <h1 class="headline-xl">
               See Which Sponsors <span class="serif-italic" style="color:var(--emerald-roi);">Renew 3+ Times</span> &amp; What They Pay
             </h1>
-            <p class="subhead">
+            <p class="subhead" style="margin-bottom:14px;">
               68% of one-off sponsorships lose money and never book again. Search any brand or show to see verified 3+ repeat sponsors, estimated monthly spend, and real CPM rates.
             </p>
 
             <!-- Built For Channel / Persona Pills -->
-            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;">
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px;">
               <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Built for:</span>
               <span class="preset-chip" style="cursor:default;">🎙️ Podcasters &amp; YouTubers</span>
               <span class="preset-chip" style="cursor:default;">📩 Newsletter Creators</span>
@@ -68,7 +68,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             </div>
 
             <!-- 3-Step Layperson Journey inside Top Hero -->
-            <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:16px;">
+            <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:0;">
               <div class="panel" style="padding:12px;">
                 <div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-bottom:3px;">STEP 1 • FREE CHECK</div>
                 <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Search any brand or show to see monthly ad spend &amp; 3x+ renewal score.</div>
@@ -84,8 +84,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             </div>
           </div>
 
-          <!-- Redacted Outbound Pitch Preview Box (Balanced Left Column Anchor) -->
-          <div class="pitch-box" style="margin-top:auto; display:flex; flex-direction:column;">
+          <!-- Redacted Outbound Pitch Preview Box (Immediately Below Steps — Zero White Gap) -->
+          <div class="pitch-box" style="margin-top:0; display:flex; flex-direction:column;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
                 <span class="pill-emerald">DIAGNOSTIC QUOTE &amp; LOCKED PITCH PACK</span>
@@ -105,11 +105,87 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               "• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]"
             )}</pre>
           </div>
+
+          <!-- Top 3x+ Renewed Category Benchmarks & Audience Tier Reference (Balances Left & Right Columns Naturally) -->
+          <div class="panel" id="home-left-category-benchmarks" style="padding:14px 16px; background:var(--bg-surface); display:flex; flex-direction:column; gap:12px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+                <span class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-primary); text-transform:uppercase;">✦ 2026 Category CPM &amp; 3x+ Renewal Benchmarks</span>
+                <a href="/leaderboard" class="mono" style="font-size:12.5px; font-weight:700; color:var(--vermilion); text-decoration:underline;">Full 42-Brand Leaderboard →</a>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
+                <button type="button" onclick="selectBrandPreset('AG1')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">AG1 (Health DTC)</strong>
+                    <span class="pill-emerald" style="padding:2px 6px; font-size:11.5px;">18x Renewed</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">$1.42M/mo • $45 Avg CPM</div>
+                </button>
+                <button type="button" onclick="selectBrandPreset('Deel')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">Deel (B2B HR/Payroll)</strong>
+                    <span class="pill-emerald" style="padding:2px 6px; font-size:11.5px;">12x Renewed</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">$680K/mo • $42 Avg CPM</div>
+                </button>
+                <button type="button" onclick="selectBrandPreset('Ramp')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">Ramp (Fintech Spend)</strong>
+                    <span class="pill-emerald" style="padding:2px 6px; font-size:11.5px;">10x Renewed</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">$790K/mo • $52 Avg CPM</div>
+                </button>
+                <button type="button" onclick="selectBrandPreset('HubSpot')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">HubSpot (B2B CRM)</strong>
+                    <span class="pill-emerald" style="padding:2px 6px; font-size:11.5px;">15x Renewed</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">$940K/mo • $48 Avg CPM</div>
+                </button>
+                <button type="button" onclick="selectBrandPreset('Eight Sleep')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">Eight Sleep (Perf DTC)</strong>
+                    <span class="pill-emerald" style="padding:2px 6px; font-size:11.5px;">9x Renewed</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">$510K/mo • $46 Avg CPM</div>
+                </button>
+                <button type="button" onclick="selectBrandPreset('Lenny\\'s Podcast')" style="text-align:left; padding:9px 11px; border-radius:10px; background:var(--bg-elevated); border:1px solid var(--border-hairline); cursor:pointer;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <strong style="font-size:13px; color:var(--text-primary);">Lenny's Podcast</strong>
+                    <span class="pill-amber" style="padding:2px 6px; font-size:11.5px;">Show Rate Card</span>
+                  </div>
+                  <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:3px;">620K Reach • $50 Base CPM</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Creator Audience Tier Quote Reference Strip -->
+            <div style="border-top:1px solid var(--border-hairline); padding-top:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:8px;">
+                <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;">⚡ Quick Audience Tier Pilot Quote Reference (3-Flight Package)</span>
+                <span class="mono" style="font-size:11.5px; color:var(--emerald-roi); font-weight:700;">Tap Tier to Recalculate</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px;">
+                <button type="button" onclick="selectReachTier(25000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                  <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">25K NICHE REACH</div>
+                  <div class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary);">$3,150–$3,900</div>
+                </button>
+                <button type="button" onclick="selectReachTier(75000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                  <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">75K MID-TIER</div>
+                  <div class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi);">$9,450–$11,700</div>
+                </button>
+                <button type="button" onclick="selectReachTier(250000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                  <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">250K FLAGSHIP</div>
+                  <div class="mono" style="font-size:13px; font-weight:800; color:var(--vermilion);">$31,500–$39,000</div>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Right Column: Clean Two-Sided Sponsor & Show Lookup Workbench -->
-        <div class="double-bezel" style="display:flex; flex-direction:column; height:100%;">
-          <div class="panel" style="display:flex; flex-direction:column; flex:1; height:100%;">
+        <div class="double-bezel" style="display:flex; flex-direction:column;">
+          <div class="panel" style="display:flex; flex-direction:column; flex:1;">
             <div class="panel-header">
               <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                 <span class="pill-vermilion">LIVE SPONSORSHIP CHECKER</span>
@@ -118,7 +194,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <span class="pill-emerald" id="res-match-pill">${defaultAnalysis.matched_type === 'show' ? 'SHOW ROSTER MATCH' : (defaultAnalysis.matched_type === 'dynamic_brand' ? 'LIVE DOMAIN MODEL' : 'VERIFIED 3x+ LEDGER')}</span>
             </div>
 
-            <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+            <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:flex-start;">
               <div>
                 <!-- MODE A: CLEAN BRAND / SHOW LOOKUP + VISIBLE AUDIENCE REACH QUOTE BAR -->
                 <div id="mode-lookup-pane">
@@ -197,7 +273,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               </div>
 
               <!-- LIVE OUTPUT DISPLAY AREA -->
-              <div id="radar-results-container" style="margin-top:14px; border-top:1px solid var(--border-hairline); padding-top:14px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+              <div id="radar-results-container" style="margin-top:14px; border-top:1px solid var(--border-hairline); padding-top:14px; display:flex; flex-direction:column; justify-content:flex-start;">
                 <div class="kpi-grid">
                   <div class="kpi-box">
                     <div class="kpi-label" id="res-entity-label">${displayEntity.type === 'show' ? 'MATCHED CREATOR SHOW' : 'SPONSOR / ENTITY'}</div>
@@ -222,11 +298,11 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                 </div>
 
                 <!-- Verified Placements Sub-Table -->
-                <div style="margin:10px 0 8px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="margin:6px 0 8px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                   <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);" id="res-table-title">${escapeHtml(displayEntity.table_title)}</span>
                   <span class="pill-emerald" id="res-engine-badge">VERIFIED 3x+ LEDGER</span>
                 </div>
-                <div class="table-wrap" style="margin-top:auto;">
+                <div class="table-wrap" style="margin-top:0;">
                   <table class="ledger-table">
                     <thead>
                       <tr>
