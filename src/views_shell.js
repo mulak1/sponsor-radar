@@ -659,8 +659,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center;">
-        <a href="/#radar-tool" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
-          <span>Search Sponsor Ledger</span>
+        <a href="/buy/micro_pass?source=nav_cta" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
+          <span>Unlock 3-File Pack ($1.99)</span>
           <span class="btn-icon-circle" aria-hidden="true">↗</span>
         </a>
       </div>

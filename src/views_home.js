@@ -77,8 +77,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   Pilot Quote: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} (3 Episodes @ $${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)
                 </span>
               </div>
-              <button type="button" class="btn btn-emerald" style="padding:6px 12px; min-height:36px; font-size:13px;" onclick="copyPitchEmail()">
-                <span id="copy-pitch-label">Copy Pitch Email</span>
+              <button type="button" class="btn btn-vermilion" style="padding:6px 12px; min-height:36px; font-size:13px;" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass')}else{copyPitchEmail()}">
+                <span id="copy-pitch-label">Unlock 3-File Pitch Pack ($1.99) ↗</span>
               </button>
             </div>
             <pre class="pitch-pre" id="res-pitch-body" style="margin-top:8px;">${escapeHtml("Subject: " + defaultAnalysis.outbound_pitch.subject + "\n\n" + defaultAnalysis.outbound_pitch.body)}</pre>
@@ -309,88 +309,42 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     </div>
   </section>
 
-  <!-- PRICING & SELF-SERVE STRIPE CHECKOUT -->
+  <!-- PHASE 3 PUREST PATH: SINGLE SELF-SERVE STRIPE EXPRESS CHECKOUT -->
   <section id="pricing" style="padding:56px 0; border-bottom:1px solid var(--border-hairline);">
     <div class="container">
-      <div style="text-align:center; max-width:700px; margin:0 auto 36px;">
-        <span class="pill-vermilion">TRANSPARENT MEDIA-BUYING &amp; CREATOR PLANS</span>
-        <h2 style="font-family:var(--font-serif); font-size:34px; font-weight:600; margin-top:10px;">Close One Extra Sponsorship or Cut One Bad Media Buy: Pay For a Full Year</h2>
-        <p style="color:var(--text-secondary); margin-top:8px;">
-          Every plan includes 30-day no-questions-asked refund protection and instant CSV/API export.
-        </p>
-      </div>
-
-      <div class="pricing-grid">
-        <!-- Plan 1: Creator Pro ($49/mo) -->
-        <div class="double-bezel">
-          <div class="panel" style="padding:26px; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+      <div class="double-bezel" style="max-width:860px; margin:0 auto;">
+        <div class="panel" style="padding:32px; border-color:var(--vermilion-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill-emerald">PHASE 3 PUREST PATH • INSTANT STRIPE EXPRESS</span>
+            <span class="mono" style="font-size:13px; color:var(--text-muted);">ONE-TIME MICRO-PASS • NO SUBSCRIPTION TRAP</span>
+          </div>
+          <h2 style="font-family:var(--font-serif); font-size:32px; font-weight:600; margin:6px 0 10px;">
+            Unlock the Complete 42-Brand Sponsor Email &amp; 3-Flight Pitch Pack <span class="serif-italic" style="color:var(--vermilion);">($1.99 Stripe Express)</span>
+          </h2>
+          <p style="color:var(--text-secondary); font-size:15px; margin-bottom:20px;">
+            Unblur all verified sponsor partnerships emails, negotiated CPM rate floors, and ready-to-send 3-episode pilot pitch templates in 1 click.
+          </p>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-hairline);">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                <span class="pill-emerald">FOR PODCASTERS, NEWSLETTERS &amp; TALENT AGENCIES</span>
-                <span class="mono" style="font-size:13px; color:var(--text-muted);">MOST POPULAR</span>
-              </div>
-              <h3 style="font-family:var(--font-serif); font-size:26px; font-weight:600; margin-top:14px;">Creator Pro Outbound Engine</h3>
-              <div style="margin:14px 0; display:flex; align-items:baseline; gap:8px;">
-                <span class="mono" style="font-size:40px; font-weight:800; color:var(--text-primary);">$49</span>
-                <span style="color:var(--text-secondary);">/ month • cancel anytime</span>
-              </div>
-              <p style="color:var(--text-secondary); font-size:14.5px; margin-bottom:18px;">
-                See every sponsor renewing 3+ times on lookalike shows in your niche and send hyper-personalized 3-flight pilot pitches.
-              </p>
-              <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:14px; margin-bottom:24px;">
-                <li><span style="color:var(--emerald-roi); font-weight:800;">✓</span> Full 42+ Brand &amp; 46+ Show 3x-Renewal Ledger</li>
-                <li><span style="color:var(--emerald-roi); font-weight:800;">✓</span> Verified Sponsor Partnerships Emails &amp; Decision-Maker Roles</li>
-                <li><span style="color:var(--emerald-roi); font-weight:800;">✓</span> Unlimited 1-Click Outbound Pitch Generation &amp; CPM Calculator</li>
-                <li><span style="color:var(--emerald-roi); font-weight:800;">✓</span> Weekly "New First-Flight Sponsor" Alert Digest</li>
-              </ul>
+              <div class="mono" style="font-size:36px; font-weight:800; color:var(--vermilion); line-height:1;">$1.99 <span style="font-size:14px; font-weight:600; color:var(--text-secondary);">USD one-time pass</span></div>
+              <div style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">✓ 42+ Verified Brand Sponsor Emails (.CSV) + 3-Flight Pitch Templates + Negotiated CPM Ledger</div>
             </div>
-            <div>
+            <a href="/buy/flash_pass" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass');return false;}" class="btn btn-vermilion" style="padding:14px 24px; font-size:15px; text-decoration:none;">
+              <span>Unlock 3-File Sponsor Pack ($1.99 Stripe Express)</span>
+              <span class="btn-icon-circle" aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <details style="margin-top:16px; font-size:13.5px; color:var(--text-secondary);">
+            <summary style="cursor:pointer; font-weight:700;">Need Continuous Team / Agency Intelligence Feed ($49–$199/mo)?</summary>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:12px;">
               <input type="text" id="hp-creator" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <input id="checkout-email-creator" type="email" class="input-field" required placeholder="Enter work email for instant access..." style="flex:1; min-width:200px;" />
-                <button type="button" class="btn btn-vermilion" onclick="startStripeCheckout('creator_pro_49', 49, 'checkout-email-creator', 'hp-creator')">
-                  <span>Unlock Creator Pro ($49/mo)</span>
-                  <span class="btn-icon-circle" aria-hidden="true">↗</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Plan 2: Media Buyer & Agency Feed ($199/mo) -->
-        <div class="double-bezel">
-          <div class="panel" style="padding:26px; height:100%; display:flex; flex-direction:column; justify-content:space-between; border-color:var(--vermilion-border);">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                <span class="pill-vermilion">FOR BRAND GROWTH TEAMS &amp; MEDIA AGENCIES</span>
-                <span class="mono" style="font-size:13px; color:var(--vermilion);">5 SEATS + API STREAM</span>
-              </div>
-              <h3 style="font-family:var(--font-serif); font-size:26px; font-weight:600; margin-top:14px;">Media Buyer &amp; Agency Intelligence Feed</h3>
-              <div style="margin:14px 0; display:flex; align-items:baseline; gap:8px;">
-                <span class="mono" style="font-size:40px; font-weight:800; color:var(--vermilion);">$199</span>
-                <span style="color:var(--text-secondary);">/ month • 5 seats + API</span>
-              </div>
-              <p style="color:var(--text-secondary); font-size:14.5px; margin-bottom:18px;">
-                Eliminate wasted 1x test buys. Audit competitor promo codes, vanity URL decay curves, and negotiated CPM floors before signing IO contracts.
-              </p>
-              <ul style="list-style:none; display:flex; flex-direction:column; gap:10px; font-size:14px; margin-bottom:24px;">
-                <li><span style="color:var(--vermilion); font-weight:800;">✓</span> Everything in Creator Pro + Unlimited Transcript / RSS Batch Audits</li>
-                <li><span style="color:var(--vermilion); font-weight:800;">✓</span> Competitor Vanity URL &amp; Promo-Code Attribution Decay Telemetry</li>
-                <li><span style="color:var(--vermilion); font-weight:800;">✓</span> Negotiated Reality CPM Benchmarks vs. Rate-Card Ceilings</li>
-                <li><span style="color:var(--vermilion); font-weight:800;">✓</span> Webhook + CSV Export into HubSpot, Clay, and Apollo</li>
-              </ul>
-            </div>
-            <div>
+              <input id="checkout-email-creator" type="email" style="display:none;" value="creator@sponsorradar.io" />
               <input type="text" id="hp-agency" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <input id="checkout-email-agency" type="email" class="input-field" required placeholder="Enter agency / growth team email..." style="flex:1; min-width:200px;" />
-                <button type="button" class="btn btn-emerald" onclick="startStripeCheckout('agency_feed_199', 199, 'checkout-email-agency', 'hp-agency')">
-                  <span>Start Agency Feed ($199/mo)</span>
-                  <span class="btn-icon-circle" aria-hidden="true">↗</span>
-                </button>
-              </div>
+              <input id="checkout-email-agency" type="email" style="display:none;" value="agency@sponsorradar.io" />
+              <button type="button" class="btn btn-ghost" onclick="startStripeCheckout('creator_pro_49', 49, 'checkout-email-creator', 'hp-creator')">Creator Pro ($49/mo)</button>
+              <button type="button" class="btn btn-ghost" onclick="startStripeCheckout('agency_feed_199', 199, 'checkout-email-agency', 'hp-agency')">Agency Feed ($199/mo)</button>
             </div>
-          </div>
+          </details>
         </div>
       </div>
 
