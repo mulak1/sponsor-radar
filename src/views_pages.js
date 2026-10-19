@@ -266,7 +266,30 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <span>Unlock Buyer Email &amp; 3-File Pitch Pack ($1.99 Stripe Express) ↗</span>
           </a>
         </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0;padding:8px 12px;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.28);">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span class="mono" style="font-size:11.5px;color:#a7f3d0;font-weight:700;">CALCULATE YOUR 3-FLIGHT PILOT RATE:</span>
+            <button type="button" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm_usd : 38})" style="background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:700;cursor:pointer;">10K Reach</button>
+            <button type="button" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm_usd : 38})" style="background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:700;cursor:pointer;">25K Reach</button>
+            <button type="button" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm_usd : 38})" style="background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:700;cursor:pointer;">75K Reach</button>
+            <button type="button" onclick="window.__srCalcPseoReach(150000, ${brand ? brand.avg_cpm_usd : 38})" style="background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:700;cursor:pointer;">150K Reach</button>
+          </div>
+          <span id="sr-pseo-quote-readout" class="mono" style="font-size:12.5px;font-weight:800;color:#6ee7b7;">Est. 3-Flight Package: $${Math.round(35 * (brand ? brand.avg_cpm_usd : 38) * 3 * 0.88).toLocaleString()} (12% Renewal Discount)</span>
+        </div>
         <pre class="pitch-pre">${escapeHtml('Subject: ' + outboundPitch.subject + '\n\n' + outboundPitch.body)}</pre>
+        <script>
+          window.__srCalcPseoReach = function(reach, cpm) {
+            var single = Math.round((reach / 1000) * cpm);
+            var pkg = Math.round(single * 3 * 0.88);
+            var el = document.getElementById('sr-pseo-quote-readout');
+            if (el) el.textContent = (reach / 1000) + 'K Reach → $' + single.toLocaleString() + '/slot • 3-Flight Pilot: $' + pkg.toLocaleString();
+            fetch('/api/telemetry/event', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ event_type: 'calculate', page_url: window.location.pathname, meta: { source: 'pseo_reach_quote_bar', reach: reach, cpm: cpm, pilot_package_usd: pkg } })
+            }).catch(function(){});
+          };
+        </script>
       </div>
       ` : ''}
 

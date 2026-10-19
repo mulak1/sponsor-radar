@@ -486,8 +486,10 @@ function createTelemetryStore(dataDir, moduleId) {
       const nowIso = new Date().toISOString();
       const mfFlag = (isMirofish || utmSource === 'mirofish_swarm' || String(meta?.source || '').includes('mirofish')) ? 1 : 0;
       const forceTest = (isTest || mfFlag || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
+      const refStr = String(meta?.ref || '').toLowerCase();
+      const inferredSrc = utmSource || (mfFlag ? 'mirofish_swarm' : (refStr.includes('google.') ? 'google_organic' : (refStr.includes('bing.') ? 'bing_organic' : (refStr.includes('chatgpt.') || refStr.includes('openai.') ? 'chatgpt_ai' : (refStr.includes('perplexity.') ? 'perplexity_ai' : (refStr.includes('reddit.') ? 'reddit_social' : (refStr.includes('github.') ? 'github_dev' : '')))))));
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
-      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: utmSource || (mfFlag ? 'mirofish_swarm' : ''), utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
+      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: inferredSrc, utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
       if (state.events.length > 5000) state.events = state.events.slice(-4000);
       if (eventType === 'visit') state.impressions += 1;
       if (eventType === 'calculate') state.calculations += 1;
@@ -523,9 +525,17 @@ function createTelemetryStore(dataDir, moduleId) {
       for (const e of rawCandidates) {
         const ts = new Date(e.created_at).getTime(), ipKey = e.client_ip || '', ck = (e.meta && e.meta.vid) || ipKey;
         if (e.event_type === 'visit' || e.event_type === 'visit_hydrated') {
-          if ((seenVis.has(ck) && Math.abs(ts - seenVis.get(ck)) <= 20000) || (ipKey && seenVis.has(ipKey) && Math.abs(ts - seenVis.get(ipKey)) <= 20000)) continue;
-          seenVis.set(ck, ts); if (ipKey) seenVis.set(ipKey, ts);
-          humanEvents.push(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e); continue;
+          const prevEntry = (seenVis.has(ck) && Math.abs(ts - seenVis.get(ck).ts) <= 20000) ? seenVis.get(ck) : ((ipKey && seenVis.has(ipKey) && Math.abs(ts - seenVis.get(ipKey).ts) <= 20000) ? seenVis.get(ipKey) : null);
+          if (prevEntry) {
+            if (e.meta && Object.keys(e.meta).length > 0) prevEntry.row.meta = { ...(prevEntry.row.meta || {}), ...e.meta };
+            const rLower = String((e.meta && e.meta.ref) || '').toLowerCase();
+            if ((!prevEntry.row.utm_source || prevEntry.row.utm_source === 'direct') && (e.utm_source || rLower)) prevEntry.row.utm_source = e.utm_source || (rLower.includes('google.') ? 'google_organic' : (rLower.includes('bing.') ? 'bing_organic' : prevEntry.row.utm_source));
+            continue;
+          }
+          const rLow = String((e.meta && e.meta.ref) || '').toLowerCase();
+          const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), utm_source: e.utm_source || (rLow.includes('google.') ? 'google_organic' : (rLow.includes('bing.') ? 'bing_organic' : '')) };
+          const rec = { ts, row }; seenVis.set(ck, rec); if (ipKey) seenVis.set(ipKey, rec);
+          humanEvents.push(row); continue;
         }
         if (e.event_type === 'view_paywall') {
           if (seenPw.has(ck) && Math.abs(ts - seenPw.get(ck)) <= 60000) continue;

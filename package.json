@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "seed": "node src/seed.js",
+    "test": "node tests/e2e-user-journeys.test.js",
     "test:e2e": "node scripts/verify_playwright.js"
   },
   "dependencies": {

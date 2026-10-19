@@ -111,6 +111,7 @@ async function runVerification() {
     results.screenshots.push(lookupShot);
 
     // Execute Mode B: Live Ad-Read Transcript Analyzer
+    await page.click('#mode-b-summary');
     await page.click('#tab-mode-transcript');
     await page.selectOption('#transcript-preset', 'huberman-ag1-eightsleep');
     await page.waitForFunction(() => {
