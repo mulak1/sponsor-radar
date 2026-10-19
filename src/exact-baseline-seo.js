@@ -801,46 +801,63 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   });
 }
 
+function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
+  const t = cfg.theme;
+  const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
+  const top3 = ledger.filter((s) => s.score >= 85).slice(0, 3);
+  const fix2 = ledger.filter((s) => s.score < 80).slice(0, 2);
+  const medals = [
+    { icon: '🥇 #1 LEADER', bg: '#FFFBEB', border: '#FDE68A', text: '#B45309' },
+    { icon: '🥈 #2 RUNNER-UP', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' },
+    { icon: '🥉 #3 TOP TIER', bg: '#FFF7ED', border: '#FED7AA', text: '#9A3412' }
+  ];
+  const podiumCards = top3.map((s, i) => {
+    const m = medals[i] || medals[2];
+    return `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:flex;flex-direction:column;justify-content:space-between;padding:16px 18px;border-radius:12px;background:#FFFFFF;border:1.5px solid ${i === 0 ? t.brandPrimary : t.border};box-shadow:0 4px 14px rgba(15,23,42,0.04);text-decoration:none;color:${t.textPrimary};">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="padding:3px 9px;border-radius:999px;background:${m.bg};border:1px solid ${m.border};color:${m.text};font-size:13px;font-weight:800;">${m.icon}</span>
+          <span style="padding:3px 10px;border-radius:999px;background:${t.safeSoftBg};color:${t.safeColor};font-family:monospace;font-size:13.5px;font-weight:800;">Grade ${escHtml(s.grade)} · ${s.score}/100</span>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;">${escHtml(s.target)}</div>
+        <div style="font-size:13.5px;color:${t.textSecondary};margin-bottom:10px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
+      </div>
+      <div>
+        <div style="width:100%;height:7px;background:#E2E8F0;border-radius:999px;overflow:hidden;margin-bottom:6px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:999px;"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:${t.brandPrimary};font-weight:700;"><span>View Verified Report</span><span>→</span></div>
+      </div>
+    </a>`;
+  }).join('');
+  const fixPills = fix2.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C;font-size:13px;font-weight:700;text-decoration:none;"><span>⚠️ ${escHtml(s.target)}</span><span style="font-family:monospace;">Grade ${escHtml(s.grade)} (${s.score}/100)</span><span>See Why →</span></a>`).join('');
+
+  return `<section id="eb-leaderboard-home-showcase" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Podium" style="max-width:1280px;margin:24px auto;padding:0 24px;font-family:${t.fontSans};">
+    <div class="eb-panel-card" style="margin:0;padding:24px;background:${t.cardBg};border:1.5px solid ${t.accentBorder};">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+        <div>
+          <span style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">🏆 Live Public Benchmark Leaderboard</span>
+          <h2 style="margin:4px 0 0 0;font-size:22px;font-family:${t.fontDisplay};font-weight:700;color:${t.textPrimary};">Top-Rated Industry Leaders (Grade A+) &amp; Common Mistakes</h2>
+        </div>
+        <a href="/leaderboard" style="padding:9px 18px;border-radius:999px;background:${t.brandPrimary};color:#FFFFFF;font-size:14px;font-weight:700;text-decoration:none;">Explore Full Interactive Leaderboard →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:14px;">${podiumCards}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:12px;border-top:1px solid ${t.border};">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:13.5px;font-weight:700;color:${t.textSecondary};">Common Mistakes Analysed:</span>${fixPills}</div>
+        <a href="/leaderboard" style="font-size:13.5px;font-weight:700;color:${t.brandPrimary};text-decoration:underline;"> Filter all ${ledger.length} ranked benchmarks →</a>
+      </div>
+    </div>
+  </section>`;
+}
+
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const t = cfg.theme;
   const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
   if (entries.length === 0) return '';
-  const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
-  const top3 = ledger.filter((s) => s.score >= 85).slice(0, 3);
-  const fix3 = ledger.filter((s) => s.score < 80).slice(0, 3);
-  const firstScanTarget = ledger[0] ? ledger[0].target : 'stripe.com';
-  const renderLbRow = (s, isTop) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'public_scan_pill',target:'${escHtml(s.target)}'})" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#FFFFFF;border:1px solid ${t.border};text-decoration:none;color:${t.textPrimary};">
-    <div style="min-width:0;flex:1;">
-      <div style="display:flex;align-items:center;gap:8px;"><strong style="font-size:14px;color:${t.textPrimary};">${escHtml(s.target)}</strong><span style="font-size:13px;color:${t.textSecondary};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">• ${escHtml(s.kpi1)}</span></div>
-      <div style="font-size:13px;color:${t.textSecondary};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${escHtml(s.cnnReadout)}</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-      <div style="width:52px;height:6px;background:#E2E8F0;border-radius:999px;overflow:hidden;"><div style="width:${s.score}%;height:100%;background:${isTop ? t.safeColor : '#E11D48'};"></div></div>
-      <span style="padding:3px 9px;border-radius:999px;background:${isTop ? t.safeSoftBg : '#FFF1F2'};color:${isTop ? t.safeColor : '#E11D48'};font-family:monospace;font-size:13px;font-weight:800;">${escHtml(s.grade)} (${s.score})</span>
-    </div>
-  </a>`;
   const pillsHtml = entries.map((item) => {
     const active = reqPath === `/seo/${item.slug}`;
     return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:13px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.35;"><span>${escHtml(item.title)}</span></a>`;
   }).join('');
 
-  return `<section id="eb-leaderboard-home-showcase" class="eb-panel-card" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Showcase" style="margin-top:16px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
-      <div>
-        <span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">🏆 Live Public Industry Leaderboard</span>
-        <h3 style="margin:4px 0 0 0;font-size:20px;font-family:${t.fontDisplay};font-weight:700;color:${t.textPrimary};">Compare Top Performers (Grade A+) vs. Common Mistakes</h3>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <a href="/api/badge/cnn/${escHtml(encodeURIComponent(firstScanTarget))}.svg" target="_blank" rel="noopener" style="padding:7px 13px;border-radius:999px;background:#0F172A;color:#38BDF8;border:1px solid #1E293B;font-size:13px;font-weight:700;text-decoration:none;">🔬 Live SVG Scorecard ↗</a>
-        <a href="/leaderboard" style="padding:8px 16px;border-radius:999px;background:${t.brandPrimary};color:#FFFFFF;font-size:13.5px;font-weight:700;text-decoration:none;">Explore Full Leaderboard &amp; Rank Yours →</a>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;">
-      <div style="background:${t.subtleBg};border:1px solid ${t.border};border-radius:12px;padding:12px;"><div style="font-size:13px;font-weight:800;color:${t.safeColor};margin-bottom:8px;">🏆 HALL OF FAME LEADERS (GRADE A+ / A)</div><div style="display:grid;gap:8px;">${top3.map((s) => renderLbRow(s, true)).join('')}</div></div>
-      <div style="background:${t.subtleBg};border:1px solid ${t.border};border-radius:12px;padding:12px;"><div style="font-size:13px;font-weight:800;color:#E11D48;margin-bottom:8px;">⚠️ COMMON MISTAKES &amp; NEEDS FIX (GRADE C / D)</div><div style="display:grid;gap:8px;">${fix3.map((s) => renderLbRow(s, false)).join('')}</div></div>
-    </div>
-  </section>
-  <nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
+  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
       <div>
         <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">✦ Complete ${entries.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
@@ -960,6 +977,8 @@ module.exports = {
   CRAWLER_UA_REGEX,
   loadVerticalSeoCatalog,
   attachUniversalSeoAndAiRoutes,
+  buildTopLeaderboardPodiumShowcaseHtml,
   buildMobileSeoCrawlMeshHtml,
   enhanceHtmlForSearchAndAiBots
 };
+

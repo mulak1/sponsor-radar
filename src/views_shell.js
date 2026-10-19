@@ -148,17 +148,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     /* Top Editorial Intelligence Ribbon */
     .ticker-bar {
-      background: var(--bg-parchment);
-      border-bottom: 1px solid var(--border-hairline);
-      padding: 8px 18px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
+      display: none;
     }
     .ticker-items {
       display: flex;

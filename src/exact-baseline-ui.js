@@ -15,7 +15,7 @@
  */
 
 const SOVRN_KEY = process.env.SOVRN_COMMERCE_KEY || 'ea3d7b74c5752fd817f896be27cd1a01';
-const { buildMobileSeoCrawlMeshHtml, enhanceHtmlForSearchAndAiBots } = require('./exact-baseline-seo');
+const { buildTopLeaderboardPodiumShowcaseHtml, buildMobileSeoCrawlMeshHtml, enhanceHtmlForSearchAndAiBots } = require('./exact-baseline-seo');
 
 function esc(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -42,7 +42,7 @@ function buildExactBaselineStyles(cfg) {
   .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular { font-variant-numeric: tabular-nums !important; }
   .eb-blurred-deliverable { filter: blur(5px) !important; user-select: none !important; cursor: pointer !important; max-height: 140px !important; overflow: hidden !important; opacity: 0.55 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
   #eb-deliverable-curtain { margin-top: 14px; padding: 18px 20px; border-radius: ${t.radiusCard}; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; box-shadow: ${t.shadow}; font-family: ${t.fontSans}; position: relative; z-index: 20; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; font-weight: 400 !important; }
-  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 11px 14px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.5; margin: 0; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
+  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 11px 14px; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.5; margin: 0; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
   .eb-doppelrand-shell { padding: 6px; border-radius: 18px; background: rgba(15, 23, 42, 0.035); border: 1px solid ${t.border}; box-shadow: 0 14px 34px -10px rgba(15, 23, 42, 0.08); margin: 10px 0 12px 0; transition: transform 650ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 650ms cubic-bezier(0.32, 0.72, 0, 1); }
   .eb-doppelrand-shell:hover { transform: translateY(-2px); box-shadow: 0 20px 42px -12px rgba(15, 23, 42, 0.13); }
   .eb-doppelrand-inner { position: relative; border-radius: 13px; overflow: hidden; background: ${t.cardBg}; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65); }
@@ -65,7 +65,7 @@ function buildExactBaselineStyles(cfg) {
   .eb-tier-card.featured { border: 2px solid ${t.brandPrimary}; background: ${t.brandSoftBg}; position: relative; }
   #eb-executive-strip { margin-bottom: 20px; }
   .eb-strip-top-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid ${t.border}; }
-  .eb-strip-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${t.brandPrimary}; background: ${t.brandSoftBg}; border: 1px solid ${t.accentBorder}; padding: 4px 12px; border-radius: 999px; }
+  .eb-strip-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: ${t.brandPrimary}; background: ${t.brandSoftBg}; border: 1px solid ${t.accentBorder}; padding: 4px 12px; border-radius: 999px; }
   #preset-chips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; width: 100%; margin-bottom: 10px; }
   #preset-chips .preset-chip { padding: 7px 8px; font-size: 13px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: ${t.radiusPill}; background: ${t.canvasBg}; color: ${t.textSecondary}; border: 1px solid ${t.border}; }
   #preset-chips .preset-chip:hover { background: ${t.brandSoftBg}; color: ${t.brandPrimary}; border-color: ${t.accentBorder}; }
@@ -81,7 +81,7 @@ function buildExactBaselineStyles(cfg) {
   .stat-pill-locked { grid-column: 1 / -1; background: ${t.brandSoftBg}; border: 1px solid ${t.accentBorder}; border-radius: 10px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
   .eb-locked-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
   .eb-store-pills { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .store-preview-pill { padding: 5px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 600; background: #FFFFFF; color: ${t.textSecondary}; border: 1px solid ${t.border}; }
+  .store-preview-pill { padding: 5px 11px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #FFFFFF; color: ${t.textSecondary}; border: 1px solid ${t.border}; }
   .store-preview-pill.active { background: ${t.brandPrimary}; color: #FFFFFF; border-color: ${t.brandPrimary}; }
   #inline-aisle-peek-drawer { display: block; font-size: 13.5px; padding: 9px 13px; border-radius: 8px; background: #FFFFFF; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-left: 3px solid ${t.brandPrimary}; line-height: 1.5; }
   #lead-squeeze-card { background: ${t.subtleBg}; border: 1px solid ${t.border}; border-radius: 10px; padding: 10px 12px; }
@@ -89,7 +89,9 @@ function buildExactBaselineStyles(cfg) {
   .eb-action-btn { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #FFFFFF; color: ${t.textSecondary}; border: 1px solid ${t.border}; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
   .eb-action-btn:hover { border-color: ${t.brandPrimary}; color: ${t.brandPrimary}; background: ${t.brandSoftBg}; }
   #tripwire-upsell-box { display: none; margin-top: 8px; padding: 9px 13px; border-radius: 8px; background: ${t.safeSoftBg}; color: ${t.textPrimary}; border: 1px solid ${t.safeBorder}; font-size: 13px; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-  #sticky-mobile-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9990; display: flex !important; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 20px; background: ${t.dockBg}; backdrop-filter: blur(14px); border-top: 1px solid ${t.border}; color: ${t.textPrimary}; box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.05); font-family: ${t.fontSans}; }
+  #sticky-mobile-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9990; display: flex !important; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 20px; background: ${t.dockBg}; backdrop-filter: blur(14px); border-top: 1px solid ${t.border}; color: ${t.textPrimary}; box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.05); font-family: ${t.fontSans}; transform: translateY(120%); opacity: 0; pointer-events: none; transition: transform 250ms ease, opacity 250ms ease; }
+  #sticky-mobile-bar.eb-dock-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  #eb-sticky-email-form, #btn-sticky-micro-unlock { display: none !important; }
   #stickyDock { display: none !important; }
   #eb-ouibounce-toast { display: none; position: fixed; bottom: 62px; right: 16px; max-width: 350px; z-index: 9991; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 14px; padding: 15px; box-shadow: 0 18px 38px rgba(15, 23, 42, 0.14); font-family: ${t.fontSans}; }
   #eb-cmdk-modal { display: none; position: fixed; inset: 0; z-index: 9995; background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(4px); align-items: flex-start; justify-content: center; padding-top: 70px; font-family: ${t.fontSans}; }
@@ -106,7 +108,7 @@ function buildExactBaselineStyles(cfg) {
     .eb-gbb-grid, #eb-pseo-hero-split, #eb-curtain-visual-split, #eb-interactive-control-row { grid-template-columns: 1fr; }
     .eb-doppelrand-img { height: 124px; } #free-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #preset-chips { gap: 4px; } #preset-chips .preset-chip { font-size:13px; padding: 5px 3px; }
-    #sticky-mobile-bar { padding: 7px 12px; gap: 6px; } #eb-sticky-email-form, #btn-sticky-micro-unlock { display: none !important; }
+    #sticky-mobile-bar { padding: 7px 12px; gap: 6px; }
   }
   @media print {
     header, nav, footer, #sticky-mobile-bar, #eb-ouibounce-toast, #eb-cmdk-modal, #eb-floating-gate-popover, #prog-share-toolbar, #in-card-unlock-bar, #eb-sovrn-affiliate-strip, button, .preset-chip { display: none !important; }
@@ -446,14 +448,12 @@ function buildClientRuntimeScript(cfg) {
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('walletConflicts') || document.getElementById('appleWalletCardPreview');
 
     if (CFG.moduleId === 'sponsor_radar') {
-      var emailNodes = [document.getElementById('res-dm-email')].concat(Array.prototype.slice.call(document.querySelectorAll('.kpi-box .kpi-val, .pitch-box .mono')));
-      emailNodes.forEach(function(nd) {
-        if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('Unlock') === -1) {
-          nd.setAttribute('data-raw-email', nd.textContent);
-          var parts = nd.textContent.trim().split('@');
-          nd.innerHTML = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com') + ' <button type="button" onclick="window.__ebOpenFloatingGate(this)" style="background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';border-radius:999px;padding:1px 8px;font-size:13px;font-weight:700;margin-left:4px;">Unlock (99¢)</button>';
-        }
-      });
+      var nd = document.getElementById('res-dm-email');
+      if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('***') === -1) {
+        nd.setAttribute('data-raw-email', nd.textContent);
+        var parts = nd.textContent.trim().split('@');
+        nd.textContent = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com');
+      }
     }
 
     var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
@@ -482,10 +482,11 @@ function buildClientRuntimeScript(cfg) {
       }
       var tblEl = tbody.closest('table');
       var tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
+      var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
       if (tblWrap && tblWrap.parentNode && !document.getElementById('eb-tanstack-table-bar')) {
         var tBar = document.createElement('div');
         tBar.id = 'eb-tanstack-table-bar';
-        tBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:9px 12px;margin-bottom:10px;border-radius:10px;background:' + CFG.theme.subtleBg + ';border:1px solid ' + CFG.theme.border + ';font-family:' + CFG.theme.fontSans + ';';
+        tBar.style.cssText = 'display:' + (isPseoOrDir ? 'flex' : 'none') + ';justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:9px 12px;margin-bottom:10px;border-radius:10px;background:' + CFG.theme.subtleBg + ';border:1px solid ' + CFG.theme.border + ';font-family:' + CFG.theme.fontSans + ';';
         tBar.innerHTML = '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px;"><span style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Filter Table:</span><input type="search" id="eb-tanstack-filter-input" placeholder="Search rows or test your own..." oninput="window.__ebFilterAndCalcTable(this.value)" style="flex:1;padding:6px 10px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13.5px;" /></div>'
           + '<div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-tanstack-sort" onclick="window.__ebSortTableRows()" style="padding:6px 11px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⇅ Sort by Impact</button><button type="button" id="btn-tanstack-unlock-rows" onclick="window.__ebOpenFloatingGate(this)" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;cursor:pointer;">🔒 Unlock Full Table</button></div>';
         tblWrap.parentNode.insertBefore(tBar, tblWrap);
@@ -539,11 +540,8 @@ function buildClientRuntimeScript(cfg) {
       if (nativePhotoShell && !document.getElementById('eb-hero-sparkline-pill')) {
         nativePhotoShell.style.position = 'relative'; nativePhotoShell.style.cursor = 'pointer'; nativePhotoShell.onclick = function(ev) { window.__ebCycleHeroScenario(ev); }; nativePhotoShell.insertAdjacentHTML('beforeend', sparkPillHtml);
       } else if (!nativePhotoShell && !document.getElementById('eb-doppelrand-hero-card')) {
-        var presetRowCf = document.querySelector('#grader .preset-strip'), teHeaderAa = document.querySelector('.telemetry-card .card-header-bar'), subheadSr = document.querySelector('#radar-tool .hero-grid p.subhead, .hero-grid p.subhead'), fallbackLead = document.querySelector('.hero-sub, .subhead, .hero-lead, main h1 ~ p');
-        if (presetRowCf && presetRowCf.parentNode) presetRowCf.parentNode.insertBefore(buildHeroCardEl(128, 'margin:14px 0 0 0;'), presetRowCf.nextSibling);
-        else if (teHeaderAa && teHeaderAa.parentNode) teHeaderAa.parentNode.insertBefore(buildHeroCardEl(132, 'margin:0 0 12px 0;'), teHeaderAa.nextSibling);
-        else if (subheadSr && subheadSr.parentNode) subheadSr.parentNode.insertBefore(buildHeroCardEl(138, 'margin:10px 0 12px 0;'), subheadSr.nextSibling);
-        else if (fallbackLead && fallbackLead.parentNode) fallbackLead.parentNode.insertBefore(buildHeroCardEl(140, 'margin:12px 0 14px 0;'), fallbackLead.nextSibling);
+        var fallbackLead = document.querySelector('.hero-sub, .subhead, .hero-lead, main h1 ~ p');
+        if (fallbackLead && fallbackLead.parentNode) fallbackLead.parentNode.insertBefore(buildHeroCardEl(120, 'display:none;margin:0;'), fallbackLead.nextSibling);
       }
       var homeSubLead = document.querySelector('.hero-sub, .subhead, .editorial-subhead, .hero-lead, main h1 ~ p');
       if (homeSubLead && homeSubLead.parentNode && !window.__ebIsUnlocked && !document.getElementById('eb-mobile-firstfold-bar')) homeSubLead.parentNode.insertBefore(buildQBar('eb-mobile-firstfold-bar'), homeSubLead.nextSibling);
@@ -553,7 +551,7 @@ function buildClientRuntimeScript(cfg) {
       if (targetEl) targetEl.classList.add('eb-blurred-deliverable');
       if (!document.getElementById('eb-postcalc-inline-cta')) {
         var pcCta = document.createElement('div'); pcCta.id = 'eb-postcalc-inline-cta';
-        pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
+        pcCta.style.cssText = 'display:none;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
         pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span><div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><a id="btn-postcalc-permalink" href="/scan/' + encodeURIComponent(window.__ebActiveEntity || (CFG.presets[0] && CFG.presets[0].key) || 'verified') + '" style="font-size:12.5px;font-weight:600;color:' + CFG.theme.textSecondary + ';text-decoration:underline;white-space:nowrap;">Share Report ↗</a><button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="display:none;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;">Unlock 3-File Pack ($1.99) →</button></div>'
           + '<form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:none;"><input type="email" id="eb-postcalc-email-input" placeholder="' + PERSONA.leadPh + '" /><button type="submit" id="btn-postcalc-email-submit">' + PERSONA.leadBtn + '</button></form>';
         if (scoreAnchor && scoreAnchor.parentNode) scoreAnchor.parentNode.insertBefore(pcCta, scoreAnchor.nextSibling);
@@ -614,8 +612,10 @@ function buildClientRuntimeScript(cfg) {
       + '<input type="email" id="eb-inline-scorecard-email" placeholder="' + PERSONA.leadPh + '" required style="padding:6px 10px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13px;min-width:195px;" />'
       + '<button type="submit" id="btn-save-scorecard" style="padding:6px 13px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:13px;cursor:pointer;">' + PERSONA.leadBtn + ' →</button></div></form>';
 
+    var lbShowcase = !isPseoOrDir ? document.getElementById('eb-leaderboard-home-showcase') : null;
     if (mountAnchor.parentNode) {
       if (mountAnchor === tBarAnchor || mountAnchor === targetEl) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
+      else if (lbShowcase && lbShowcase.parentNode) lbShowcase.parentNode.insertBefore(curtain, lbShowcase.nextSibling);
       else mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     }
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -870,6 +870,8 @@ function buildClientRuntimeScript(cfg) {
   document.addEventListener('mouseleave', function(e) { if (e.clientY <= 12) showRescueToast('desktop_exit'); }, { passive: true });
   window.addEventListener('scroll', function() {
     var y = window.scrollY || 0;
+    var sb = document.getElementById('sticky-mobile-bar');
+    if (sb) sb.classList.toggle('eb-dock-visible', y > 650);
     if (y > maxScrollY) maxScrollY = y;
     else if (maxScrollY > 450 && (maxScrollY - y) > 120) showRescueToast('mobile_scroll_up');
   }, { passive: true });
@@ -967,6 +969,12 @@ function renderExactBaselineEnhancements(html, cfg, reqPath) {
   let out = enhanceHtmlForSearchAndAiBots(html, cfg, reqPath);
   const styles = buildExactBaselineStyles(cfg), bottomSuite = buildBottomConversionSuiteHtml(cfg, reqPath), clientJs = buildClientRuntimeScript(cfg);
   out = out.includes('</head>') ? out.replace('</head>', () => `${styles}\n</head>`) : styles + out;
+  const isHomeRoute = !reqPath || reqPath === '/' || reqPath === '/index.html';
+  if (isHomeRoute && !out.includes('eb-leaderboard-home-showcase')) {
+    const podiumHtml = buildTopLeaderboardPodiumShowcaseHtml(cfg);
+    if (/<main[\s\S]*?<\/section>/i.test(out)) out = out.replace(/(<main[\s\S]*?<\/section>)/i, (m) => `${m}\n<div class="container" style="max-width:1240px;margin:0 auto;padding:0 20px;">${podiumHtml}</div>`);
+    else if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${podiumHtml}\n${m}`);
+  }
   if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${bottomSuite}\n${m}`);
   else if (out.includes('</body>')) out = out.replace('</body>', () => `${bottomSuite}\n</body>`);
   else out = `${out}\n${bottomSuite}`;
