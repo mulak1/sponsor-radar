@@ -96,9 +96,9 @@ const VERTICAL_CONFIGS = {
       { key: 'supabase.com', label: 'Supabase' }, { key: 'notion.so', label: 'Notion' }, { key: 'vercel.com', label: 'Vercel' }
     ],
     coMarketingPills: [
-      { key: 'perplexity', label: 'Perplexity', rowText: 'Perplexity Tip: Adding a clear 50-word summary at the top of key pages + /llms-full.txt boosts #1 citations.' },
-      { key: 'chatgpt', label: 'ChatGPT Search', rowText: 'ChatGPT Tip: Make sure OAI-SearchBot is allowed in robots.txt and your pricing page has clear structured data.' },
-      { key: 'gemini', label: 'Google AI Overviews', rowText: 'Google AI Tip: Adding FAQ structured data increases how often Google AI quotes your product pages by +34%.' }
+      { key: 'perplexity', label: 'Perplexity', rowText: 'Perplexity Diagnosis: Missing root /llms-full.txt & answer-first summary blocks reduce #1 citations by up to 64%.' },
+      { key: 'chatgpt', label: 'ChatGPT Search', rowText: 'ChatGPT Diagnosis: Blocked OAI-SearchBot rules or missing Product JSON-LD cause ChatGPT to recommend competitors.' },
+      { key: 'gemini', label: 'Google AI Overviews', rowText: 'Google AI Diagnosis: Unanchored FAQ & Organization entities drop AI Overview citation share by 34%.' }
     ],
     affiliates: [
       { title: 'Semrush AI SEO & Visibility Tracker', badge: 'Verified SEO Partner', cpa: 'Explore 7-Day Trial', url: 'https://www.semrush.com/' },
@@ -118,8 +118,8 @@ const VERTICAL_CONFIGS = {
       { file: '25-buyer-prompts.csv', size: '6.1 KB', schema: '25 Buyer Questions Table', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [BEFORE] AI crawlers blocked or missing /llms.txt guide | Current AI Mention Rate: 22.9%',
-      afterLine: '+ [AFTER]  All 6 AI crawlers enabled + /llms-full.txt + FAQ schema | Expected Mention Rate: 29.2% (+6.3%)',
+      beforeLine: '- [DIAGNOSIS] 3 AI Crawler & Schema Gaps Detected | Current AI Mention Share: 22.9%',
+      afterLine: '+ [LOCKED FIX] Custom /llms-full.txt + JSON-LD @graph [REDACTED IN PREVIEW] -> 29.2% (+6.3% Lift)',
       roiBadge: '+6.3% to +27% More AI Mentions'
     }
   },
@@ -138,7 +138,7 @@ const VERTICAL_CONFIGS = {
     proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'Agency & Media-Buyer Pro Feed ($199/mo)',
     lockedTitle: 'Verified Sponsor Partnership Contacts',
     deliverableName: 'Verified Sponsor Contact Email + Ready-to-Send Pitch + Full Ad Rate Table',
-    freeDeliverableName: 'Verified Sponsor Contact & Ready-to-Send Pitch Email',
+    freeDeliverableName: 'Verified Sponsor Contact & 3-Ad Pilot Pitch Pack',
     unlockBannerTitle: 'Get Verified Sponsor Contact Emails, Real Ad Rates (CPM) & Pitch Templates',
     explainerText: 'See which sponsors booked 3+ repeat ads, what they paid, and who to email on their partnerships team',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
@@ -187,9 +187,9 @@ const VERTICAL_CONFIGS = {
       { key: 'linear', label: 'Linear' }, { key: 'ramp', label: 'Ramp' }, { key: 'eight-sleep', label: '8Sleep' }
     ],
     coMarketingPills: [
-      { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Benchmark: 60-second host-read mid-roll ads average $38.50 CPM with a 4.2x repeat booking rate.' },
-      { key: 'youtube', label: 'YouTube Creators', rowText: 'YouTube Benchmark: 90-second creator integrations with a pinned link in comments average 2.8% click-through.' },
-      { key: 'beehiiv', label: 'Newsletters', rowText: 'Newsletter Benchmark: Top-banner B2B newsletter sponsorships average $42 per click ($65 CPM).' }
+      { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Spend Signal: 68% of single-episode test ads churn; 3x+ renewed mid-rolls reveal proven ROI.' },
+      { key: 'youtube', label: 'YouTube Creators', rowText: 'YouTube Spend Signal: Track which sponsors book 3+ consecutive creator integrations vs. 1-off tests.' },
+      { key: 'beehiiv', label: 'Newsletters', rowText: 'Newsletter Spend Signal: Compare verified multi-issue newsletter sponsors and negotiated rate tiers.' }
     ],
     affiliates: [
       { title: 'Riverside.fm 4K Podcast & Video Studio', badge: 'Creator Studio Pick', cpa: 'Explore Creator Studio', url: 'https://riverside.fm/' },
@@ -209,8 +209,8 @@ const VERTICAL_CONFIGS = {
       { file: '96-flight-cpm-decay.csv', size: '14.2 KB', schema: '96 Ad Placements & Rates', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [BEFORE] Cold-emailing generic info@brand.com without rate proof | Avg Reply Rate: 1.1%',
-      afterLine: '+ [AFTER]  Emailing verified partnerships lead with 14x repeat-booking proof | Avg Reply Rate: 18.4%',
+      beforeLine: '- [DIAGNOSIS] 14 Verified 3x+ Renewed Placements Found | Generic Cold Outreach Reply: 1.1%',
+      afterLine: '+ [LOCKED FIX] Verified Partnerships Email + 3-Flight Pitch [REDACTED IN PREVIEW] -> 18.4% Reply',
       roiBadge: '16.7x Higher Sponsor Reply Rate'
     }
   },
@@ -278,9 +278,9 @@ const VERTICAL_CONFIGS = {
       { key: 'preset-acne-rx-bpo-tret', label: 'Tret+BPO' }, { key: 'preset-fungal-safe-barrier', label: 'Fungal' }, { key: 'preset-glass-skin', label: 'Barrier' }
     ],
     coMarketingPills: [
-      { key: 'sephora', label: 'Morning vs. Night Split', rowText: 'Layering Tip: Use Vitamin C in the morning and Copper Peptides at night so they never cancel each other out.' },
-      { key: 'dermstore', label: 'Retinol Comfort Tip', rowText: 'Retinol Tip: Wait 15–20 minutes after applying Retinol or Tretinoin before sealing with your ceramide moisturizer.' },
-      { key: 'ultrasun', label: 'Morning SPF Pairing', rowText: 'Morning Glow Tip: Pairing Vitamin C under daily broad-spectrum SPF boosts antioxidant protection 4x.' }
+      { key: 'sephora', label: 'pH Clash Risk', rowText: 'Formulation Alert: Mixing low-pH direct acids (pH 3.2) with neutral peptides (pH 6.0) causes rapid hydrolysis.' },
+      { key: 'dermstore', label: 'Retinoid Oxidation', rowText: 'Formulation Alert: Combining unencapsulated retinoids with peroxides or low-pH acids triggers barrier stinging.' },
+      { key: 'ultrasun', label: 'Pore-Safety Check', rowText: 'Formulation Alert: Heavy esters (Isopropyl Myristate & Coconut Alkanes) trap heat under active serums.' }
     ],
     affiliates: [
       { title: 'SkinCeuticals C E Ferulic (Dermstore)', badge: 'Morning Vitamin C Pick', cpa: 'Shop Authorized Clinical', url: 'https://www.dermstore.com/p/skinceuticals-c-e-ferulic-with-15-l-ascorbic-acid-vitamin-c-serum-30ml/11289609/' },
@@ -300,8 +300,8 @@ const VERTICAL_CONFIGS = {
       { file: 'non-comedogenic-swaps.csv', size: '5.5 KB', schema: 'Pore-Safe Product Swaps', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [BEFORE] Layering Vitamin C + Copper Peptides in the same routine -> Serums cancel out & sting',
-      afterLine: '+ [AFTER]  Morning: Vitamin C + SPF | Night: Copper Peptides + Barrier Cream -> Harmony: 96/100',
+      beforeLine: '- [DIAGNOSIS] High-Risk Active Clash & 2.8 pH Gap Detected | Current Routine Harmony: 20/100',
+      afterLine: '+ [LOCKED FIX] Custom AM/PM Split Order + 4-Night Schedule [REDACTED IN PREVIEW] -> 96/100 Harmony',
       roiBadge: 'Saves $182+ in Wasted Serums'
     }
   },
@@ -329,7 +329,7 @@ const VERTICAL_CONFIGS = {
     tier1Tag: 'SINGLE-STORE RECOVERY PASS • SAVE 96% VS $49',
     tier1Desc: 'Instantly unlocks the 1-click checkout recovery script, Stripe webhook retry worker (.JS), and bank decline retry schedule (.CSV).',
     tier2Tag: 'STARTER STORE RECOVERY ($49/MO)',
-    tier2Desc: 'Automated checkout exit-offer matching + Friday payday retry scheduling for failed Stripe renewals with 0% commission.',
+    tier2Desc: 'Automated checkout exit-offer matching + payday-aligned retry scheduling for failed Stripe renewals with 0% commission.',
     tier3Tag: 'GROWTH & 1-TAP SMS SUITE ($149/MO)',
     tier3Desc: 'Multi-store recovery, 1-Tap Apple Pay card-update SMS links, and direct Klaviyo & PostHog integration.',
     battlecard: {
@@ -337,7 +337,7 @@ const VERTICAL_CONFIGS = {
       colLegacy: '15%-Commission Recovery Apps', colManual: 'Generic 10%-Off Popups',
       rows: [
         ['Abandoned Checkout Recovery', 'Matches the right offer to why the shopper is leaving (shipping, price, trust)', 'Charges 10%–15% commission on recovered sales', 'Trains every customer to leave just to get a coupon'],
-        ['Failed Stripe Card Recovery', 'Retries cards on payday mornings when bank balances replenish', 'Blind daily retries that trigger bank fraud blocks', 'Generic "card declined" emails buyers ignore'],
+        ['Failed Stripe Card Recovery', 'Retries cards on bank-liquidity windows when balances replenish', 'Blind daily retries that trigger bank fraud blocks', 'Generic "card declined" emails buyers ignore'],
         ['Flat, Predictable Pricing', '$1.99 Single-Store Pass or $49/mo flat (0% commission)', '$500–$2,500+/mo in revenue-share fees', '$15k–$75k/mo in lost sales']
       ]
     },
@@ -354,7 +354,7 @@ const VERTICAL_CONFIGS = {
     kpis: [
       { label: 'Recoverable MRR/Mo', val: '$56,722', sub: '24.6% Net Lift' },
       { label: 'Exit-Intent Capture', val: '$49,076', sub: 'C1–C6 Bandit Arms' },
-      { label: 'Smart Dunning Lift', val: '$7,646', sub: 'Payday Window Retry' },
+      { label: 'Smart Dunning Lift', val: '$7,646', sub: 'Issuer Window Retry' },
       { label: 'Pre-Exit Hesitation', val: '< 12.0s', sub: 'Cursor Velocity Vector' }
     ],
     presetKpis: {
@@ -369,9 +369,9 @@ const VERTICAL_CONFIGS = {
       { key: 'creator_checkout', label: 'Creator' }, { key: 'subscription_app', label: 'Sub App' }, { key: 'enterprise_annual', label: 'Enterprise' }
     ],
     coMarketingPills: [
-      { key: 'stripe', label: 'Stripe Billing', rowText: 'Stripe Billing Schedule: Delay insufficient_funds retry to Friday 06:00 AM local timezone (+31.4% card recovery)' },
-      { key: 'shopify', label: 'Shopify Plus', rowText: 'Shopify Plus Bandit: Trigger C1 Price-Objection 15% dynamic coupon only when cursor velocity vy < -0.65px/ms' },
-      { key: 'recharge', label: 'Recharge SMS', rowText: 'Recharge SMS Dunning: Dispatch 1-Tap Apple Pay card-update magic link via SMS 4 hours after do_not_honor decline' }
+      { key: 'stripe', label: 'Stripe Billing', rowText: 'Stripe Decline Alert: Naive 24h cron retries on insufficient_funds burn 4-retry Visa limits before balances clear.' },
+      { key: 'shopify', label: 'Shopify Plus', rowText: 'Checkout Exit Alert: Static 10%-off popups sacrifice margin on full-price buyers while missing shipping/trust objections.' },
+      { key: 'recharge', label: 'Recharge SMS', rowText: 'Subscription Alert: Generic dunning emails average < 8% open rates on do_not_honor and expired_card declines.' }
     ],
     affiliates: [
       { title: 'Stripe Billing & Smart Retries Suite', badge: 'Official Payment Rail', cpa: 'Explore Webhook Docs', url: 'https://stripe.com/billing' },
@@ -382,7 +382,7 @@ const VERTICAL_CONFIGS = {
       name: 'carlsednaoui/ouibounce + PostHog/posthog + colinhacks/zod',
       stars: '★ 171,369 Combined', url: 'https://github.com/PostHog/posthog',
       badge: 'Beta-Bernoulli C1–C6 Bandit + Stripe Decline-Code Retry Engine',
-      title: 'Autonomous Exit-Intent Bandit & Payday-Window Dunning Worker',
+      title: 'Autonomous Exit-Intent Bandit & Issuer-Window Dunning Worker',
       summary: 'Replaces naive 24h card retries and static popups with decline-code aware scheduling and Thompson Sampling.'
     },
     deliverableFiles: [
@@ -391,8 +391,8 @@ const VERTICAL_CONFIGS = {
       { file: 'payday-retry-schedule.csv', size: '5.2 KB', schema: 'Visa/MC Compliance Matrix', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [NAIVE]  Immediate 24h retry on insufficient_funds + static 10% popup -> $214,523/mo leaked',
-      afterLine: '+ [BANDIT] Friday 06:00 Payday Retry + C1-C6 Thompson Bandit SDK -> +$56,722/mo net recovered',
+      beforeLine: '- [DIAGNOSIS] $214,523/mo Leaking Across Checkout Exits & Failed Stripe Card Renewals',
+      afterLine: '+ [LOCKED FIX] Issuer-Timed Retry Schedule + C1–C6 Bandit SDK [REDACTED IN PREVIEW] -> +$56,722/mo',
       roiBadge: '+$56,722/mo Net Recovery'
     }
   }

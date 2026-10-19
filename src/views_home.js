@@ -37,51 +37,65 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   <section class="hero-section" id="radar-tool">
     <div class="container">
       <div class="hero-grid" style="align-items:stretch;">
-        <!-- Left Column: Merged Executive Brief + 1-Click Outbound Pitch Box -->
+        <!-- Left Column: Crisp Layperson Value Proposition + Redacted Outbound Pitch Preview -->
         <div id="home-executive-brief" style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
           <div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <span class="pill-vermilion">2026 EXECUTIVE BRIEF &amp; SPONSORSHIP CHECKER</span>
+              <span class="pill-vermilion">PODCAST, NEWSLETTER &amp; YOUTUBE SPONSOR CHECKER</span>
               <a href="/leaderboard" class="pill-emerald" style="text-decoration:none;">🏆 Top-3 Podium Leaderboard &rarr;</a>
             </div>
             <h1 class="headline-xl">
-              Executive Brief: Why the <span class="serif-italic" style="color:var(--emerald-roi);">3x-Renewal Signal</span> Beats Vanity Download Numbers
+              See Which Sponsors <span class="serif-italic" style="color:var(--emerald-roi);">Renew 3+ Times</span> &amp; What They Pay
             </h1>
             <p class="subhead">
-              68% of single-episode sponsorships never make back their ad spend and never return. Instead of guessing from inflated media kits, see where top buyers (AG1, Deel, Ramp, Eight Sleep) renew 3 to 18 times in a row.
+              68% of one-off sponsorships lose money and never book again. Search any brand or show to see verified 3+ repeat sponsors, estimated monthly spend, and real CPM rates.
             </p>
 
-            <!-- 3-Point Executive Brief Summary inside Top Hero -->
+            <!-- Built For Channel / Persona Pills -->
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;">
+              <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Built for:</span>
+              <span class="preset-chip" style="cursor:default;">🎙️ Podcasters &amp; YouTubers</span>
+              <span class="preset-chip" style="cursor:default;">📩 Newsletter Creators</span>
+              <span class="preset-chip" style="cursor:default;">🤝 Media Buyers &amp; Agencies</span>
+            </div>
+
+            <!-- 3-Step Layperson Journey inside Top Hero -->
             <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:16px;">
               <div class="panel" style="padding:12px;">
-                <div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-bottom:3px;">01. 3x RENEWAL RULE</div>
-                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Brands only book 3+ consecutive episodes when promo codes pay back CAC.</div>
+                <div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-bottom:3px;">STEP 1 • FREE CHECK</div>
+                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Search any brand or show to see monthly ad spend &amp; 3x+ renewal score.</div>
               </div>
               <div class="panel" style="padding:12px;">
-                <div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700; margin-bottom:3px;">02. REAL CPM RATES</div>
-                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Compare negotiated 3-episode bundle CPMs ($28 to $55) so you never overpay.</div>
+                <div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700; margin-bottom:3px;">STEP 2 • VERIFY ROI</div>
+                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Filter out 1-time test ads and see where brands book 3 to 18 episodes in a row.</div>
               </div>
               <div class="panel" style="padding:12px;">
-                <div class="mono" style="font-size:13px; color:var(--text-primary); font-weight:700; margin-bottom:3px;">03. 1-CLICK PITCH</div>
-                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Generate a ready-to-send 3-episode pilot pitch or media plan in seconds.</div>
+                <div class="mono" style="font-size:13px; color:var(--text-primary); font-weight:700; margin-bottom:3px;">STEP 3 • UNLOCK PACK</div>
+                <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Unlock verified buyer emails, CPM rate cards &amp; ready-to-send pitches ($1.99).</div>
               </div>
             </div>
           </div>
 
-          <!-- Ready-to-Send Outbound Pitch Box (Balanced Left Column Anchor) -->
+          <!-- Redacted Outbound Pitch Preview Box (Balanced Left Column Anchor) -->
           <div class="pitch-box" style="margin-top:auto; display:flex; flex-direction:column;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
-                <span class="pill-emerald">READY-TO-SEND PILOT PITCH</span>
+                <span class="pill-emerald">DIAGNOSTIC QUOTE &amp; LOCKED PITCH PACK</span>
                 <span class="mono" style="font-size:13px; color:var(--text-secondary); margin-left:6px;" id="res-pitch-meta">
                   Pilot Quote: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} (3 Episodes @ $${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)
                 </span>
               </div>
-              <button type="button" class="btn btn-vermilion" style="padding:6px 12px; min-height:36px; font-size:13px;" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass')}else{copyPitchEmail()}">
-                <span id="copy-pitch-label">Unlock 3-File Pitch Pack ($1.99) ↗</span>
+              <button type="button" class="btn btn-vermilion" style="padding:6px 12px; min-height:36px; font-size:13px;" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass')}else{window.location.href='/buy/micro_pass?source=hero_pitch_pack'}">
+                <span id="copy-pitch-label">Unlock Buyer Email &amp; Pitch Pack ($1.99) ↗</span>
               </button>
             </div>
-            <pre class="pitch-pre" id="res-pitch-body" style="margin-top:8px;">${escapeHtml("Subject: " + defaultAnalysis.outbound_pitch.subject + "\n\n" + defaultAnalysis.outbound_pitch.body)}</pre>
+            <pre class="pitch-pre" id="res-pitch-body" style="margin-top:8px;">${escapeHtml(
+              "# SponsorRadar Diagnostic Summary (" + defaultAnalysis.brand.name + ")\n" +
+              "• Verified 3x+ Renewal Score: " + defaultAnalysis.metrics.renewal_velocity_score + "/100 (" + defaultAnalysis.metrics.proven_3x_shows_count + " Proven Shows)\n" +
+              "• Recommended 3-Episode Pilot Quote: $" + defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString() + " ($" + defaultAnalysis.outbound_pitch.effective_cpm_usd + " Effective CPM)\n" +
+              "• Target Buyer Role: " + defaultAnalysis.brand.decision_maker_role + "\n" +
+              "• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]"
+            )}</pre>
           </div>
         </div>
 
@@ -184,7 +198,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   <div class="kpi-box">
                     <div class="kpi-label">PARTNERSHIPS LEAD</div>
                     <div class="kpi-val" id="res-dm-role" style="font-size:14.5px; color:var(--text-primary);">${escapeHtml(defaultAnalysis.brand.decision_maker_role)}</div>
-                    <div class="mono" id="res-dm-email" style="font-size:13px; color:var(--cyan-info);">${escapeHtml(defaultAnalysis.brand.sponsor_email)}</div>
+                    <div class="mono" id="res-dm-email" style="font-size:13px; color:var(--amber-gold);">🔒 Verified Email Locked ($1.99)</div>
                   </div>
                 </div>
 
@@ -469,7 +483,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       document.getElementById('res-renewal-score').textContent = data.metrics.renewal_velocity_score + '/100';
       document.getElementById('res-flights-summary').textContent = data.metrics.proven_3x_shows_count + ' Proven 3x+ Shows (' + data.metrics.verified_total_flights + ' Flights)';
       document.getElementById('res-dm-role').textContent = data.brand.decision_maker_role;
-      document.getElementById('res-dm-email').textContent = data.brand.sponsor_email;
+      document.getElementById('res-dm-email').textContent = '🔒 Verified Email Locked ($1.99)';
       document.getElementById('res-table-title').textContent = 'VERIFIED AD-READ PLACEMENTS FOR ' + data.brand.name.toUpperCase();
 
       const tbody = document.getElementById('res-placements-tbody');
@@ -497,9 +511,13 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 
       if (data.outbound_pitch) {
         document.getElementById('res-pitch-meta').textContent =
-          'To: ' + data.outbound_pitch.to_email + ' • Pilot Quote: $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + data.outbound_pitch.effective_cpm_usd + ' CPM)';
+          'Pilot Quote: $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + data.outbound_pitch.effective_cpm_usd + ' CPM)';
         document.getElementById('res-pitch-body').textContent =
-          'Subject: ' + data.outbound_pitch.subject + '\\n\\n' + data.outbound_pitch.body;
+          '# SponsorRadar Diagnostic Summary (' + data.brand.name + ')\\n' +
+          '• Verified 3x+ Renewal Score: ' + data.metrics.renewal_velocity_score + '/100 (' + data.metrics.proven_3x_shows_count + ' Proven Shows)\\n' +
+          '• Recommended 3-Episode Pilot Quote: $' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' ($' + data.outbound_pitch.effective_cpm_usd + ' Effective CPM)\\n' +
+          '• Target Buyer Role: ' + data.brand.decision_maker_role + '\\n' +
+          '• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]';
       }
     }
 
@@ -540,7 +558,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       document.getElementById('res-renewal-score').textContent = first.renewal_score + '/100';
       document.getElementById('res-flights-summary').textContent = first.renewal_badge;
       document.getElementById('res-dm-role').textContent = first.decision_maker_role;
-      document.getElementById('res-dm-email').textContent = first.sponsor_email;
+      document.getElementById('res-dm-email').textContent = '🔒 Verified Email Locked ($1.99)';
       document.getElementById('res-table-title').textContent = 'EXTRACTED AD-READ ENTITIES & ATTRIBUTION SIGNALS (' + data.engine_model.toUpperCase() + ')';
 
       const tbody = document.getElementById('res-placements-tbody');
@@ -548,7 +566,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         <tr>
           <td>
             <div style="font-weight:700;">\${s.brand_name}</div>
-            <div class="mono" style="font-size:13px; color:var(--text-muted);">\${s.category} • \${s.sponsor_email}</div>
+            <div class="mono" style="font-size:13px; color:var(--text-muted);">\${s.category} • 🔒 Buyer Email Locked</div>
           </td>
           <td><span class="\${s.verified_flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${s.renewal_badge}</span></td>
           <td class="mono" style="font-size:13px;">
@@ -568,9 +586,13 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 
       if (first.outbound_pitch) {
         document.getElementById('res-pitch-meta').textContent =
-          'To: ' + first.outbound_pitch.to_email + ' • Pilot Quote: $' + Number(first.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + first.outbound_pitch.effective_cpm_usd + ' CPM)';
+          'Pilot Quote: $' + Number(first.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (3 Flights @ $' + first.outbound_pitch.effective_cpm_usd + ' CPM)';
         document.getElementById('res-pitch-body').textContent =
-          'Subject: ' + first.outbound_pitch.subject + '\\n\\n' + first.outbound_pitch.body;
+          '# SponsorRadar Diagnostic Summary (' + first.brand_name + ')\\n' +
+          '• Verified 3x+ Renewal Score: ' + first.renewal_score + '/100\\n' +
+          '• Recommended 3-Episode Pilot Quote: $' + Number(first.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' ($' + first.outbound_pitch.effective_cpm_usd + ' Effective CPM)\\n' +
+          '• Target Buyer Role: ' + first.decision_maker_role + '\\n' +
+          '• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]';
       }
     }
 
@@ -579,7 +601,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (navigator.clipboard) navigator.clipboard.writeText(text);
       const label = document.getElementById('copy-pitch-label');
       label.textContent = '✓ Copied to Clipboard';
-      setTimeout(() => { label.textContent = 'Copy Outbound Pitch Email'; }, 2000);
+      setTimeout(() => { label.textContent = 'Unlock Buyer Email & Pitch Pack ($1.99) ↗'; }, 2000);
     }
 
     function filterLedgerRows(filterKey, btnEl) {
@@ -704,7 +726,7 @@ function renderLandingPage({ defaultAnalysis }) {
               </div>
               <div class="kpi-box">
                 <div class="kpi-label">DECISION MAKER EMAIL</div>
-                <div class="kpi-val" id="lp-email" style="font-size:14px; color:var(--cyan-info);">${escapeHtml(defaultAnalysis.brand.sponsor_email)}</div>
+                <div class="kpi-val" id="lp-email" style="font-size:14px; color:var(--amber-gold);">🔒 Locked in Free Preview ($1.99)</div>
               </div>
             </div>
           </div>
@@ -748,7 +770,7 @@ function renderLandingPage({ defaultAnalysis }) {
         document.getElementById('lp-brand-name').textContent = data.brand.name;
         document.getElementById('lp-spend').textContent = '$' + Number(data.metrics.est_monthly_spend_usd).toLocaleString();
         document.getElementById('lp-score').textContent = data.metrics.renewal_velocity_score + '/100';
-        document.getElementById('lp-email').textContent = data.brand.sponsor_email;
+        document.getElementById('lp-email').textContent = '🔒 Locked in Free Preview ($1.99)';
         fireMetaEvent('Lead', 0, { source: 'lp_interactive_lookup', query: q });
       }
     }

@@ -653,7 +653,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </a>
       <nav class="nav-links" aria-label="Primary Navigation">
         <a href="/#radar-tool">Spend Radar</a>
-        <a href="/#home-executive-brief">Executive Brief</a>
         <a href="/leaderboard" style="font-weight:700;color:var(--vermilion);">🏆 Leaderboard</a>
         <a href="/directory">60+ Spend Reports</a>
         <a href="/#pricing">Pricing</a>
@@ -703,7 +702,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
           <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">PLATFORM</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/#radar-tool">Interactive Spend Radar</a>
-            <a href="/#home-executive-brief">Executive Brief</a>
             <a href="/leaderboard">🏆 Industry Leaderboard</a>
             <a href="/directory">60+ pSEO Spend Reports</a>
             <a href="/sitemap.xml">XML Sitemap</a>

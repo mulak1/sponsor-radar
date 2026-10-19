@@ -830,7 +830,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
   }).join('');
   const fixPills = fix2.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#FFF1F2;border:1px solid #FECDD3;color:#BE123C;font-size:13px;font-weight:700;text-decoration:none;"><span>⚠️ ${escHtml(s.target)}</span><span style="font-family:monospace;">Grade ${escHtml(s.grade)} (${s.score}/100)</span><span>See Why →</span></a>`).join('');
 
-  return `<section id="eb-leaderboard-home-showcase" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Podium" style="max-width:1280px;margin:24px auto;padding:0 24px;font-family:${t.fontSans};">
+  return `<section id="eb-leaderboard-home-showcase" class="container" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Podium" style="margin:36px auto;font-family:${t.fontSans};">
     <div class="eb-panel-card" style="margin:0;padding:24px;background:${t.cardBg};border:1.5px solid ${t.accentBorder};">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
         <div>

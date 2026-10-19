@@ -1,19 +1,8 @@
 /**
- * ExactBaseline (custom_automaton) Cumulative UI, Deliverable Value-Gating & Behavioral Economics Architecture
+ * ExactBaseline Cumulative UI, Deliverable Value-Gating & Conversion Architecture
  * Shared across CitationForge (#1), SponsorRadar (#2), DermLogic (#4), and AbandonAlpha (#9).
- *
- * Architectural & Behavioral Economics Principles (@richardrx revenue-centric-design + Dan Ariely):
- *  1. NATIVE HERO FIRST: Never inject a disjoint box above <main>. The visitor immediately sees the site's
- *     native editorial Hero headline and native interactive calculator above the fold on Desktop and Mobile.
- *  2. ZERO-PRICE EFFECT PREVENTION: Never place a "$0 Free" or "$0 Partner" button next to a paid "$1.99" CTA
- *     for the same deliverable. Free = Instant Diagnostic + 3-Line jsdiff Proof Preview. Paid = Full Production
- *     Deliverable & Export Bundle ($1.99 Single-Audit Pass vs. $4.99/$49 Complete Pack vs. $19.99/$99/$199 Pro Anchor).
- *  3. DOWNSELL-ONLY EMAIL CAPTURE: Email capture appears only in the Exit-Intent Rescue Toast (#eb-ouibounce-toast)
- *     when an abandoning visitor moves to close the tab, sending a 1-page diagnostic summary without cannibalizing buyers.
- *  4. 100% PERSONA-AUTHENTIC COPY: Every vertical renders bespoke terminology, comparison columns, and export actions.
- * Strictly < 1,000 lines per /code-craft rules.
+ * Free = Diagnostic & Quantified Problem. Paid ($1.99 Pass) = Ready-to-Use Production Fix & Export Pack.
  */
-
 const SOVRN_KEY = process.env.SOVRN_COMMERCE_KEY || 'ea3d7b74c5752fd817f896be27cd1a01';
 const { buildTopLeaderboardPodiumShowcaseHtml, buildMobileSeoCrawlMeshHtml, enhanceHtmlForSearchAndAiBots } = require('./exact-baseline-seo');
 
@@ -41,24 +30,24 @@ function buildExactBaselineStyles(cfg) {
   button:active, .preset-chip:active, .store-preview-pill:active, .eb-action-btn:active, .cta-btn:active { transform: scale(0.98) !important; }
   .metric-box-value, .matrix-price, .eb-kpi-val, .eb-tabular { font-variant-numeric: tabular-nums !important; }
   .eb-blurred-deliverable { filter: blur(5px) !important; user-select: none !important; cursor: pointer !important; max-height: 140px !important; overflow: hidden !important; opacity: 0.55 !important; transition: filter 250ms ease, max-height 250ms ease, opacity 250ms ease; }
-  #eb-deliverable-curtain { margin-top: 14px; padding: 18px 20px; border-radius: ${t.radiusCard}; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; box-shadow: ${t.shadow}; font-family: ${t.fontSans}; position: relative; z-index: 20; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; font-weight: 400 !important; }
-  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 11px 14px; font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.5; margin: 0; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
+  #eb-deliverable-curtain { margin-top: 24px; padding: 22px 24px; border-radius: ${t.radiusCard}; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; box-shadow: ${t.shadow}; font-family: ${t.fontSans}; position: relative; z-index: 20; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; font-weight: 400 !important; }
+  #eb-prism-proof-preview { background: ${t.subtleBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: 10px; padding: 12px 16px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.55; margin: 0; overflow-x: auto; white-space: pre-wrap; text-transform: none !important; letter-spacing: normal !important; }
   .eb-doppelrand-shell { padding: 6px; border-radius: 18px; background: rgba(15, 23, 42, 0.035); border: 1px solid ${t.border}; box-shadow: 0 14px 34px -10px rgba(15, 23, 42, 0.08); margin: 10px 0 12px 0; transition: transform 650ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 650ms cubic-bezier(0.32, 0.72, 0, 1); }
   .eb-doppelrand-shell:hover { transform: translateY(-2px); box-shadow: 0 20px 42px -12px rgba(15, 23, 42, 0.13); }
   .eb-doppelrand-inner { position: relative; border-radius: 13px; overflow: hidden; background: ${t.cardBg}; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.65); }
   .eb-doppelrand-img { width: 100%; height: 178px; object-fit: cover; object-position: center 44%; display: block; transition: transform 750ms cubic-bezier(0.32, 0.72, 0, 1); }
   .eb-doppelrand-shell:hover .eb-doppelrand-img { transform: scale(1.03); }
   .eb-doppelrand-caption, .eb-doppelrand-caption * { font-family: ${t.fontSans} !important; line-height: 1.3 !important; text-transform: none !important; letter-spacing: normal !important; font-style: normal !important; }
-  .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size:13px !important; color: ${t.textSecondary} !important; max-height: 36px; overflow: hidden; white-space: nowrap; }
+  .eb-doppelrand-caption { position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 5px 10px; border-radius: 9px; background: ${t.dockBg}; backdrop-filter: blur(12px); border: 1px solid ${t.border}; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size:12.5px !important; color: ${t.textSecondary} !important; max-height: 36px; overflow: hidden; white-space: nowrap; }
   #eb-hero-sparkline-pill { position: absolute; top: 8px; right: 8px; z-index: 6; padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border: 1px solid ${t.accentBorder}; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: ${t.fontSans} !important; text-transform: none !important; letter-spacing: normal !important; white-space: nowrap; }
-  #eb-dossier-format-pill { position: absolute; top: 6px; left: 6px; z-index: 6; padding: 2px 7px; border-radius: 999px; background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(8px); color: #FFFFFF !important; font-family: "JetBrains Mono", monospace !important; font-size:13px !important; font-weight: 700 !important; letter-spacing: 0.01em !important; text-transform: none !important; white-space: nowrap !important; max-width: calc(100% - 12px); overflow: hidden; text-overflow: ellipsis; transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1); }
+  #eb-dossier-format-pill { position: absolute; top: 8px; left: 8px; z-index: 6; padding: 3px 9px; border-radius: 999px; background: rgba(15, 23, 42, 0.86); backdrop-filter: blur(8px); color: #FFFFFF !important; font-family: "JetBrains Mono", monospace !important; font-size:12px !important; font-weight: 700 !important; letter-spacing: 0.01em !important; text-transform: none !important; white-space: nowrap !important; max-width: calc(100% - 16px); overflow: hidden; text-overflow: ellipsis; transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1); }
   tr[data-eb-live-row] { cursor: pointer; transition: background-color 150ms ease; }
   tr[data-eb-live-row]:hover { background-color: ${t.brandSoftBg} !important; }
-  #eb-pseo-hero-split { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: stretch; margin: 12px 0 18px 0; } #eb-pseo-hero-split #eb-doppelrand-hero-card, #eb-curtain-visual-split #eb-curtain-dossier-card { display: flex; flex-direction: column; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-inner, #eb-curtain-visual-split .eb-doppelrand-inner { flex: 1; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-img { height: 100% !important; min-height: 145px; max-height: 330px; object-fit: cover; } #eb-curtain-visual-split .eb-doppelrand-img { height: 100% !important; min-height: 132px; max-height: 185px; object-fit: cover; } .eb-pseo-lead-card { flex: 1; width: 100% !important; max-width: none !important; display: flex; flex-direction: column; justify-content: center; padding: 14px 18px; border-radius: 12px; background: ${t.cardBg}; border: 1px solid ${t.border}; border-left: 3.5px solid ${t.brandPrimary}; box-shadow: ${t.shadow}; margin: 0 !important; font-size: 15.5px; line-height: 1.6; }
+  #eb-pseo-hero-split { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: stretch; margin: 12px 0 18px 0; } #eb-pseo-hero-split #eb-doppelrand-hero-card, #eb-curtain-visual-split #eb-curtain-dossier-card { display: flex; flex-direction: column; height: 100%; margin: 0 !important; } #eb-pseo-hero-split .eb-doppelrand-inner, #eb-curtain-visual-split .eb-doppelrand-inner { flex: 1; height: 100%; } #eb-pseo-hero-split .eb-doppelrand-img { height: 100% !important; min-height: 145px; max-height: 330px; object-fit: cover; } #eb-curtain-visual-split .eb-doppelrand-img { height: 100% !important; min-height: 148px; max-height: 190px; object-fit: cover; } .eb-pseo-lead-card { flex: 1; width: 100% !important; max-width: none !important; display: flex; flex-direction: column; justify-content: center; padding: 14px 18px; border-radius: 12px; background: ${t.cardBg}; border: 1px solid ${t.border}; border-left: 3.5px solid ${t.brandPrimary}; box-shadow: ${t.shadow}; margin: 0 !important; font-size: 15.5px; line-height: 1.6; }
   @media (min-width: 960px) { .hero-grid, .hero-split, .hero-editorial-grid { align-items: stretch !important; } .hero-grid > *, .hero-split > * { display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 100% !important; } .hero-grid > .bezel-shell > *, .hero-grid > .double-bezel > * { flex: 1 !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; } }
-  #eb-curtain-visual-split { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: stretch; margin-bottom: 10px; }
+  #eb-curtain-visual-split { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: stretch; margin: 12px 0 14px 0; }
   #eb-floating-gate-popover { display: none; position: fixed; z-index: 9998; width: 360px; max-width: calc(100vw - 24px); background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 16px; padding: 16px; box-shadow: 0 22px 48px -12px rgba(15, 23, 42, 0.2); font-family: ${t.fontSans}; text-transform: none !important; }
-  #eb-bottom-conversion-suite { max-width: 1280px; margin: 40px auto 88px auto; padding: 0 24px; font-family: ${t.fontSans}; text-transform: none !important; }
+  #eb-bottom-conversion-suite { margin: 36px auto 88px auto; font-family: ${t.fontSans}; text-transform: none !important; }
   .eb-panel-card { background: ${t.cardBg}; color: ${t.textPrimary}; border: 1px solid ${t.border}; border-radius: ${t.radiusCard}; padding: 22px 24px; margin-bottom: 20px; box-shadow: ${t.shadow}; }
   .eb-gbb-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; align-items: stretch; }
   .eb-tier-card { background: ${t.canvasBg}; border: 1px solid ${t.border}; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; color: ${t.textPrimary}; }
@@ -179,7 +168,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   const battlecardRowsHtml = bc.rows.map((r, idx) => `<tr style="${idx < bc.rows.length - 1 ? `border-bottom:1px solid ${t.border};` : ''}"><td style="padding:10px 12px;font-weight:600;">${esc(r[0])}</td><td style="padding:10px 12px;color:${t.safeColor};font-weight:700;">✓ ${esc(r[1])}</td><td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[2])}</td><td style="padding:10px 12px;color:${t.textSecondary};">${esc(r[3])}</td></tr>`).join('');
   const savingsPct = Math.max(50, Math.round((1 - 1.99 / cfg.corePriceUsd) * 100));
 
-  return `<section id="eb-bottom-conversion-suite" aria-label="${esc(cfg.brandName)} Export Passes, Comparisons & Partner Ecosystem">
+  return `<section id="eb-bottom-conversion-suite" class="container" aria-label="${esc(cfg.brandName)} Export Passes, Comparisons & Partner Ecosystem">
   <div id="in-card-unlock-bar" class="eb-panel-card">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
       <div><span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">Instant Self-Serve Fulfillment • 30-Day Guarantee</span><h2 id="in-card-unlock-title" style="margin:4px 0 0 0;font-size:22px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">${esc(cfg.unlockBannerTitle)}</h2></div>
@@ -251,7 +240,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
 <div id="eb-ouibounce-toast" role="dialog" aria-label="Send 1-Page Summary Before Leaving">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
     <span id="eb-ouibounce-title" style="font-size:13px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">✦ Save Your Results Before Leaving</span>
-    <button type="button" onclick="document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
+    <button type="button" onclick="try{localStorage.setItem('eb_toast_dismissed_ts',String(Date.now()));}catch(_){}document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
   </div>
   <p id="eb-ouibounce-desc" style="font-size:13px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Email yourself the 1-Page Summary &amp; reveal Row #4 free, or grab the complete 3-file bundle for <strong>$1.99</strong>:</p>
   <form onsubmit="return window.__ebSendExitSummary(event)" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
@@ -417,28 +406,28 @@ function buildClientRuntimeScript(cfg) {
     var q = inp && inp.value.trim() ? inp.value.trim() : (presetKey || window.__ebActiveEntity || 'custom-audit');
     window.__ebActiveEntity = q;
     if (window.history && window.history.replaceState) { try { window.history.replaceState(null, '', window.location.pathname + '?q=' + encodeURIComponent(q)); } catch (_) {} }
-    var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 22) || 'custom';
+    var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 18) || 'custom';
     window.__ebLogEvent('calculate', { source: 'curtain_custom_compile', query: q });
     var dPill = document.getElementById('eb-dossier-format-pill'), f0 = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' };
-    if (dPill) { dPill.textContent = '📄 ' + slug + '-' + f0.file + ' • ' + f0.size; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
+    if (dPill) { dPill.textContent = '📄 ' + f0.file + ' (' + f0.size + ')'; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
     var spLbl = document.getElementById('eb-hero-sparkline-label');
     if (spLbl) spLbl.textContent = '✓ ' + q.slice(0, 18) + ' Active';
     fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var hdr = document.getElementById('eb-curtain-title-span'), qRd = document.getElementById('eb-quick-live-readout') || document.getElementById('eb-mobile-live-readout');
-        if (hdr) hdr.textContent = '✦ Custom Deliverable (' + q + '): Verified Preview';
+        if (hdr) hdr.textContent = '✦ Diagnostic Summary & Locked Deliverable Pack (' + q + ')';
         if (qRd && data && data.kpis) { qRd.style.display = 'inline-flex'; qRd.textContent = '✓ ' + q.slice(0, 18) + ': ' + data.kpis.slice(0, 2).join(' • '); }
         var pills = document.getElementById('eb-manifest-pills-left') || document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
           pills.innerHTML = CFG.deliverableFiles.map(function(f, idx) {
-            return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">✓ <code>' + slug + '-' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
+            return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';">🔒 <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
           }).join('');
         }
         var pre = document.getElementById('eb-prism-proof-preview');
-        if (pre && data) pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Custom KPIs for ' + q + ': ' + ((data.kpis || []).join(' | ')) + '\\n' + (data.row1_insight || '');
+        if (pre && data) pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// [TARGET SCENARIO: ' + q + ' • KPIs: ' + ((data.kpis || []).join(' | ')) + ']\\n// 🔒 Exact production script, schedule & configuration redacted in preview ($1.99 Unlock)';
         var btn = document.getElementById('btn-curtain-flash-pass');
-        if (btn) btn.textContent = 'Unlock Custom ' + q.slice(0, 16) + ' Bundle ($1.99) →';
+        if (btn) btn.textContent = '⚡ Unlock Custom ' + q.slice(0, 14) + ' Pack ($1.99) →';
         window.__ebTriggerPostCalcSpotlight(q);
       }).catch(function(){});
   };
@@ -552,7 +541,7 @@ function buildClientRuntimeScript(cfg) {
       if (!document.getElementById('eb-postcalc-inline-cta')) {
         var pcCta = document.createElement('div'); pcCta.id = 'eb-postcalc-inline-cta';
         pcCta.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;margin:10px 0;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1.5px solid ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';';
-        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span><div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><a id="btn-postcalc-permalink" href="/scan/' + encodeURIComponent(window.__ebActiveEntity || (CFG.presets[0] && CFG.presets[0].key) || 'verified') + '" style="font-size:12.5px;font-weight:600;color:' + CFG.theme.textSecondary + ';text-decoration:underline;white-space:nowrap;">Share Report ↗</a><button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="display:none;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;">' + PERSONA.pureCta + '</button></div>'
+        pcCta.innerHTML = '<span id="eb-postcalc-cta-title" style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';">' + PERSONA.ctaTitle + '</span><div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><a id="btn-postcalc-permalink" href="/scan/' + encodeURIComponent(window.__ebActiveEntity || (CFG.presets[0] && CFG.presets[0].key) || 'verified') + '" style="font-size:12.5px;font-weight:600;color:' + CFG.theme.textSecondary + ';text-decoration:underline;white-space:nowrap;">Share Report ↗</a><button type="button" id="btn-postcalc-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="display:none;">' + PERSONA.microBtn + '</button><button type="button" id="btn-postcalc-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;">⚡ Unlock Full Fix Pack ($1.99) →</button></div>'
           + '<form id="eb-postcalc-email-form" onsubmit="return window.__ebSaveInlineScorecard(event, \\\'eb-postcalc-email-input\\\', \\\'eb-postcalc-email-form\\\')" style="display:none;"><input type="email" id="eb-postcalc-email-input" placeholder="' + PERSONA.leadPh + '" /><button type="submit" id="btn-postcalc-email-submit">' + PERSONA.leadBtn + '</button></form>';
         if (scoreAnchor && scoreAnchor.parentNode) scoreAnchor.parentNode.insertBefore(pcCta, scoreAnchor.nextSibling);
         else if (targetEl && targetEl.parentNode) targetEl.parentNode.insertBefore(pcCta, targetEl);
@@ -565,22 +554,21 @@ function buildClientRuntimeScript(cfg) {
     var mountAnchor = isPseoOrDir ? seoTargetEl : (homeFullGrid || tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card'));
     if (!mountAnchor) return;
     var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' }, f1 = (CFG.deliverableFiles && CFG.deliverableFiles[1]) || fInit, f2 = (CFG.deliverableFiles && CFG.deliverableFiles[2]) || fInit;
-    var rawText = (!isPseoOrDir && targetEl) ? (targetEl.textContent || '').trim() : ('// Target Benchmark: ' + (window.__ebActiveEntity || CFG.brandName) + ' • Deliverable: ' + fInit.file + ' (' + fInit.size + ')\\n// Status: Rows #1–#3 Verified | Rows #4+ & Raw File Ready ($1.99 Stripe Express Pass)');
-    var previewLines = rawText.split('\\n').slice(0, 3).join('\\n');
-    if (previewLines.length > 220) previewLines = previewLines.slice(0, 220) + ' ...';
+    var activeEnt = window.__ebActiveEntity || CFG.brandName;
+    var previewLines = '// [LOCKED DELIVERABLE MANIFEST • ' + activeEnt + ']\\n//   1. ' + fInit.file + ' (' + fInit.size + ')   2. ' + f1.file + ' (' + f1.size + ')   3. ' + f2.file + ' (' + f2.size + ')\\n// 🔒 Exact production script, retry windows & configuration redacted until unlocked ($1.99 Pass)';
 
     var existingCurtain = document.getElementById('eb-deliverable-curtain');
     var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
     if (existingCurtain) {
       var prevBox = document.getElementById('eb-prism-proof-preview');
-      if (prevBox && previewLines) prevBox.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + previewLines;
+      if (prevBox) prevBox.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines;
       var hdrSpan = document.getElementById('eb-curtain-title-span');
-      if (hdrSpan) hdrSpan.textContent = '✦ ' + CFG.freeDeliverableName + entityTag + ' : Live Output Preview';
+      if (hdrSpan) hdrSpan.textContent = '✦ Diagnostic Summary & Locked 3-File Fix Pack' + entityTag;
       return;
     }
 
     var filesHtml = (CFG.deliverableFiles || []).map(function(f, idx) {
-      return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:' + (idx === 0 ? CFG.theme.brandSoftBg : CFG.theme.subtleBg) + ';color:' + (idx === 0 ? CFG.theme.brandPrimary : CFG.theme.textPrimary) + ';border:1px solid ' + (idx === 0 ? CFG.theme.accentBorder : CFG.theme.border) + ';">✓ <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ' ↓)</span></span>';
+      return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:' + (idx === 0 ? CFG.theme.brandSoftBg : CFG.theme.subtleBg) + ';color:' + (idx === 0 ? CFG.theme.brandPrimary : CFG.theme.textPrimary) + ';border:1px solid ' + (idx === 0 ? CFG.theme.accentBorder : CFG.theme.border) + ';">🔒 <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
     }).join('');
     var chipsHtml = (CFG.presets || []).map(function(p) {
       return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
@@ -588,23 +576,23 @@ function buildClientRuntimeScript(cfg) {
     var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
       return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="display:none;">' + d + '</button>';
     }).join('');
-    var dossierSplitHtml = '<div id="eb-curtain-visual-split" style="margin-bottom:10px;align-items:stretch;"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="cursor:pointer;" title="Click to unlock ' + PERSONA.dossierTag + ' ($1.99)"><div class="eb-doppelrand-inner" style="height:100%;"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' • ' + fInit.size + '</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:132px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:4px 8px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:13px;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + PERSONA.dossierTag + '</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:700;font-size:13px;flex-shrink:0;">$1.99 →</span></div></div></div><div id="eb-prism-proof-frame" style="display:flex;flex-direction:column;justify-content:space-between;border-radius:11px;border:1px solid ' + CFG.theme.border + ';background:' + CFG.theme.subtleBg + ';overflow:hidden;"><pre id="eb-prism-proof-preview" style="margin:0;border:none;border-radius:0;flex:1;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + (previewLines || '// Customized output preview ready') + '</pre><div id="eb-prism-proof-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.88);border-top:1px solid ' + CFG.theme.border + ';font-size:13px;"><span style="color:' + CFG.theme.textSecondary + ';font-weight:600;">Click any file tab above to preview</span><div style="display:inline-flex;align-items:center;gap:8px;"><button type="button" id="btn-copy-readme-badge" onclick="window.__ebCopyReadmeBadge(this)" style="display:none;">🛡️ Copy Badge</button><button type="button" id="btn-nuqs-share-url" onclick="window.__ebCopyScenarioLink(this)" style="display:none;">🔗 Share Link</button></div></div></div></div>';
+    var dossierSplitHtml = '<div id="eb-curtain-visual-split"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="cursor:pointer;margin:0 !important;" title="Click to unlock ' + PERSONA.dossierTag + ' ($1.99)"><div class="eb-doppelrand-inner" style="height:100%;"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' (' + fInit.size + ')</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:148px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 10px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:12.5px;color:#0F172A;">🔒 3-File Fix Pack</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:800;font-size:12.5px;flex-shrink:0;">$1.99 →</span></div></div></div><div id="eb-prism-proof-frame" style="display:flex;flex-direction:column;justify-content:space-between;border-radius:12px;border:1px solid ' + CFG.theme.border + ';background:' + CFG.theme.subtleBg + ';overflow:hidden;"><pre id="eb-prism-proof-preview" style="margin:0;border:none;border-radius:0;flex:1;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines + '</pre><div id="eb-prism-proof-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:7px 14px;background:rgba(255,255,255,0.92);border-top:1px solid ' + CFG.theme.border + ';font-size:12.5px;"><span style="color:' + CFG.theme.textSecondary + ';font-weight:600;">🔒 Free check shows the problem &amp; ROI • $1.99 Pass unlocks all 3 production files</span><div style="display:inline-flex;align-items:center;gap:8px;"><button type="button" id="btn-copy-readme-badge" onclick="window.__ebCopyReadmeBadge(this)" style="display:none;">🛡️ Copy Badge</button><button type="button" id="btn-nuqs-share-url" onclick="window.__ebCopyScenarioLink(this)" style="display:none;">🔗 Share Link</button></div></div></div></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
-    curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">'
-      + '<span id="eb-curtain-title-span" style="font-size:12.5px;font-weight:700;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ ' + CFG.freeDeliverableName + entityTag + ' : Live Output Preview</span>'
-      + '<div style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:13px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:3px 10px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div></div>'
+    curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">'
+      + '<span id="eb-curtain-title-span" style="font-size:13px;font-weight:800;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ Diagnostic Summary &amp; Locked 3-File Fix Pack' + entityTag + '</span>'
+      + '<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:12.5px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:3px 10px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:none;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
       + '<input type="text" id="eb-curtain-entity-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13px;" />'
       + '<button type="button" id="btn-curtain-run-custom" onclick="window.__ebCompileCustomCurtain()" style="padding:6px 12px;border-radius:8px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-weight:700;font-size:13px;cursor:pointer;">Preview Custom Output ↵</button>'
       + chipsHtml + '</div>'
-      + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;"><div id="eb-manifest-pills-left" style="display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;">' + filesHtml + '</div><div id="eb-observable-telemetry-pill" style="display:inline-flex;align-items:center;gap:8px;padding:4px 11px;border-radius:999px;background:#F8FAFC;border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:700;color:' + CFG.theme.textSecondary + ';"><svg aria-hidden="true" width="68" height="14" viewBox="0 0 68 14" style="vertical-align:middle;"><rect x="1" y="8" width="8" height="5" rx="1.5" fill="#94A3B8"/><rect x="12" y="6" width="8" height="7" rx="1.5" fill="#64748B"/><rect x="23" y="4" width="8" height="9" rx="1.5" fill="' + CFG.theme.brandPrimary + '" opacity="0.75"/><rect x="34" y="2" width="8" height="11" rx="1.5" fill="' + CFG.theme.brandPrimary + '"/><rect x="45" y="1" width="8" height="12" rx="1.5" fill="' + CFG.theme.safeColor + '"/><path d="M56 10 L60 6 L66 2" fill="none" stroke="' + CFG.theme.safeColor + '" stroke-width="1.8" stroke-linecap="round"/></svg><span>Verified Output</span></div></div>' : '')
+      + (filesHtml ? '<div id="eb-zod-manifest-pills" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;"><div id="eb-manifest-pills-left" style="display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;">' + filesHtml + '</div><div id="eb-observable-telemetry-pill" style="display:inline-flex;align-items:center;gap:8px;padding:4px 11px;border-radius:999px;background:#F8FAFC;border:1px solid ' + CFG.theme.border + ';font-size:12.5px;font-weight:700;color:' + CFG.theme.textSecondary + ';"><svg aria-hidden="true" width="68" height="14" viewBox="0 0 68 14" style="vertical-align:middle;"><rect x="1" y="8" width="8" height="5" rx="1.5" fill="#94A3B8"/><rect x="12" y="6" width="8" height="7" rx="1.5" fill="#64748B"/><rect x="23" y="4" width="8" height="9" rx="1.5" fill="' + CFG.theme.brandPrimary + '" opacity="0.75"/><rect x="34" y="2" width="8" height="11" rx="1.5" fill="' + CFG.theme.brandPrimary + '"/><rect x="45" y="1" width="8" height="12" rx="1.5" fill="' + CFG.theme.safeColor + '"/><path d="M56 10 L60 6 L66 2" fill="none" stroke="' + CFG.theme.safeColor + '" stroke-width="1.8" stroke-linecap="round"/></svg><span>Ready to Unlock</span></div></div>' : '')
       + dossierSplitHtml
-      + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:12px;border-top:1.5px solid ' + CFG.theme.accentBorder + ';">'
-      + '<div style="font-size:13.5px;color:' + CFG.theme.textSecondary + ';"><strong style="color:' + CFG.theme.textPrimary + ';">' + PERSONA.lossHook + '</strong> <span style="color:' + CFG.theme.textMuted + ';">(One-time pass • Instant browser unlock + download)</span></div>'
-      + '<div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:14px;border-top:1.5px solid ' + CFG.theme.accentBorder + ';">'
+      + '<div style="flex:1;min-width:240px;font-size:13.5px;color:' + CFG.theme.textSecondary + ';line-height:1.45;"><strong style="color:' + CFG.theme.textPrimary + ';">' + PERSONA.lossHook + '</strong> <span style="color:' + CFG.theme.textMuted + ';">(One-time $1.99 pass • Instant browser unlock)</span></div>'
+      + '<div style="display:inline-flex;gap:8px;align-items:center;flex-shrink:0;">'
       + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="display:none;">' + PERSONA.microBtn + '</button>'
-      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:11px 20px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:800;font-size:14px;box-shadow:0 6px 18px rgba(15,23,42,0.14);">' + PERSONA.pureCta + '</button>'
+      + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:11px 22px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:800;font-size:13.5px;white-space:nowrap;box-shadow:0 6px 18px rgba(15,23,42,0.14);">⚡ Unlock 3-File Fix Pack ($1.99 Stripe Express →)</button>'
       + '</div></div>'
       + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="display:none;">'
       + '<span>' + domChipsHtml + '</span>'
@@ -614,7 +602,7 @@ function buildClientRuntimeScript(cfg) {
     var lbShowcase = !isPseoOrDir ? document.getElementById('eb-leaderboard-home-showcase') : null;
     if (mountAnchor.parentNode) {
       if (mountAnchor === tBarAnchor || mountAnchor === targetEl) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
-      else if (lbShowcase && lbShowcase.parentNode) lbShowcase.parentNode.insertBefore(curtain, lbShowcase.nextSibling);
+      else if (lbShowcase) lbShowcase.appendChild(curtain);
       else mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     }
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -665,9 +653,9 @@ function buildClientRuntimeScript(cfg) {
       allPills[p].style.borderColor = active ? CFG.theme.accentBorder : CFG.theme.border;
     }
     var dPill = document.getElementById('eb-dossier-format-pill');
-    if (dPill) { dPill.textContent = '📄 ' + f.file + ' • ' + f.size; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
+    if (dPill) { dPill.textContent = '📄 ' + f.file + ' (' + f.size + ')'; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
     var prevBox = document.getElementById('eb-prism-proof-preview');
-    if (prevBox) prevBox.textContent = '// [ACTIVE DELIVERABLE: ' + f.file + ' (' + f.size + ') • ' + (f.schema || 'Verified Contract') + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// Target: ' + (window.__ebActiveEntity || CFG.brandName) + ': Click "⚡ Raw File (99¢)" or enter email below to reveal Row #4';
+    if (prevBox) prevBox.textContent = '// [SELECTED FILE: ' + f.file + ' (' + f.size + ') • ' + (f.schema || 'Verified Contract') + ']\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// 🔒 Target: ' + (window.__ebActiveEntity || CFG.brandName) + ' • Exact production file contents locked until $1.99 Express Pass checkout';
     var microBtn = document.getElementById('btn-curtain-micro-pass');
     if (microBtn) microBtn.textContent = '⚡ Download ' + f.file + ' (99¢)';
     var popMicroBtn = document.getElementById('btn-popover-micro-pass');
@@ -858,21 +846,25 @@ function buildClientRuntimeScript(cfg) {
     }
   } catch (_) {}
 
-  var ouibounceShown = false, maxScrollY = 0, pageEnteredAt = Date.now();
+  var ouibounceShown = false, pageEnteredAt = Date.now();
   function showRescueToast(reason) {
-    if (ouibounceShown || window.__ebIsUnlocked) return;
+    if (ouibounceShown || window.__ebIsUnlocked || CFG.moduleId === 'abandon_alpha' || !window.__ebUserInteracted) return;
+    if ((Date.now() - pageEnteredAt) < 90000) return;
+    try {
+      var lastTs = Number(localStorage.getItem('eb_toast_dismissed_ts') || 0);
+      if (lastTs && (Date.now() - lastTs) < 7 * 86400000) return;
+      localStorage.setItem('eb_toast_dismissed_ts', String(Date.now()));
+    } catch (_) {}
     ouibounceShown = true;
     var toast = document.getElementById('eb-ouibounce-toast');
     if (toast) toast.style.display = 'block';
     window.__ebLogEvent('view_paywall', { target: 'sonner_rescue_' + reason });
   }
-  document.addEventListener('mouseleave', function(e) { if (e.clientY <= 12) showRescueToast('desktop_exit'); }, { passive: true });
+  document.addEventListener('mouseleave', function(e) { if (e.clientY <= 8) showRescueToast('desktop_exit'); }, { passive: true });
   window.addEventListener('scroll', function() {
     var y = window.scrollY || 0;
     var sb = document.getElementById('sticky-mobile-bar');
     if (sb) sb.classList.toggle('eb-dock-visible', y > 650);
-    if (y > maxScrollY) maxScrollY = y;
-    else if (maxScrollY > 450 && (maxScrollY - y) > 120) showRescueToast('mobile_scroll_up');
   }, { passive: true });
 
   window.__ebToggleCmdk = function() {
@@ -971,7 +963,7 @@ function renderExactBaselineEnhancements(html, cfg, reqPath) {
   const isHomeRoute = !reqPath || reqPath === '/' || reqPath === '/index.html';
   if (isHomeRoute && !out.includes('eb-leaderboard-home-showcase')) {
     const podiumHtml = buildTopLeaderboardPodiumShowcaseHtml(cfg);
-    if (/<main[\s\S]*?<\/section>/i.test(out)) out = out.replace(/(<main[\s\S]*?<\/section>)/i, (m) => `${m}\n<div class="container" style="max-width:1240px;margin:0 auto;padding:0 20px;">${podiumHtml}</div>`);
+    if (/<main[\s\S]*?<\/section>/i.test(out)) out = out.replace(/(<main[\s\S]*?<\/section>)/i, (m) => `${m}\n${podiumHtml}`);
     else if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${podiumHtml}\n${m}`);
   }
   if (/<\/main>/i.test(out)) out = out.replace(/<\/main>/i, (m) => `${bottomSuite}\n${m}`);
