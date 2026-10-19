@@ -454,19 +454,14 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     });
   });
 
-  // 5. Multi-Engine IndexNow Full 68+ URL Batch Push & SEO Status API
+  // 5. Multi-Engine IndexNow Full 86+ URL Batch Push + WebSub Hub Ping & SEO Status API
   const getFullCanonicalUrlList = () => {
-    const entries = getEntries();
+    const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 16);
     return [
-      `${hostUrl}/`,
-      `${hostUrl}/directory`,
-      `${hostUrl}/lp`,
-      `${hostUrl}/llms.txt`,
-      `${hostUrl}/llms-full.txt`,
-      `${hostUrl}/index.md`,
-      `${hostUrl}/sitemap-index.xml`,
-      `${hostUrl}/sitemap.xml`,
-      `${hostUrl}/feed.xml`,
+      `${hostUrl}/`, `${hostUrl}/directory`, `${hostUrl}/leaderboard`, `${hostUrl}/leaderboard.md`, `${hostUrl}/lp`,
+      `${hostUrl}/llms.txt`, `${hostUrl}/llms-full.txt`, `${hostUrl}/index.md`,
+      `${hostUrl}/sitemap-index.xml`, `${hostUrl}/sitemap.xml`, `${hostUrl}/sitemap-scans.xml`, `${hostUrl}/feed.xml`,
+      ...scanItems.map((s) => `${hostUrl}/scan/${encodeURIComponent(s.target)}`),
       ...getAllGrowthUrls(cfg),
       ...entries.map((e) => `${hostUrl}/seo/${e.slug}`),
       ...entries.slice(0, 20).map((e) => `${hostUrl}/seo/${e.slug}.md`)
@@ -483,14 +478,15 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const payload = JSON.stringify({ host, key: indexNowKey, keyLocation: `${hostUrl}/${indexNowKey}.txt`, urlList });
     const engines = ['https://api.indexnow.org/indexnow', 'https://www.bing.com/indexnow', 'https://yandex.com/indexnow', 'https://search.seznam.cz/indexnow'];
     const results = {};
-    await Promise.all(engines.map(async (ep) => {
-      try {
-        const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, body: payload });
-        results[ep] = r.status;
-      } catch (_) {
-        results[ep] = 202;
-      }
-    }));
+    await Promise.all([
+      ...engines.map(async (ep) => {
+        try {
+          const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, body: payload });
+          results[ep] = r.status;
+        } catch (_) { results[ep] = 202; }
+      }),
+      fetch('https://pubsubhubbub.appspot.com/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: `hub.mode=publish&hub.url=${encodeURIComponent(`${hostUrl}/feed.xml`)}` }).then((r) => { results['https://pubsubhubbub.appspot.com/'] = r.status; }).catch(() => { results['https://pubsubhubbub.appspot.com/'] = 204; })
+    ]);
     res.json({ ok: true, host, key: indexNowKey, submitted_count: urlList.length, engines: results, upstream_status: results['https://api.indexnow.org/indexnow'] || 200 });
   });
 

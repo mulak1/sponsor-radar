@@ -166,15 +166,15 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                 <span class="mono" style="font-size:11.5px; color:var(--emerald-roi); font-weight:700;">Tap Tier to Recalculate</span>
               </div>
               <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px;">
-                <button type="button" onclick="selectReachTier(25000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                <button type="button" onclick="setAudienceReach(25000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
                   <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">25K NICHE REACH</div>
                   <div class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary);">$3,150–$3,900</div>
                 </button>
-                <button type="button" onclick="selectReachTier(75000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                <button type="button" onclick="setAudienceReach(75000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
                   <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">75K MID-TIER</div>
                   <div class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi);">$9,450–$11,700</div>
                 </button>
-                <button type="button" onclick="selectReachTier(250000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
+                <button type="button" onclick="setAudienceReach(250000)" style="padding:7px 9px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline); text-align:left; cursor:pointer;">
                   <div class="mono" style="font-size:11.5px; color:var(--text-secondary);">250K FLAGSHIP</div>
                   <div class="mono" style="font-size:13px; font-weight:800; color:var(--vermilion);">$31,500–$39,000</div>
                 </button>
@@ -239,8 +239,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   </div>
 
                   <!-- Progressive Disclosure: Transcript Ad-Read Extractor Mode -->
-                  <details style="margin-top:8px; padding:8px 12px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-hairline);">
-                    <summary style="cursor:pointer; font-size:12.5px; font-weight:700; color:var(--text-secondary);">⚙️ Switch to Mode B: Extract Sponsor Reads from Raw Podcast / YouTube Transcript ▾</summary>
+                  <details id="mode-b-details" style="margin-top:8px; padding:8px 12px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-hairline);">
+                    <summary id="mode-b-summary" style="cursor:pointer; font-size:12.5px; font-weight:700; color:var(--text-secondary);">⚙️ Switch to Mode B: Extract Sponsor Reads from Raw Podcast / YouTube Transcript ▾</summary>
                     <div class="mode-tabs" role="tablist" style="margin-top:8px;">
                       <button type="button" id="tab-mode-lookup" class="mode-tab active" onclick="switchToolMode('lookup')">Mode A: Brand / Show Radar</button>
                       <button type="button" id="tab-mode-transcript" class="mode-tab" onclick="switchToolMode('transcript')">Mode B: Ad-Read Extractor</button>
@@ -250,6 +250,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 
                 <!-- MODE B: LIVE TRANSCRIPT / RSS AD-READ EXTRACTOR -->
                 <div id="mode-transcript-pane" style="display:none; margin-top:10px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span class="mono" style="font-size:12.5px; font-weight:700; color:var(--emerald-roi);">⚙️ MODE B ACTIVE: RAW TRANSCRIPT SPONSOR EXTRACTOR</span>
+                    <button type="button" class="btn btn-ghost" style="padding:4px 10px; min-height:30px; font-size:12px;" onclick="switchToolMode('lookup')">← Back to Mode A: Brand / Show Radar</button>
+                  </div>
                   <div class="lookup-form-grid" style="margin-bottom:10px;">
                     <div>
                       <label for="transcript-preset" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:5px;">LOAD SAMPLE AD-READ TRANSCRIPT</label>
@@ -527,6 +531,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (reachInput) reachInput.value = Number(reachVal) || 75000;
       runBrandLookup();
     }
+    const selectReachTier = setAudienceReach;
 
     function loadTranscriptPreset(presetId) {
       const found = SAMPLE_TRANSCRIPTS_MAP.find(item => item.id === presetId);
