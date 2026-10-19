@@ -484,9 +484,10 @@ function createTelemetryStore(dataDir, moduleId) {
     },
     recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, isOwnerIp = 0, isMirofish = 0, clientIp = '', meta = {} }) {
       const nowIso = new Date().toISOString();
-      const mfFlag = (isMirofish || utmSource === 'mirofish_swarm' || String(meta?.source || '').includes('mirofish')) ? 1 : 0;
-      const forceTest = (isTest || mfFlag || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
       const refStr = String(meta?.ref || '').toLowerCase();
+      const isApiProbeRef = refStr.includes('/api/telemetry') || refStr.includes('/api/meta-capi');
+      const mfFlag = (isMirofish || utmSource === 'mirofish_swarm' || String(meta?.source || '').includes('mirofish')) ? 1 : 0;
+      const forceTest = (isTest || mfFlag || isOwnerIp || isExcludedOwnerIp(clientIp) || isApiProbeRef) ? 1 : 0;
       const inferredSrc = utmSource || (mfFlag ? 'mirofish_swarm' : (refStr.includes('google.') ? 'google_organic' : (refStr.includes('bing.') ? 'bing_organic' : (refStr.includes('chatgpt.') || refStr.includes('openai.') ? 'chatgpt_ai' : (refStr.includes('perplexity.') ? 'perplexity_ai' : (refStr.includes('reddit.') ? 'reddit_social' : (refStr.includes('github.') ? 'github_dev' : '')))))));
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
       state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: inferredSrc, utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
@@ -516,7 +517,8 @@ function createTelemetryStore(dataDir, moduleId) {
     getPstReport(windowHours = 3) {
       const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
-      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
+      const inferRefSrc = (r) => r.includes('google.') ? 'google_organic' : (r.includes('bing.') ? 'bing_organic' : (r.includes('chatgpt.') || r.includes('openai.') ? 'chatgpt_ai' : (r.includes('perplexity.') ? 'perplexity_ai' : (r.includes('reddit.') ? 'reddit_social' : (r.includes('github.') ? 'github_dev' : '')))));
+      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
       const jsVerifiedIps = new Set(baseClean.filter((e) => e.event_type !== 'visit' || (e.meta && e.meta.js_hydrated)).map((e) => e.client_ip));
       const isJsVerifiedHuman = (e) => e.event_type !== 'visit' || jsVerifiedIps.has(e.client_ip) || (nowMs - new Date(e.created_at).getTime() <= 20000);
       const unhydratedAll = baseClean.filter((e) => e.event_type === 'visit' && !isJsVerifiedHuman(e));
@@ -529,11 +531,11 @@ function createTelemetryStore(dataDir, moduleId) {
           if (prevEntry) {
             if (e.meta && Object.keys(e.meta).length > 0) prevEntry.row.meta = { ...(prevEntry.row.meta || {}), ...e.meta };
             const rLower = String((e.meta && e.meta.ref) || '').toLowerCase();
-            if ((!prevEntry.row.utm_source || prevEntry.row.utm_source === 'direct') && (e.utm_source || rLower)) prevEntry.row.utm_source = e.utm_source || (rLower.includes('google.') ? 'google_organic' : (rLower.includes('bing.') ? 'bing_organic' : prevEntry.row.utm_source));
+            if ((!prevEntry.row.utm_source || prevEntry.row.utm_source === 'direct') && (e.utm_source || rLower)) prevEntry.row.utm_source = e.utm_source || inferRefSrc(rLower) || prevEntry.row.utm_source;
             continue;
           }
           const rLow = String((e.meta && e.meta.ref) || '').toLowerCase();
-          const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), utm_source: e.utm_source || (rLow.includes('google.') ? 'google_organic' : (rLow.includes('bing.') ? 'bing_organic' : '')) };
+          const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), utm_source: e.utm_source || inferRefSrc(rLow) };
           const rec = { ts, row }; seenVis.set(ck, rec); if (ipKey) seenVis.set(ipKey, rec);
           humanEvents.push(row); continue;
         }
