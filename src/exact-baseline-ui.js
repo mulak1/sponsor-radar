@@ -398,7 +398,29 @@ function buildClientRuntimeScript(cfg) {
     window.__ebCompileCustomCurtain(p.key);
   };
 
-  window.__ebCompileCustomCurtain = function(presetKey) {
+  window.__ebToggleSampleDemo = function(btn) {
+    var pre = document.getElementById('eb-prism-proof-preview');
+    if (!pre) return;
+    if (pre.getAttribute('data-demo-open') === '1') {
+      pre.setAttribute('data-demo-open', '0');
+      pre.textContent = window.__ebLastCurtainPreview || pre.textContent;
+      if (btn) btn.textContent = '👁️ Peek Sample File Format (Demo)';
+      return;
+    }
+    window.__ebLastCurtainPreview = pre.textContent;
+    pre.setAttribute('data-demo-open', '1');
+    var demoMap = {
+      citation_forge: '# [SAMPLE DEMO FILE 1/3: /llms.txt • Benchmark: acme-demo.io]\\n> Acme Demo: Enterprise Cloud Workflow API & Documentation\\n## Core Citability Endpoints (AnswerDotAI v1.0 Spec)\\n- [Pricing & Tiers](https://acme-demo.io/pricing.md): Verified 2026 seat matrix\\n- [API Reference](https://acme-demo.io/docs/api.md): OpenAPI 3.1 + JSON-LD @graph\\n// 🔒 [YOUR CUSTOM DOMAIN FILES (llms.txt + schema.jsonld + robots.txt) UNLOCK FOR $1.99]',
+      sponsor_radar: '# [SAMPLE DEMO FILE 1/3: sponsor-outreach-pack.csv • Benchmark: DemoBrand]\\nBrand,Repeat_Renewals,Verified_CPM,Decision_Maker_Role,Direct_Buyer_Email\\nDemoBrand,4x Renewed (My First Million),$38.00 CPM,VP Growth & Partnerships,[UNLOCKED_IN_$1.99_PACK]\\n// 🔒 [YOUR SELECTED BRAND DIRECT EMAILS, 14-SHOW LEDGER & 3-FLIGHT PITCH UNLOCK FOR $1.99]',
+      derm_logic: '# [SAMPLE DEMO FILE 1/3: am-pm-skin-cycling.ics • Benchmark: Demo Routine]\\n[AM MORNING ORDER]: 1. Gentle Cleanser (pH 5.5) -> 2. Vitamin C 15% (pH 3.2 • Wait 12m) -> 3. SPF 50\\n[PM NIGHT 1 (EXFOLIATE)]: Cleanser -> Glycolic 7% -> 3:1:1 Ceramide Barrier Cream\\n[PM NIGHT 2 (RETINOID)]: Cleanser -> Retinol 0.5% (Separated from Acids) -> Peptide Seal\\n// 🔒 [YOUR CUSTOM INGREDIENT RESOLUTION, 4-NIGHT CALENDAR & 9:16 PHONE CARD UNLOCK FOR $1.99]',
+      abandon_alpha: '// [SAMPLE DEMO FILE 1/3: stripe-retry-worker.js • Benchmark: DemoStore DTC]\\nexport const RETRY_WINDOWS = { insufficient_funds: ["Fri 09:05 Local (Payday)", "+48h"], do_not_honor: ["+4h 3DS Fallback", "ApplePay_Link"] };\\nexport const BANDIT_ARMS = { C1_PRICE: "SAVE15", C2_SHIPPING: "FREESHIP_VIP" };\\n// 🔒 [YOUR STORE CUSTOM C1-C6 BANDIT SDK TAG & STRIPE WEBHOOK WORKER UNLOCK FOR $1.99]'
+    };
+    pre.textContent = demoMap[CFG.moduleId] || demoMap.citation_forge;
+    if (btn) btn.textContent = '↺ Back to Your Diagnostic Summary';
+    window.__ebLogEvent('tab_switch', { store_pill: 'peek_sample_demo' });
+  };
+
+  window.__ebCompileCustomCurtain = function(presetKey, customBadge, customDiagLine) {
     window.__ebUserInteracted = true;
     var inp = document.getElementById('eb-curtain-entity-input'), qIn = document.getElementById('eb-pseo-quick-input');
     if (presetKey && inp) inp.value = presetKey;
@@ -406,17 +428,19 @@ function buildClientRuntimeScript(cfg) {
     var q = inp && inp.value.trim() ? inp.value.trim() : (presetKey || window.__ebActiveEntity || 'custom-audit');
     window.__ebActiveEntity = q;
     if (window.history && window.history.replaceState) { try { window.history.replaceState(null, '', window.location.pathname + '?q=' + encodeURIComponent(q)); } catch (_) {} }
-    var slug = q.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 18) || 'custom';
     window.__ebLogEvent('calculate', { source: 'curtain_custom_compile', query: q });
     var dPill = document.getElementById('eb-dossier-format-pill'), f0 = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' };
     if (dPill) { dPill.textContent = '📄 ' + f0.file + ' (' + f0.size + ')'; dPill.style.transform = 'scale(1.06)'; setTimeout(function() { dPill.style.transform = 'scale(1)'; }, 180); }
     var spLbl = document.getElementById('eb-hero-sparkline-label');
     if (spLbl) spLbl.textContent = '✓ ' + q.slice(0, 18) + ' Active';
+    var badgeEl = document.getElementById('eb-curtain-roi-badge');
+    if (badgeEl && customBadge) badgeEl.textContent = customBadge;
     fetch('/api/github-upgrade/fuse-search?q=' + encodeURIComponent(q))
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var hdr = document.getElementById('eb-curtain-title-span'), qRd = document.getElementById('eb-quick-live-readout') || document.getElementById('eb-mobile-live-readout');
-        if (hdr) hdr.textContent = '✦ Diagnostic Summary & Locked Deliverable Pack (' + q + ')';
+        if (hdr) hdr.textContent = '✦ Step 3 Ready for ' + q + ': Unlock Your Custom 3-File Fix Pack';
+        if (badgeEl && !customBadge && data && data.kpis && data.kpis[0]) badgeEl.textContent = 'Est. Impact: ' + data.kpis[0];
         if (qRd && data && data.kpis) { qRd.style.display = 'inline-flex'; qRd.textContent = '✓ ' + q.slice(0, 18) + ': ' + data.kpis.slice(0, 2).join(' • '); }
         var pills = document.getElementById('eb-manifest-pills-left') || document.getElementById('eb-zod-manifest-pills');
         if (pills && CFG.deliverableFiles) {
@@ -425,17 +449,17 @@ function buildClientRuntimeScript(cfg) {
           }).join('');
         }
         var pre = document.getElementById('eb-prism-proof-preview');
-        if (pre && data) pre.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n// [TARGET SCENARIO: ' + q + ' • KPIs: ' + ((data.kpis || []).join(' | ')) + ']\\n// 🔒 Exact production script, schedule & configuration redacted in preview ($1.99 Unlock)';
-        var btn = document.getElementById('btn-curtain-flash-pass');
-        if (btn) btn.textContent = '⚡ Unlock Custom ' + q.slice(0, 14) + ' Pack ($1.99) →';
+        if (pre && data) { pre.setAttribute('data-demo-open', '0'); pre.textContent = (customDiagLine || CFG.remDiff.beforeLine) + '\\n' + CFG.remDiff.afterLine + '\\n// [TARGET SCENARIO: ' + q + ' • KPIs: ' + ((data.kpis || []).join(' | ')) + ']\\n// 🔒 Exact production script, schedule & configuration redacted in preview ($1.99 Unlock)'; window.__ebLastCurtainPreview = pre.textContent; }
+        var btn = document.getElementById('btn-curtain-flash-pass'), pcBtn = document.getElementById('btn-postcalc-flash-pass');
+        if (btn) btn.textContent = '⚡ Unlock Custom ' + q.slice(0, 16) + ' Pack ($1.99 Stripe Express →)';
+        if (pcBtn) pcBtn.textContent = '⚡ Unlock ' + q.slice(0, 14) + ' Fix Pack ($1.99) →';
         window.__ebTriggerPostCalcSpotlight(q);
       }).catch(function(){});
   };
 
-  window.__ebMountDeliverableCurtain = function(entityOverride) {
+  window.__ebMountDeliverableCurtain = function(entityOverride, customBadge, customDiagLine) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('walletConflicts') || document.getElementById('appleWalletCardPreview');
-
     if (CFG.moduleId === 'sponsor_radar') {
       var nd = document.getElementById('res-dm-email');
       if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('***') === -1) {
@@ -444,7 +468,6 @@ function buildClientRuntimeScript(cfg) {
         nd.textContent = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com');
       }
     }
-
     var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
     if (tbody && !window.__ebIsUnlocked) {
       var trs = tbody.querySelectorAll('tr');
@@ -456,8 +479,7 @@ function buildClientRuntimeScript(cfg) {
           if (tdFirst && !tdFirst.querySelector('.eb-row-sim-pill')) tdFirst.insertAdjacentHTML('beforeend', ' <span class="eb-row-sim-pill" style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;white-space:nowrap;vertical-align:middle;">⚡ Sim</span>');
           trs[r0].addEventListener('click', function(ev) {
             if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return;
-            var td0 = this.querySelector('td, th');
-            var ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : '';
+            var td0 = this.querySelector('td, th'), ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : '';
             if (ent) window.__ebCompileCustomCurtain(ent);
           });
         }
@@ -469,19 +491,16 @@ function buildClientRuntimeScript(cfg) {
         gateTr.innerHTML = '<td colspan="8" style="padding:9px 14px;border-top:1.5px dashed ' + CFG.theme.accentBorder + ';border-bottom:1.5px dashed ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';font-size:13px;color:' + CFG.theme.textPrimary + ';"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span>🔒 <strong>Rows #4–#' + trs.length + ' Locked (Highest-Impact Fixes):</strong> Instant 1-Click Stripe Unlock for All ' + trs.length + ' Rows + Ready-to-Use Files</span><span style="padding:4px 11px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;font-size:12.5px;font-weight:700;white-space:nowrap;">⚡ Unlock All ' + trs.length + ' Rows ($1.99 Stripe Express →)</span></div></td>';
         tbody.insertBefore(gateTr, trs[3]);
       }
-      var tblEl = tbody.closest('table');
-      var tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
+      var tblEl = tbody.closest('table'), tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
       var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
       if (tblWrap && tblWrap.parentNode && !document.getElementById('eb-tanstack-table-bar')) {
-        var tBar = document.createElement('div');
-        tBar.id = 'eb-tanstack-table-bar';
+        var tBar = document.createElement('div'); tBar.id = 'eb-tanstack-table-bar';
         tBar.style.cssText = 'display:' + (isPseoOrDir ? 'flex' : 'none') + ';justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:9px 12px;margin-bottom:10px;border-radius:10px;background:' + CFG.theme.subtleBg + ';border:1px solid ' + CFG.theme.border + ';font-family:' + CFG.theme.fontSans + ';';
         tBar.innerHTML = '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px;"><span style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Filter Table:</span><input type="search" id="eb-tanstack-filter-input" placeholder="Search rows or test your own..." oninput="window.__ebFilterAndCalcTable(this.value)" style="flex:1;padding:6px 10px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13.5px;" /></div>'
           + '<div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-tanstack-sort" onclick="window.__ebSortTableRows()" style="padding:6px 11px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⇅ Sort by Impact</button><button type="button" id="btn-tanstack-unlock-rows" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;cursor:pointer;">🔒 Unlock Full Table ($1.99)</button></div>';
         tblWrap.parentNode.insertBefore(tBar, tblWrap);
       }
     }
-
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
     var h1Node = document.querySelector('main h1, article h1, h1');
     if (h1Node && !window.__ebActiveEntity && isPseoOrDir) {
@@ -548,39 +567,34 @@ function buildClientRuntimeScript(cfg) {
         if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(pcCta);
       }
     }
-    var tBarAnchor = document.getElementById('eb-tanstack-table-bar');
-    var homeFullGrid = !isPseoOrDir ? document.querySelector('main .bento-grid, main .hero-split, main .hero-grid') : null;
+    var tBarAnchor = document.getElementById('eb-tanstack-table-bar'), homeFullGrid = !isPseoOrDir ? document.querySelector('main .bento-grid, main .hero-split, main .hero-grid') : null;
     var seoTargetEl = isPseoOrDir ? (existingHeroSplit || document.getElementById('eb-pseo-hero-split') || document.querySelector('main .table-wrap, article .table-wrap, main .posterior-table-wrap') || tBarAnchor || targetEl) : null;
     var mountAnchor = isPseoOrDir ? seoTargetEl : (homeFullGrid || tBarAnchor || targetEl || document.getElementById('eb-doppelrand-hero-card'));
     if (!mountAnchor) return;
     var fInit = (CFG.deliverableFiles && CFG.deliverableFiles[0]) || { file: 'bundle.txt', size: '4.2 KB' }, f1 = (CFG.deliverableFiles && CFG.deliverableFiles[1]) || fInit, f2 = (CFG.deliverableFiles && CFG.deliverableFiles[2]) || fInit;
-    var activeEnt = window.__ebActiveEntity || CFG.brandName;
+    var activeEnt = window.__ebActiveEntity || (CFG.presets && CFG.presets[0] && CFG.presets[0].label) || CFG.brandName;
     var previewLines = '// [LOCKED DELIVERABLE MANIFEST • ' + activeEnt + ']\\n//   1. ' + fInit.file + ' (' + fInit.size + ')   2. ' + f1.file + ' (' + f1.size + ')   3. ' + f2.file + ' (' + f2.size + ')\\n// 🔒 Exact production script, retry windows & configuration redacted until unlocked ($1.99 Pass)';
-
-    var existingCurtain = document.getElementById('eb-deliverable-curtain');
-    var entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : '';
+    var existingCurtain = document.getElementById('eb-deliverable-curtain'), entityTag = window.__ebActiveEntity ? (' (' + window.__ebActiveEntity + ')') : (' (Sample: ' + activeEnt + ')');
     if (existingCurtain) {
       var prevBox = document.getElementById('eb-prism-proof-preview');
-      if (prevBox) prevBox.textContent = CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines;
-      var hdrSpan = document.getElementById('eb-curtain-title-span');
-      if (hdrSpan) hdrSpan.textContent = '✦ Diagnostic Summary & Locked 3-File Fix Pack' + entityTag;
+      if (prevBox) { prevBox.setAttribute('data-demo-open', '0'); prevBox.textContent = (customDiagLine || CFG.remDiff.beforeLine) + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines; window.__ebLastCurtainPreview = prevBox.textContent; }
+      var hdrSpan = document.getElementById('eb-curtain-title-span'), rBadge = document.getElementById('eb-curtain-roi-badge'), cBtn = document.getElementById('btn-curtain-flash-pass'), pcBtn = document.getElementById('btn-postcalc-flash-pass');
+      if (hdrSpan) hdrSpan.textContent = (window.__ebUserInteracted ? '✦ Step 3 Ready for ' + activeEnt + ': Unlock Your Custom 3-File Fix Pack' : '✦ Step 3 • Diagnostic Summary & Locked 3-File Fix Pack' + entityTag);
+      if (rBadge && customBadge) rBadge.textContent = customBadge;
+      if (cBtn && window.__ebUserInteracted && window.__ebActiveEntity) cBtn.textContent = '⚡ Unlock Custom ' + window.__ebActiveEntity.slice(0, 16) + ' Pack ($1.99 Stripe Express →)';
+      if (pcBtn && window.__ebUserInteracted && window.__ebActiveEntity) pcBtn.textContent = '⚡ Unlock ' + window.__ebActiveEntity.slice(0, 14) + ' Fix Pack ($1.99) →';
       return;
     }
-
     var filesHtml = (CFG.deliverableFiles || []).map(function(f, idx) {
       return '<span class="eb-manifest-pill" onclick="window.__ebSelectManifestFile(' + idx + ', this)" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:' + (idx === 0 ? CFG.theme.brandSoftBg : CFG.theme.subtleBg) + ';color:' + (idx === 0 ? CFG.theme.brandPrimary : CFG.theme.textPrimary) + ';border:1px solid ' + (idx === 0 ? CFG.theme.accentBorder : CFG.theme.border) + ';">🔒 <code>' + f.file + '</code> <span style="color:' + CFG.theme.textMuted + ';">(' + f.size + ')</span></span>';
     }).join('');
-    var chipsHtml = (CFG.presets || []).map(function(p) {
-      return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>';
-    }).join('');
-    var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) {
-      return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="display:none;">' + d + '</button>';
-    }).join('');
-    var dossierSplitHtml = '<div id="eb-curtain-visual-split"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="cursor:pointer;margin:0 !important;" title="Click to unlock ' + PERSONA.dossierTag + ' ($1.99)"><div class="eb-doppelrand-inner" style="height:100%;"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' (' + fInit.size + ')</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:148px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 10px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:12.5px;color:#0F172A;">🔒 3-File Fix Pack</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:800;font-size:12.5px;flex-shrink:0;">$1.99 →</span></div></div></div><div id="eb-prism-proof-frame" style="display:flex;flex-direction:column;justify-content:space-between;border-radius:12px;border:1px solid ' + CFG.theme.border + ';background:' + CFG.theme.subtleBg + ';overflow:hidden;"><pre id="eb-prism-proof-preview" style="margin:0;border:none;border-radius:0;flex:1;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines + '</pre><div id="eb-prism-proof-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:7px 14px;background:rgba(255,255,255,0.92);border-top:1px solid ' + CFG.theme.border + ';font-size:12.5px;"><span style="color:' + CFG.theme.textSecondary + ';font-weight:600;">🔒 Free check shows the problem &amp; ROI • $1.99 Pass unlocks all 3 production files</span><div style="display:inline-flex;align-items:center;gap:8px;"><button type="button" id="btn-copy-readme-badge" onclick="window.__ebCopyReadmeBadge(this)" style="display:none;">🛡️ Copy Badge</button><button type="button" id="btn-nuqs-share-url" onclick="window.__ebCopyScenarioLink(this)" style="display:none;">🔗 Share Link</button></div></div></div></div>';
+    var chipsHtml = (CFG.presets || []).map(function(p) { return '<button type="button" class="eb-curtain-preset-chip" onclick="window.__ebCompileCustomCurtain(\\\'' + p.key + '\\\')" style="padding:4px 9px;border-radius:999px;background:' + CFG.theme.subtleBg + ';color:' + CFG.theme.textSecondary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⚡ ' + p.label + '</button>'; }).join('');
+    var domChipsHtml = ['@gmail.com', '@icloud.com', '@outlook.com'].map(function(d) { return '<button type="button" class="eb-domain-chip" onclick="window.__ebFillEmailDomain(\\\'eb-inline-scorecard-email\\\', \\\'' + d + '\\\', \\\'eb-save-scorecard-bar\\\')" style="display:none;">' + d + '</button>'; }).join('');
+    var dossierSplitHtml = '<div id="eb-curtain-visual-split"><div id="eb-curtain-dossier-card" class="eb-doppelrand-shell" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="cursor:pointer;margin:0 !important;" title="Click to unlock ' + PERSONA.dossierTag + ' ($1.99)"><div class="eb-doppelrand-inner" style="height:100%;"><span id="eb-dossier-format-pill">📄 ' + fInit.file + ' (' + fInit.size + ')</span><img src="/public/editorial-dossier.jpg" alt="' + CFG.brandName + ' ' + PERSONA.dossierTag + '" class="eb-doppelrand-img" style="height:148px;" loading="lazy" decoding="async" /><div class="eb-doppelrand-caption" style="padding:5px 10px;bottom:6px;left:6px;right:6px;"><span style="font-weight:700;font-size:12.5px;color:#0F172A;">🔒 3-File Fix Pack</span><span style="color:' + CFG.theme.brandPrimary + ';font-weight:800;font-size:12.5px;flex-shrink:0;">$1.99 →</span></div></div></div><div id="eb-prism-proof-frame" style="display:flex;flex-direction:column;justify-content:space-between;border-radius:12px;border:1px solid ' + CFG.theme.border + ';background:' + CFG.theme.subtleBg + ';overflow:hidden;"><pre id="eb-prism-proof-preview" style="margin:0;border:none;border-radius:0;flex:1;">' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines + '</pre><div id="eb-prism-proof-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:7px 14px;background:rgba(255,255,255,0.92);border-top:1px solid ' + CFG.theme.border + ';font-size:12.5px;"><span style="color:' + CFG.theme.textSecondary + ';font-weight:600;">🔒 Free check shows the problem &amp; ROI • $1.99 Pass unlocks all 3 production files</span><div style="display:inline-flex;align-items:center;gap:8px;"><button type="button" id="btn-peek-sample-demo" onclick="window.__ebToggleSampleDemo(this)" style="padding:3px 10px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">👁️ Peek Sample File Format (Demo)</button><button type="button" id="btn-copy-readme-badge" onclick="window.__ebCopyReadmeBadge(this)" style="display:none;">🛡️ Copy Badge</button><button type="button" id="btn-nuqs-share-url" onclick="window.__ebCopyScenarioLink(this)" style="display:none;">🔗 Share Link</button></div></div></div></div>';
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">'
-      + '<span id="eb-curtain-title-span" style="font-size:13px;font-weight:800;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ Diagnostic Summary &amp; Locked 3-File Fix Pack' + entityTag + '</span>'
+      + '<span id="eb-curtain-title-span" style="font-size:13px;font-weight:800;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ Step 3 • Diagnostic Summary &amp; Locked 3-File Fix Pack' + entityTag + '</span>'
       + '<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:12.5px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:3px 10px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:none;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
       + '<input type="text" id="eb-curtain-entity-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13px;" />'
@@ -594,15 +608,12 @@ function buildClientRuntimeScript(cfg) {
       + '<button type="button" id="btn-curtain-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="display:none;">' + PERSONA.microBtn + '</button>'
       + '<button type="button" id="btn-curtain-flash-pass" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:11px 22px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:800;font-size:13.5px;white-space:nowrap;box-shadow:0 6px 18px rgba(15,23,42,0.14);">⚡ Unlock 3-File Fix Pack ($1.99 Stripe Express →)</button>'
       + '</div></div>'
-      + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="display:none;">'
-      + '<span>' + domChipsHtml + '</span>'
-      + '<input type="email" id="eb-inline-scorecard-email" placeholder="' + PERSONA.leadPh + '" />'
-      + '<button type="submit" id="btn-save-scorecard">' + PERSONA.leadBtn + ' →</button></form>';
-
+      + '<div id="eb-click-trigger-bar" style="margin-top:8px;padding-top:8px;border-top:1px dashed ' + CFG.theme.border + ';display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;color:' + CFG.theme.textMuted + ';font-weight:600;"><span>🔒 One-time $1.99 payment (never a subscription) • No account or password required</span><span>✓ Instant browser download via Apple Pay / Stripe • 30-day money-back guarantee</span></div>'
+      + '<form id="eb-save-scorecard-bar" onsubmit="return window.__ebSaveInlineScorecard(event)" style="display:none;"><span>' + domChipsHtml + '</span><input type="email" id="eb-inline-scorecard-email" placeholder="' + PERSONA.leadPh + '" /><button type="submit" id="btn-save-scorecard">' + PERSONA.leadBtn + ' →</button></form>';
     var lbShowcase = !isPseoOrDir ? document.getElementById('eb-leaderboard-home-showcase') : null;
     if (mountAnchor.parentNode) {
       if (mountAnchor === tBarAnchor || mountAnchor === targetEl) mountAnchor.parentNode.insertBefore(curtain, mountAnchor);
-      else if (lbShowcase) lbShowcase.appendChild(curtain);
+      else if (lbShowcase) { curtain.style.marginTop = '0'; curtain.style.marginBottom = '24px'; lbShowcase.insertBefore(curtain, lbShowcase.firstChild); }
       else mountAnchor.parentNode.insertBefore(curtain, mountAnchor.nextSibling);
     }
     if (window.__ebPaywallObserver) window.__ebPaywallObserver.observe(curtain);
@@ -611,8 +622,7 @@ function buildClientRuntimeScript(cfg) {
     if (dermModal && !document.getElementById('eb-modal-flash-pass-pill')) {
       var modalBox = dermModal.querySelector('.modal-card, div');
       if (modalBox) {
-        var pill = document.createElement('div');
-        pill.id = 'eb-modal-flash-pass-pill';
+        var pill = document.createElement('div'); pill.id = 'eb-modal-flash-pass-pill';
         pill.style.cssText = 'margin:10px 0;padding:10px 12px;border-radius:10px;background:' + CFG.theme.brandSoftBg + ';border:1px solid ' + CFG.theme.accentBorder + ';display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;';
         pill.innerHTML = '<span style="font-size:13px;font-weight:700;color:' + CFG.theme.textPrimary + ';">✦ Single-Routine Instant Pass (Save 60%)</span><button type="button" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-weight:700;font-size:13px;">Unlock Pass ($1.99) →</button>';
         modalBox.insertBefore(pill, modalBox.firstChild);
@@ -692,66 +702,42 @@ function buildClientRuntimeScript(cfg) {
   window.__ebApplyUnblurState = function() {
     window.__ebIsUnlocked = true;
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
-    var gTr = document.getElementById('eb-table-row4-gate-tr');
-    if (gTr && gTr.parentNode) gTr.parentNode.removeChild(gTr);
-    var blurred = document.querySelectorAll('.eb-blurred-deliverable');
-    for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
+    var gTr = document.getElementById('eb-table-row4-gate-tr'); if (gTr && gTr.parentNode) gTr.parentNode.removeChild(gTr);
+    var blurred = document.querySelectorAll('.eb-blurred-deliverable'); for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
     Array.prototype.slice.call(document.querySelectorAll('[data-raw-email]')).forEach(function(nd) { nd.textContent = nd.getAttribute('data-raw-email'); });
     var curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) {
-      curtain.style.background = CFG.theme.safeSoftBg;
-      curtain.style.borderColor = CFG.theme.safeBorder;
+      curtain.style.background = CFG.theme.safeSoftBg; curtain.style.borderColor = CFG.theme.safeBorder;
       curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span style="font-size:12.5px;font-weight:700;color:' + CFG.theme.safeColor + ';">✓ Full Production Deliverable Unlocked! Download your bundle below:</span><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-filesaver-bundle" onclick="window.__ebSaveBundleFile()" style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:#FFFFFF;color:' + CFG.theme.safeColor + ';border:1px solid ' + CFG.theme.safeBorder + ';font-weight:700;font-size:13px;">Download Deliverable Bundle (.TXT) ↓</button><a href="/api/github-upgrade/export.csv" download style="padding:6px 12px;border-radius:' + CFG.theme.radiusPill + ';background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;text-decoration:none;font-weight:700;font-size:13px;">Export .CSV ↓</a></div></div>';
     }
-    var pop = document.getElementById('eb-floating-gate-popover');
-    if (pop) pop.style.display = 'none';
+    var pop = document.getElementById('eb-floating-gate-popover'); if (pop) pop.style.display = 'none';
   };
-
   window.__ebOpenFloatingGate = function(anchorEl) {
-    var pop = document.getElementById('eb-floating-gate-popover');
-    if (!pop) return;
+    var pop = document.getElementById('eb-floating-gate-popover'); if (!pop) return;
     if (anchorEl) {
-      var trEl = anchorEl.tagName === 'TR' ? anchorEl : (anchorEl.closest ? anchorEl.closest('tr') : null);
-      var pTitle = document.getElementById('eb-popover-title');
-      if (trEl && pTitle) {
-        var firstCell = trEl.querySelector('td, th');
-        var cellTxt = firstCell ? (firstCell.textContent || '').trim().slice(0, 34) : '';
-        if (cellTxt) pTitle.textContent = 'Unblur "' + cellTxt + '" + Full Deliverable';
-      }
+      var trEl = anchorEl.tagName === 'TR' ? anchorEl : (anchorEl.closest ? anchorEl.closest('tr') : null), pTitle = document.getElementById('eb-popover-title');
+      if (trEl && pTitle) { var firstCell = trEl.querySelector('td, th'), cellTxt = firstCell ? (firstCell.textContent || '').trim().slice(0, 34) : ''; if (cellTxt) pTitle.textContent = 'Unblur "' + cellTxt + '" + Full Deliverable'; }
     }
-    pop.style.display = 'block';
-    window.__ebLogEvent('view_paywall', { target: 'floating_ui_gate' });
+    pop.style.display = 'block'; window.__ebLogEvent('view_paywall', { target: 'floating_ui_gate' });
     if (anchorEl && anchorEl.getBoundingClientRect) {
-      var rect = anchorEl.getBoundingClientRect();
-      var top = rect.bottom + 8, left = Math.max(12, Math.min(window.innerWidth - 362, rect.left));
+      var rect = anchorEl.getBoundingClientRect(), top = rect.bottom + 8, left = Math.max(12, Math.min(window.innerWidth - 362, rect.left));
       if (top + 240 > window.innerHeight) top = Math.max(12, rect.top - 230);
       pop.style.top = top + 'px'; pop.style.left = left + 'px';
-    } else {
-      pop.style.top = '120px'; pop.style.left = Math.max(12, (window.innerWidth - 350) / 2) + 'px';
-    }
+    } else { pop.style.top = '120px'; pop.style.left = Math.max(12, (window.innerWidth - 350) / 2) + 'px'; }
   };
-
   document.addEventListener('click', function(e) {
     var nativeCkBtn = e.target && e.target.closest ? e.target.closest('button[onclick*="startCheckout"]') : null;
-    if (nativeCkBtn) {
-      var cEmail = document.getElementById('checkout-email');
-      if (cEmail && (!cEmail.value || cEmail.value.indexOf('@') === -1)) cEmail.value = 'express-checkout@' + CFG.domain.replace('www.', '');
-    }
+    if (nativeCkBtn) { var cEmail = document.getElementById('checkout-email'); if (cEmail && (!cEmail.value || cEmail.value.indexOf('@') === -1)) cEmail.value = 'express-checkout@' + CFG.domain.replace('www.', ''); }
     if (window.__ebIsUnlocked) return;
     var btn = e.target && e.target.closest ? e.target.closest('.eb-blurred-deliverable, .pitch-box a[href*="#pricing"], #copy-artifact-btn, #download-artifact-btn, #copy-code-btn, #copy-sdk-btn, button[onclick*="copyCompiledCode"], button[onclick*="downloadCompiledFile"], button[onclick*="copyPitchEmail"]') : null;
     if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    window.__ebOpenFloatingGate(btn);
+    e.preventDefault(); e.stopPropagation(); window.__ebOpenFloatingGate(btn);
   }, true);
-
   window.__ebSendExitSummary = function(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
-    var input = document.getElementById('eb-ouibounce-email');
-    var email = input ? input.value.trim() : '';
+    var input = document.getElementById('eb-ouibounce-email'), email = input ? input.value.trim() : '';
     if (!email) return false;
-    var r4 = document.querySelector('tr.eb-blurred-deliverable');
-    if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
+    var r4 = document.querySelector('tr.eb-blurred-deliverable'); if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
     fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) })
       .then(function() {
         var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc');
@@ -775,28 +761,40 @@ function buildClientRuntimeScript(cfg) {
             }).catch(function(){});
           } catch (_) {}
         }
-        if (url.indexOf('/api/audit') !== -1 || url.indexOf('/api/analyze-sponsor') !== -1 || url.indexOf('/api/analyze-routine') !== -1 || url.indexOf('/api/audit-leakage') !== -1) {
+        if (url.indexOf('/api/audit') !== -1 || url.indexOf('/api/analyze-sponsor') !== -1 || url.indexOf('/api/analyze-routine') !== -1 || url.indexOf('/api/audit-leakage') !== -1 || url.indexOf('/api/bandit-select') !== -1 || url.indexOf('/api/webhook-simulate') !== -1) {
           try {
             res.clone().json().then(function(data) {
-              var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val'), entityName = '';
+              var boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val'), entityName = '', customBadge = '', customDiagLine = '';
+              if (!isAutoInit) window.__ebUserInteracted = true;
               if (CFG.moduleId === 'citation_forge' && data && data.audit) {
                 entityName = data.audit.domain || '';
-                if (data.audit.scores && boxes.length >= 3) { boxes[0].textContent = data.audit.scores.csovPct + '%'; boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100'; boxes[2].textContent = data.audit.scores.entityDensityScore + '/100'; }
+                if (data.audit.scores) {
+                  customBadge = 'Grade ' + data.audit.scores.grade + ' • ' + data.audit.scores.csovPct + '% AI Share';
+                  customDiagLine = '- [DIAGNOSIS: ' + entityName + '] Current AI Citation Share: ' + data.audit.scores.csovPct + '% (Projected after Fix Pack: ' + data.audit.scores.projectedCsovPct + '%)';
+                  if (boxes.length >= 3) { boxes[0].textContent = data.audit.scores.csovPct + '%'; boxes[1].textContent = data.audit.scores.agentReadabilityScore + '/100'; boxes[2].textContent = data.audit.scores.entityDensityScore + '/100'; }
+                }
               } else if (CFG.moduleId === 'sponsor_radar' && data) {
-                entityName = (data.brand && data.brand.name) || '';
-                if (data.metrics && boxes.length >= 3) { boxes[0].textContent = data.metrics.renewal_velocity_score + '/100'; boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString(); boxes[2].textContent = '$' + data.metrics.avg_cpm_usd; }
+                entityName = (data.brand && data.brand.name) || (data.extracted_sponsors && data.extracted_sponsors[0] && data.extracted_sponsors[0].brand_name) || '';
+                if (data.metrics) {
+                  customBadge = '3x+ Score: ' + data.metrics.renewal_velocity_score + '/100 • $' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString() + '/mo';
+                  customDiagLine = '- [DIAGNOSIS: ' + entityName + '] ' + data.metrics.proven_3x_shows_count + ' Proven 3x+ Shows ($' + data.metrics.avg_cpm_usd + ' Avg CPM)';
+                  if (boxes.length >= 3) { boxes[0].textContent = data.metrics.renewal_velocity_score + '/100'; boxes[1].textContent = '$' + Number(data.metrics.est_monthly_spend_usd || 0).toLocaleString(); boxes[2].textContent = '$' + data.metrics.avg_cpm_usd; }
+                }
               } else if (CFG.moduleId === 'derm_logic' && data) {
-                entityName = data.compatibilityScore != null ? ('Score ' + data.compatibilityScore + '/100') : '';
+                entityName = data.compatibilityScore != null ? ('Routine (' + data.compatibilityScore + '/100)') : '';
+                customBadge = ((data.conflicts && data.conflicts.length) || 0) + ' Active Clash(es) • Barrier Stress ' + (data.barrierHazardIndex || 0) + '%';
+                customDiagLine = '- [DIAGNOSIS] Routine Harmony: ' + data.compatibilityScore + '/100 • ' + ((data.conflicts && data.conflicts.length) || 0) + ' Active Conflict(s) Detected';
                 if (boxes.length >= 2 && data.compatibilityScore != null) boxes[0].textContent = data.compatibilityScore + '/100';
               } else if (CFG.moduleId === 'abandon_alpha' && data) {
-                entityName = data.storeName || '';
-                if (boxes.length >= 3) {
-                  if (data.totalRecoverableUsd != null) boxes[0].textContent = '$' + Math.round(data.totalRecoverableUsd).toLocaleString();
-                  if (data.exitIntentRecoveredUsd != null) boxes[1].textContent = '$' + Math.round(data.exitIntentRecoveredUsd).toLocaleString();
-                  if (data.dunningRecoveredUsd != null) boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd).toLocaleString();
+                entityName = data.storeName || (data.selectedArm && data.selectedArm.objection_code) || '';
+                if (data.totalRecoverableUsd != null) {
+                  customBadge = '+$' + Math.round(data.totalRecoverableUsd).toLocaleString() + '/mo Recoverable MRR';
+                  customDiagLine = '- [DIAGNOSIS: ' + entityName + '] Leaking $' + Math.round(data.totalMonthlyLeakedUsd || 0).toLocaleString() + '/mo (+$' + Math.round(data.totalRecoverableUsd).toLocaleString() + '/mo Recoverable)';
                 }
+                if (boxes.length >= 3 && data.totalRecoverableUsd != null) { boxes[0].textContent = '$' + Math.round(data.totalRecoverableUsd).toLocaleString(); boxes[1].textContent = '$' + Math.round(data.exitIntentRecoveredUsd || 0).toLocaleString(); boxes[2].textContent = '$' + Math.round(data.dunningRecoveredUsd || 0).toLocaleString(); }
               }
-              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName); if (!isAutoInit && window.__ebUserInteracted) window.__ebTriggerPostCalcSpotlight(entityName); }, 90);
+              if (!isAutoInit) window.__ebLogEvent('calculate', { source: 'native_calc', entity: entityName || CFG.moduleId });
+              setTimeout(function() { window.__ebMountDeliverableCurtain(entityName, customBadge, customDiagLine); if (!isAutoInit && window.__ebUserInteracted) window.__ebTriggerPostCalcSpotlight(entityName); }, 90);
             }).catch(function(){});
           } catch (_) {}
         }
