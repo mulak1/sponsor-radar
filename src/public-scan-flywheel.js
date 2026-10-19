@@ -82,12 +82,18 @@ const MEM_SCAN_LEDGERS = {};
 
 function loadPublicScanLedger(cfg) {
   const cat = getFlywheelCatalog(cfg.moduleId);
-  const filterCross = (arr) => cfg.moduleId === 'citation_forge' ? arr : arr.filter((x) => x && String(x.target).toLowerCase() !== 'stripe.com');
-  if (Array.isArray(MEM_SCAN_LEDGERS[cfg.moduleId]) && MEM_SCAN_LEDGERS[cfg.moduleId].length > 0) return filterCross(MEM_SCAN_LEDGERS[cfg.moduleId]);
+  const filterClean = (arr) => arr.filter((x) => {
+    if (!x || !x.target) return false;
+    const t = String(x.target).toLowerCase();
+    if (cfg.moduleId !== 'citation_forge' && t === 'stripe.com') return false;
+    if (/^(test|playwright|synthetic|bot|localhost|127\.0\.0\.1|99\.112\.|84\.17\.)/i.test(t) || /(onload|alert|xss|script)/i.test(t)) return false;
+    return true;
+  });
+  if (Array.isArray(MEM_SCAN_LEDGERS[cfg.moduleId]) && MEM_SCAN_LEDGERS[cfg.moduleId].length > 0) return filterClean(MEM_SCAN_LEDGERS[cfg.moduleId]);
   const filePath = path.join(process.cwd(), 'data', `public_scans_${cfg.moduleId}.json`);
   try {
     if (fs.existsSync(filePath)) {
-      const parsed = filterCross(JSON.parse(fs.readFileSync(filePath, 'utf8')) || []);
+      const parsed = filterClean(JSON.parse(fs.readFileSync(filePath, 'utf8')) || []);
       if (Array.isArray(parsed) && parsed.length > 0) return (MEM_SCAN_LEDGERS[cfg.moduleId] = parsed);
     }
   } catch (_) {}
@@ -96,7 +102,8 @@ function loadPublicScanLedger(cfg) {
 
 function savePublicScanEntry(cfg, entry) {
   const list = loadPublicScanLedger(cfg);
-  if (!/^[a-zA-Z0-9._+-]{2,48}$/.test(entry.target) || (cfg.moduleId !== 'citation_forge' && entry.target.toLowerCase() === 'stripe.com')) return list;
+  const tLow = String(entry.target || '').toLowerCase();
+  if (!/^[a-zA-Z0-9._+-]{2,48}$/.test(entry.target) || (cfg.moduleId !== 'citation_forge' && tLow === 'stripe.com') || /^(test|playwright|synthetic|bot|localhost|127\.0\.0\.1)/i.test(tLow)) return list;
   const idx = list.findIndex((x) => x.target.toLowerCase() === entry.target.toLowerCase());
   if (idx >= 0) list[idx] = { ...list[idx], ...entry, scannedAt: new Date().toISOString() };
   else list.unshift({ ...entry, scannedAt: new Date().toISOString() });
@@ -369,7 +376,7 @@ function getAllPublicScanUrls(cfg) {
   return [`${base}/leaderboard`, ...ledger.map((e) => `${base}/scan/${encodeURIComponent(e.target)}`)];
 }
 
-function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
+function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn) {
   const cat = getFlywheelCatalog(cfg.moduleId);
 
   app.get('/scan', (req, res) => {
@@ -381,7 +388,8 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
     const rawParam = String(req.params.target || '');
     const isMd = rawParam.endsWith('.md');
     const scan = evaluateScanTarget(cfg, isMd ? rawParam.slice(0, -3) : rawParam);
-    savePublicScanEntry(cfg, scan);
+    const cls = classifyFn ? classifyFn(req) : { isTest: 0, isCrawler: 0, isOwnerIp: false };
+    if (!cls.isTest && !cls.isCrawler && !cls.isOwnerIp) savePublicScanEntry(cfg, scan);
 
     const ua = String(req.headers['user-agent'] || '');
     const accept = String(req.headers['accept'] || '');
@@ -412,7 +420,8 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn) {
   app.all('/api/cnn/inspect', (req, res) => {
     const raw = req.body?.target || req.body?.query || req.query?.target || req.query?.q || cat.entities[0].target;
     const scan = evaluateScanTarget(cfg, raw);
-    savePublicScanEntry(cfg, scan);
+    const cls = classifyFn ? classifyFn(req) : { isTest: 0, isCrawler: 0, isOwnerIp: false };
+    if (!cls.isTest && !cls.isCrawler && !cls.isOwnerIp) savePublicScanEntry(cfg, scan);
     res.setHeader('Access-Control-Allow-Origin', '*');
     return res.json({
       ok: true,

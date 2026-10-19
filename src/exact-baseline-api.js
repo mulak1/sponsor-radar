@@ -398,7 +398,7 @@ const VERTICAL_CONFIGS = {
   }
 };
 
-const OWNER_EXCLUDED_IPS = ['99.112.70.144', '99.112.70.', '2600:1702:75f1:4c10', '127.0.0.1', '::1', 'localhost', ...(process.env.EXCLUDED_TEST_IPS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)];
+const OWNER_EXCLUDED_IPS = ['99.112.70.144', '99.112.70.', '84.17.44.226', '84.17.44.', '2600:1702:75f1:4c10', '127.0.0.1', '::1', 'localhost', ...(process.env.EXCLUDED_TEST_IPS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)];
 
 function extractClientIps(req) {
   const rawList = [req.headers?.['cf-connecting-ip'], req.headers?.['true-client-ip'], req.headers?.['x-real-ip'], ...String(req.headers?.['x-forwarded-for'] || '').split(','), req.ip, req.socket?.remoteAddress];
@@ -423,7 +423,7 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const emailLower = String(extraEmail || '').toLowerCase();
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
-  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/'))));
+  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/'))));
   if (isHtmlRoute && !req.headers['accept-language']) isBurstScrape = true;
   if (isHtmlRoute && clientIp && !isOwnerIp) {
     const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 30000);
@@ -440,28 +440,47 @@ function classifyTrafficRequest(req, extraEmail = '') {
 function createTelemetryStore(dataDir, moduleId) {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   const ledgerPath = path.join(dataDir, `eb_telemetry_${moduleId}.json`);
-  let state = { events: [], leads: [], orders: [], impressions: 0, calculations: 0, checkout_intents: 0, crawler_hits: 0 };
+  let state = { events: [], leads: [], orders: [], owner_ips: [], impressions: 0, calculations: 0, checkout_intents: 0, crawler_hits: 0 };
   if (fs.existsSync(ledgerPath)) { try { state = { ...state, ...JSON.parse(fs.readFileSync(ledgerPath, 'utf8')) }; } catch (_) {} }
+  if (Array.isArray(state.owner_ips)) { for (const ip of state.owner_ips) { if (ip && !OWNER_EXCLUDED_IPS.includes(ip)) OWNER_EXCLUDED_IPS.push(ip); } }
   let savePending = false;
   function save() { if (savePending) return; savePending = true; setImmediate(() => { savePending = false; fs.promises.writeFile(ledgerPath, JSON.stringify(state)).catch(() => {}); }); }
   let sanitized = false;
   for (let i = 0; i < state.events.length; i++) {
     const e = state.events[i];
-    if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (!e.client_ip && e.created_at >= '2026-10-17T09:18:00Z' && e.created_at <= '2026-10-17T09:55:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
+    if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || (!e.client_ip && e.event_type !== 'visit') || (!e.client_ip && e.created_at >= '2026-10-17T09:18:00Z' && e.created_at <= '2026-10-17T09:55:00Z' && (!e.utm_source || e.utm_source === 'direct') && e.page_url === '/'))) {
       e.is_test = 1; e.is_owner = 1; sanitized = true;
+    } else if (Number(e.is_test) === 0 && e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET') {
+      e.is_test = 1; e.is_crawler = 1; sanitized = true;
     } else if (Number(e.is_test) === 0 && e.event_type === 'visit') {
       const t0 = new Date(e.created_at).getTime(), win = state.events.slice(Math.max(0, i - 6), Math.min(state.events.length, i + 7));
       const samePathQuick = win.filter((x) => x.event_type === 'visit' && x.page_url === e.page_url && (!e.client_ip || x.client_ip === e.client_ip) && Math.abs(new Date(x.created_at).getTime() - t0) <= 15000).length;
       const hasJs = win.some((x) => x.event_type !== 'visit' && (!e.client_ip || x.client_ip === e.client_ip) && Math.abs(new Date(x.created_at).getTime() - t0) <= 20000);
-      const seoBurst = (String(e.page_url || '').startsWith('/seo/') || String(e.page_url || '').startsWith('/?preset=')) && win.filter((x) => x.event_type === 'visit' && Math.abs(new Date(x.created_at).getTime() - t0) <= 4000).length >= 3;
+      const seoBurst = (String(e.page_url || '').startsWith('/seo/') || String(e.page_url || '').startsWith('/scan/') || String(e.page_url || '').startsWith('/?preset=')) && win.filter((x) => x.event_type === 'visit' && Math.abs(new Date(x.created_at).getTime() - t0) <= 4000).length >= 3;
       if (seoBurst || (samePathQuick >= 2 && !hasJs)) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
     }
   }
-  for (const l of state.leads) { if (Number(l.is_test) === 0 && (isExcludedOwnerIp(l.client_ip) || l.is_owner)) { l.is_test = 1; l.is_owner = 1; sanitized = true; } }
-  for (const o of state.orders) { if (Number(o.is_test) === 0 && (isExcludedOwnerIp(o.client_ip) || o.is_owner)) { o.is_test = 1; o.is_owner = 1; sanitized = true; } }
+  for (const l of state.leads) { if (Number(l.is_test) === 0 && (!l.client_ip || isExcludedOwnerIp(l.client_ip) || l.is_owner)) { l.is_test = 1; l.is_owner = 1; sanitized = true; } }
+  for (const o of state.orders) { if (Number(o.is_test) === 0 && (!o.client_ip || isExcludedOwnerIp(o.client_ip) || o.is_owner)) { o.is_test = 1; o.is_owner = 1; sanitized = true; } }
   if (sanitized) save();
 
   return {
+    registerOwnerIp(req) {
+      const ips = extractClientIps(req).filter((ip) => ip && !ip.startsWith('100.64.') && !ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('192.168.'));
+      let changed = false;
+      state.owner_ips = Array.isArray(state.owner_ips) ? state.owner_ips : [];
+      for (const ip of ips) {
+        if (!OWNER_EXCLUDED_IPS.includes(ip)) { OWNER_EXCLUDED_IPS.push(ip); changed = true; }
+        if (!state.owner_ips.includes(ip)) { state.owner_ips.push(ip); changed = true; }
+      }
+      if (changed) {
+        for (const e of state.events) { if (Number(e.is_test) === 0 && isExcludedOwnerIp(e.client_ip)) { e.is_test = 1; e.is_owner = 1; } }
+        for (const l of state.leads) { if (Number(l.is_test) === 0 && isExcludedOwnerIp(l.client_ip)) { l.is_test = 1; l.is_owner = 1; } }
+        for (const o of state.orders) { if (Number(o.is_test) === 0 && isExcludedOwnerIp(o.client_ip)) { o.is_test = 1; o.is_owner = 1; } }
+        save();
+      }
+      return ips;
+    },
     recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, isOwnerIp = 0, clientIp = '', meta = {} }) {
       const nowIso = new Date().toISOString();
       const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
@@ -493,7 +512,7 @@ function createTelemetryStore(dataDir, moduleId) {
     getPstReport(windowHours = 3) {
       const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
-      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !isExcludedOwnerIp(e.client_ip);
+      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !isExcludedOwnerIp(e.client_ip) && (e.event_type === 'visit' || Boolean(e.client_ip)) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET');
       const humanEvents = state.events.filter(isHumanEvent), testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
       const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), prevEventsList = humanEvents.filter((e) => { const t = new Date(e.created_at).getTime(); return t >= prevCutMs && t < cutoffMs; });
       const winTestList = testEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), winCrawlerHits = state.events.filter((e) => Number(e.is_crawler) === 1 && new Date(e.created_at).getTime() >= cutoffMs).length;
@@ -504,18 +523,18 @@ function createTelemetryStore(dataDir, moduleId) {
       for (const e of humanEvents) cumCounts[e.event_type] = (cumCounts[e.event_type] || 0) + 1;
       const recentRows = winEventsList.slice(-15).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || 'direct', is_test: 0, is_crawler: 0, meta: e.meta || {} }));
       const recentAllRows = state.events.slice(-20).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || (e.is_crawler ? 'ai_search_crawler' : 'direct'), is_test: e.is_test, is_crawler: e.is_crawler, meta: e.meta || {} }));
-      const humanLeadsList = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)), humanLeads = humanLeadsList.length, winLeads = humanLeadsList.filter((l) => new Date(l.created_at).getTime() >= cutoffMs).length, testLeads = state.leads.length - humanLeads;
-      const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
+      const humanLeadsList = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && Boolean(l.client_ip) && !isExcludedOwnerIp(l.client_ip)), humanLeads = humanLeadsList.length, winLeads = humanLeadsList.filter((l) => new Date(l.created_at).getTime() >= cutoffMs).length, testLeads = state.leads.length - humanLeads;
+      const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && Boolean(o.client_ip) && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
       const paidOrders = paidOrdersList.length, paidRevUsd = paidOrdersList.reduce((acc, o) => acc + (Number(o.amount_usd) || 0), 0);
       return {
         ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()), pst_prev_window_start: toPstString(new Date(prevCutMs).toISOString()),
-        window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1'],
+        window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '84.17.44.226', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1', ...(state.owner_ips || [])],
         window_events: winCounts, prior_window_events: prevCounts, window_devices: winDevices, window_sources: winSources, window_leads: winLeads, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, recent_pst_events: recentRows, recent_all_events: recentAllRows,
         all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
         server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: state.crawler_hits || 0, total_events_logged: state.events.length }
       };
     },
-    getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && !isExcludedOwnerIp(l.client_ip)),
+    getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && Boolean(l.client_ip) && !isExcludedOwnerIp(l.client_ip)),
     getRawState: () => state
   };
 }
@@ -744,15 +763,13 @@ function attachExactBaselinePack(app, options = {}) {
 
   app.get('/api/github-upgrade/stripe-recovery-worker.js', (req, res) => {
     const code = [
-      '/**', ' * AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker', ' */',
-      'export default {',
-      '  async fetch(request) {',
-      '    const payload = await request.json();',
-      '    const code = payload?.data?.object?.last_payment_error?.decline_code || "insufficient_funds";',
-      '    const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 4 : 12);',
-      '    return new Response(JSON.stringify({ ok: true, decline_code: code, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });',
-      '  }',
-      '};'
+      '/** AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker */',
+      'export default { async fetch(request) {',
+      '  const payload = await request.json();',
+      '  const code = payload?.data?.object?.last_payment_error?.decline_code || "insufficient_funds";',
+      '  const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 4 : 12);',
+      '  return new Response(JSON.stringify({ ok: true, decline_code: code, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });',
+      '} };'
     ].join('\n');
     res.status(200).type('application/javascript; charset=utf-8').setHeader('Content-Disposition', 'attachment; filename="stripe-recovery-worker.js"').send(code);
   });
@@ -760,12 +777,8 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/remediation-diff', (req, res) => {
     const diff = cfg.remediationDiff || { beforeLine: '- [BEFORE] Legacy baseline', afterLine: '+ [AFTER] Optimized baseline', roiBadge: 'Verified Lift' };
     res.json({
-      ok: true,
-      module_id: cfg.moduleId,
-      engine: 'kpdecker/jsdiff (★ 9,214) + eligrey/FileSaver.js (★ 22,040)',
-      before_line: diff.beforeLine,
-      after_line: diff.afterLine,
-      roi_badge: diff.roiBadge,
+      ok: true, module_id: cfg.moduleId, engine: 'kpdecker/jsdiff (★ 9,214) + eligrey/FileSaver.js (★ 22,040)',
+      before_line: diff.beforeLine, after_line: diff.afterLine, roi_badge: diff.roiBadge,
       unified_patch: `--- a/${cfg.domain}/baseline\n+++ b/${cfg.domain}/remediated\n@@ -1,1 +1,1 @@\n${diff.beforeLine}\n${diff.afterLine}`,
       unlock_paths: [
         { path: 'micro_pass', price_usd: 0.99, buy_url: `https://${cfg.domain}/buy/micro_pass`, label: '99¢ Single-File Instant Export Pass' },
@@ -800,9 +813,7 @@ function attachExactBaselinePack(app, options = {}) {
       try {
         const sr = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(o.session_id)}`, { headers: { Authorization: `Bearer ${sk}` } });
         const sd = await sr.json();
-        if (sr.ok && (sd.payment_status === 'paid' || sd.status === 'complete')) {
-          store.markOrderPaid(o.session_id, sd.amount_total ? sd.amount_total / 100 : o.amount_usd);
-        }
+        if (sr.ok && (sd.payment_status === 'paid' || sd.status === 'complete')) store.markOrderPaid(o.session_id, sd.amount_total ? sd.amount_total / 100 : o.amount_usd);
       } catch (_) {}
     }
   }
@@ -826,8 +837,7 @@ function attachExactBaselinePack(app, options = {}) {
     pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}`
   });
   async function sendOneClickLeadEmail(email, summaryText, isTest) {
-    const links = buildBuyLinks(email);
-    const safeSum = escMailHtml(summaryText);
+    const links = buildBuyLinks(email), safeSum = escMailHtml(summaryText);
     const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${links.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${links.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${links.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${links.pro_b2b}\n`;
     const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${escMailHtml(cfg.brandName)}: Diagnostic Summary &amp; 1-Click Export Links</h2><p>${safeSum}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${escMailHtml(cfg.freeDeliverableName)}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${escMailHtml(cfg.coreLabel)} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${escMailHtml(cfg.proLabel)} →</strong></a></li></ul></div>`;
     const resendKey = process.env.RESEND_API_KEY || '';
@@ -864,18 +874,13 @@ function attachExactBaselinePack(app, options = {}) {
     lastBackfillMs = Date.now();
     let resentCount = 0;
     for (const l of humanLeads) {
-      if (l.email && l.email.includes('@')) {
-        const ok = await sendOneClickLeadEmail(l.email, l.summary_text || `${cfg.brandName} Diagnostic Summary`, false);
-        if (ok) resentCount++;
-      }
+      if (l.email && l.email.includes('@') && (await sendOneClickLeadEmail(l.email, l.summary_text || `${cfg.brandName} Diagnostic Summary`, false))) resentCount++;
     }
     res.json({ ok: true, module_id: cfg.moduleId, sendgrid_configured: Boolean(SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.')), total_human_leads_scanned: humanLeads.length, emails_resent: resentCount, status: humanLeads.length === 0 ? 'zero_prior_human_leads_to_resend' : 'backfill_completed' });
   });
 
   // 8. Sovrn //Commerce Contextual Partner Offers & Status
-  app.get('/api/affiliates/offers', (req, res) => {
-    res.json({ ok: true, sovrn_commerce_key: SOVRN_COMMERCE_KEY, sovrn_secret_configured: Boolean(SOVRN_SECRET_KEY), offers: cfg.affiliates });
-  });
+  app.get('/api/affiliates/offers', (req, res) => res.json({ ok: true, sovrn_commerce_key: SOVRN_COMMERCE_KEY, sovrn_secret_configured: Boolean(SOVRN_SECRET_KEY), offers: cfg.affiliates }));
 
   // 9. Multi-Tier Stripe Checkout Handler + GET /buy/:tier 1-Click HTTP 303 Payment Redirects
   async function handleTierCheckout(req, res) {
@@ -890,7 +895,9 @@ function attachExactBaselinePack(app, options = {}) {
     const isOneTime = isMicro || isFlash || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
 
     const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
-    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
+    let { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
+    const ref = String(req.headers.referer || '');
+    if (req.method === 'GET' && !ref.includes(cfg.domain.replace(/^www\./, ''))) { isTest = 1; isCrawler = 1; }
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
 
     if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
@@ -910,12 +917,9 @@ function attachExactBaselinePack(app, options = {}) {
     const buildInlineParams = () => {
       const p = new URLSearchParams({
         'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`,
-        'cancel_url': `${baseUrl}/?checkout=cancel`,
-        'mode': isOneTime ? 'payment' : 'subscription',
-        'line_items[0][price_data][currency]': 'usd',
-        'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)),
-        'line_items[0][price_data][product_data][name]': prodLabel,
-        'line_items[0][quantity]': '1'
+        'cancel_url': `${baseUrl}/?checkout=cancel`, 'mode': isOneTime ? 'payment' : 'subscription',
+        'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)),
+        'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][quantity]': '1'
       });
       if (!isOneTime) p.set('line_items[0][price_data][recurring][interval]', verticalId === 'derm_logic' ? 'year' : 'month');
       if (userEmail && userEmail.includes('@')) p.set('customer_email', userEmail);
@@ -926,13 +930,7 @@ function attachExactBaselinePack(app, options = {}) {
       try {
         let stData = null;
         if (priceId && priceId.startsWith('price_')) {
-          const params = new URLSearchParams({
-            'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`,
-            'cancel_url': `${baseUrl}/?checkout=cancel`,
-            'mode': isOneTime ? 'payment' : 'subscription',
-            'line_items[0][price]': priceId,
-            'line_items[0][quantity]': '1'
-          });
+          const params = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel`, 'mode': isOneTime ? 'payment' : 'subscription', 'line_items[0][price]': priceId, 'line_items[0][quantity]': '1' });
           if (userEmail && userEmail.includes('@')) params.set('customer_email', userEmail);
           stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: params })).json();
         }
@@ -953,7 +951,10 @@ function attachExactBaselinePack(app, options = {}) {
     if (isOwnerIp) { try { res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax'); } catch (_) {} }
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
     if (req.method === 'GET' && req.query?.checkout === 'success' && req.query?.session_id) reconcileStripeOrders().catch(() => {});
-    if (req.method === 'GET' && req.path === '/api/affiliate') store.recordEvent({ eventType: 'affiliate_click', pageUrl: req.headers.referer || '/api/affiliate', deviceType, utmSource: String(req.query?.partner || 'sovrn'), utmCampaign: String(req.query?.product || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: { product: req.query?.product, partner: req.query?.partner } });
+    if (req.method === 'GET' && req.path === '/api/affiliate') {
+      const hasSameDomainRef = String(req.headers.referer || '').includes(cfg.domain.replace(/^www\./, ''));
+      store.recordEvent({ eventType: 'affiliate_click', pageUrl: req.headers.referer || '/api/affiliate', deviceType, utmSource: String(req.query?.partner || 'sovrn'), utmCampaign: String(req.query?.product || ''), isTest: (isTest || !hasSameDomainRef) ? 1 : 0, isCrawler: (isCrawler || !hasSameDomainRef) ? 1 : 0, isOwnerIp, clientIp, meta: { product: req.query?.product, partner: req.query?.partner } });
+    }
     if (req.method === 'POST' && req.path === '/api/checkout') {
       const reqTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.planId || '').toLowerCase();
       if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'complete_dossier' || reqTier === 'pro_b2b') return handleTierCheckout(req, res);
@@ -979,7 +980,7 @@ function attachExactBaselinePack(app, options = {}) {
     };
     next();
   });
-  attachAutonomousGrowthEngine(app, cfg, store, null);
+  attachAutonomousGrowthEngine(app, cfg, store, null, classifyTrafficRequest);
   return { cfg, store };
 }
 module.exports = { INDEXNOW_KEY, VERTICAL_CONFIGS, attachExactBaselinePack };

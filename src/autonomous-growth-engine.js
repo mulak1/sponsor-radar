@@ -266,7 +266,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
 </html>`;
 }
 
-function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
+function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn) {
   const g = getGrowthConfig(cfg.moduleId);
   const edgeCacheHdr = 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400';
   let lastSyndicateAt = 0;
@@ -436,7 +436,7 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
   });
 
   // 6B. Phase A Public Scan Permalink, Leaderboard, Terminal curl & CNN Visual Sensor Flywheel
-  attachPublicScanFlywheel(app, cfg, g.badgeColor, renderHtmlFn);
+  attachPublicScanFlywheel(app, cfg, g.badgeColor, renderHtmlFn, classifyFn);
 
   // 7. Iteration 28/30 Verification & Multi-Engine Autonomous Syndication Endpoint
   app.get('/api/github-upgrade/autonomous-growth-engine', (req, res) => {
