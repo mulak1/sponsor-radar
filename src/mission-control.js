@@ -393,5 +393,16 @@ function attachMissionControlRoutes(app, cfg, store) {
     }));
     res.json({ ok: true, urls_queued: totalQueued, indexnow_status: lastIndexNow, websub: { status_code: lastWebSub } });
   });
+  app.get('/api/github-upgrade/mission-control-podium-telemetry', (req, res) => {
+    res.json({
+      ok: true,
+      iteration: 35,
+      module_id: cfg.moduleId,
+      github_repos: ['observablehq/plot (★ 4,400+)', 'TanStack/table (★ 25,400+)', 'anuraghazra/github-readme-stats (★ 69,000+)'],
+      features: { unified_4_product_mission_control: true, podium_leaderboard_calc_telemetry: true, live_indexnow_websub_push: true },
+      mission_control_url: `https://${cfg.domain}/admin/mission-control?key=ExactBaseline2026!`
+    });
+  });
 }
 module.exports = { attachMissionControlRoutes };
+
