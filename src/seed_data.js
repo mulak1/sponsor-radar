@@ -1,5 +1,5 @@
 /**
- * SponsorRadar (#2) — Rich Seed Dataset
+ * SponsorRadar (#2): Rich Seed Dataset
  * 42 Active B2B & Consumer Sponsor Brands
  * 46 Top Podcasts, Newsletters & YouTube Channels
  * 95+ Historical Ad-Read Placements with Timestamps, Promo Codes, Vanity URLs & 3x+ Renewal Counts
@@ -17,7 +17,7 @@ const BRANDS = [
   { slug: 'notion', name: 'Notion', domain: 'notion.so', category: 'Workspace & AI Productivity', vertical: 'B2B / Prosumer SaaS', est_monthly_spend: 540000, avg_cpm: 52, renewal_rate_pct: 80, decision_maker_role: 'Global Creator Marketing Lead', sponsor_email: 'creators@makenotion.com', landing_pattern: 'notion.com/{show}', default_offer: 'Try Notion AI free + 6 months Startup Plus plan' },
   { slug: 'mercury', name: 'Mercury', domain: 'mercury.com', category: 'Startup Banking & Treasury', vertical: 'B2B Fintech', est_monthly_spend: 490000, avg_cpm: 66, renewal_rate_pct: 87, decision_maker_role: 'Brand Partnerships Lead', sponsor_email: 'sponsorships@mercury.com', landing_pattern: 'mercury.com/{show}', default_offer: '$500 cash bonus with $10K deposit in 90 days' },
   { slug: 'expressvpn', name: 'ExpressVPN', domain: 'expressvpn.com', category: 'Cybersecurity & Privacy', vertical: 'Consumer Security', est_monthly_spend: 890000, avg_cpm: 34, renewal_rate_pct: 79, decision_maker_role: 'Head of YouTube & Podcast Buying', sponsor_email: 'media@expressvpn.com', landing_pattern: 'expressvpn.com/{show}', default_offer: '3 extra months free on a 12-month plan' },
-  { slug: 'retool', name: 'Retool', domain: 'retool.com', category: 'Internal Software & DevTools', vertical: 'B2B DevTools', est_monthly_spend: 285000, avg_cpm: 62, renewal_rate_pct: 77, decision_maker_role: 'Developer Relations & Media Lead', sponsor_email: 'sponsor@retool.com', landing_pattern: 'retool.com/{show}', default_offer: 'Build internal apps 10x faster — up to $25k startup credits' },
+  { slug: 'retool', name: 'Retool', domain: 'retool.com', category: 'Internal Software & DevTools', vertical: 'B2B DevTools', est_monthly_spend: 285000, avg_cpm: 62, renewal_rate_pct: 77, decision_maker_role: 'Developer Relations & Media Lead', sponsor_email: 'sponsor@retool.com', landing_pattern: 'retool.com/{show}', default_offer: 'Build internal apps 10x faster: up to $25k startup credits' },
   { slug: 'lmnt', name: 'LMNT Electrolytes', domain: 'drinklmnt.com', category: 'Health & Performance', vertical: 'DTC Wellness', est_monthly_spend: 560000, avg_cpm: 39, renewal_rate_pct: 90, decision_maker_role: 'Director of Podcast Partnerships', sponsor_email: 'partnerships@drinklmnt.com', landing_pattern: 'drinklmnt.com/{show}', default_offer: 'Free 8-count LMNT Sample Pack with any order' },
   { slug: 'ridge', name: 'Ridge Wallet', domain: 'ridge.com', category: 'Everyday Carry & Hardware', vertical: 'DTC Consumer', est_monthly_spend: 470000, avg_cpm: 32, renewal_rate_pct: 76, decision_maker_role: 'VP Creator & YouTube Media', sponsor_email: 'creators@ridge.com', landing_pattern: 'ridge.com/{show}', default_offer: '15% off sitewide with code {CODE}' },
   { slug: 'framer', name: 'Framer', domain: 'framer.com', category: 'Web Design & Publishing', vertical: 'Design & DevTools', est_monthly_spend: 260000, avg_cpm: 48, renewal_rate_pct: 81, decision_maker_role: 'Head of Creator Growth', sponsor_email: 'partners@framer.com', landing_pattern: 'framer.com/{show}', default_offer: '3 months free on Framer Pro annual subscription' },
@@ -61,7 +61,7 @@ const SHOWS = [
   { slug: 'pragmatic-engineer', name: 'The Pragmatic Engineer', channel_type: 'Newsletter & Podcast', niche: 'Big Tech & Senior Software Engineering', audience_size: 720000, base_cpm: 74, midroll_rate_usd: 26500, cadence: '2x Weekly', host_names: 'Gergely Orosz', verified_3x_sponsors: 17 },
   { slug: 'stratechery', name: 'Stratechery / Sharp Tech', channel_type: 'Newsletter & Podcast', niche: 'Tech Strategy & Executive Analysis', audience_size: 290000, base_cpm: 76, midroll_rate_usd: 22000, cadence: 'Weekly', host_names: 'Ben Thompson & Andrew Sharp', verified_3x_sponsors: 10 },
   { slug: 'huberman-lab', name: 'Huberman Lab', channel_type: 'Podcast & YouTube', niche: 'Neuroscience, Health & Human Performance', audience_size: 1250000, base_cpm: 54, midroll_rate_usd: 67500, cadence: '2x Weekly', host_names: 'Dr. Andrew Huberman', verified_3x_sponsors: 13 },
-  { slug: 'theo-t3-gg', name: 'Theo — t3.gg', channel_type: 'YouTube', niche: 'Full-Stack TypeScript, Web Dev & AI Engineering', audience_size: 185000, base_cpm: 62, midroll_rate_usd: 11470, cadence: '3x Weekly', host_names: 'Theo Browne', verified_3x_sponsors: 18 },
+  { slug: 'theo-t3-gg', name: 'Theo: t3.gg', channel_type: 'YouTube', niche: 'Full-Stack TypeScript, Web Dev & AI Engineering', audience_size: 185000, base_cpm: 62, midroll_rate_usd: 11470, cadence: '3x Weekly', host_names: 'Theo Browne', verified_3x_sponsors: 18 },
   { slug: 'fireship', name: 'Fireship', channel_type: 'YouTube & Newsletter', niche: 'High-Velocity Code Report & Dev News', audience_size: 820000, base_cpm: 55, midroll_rate_usd: 45100, cadence: '2x Weekly', host_names: 'Jeff Delaney', verified_3x_sponsors: 14 },
   { slug: 'hard-fork', name: 'Hard Fork (NYT)', channel_type: 'Podcast', niche: 'Silicon Valley, AI & Tech Culture', audience_size: 460000, base_cpm: 60, midroll_rate_usd: 27600, cadence: 'Weekly', host_names: 'Kevin Roose & Casey Newton', verified_3x_sponsors: 11 },
   { slug: '20vc', name: '20VC with Harry Stebbings', channel_type: 'Podcast', niche: 'Venture Capital, SaaS Scaling & Founders', audience_size: 320000, base_cpm: 70, midroll_rate_usd: 22400, cadence: '3x Weekly', host_names: 'Harry Stebbings', verified_3x_sponsors: 15 },
@@ -204,15 +204,15 @@ const PLACEMENT_PAIRS = [
 const SAMPLE_TRANSCRIPTS = [
   {
     id: 'lenny-deel-vanta',
-    label: "Lenny's Podcast — Deel & Vanta 3x+ Mid-Roll Transcript",
+    label: "Lenny's Podcast: Deel & Vanta 3x+ Mid-Roll Transcript",
     channel_type: 'Podcast',
     show_name: "Lenny's Podcast",
     audience_size: 440000,
-    transcript: `[00:16:28] This episode is brought to you by Deel — the all-in-one global people platform that helps fast-growing teams hire, manage, and pay contractors and full-time employees in over 150 countries without setting up local entities. We've seen Deel renew on this show over 12 times because engineering and product leaders love how effortless global payroll and compliance become. Head over to deel.com/lenny and use code LENNY to get $500 off your first global onboarding.\n\n[00:17:46] Also brought to you by Vanta. If you're building a B2B SaaS product, enterprise buyers will block your deal until you have SOC 2 or ISO 27001. Vanta automates up to 90% of compliance work for SOC 2, HIPAA, and AI security frameworks. Visit vanta.com/lenny with code LENNY for $1,000 off Vanta today.`
+    transcript: `[00:16:28] This episode is brought to you by Deel: the all-in-one global people platform that helps fast-growing teams hire, manage, and pay contractors and full-time employees in over 150 countries without setting up local entities. We've seen Deel renew on this show over 12 times because engineering and product leaders love how effortless global payroll and compliance become. Head over to deel.com/lenny and use code LENNY to get $500 off your first global onboarding.\n\n[00:17:46] Also brought to you by Vanta. If you're building a B2B SaaS product, enterprise buyers will block your deal until you have SOC 2 or ISO 27001. Vanta automates up to 90% of compliance work for SOC 2, HIPAA, and AI security frameworks. Visit vanta.com/lenny with code LENNY for $1,000 off Vanta today.`
   },
   {
     id: 'huberman-ag1-eightsleep',
-    label: 'Huberman Lab — AG1 & Eight Sleep Host-Read Transcript',
+    label: 'Huberman Lab: AG1 & Eight Sleep Host-Read Transcript',
     channel_type: 'Podcast & YouTube',
     show_name: 'Huberman Lab',
     audience_size: 1250000,
@@ -220,15 +220,15 @@ const SAMPLE_TRANSCRIPTS = [
   },
   {
     id: 'tldr-supabase-deel',
-    label: 'TLDR Newsletter — Supabase & Cloudflare Primary Block',
+    label: 'TLDR Newsletter: Supabase & Cloudflare Primary Block',
     channel_type: 'Newsletter',
     show_name: 'TLDR Newsletter',
     audience_size: 1350000,
-    transcript: `[PRIMARY SPONSOR — TOP BANNER BLOCK]\nBuild production AI & Postgres apps in minutes with Supabase (Sponsor)\nSupabase is the open-source Postgres development platform trusted by over 1 million developers. Spin up a dedicated Postgres database with pgvector embeddings, instant REST/GraphQL APIs, Edge Functions, and Auth out of the box. Claim $300 in Supabase Pro compute credits at supabase.com/tldr using code TLDRSUPA.\n\n[SECONDARY NATIVE SPONSOR]\nDeploy low-latency serverless inference at the edge with Cloudflare Workers AI. Visit cloudflare.com/tldr and apply promo code TLDRCF for $1,000 in Workers AI & R2 storage credits.`
+    transcript: `[PRIMARY SPONSOR: TOP BANNER BLOCK]\nBuild production AI & Postgres apps in minutes with Supabase (Sponsor)\nSupabase is the open-source Postgres development platform trusted by over 1 million developers. Spin up a dedicated Postgres database with pgvector embeddings, instant REST/GraphQL APIs, Edge Functions, and Auth out of the box. Claim $300 in Supabase Pro compute credits at supabase.com/tldr using code TLDRSUPA.\n\n[SECONDARY NATIVE SPONSOR]\nDeploy low-latency serverless inference at the edge with Cloudflare Workers AI. Visit cloudflare.com/tldr and apply promo code TLDRCF for $1,000 in Workers AI & R2 storage credits.`
   },
   {
     id: 'acquired-ramp-mercury',
-    label: 'Acquired Podcast — Ramp & Mercury 4-Hour Epic Read',
+    label: 'Acquired Podcast: Ramp & Mercury 4-Hour Epic Read',
     channel_type: 'Podcast',
     show_name: 'Acquired',
     audience_size: 520000,
@@ -236,11 +236,11 @@ const SAMPLE_TRANSCRIPTS = [
   },
   {
     id: 'theo-clerk-linear',
-    label: 'Theo (t3.gg) — Clerk & Linear YouTube DevTools Read',
+    label: 'Theo (t3.gg): Clerk & Linear YouTube DevTools Read',
     channel_type: 'YouTube',
-    show_name: 'Theo — t3.gg',
+    show_name: 'Theo: t3.gg',
     audience_size: 185000,
-    transcript: `[00:03:45] Shoutout to Clerk for sponsoring today's video. Look, rolling your own auth in 2026 with passkeys, multi-tenant organizations, and session revocation is a trap. Clerk drops right into Next.js and TanStack Start in five minutes. Check out clerk.com/theo and use code THEO for 10,000 free Monthly Active Users plus $500 in Pro credits.\n\n[00:05:12] Also supported by Linear — the issue tracker and project planning tool built for high-velocity engineering teams. Try Linear free for 2 months at linear.app/theo with promo code THEO.`
+    transcript: `[00:03:45] Shoutout to Clerk for sponsoring today's video. Look, rolling your own auth in 2026 with passkeys, multi-tenant organizations, and session revocation is a trap. Clerk drops right into Next.js and TanStack Start in five minutes. Check out clerk.com/theo and use code THEO for 10,000 free Monthly Active Users plus $500 in Pro credits.\n\n[00:05:12] Also supported by Linear: the issue tracker and project planning tool built for high-velocity engineering teams. Try Linear free for 2 months at linear.app/theo with promo code THEO.`
   }
 ];
 

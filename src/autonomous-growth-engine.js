@@ -3,8 +3,8 @@
 /**
  * Autonomous Zero-HITL Growth & Open-Source Distribution Engine (Iteration 28)
  * Implements:
- *  1. Dynamic Live SVG Score Badges (`GET /badge/:target.svg`, `GET /api/badge/:target.svg`) — `anuraghazra/github-readme-stats` (★ 79.8k) & `badges/shields` (★ 27.2k)
- *  2. Shields.io JSON Endpoint (`GET /api/badge/shield`) & Dynamic 1200x630 OpenGraph Scorecard (`GET /api/og/scorecard` — `vercel/satori` ★ 14.1k)
+ *  1. Dynamic Live SVG Score Badges (`GET /badge/:target.svg`, `GET /api/badge/:target.svg`): `anuraghazra/github-readme-stats` (★ 79.8k) & `badges/shields` (★ 27.2k)
+ *  2. Shields.io JSON Endpoint (`GET /api/badge/shield`) & Dynamic 1200x630 OpenGraph Scorecard (`GET /api/og/scorecard`: `vercel/satori` ★ 14.1k)
  *  3. 1-Line Embeddable Interactive Micro-Widget (`GET /embed.js`) & Copyable Markdown/HTML Snippet API (`GET /api/growth/embed-snippet`)
  *  4. Machine-Actionable Agent Discovery Triad (`GET /openapi.json` OpenAPI 3.1.0, `GET /.well-known/ai-plugin.json`, `GET /.well-known/mcp-registry.json`, `POST /api/mcp/rpc`)
  *  5. High-Intent Interactive `/tools/:slug` & `/compare/:slug` Programmatic Calculator & Comparison Routes (+ `.md` Markdown Twins)
@@ -168,6 +168,8 @@ function renderGrowthPageHtml(cfg, item, kind) {
   const canonicalUrl = `https://${cfg.domain}/${kind}/${item.slug}`;
   const badgeSvgUrl = `https://${cfg.domain}/badge/${encodeURIComponent(item.target)}.svg`;
   const mdBadgeSnippet = `[![${cfg.brandName} Verified](${badgeSvgUrl})](${canonicalUrl})`;
+  // 1. Dynamic Live SVG Score Badges (`GET /badge/:target.svg`, `GET /api/badge/:target.svg`) : `anuraghazra/github-readme-stats` (★ 79.8k) & `badges/shields` (★ 27.2k)
+  // 2. Shields.io JSON Endpoint (`GET /api/badge/shield`) & Dynamic 1200x630 OpenGraph Scorecard (`GET /api/og/scorecard` : `vercel/satori` ★ 14.1k)
   const rows = kind === 'compare'
     ? [
         { name: item.entityA, kpi: item.scoreA, action: 'Top Rated • Leading Option', status: 'RECOMMENDED (#1)' },
@@ -177,14 +179,14 @@ function renderGrowthPageHtml(cfg, item, kind) {
         { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ]
     : [
-        { name: `${item.target} — Baseline Check`, kpi: item.metricA, action: 'Test Your Own Above', status: 'VERIFIED' },
+        { name: `${item.target} : Baseline Check`, kpi: item.metricA, action: 'Test Your Own Above', status: 'VERIFIED' },
         { name: `${cfg.freeDeliverableName} Impact`, kpi: item.metricB, action: 'Ready-to-Use Action File', status: 'READY' },
         { name: 'Setup Time', kpi: '< 10 Seconds', action: 'Instant Browser Calculation', status: 'INSTANT' },
         { name: 'Row #4 Step-by-Step Fix Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
         { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ];
 
-  const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};">${escXml(r.kpi)}</td><td style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:10px 12px;border-bottom:1px solid ${escXml(t.border)};font-size:11.5px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
+  const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;font-size:14px;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};font-size:14px;">${escXml(r.kpi)}</td><td style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};font-size:14px;">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-size:13px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -203,61 +205,60 @@ function renderGrowthPageHtml(cfg, item, kind) {
   <meta name="twitter:title" content="${escXml(item.title)}" />
   <meta name="twitter:description" content="${escXml(item.summary.slice(0, 156))}" />
 </head>
-<body style="margin:0;background:${escXml(t.canvasBg)};color:${escXml(t.textPrimary)};font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;">
-  <header style="border-bottom:1px solid ${escXml(t.border)};background:#FFFFFF;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+<body style="margin:0;background:${escXml(t.canvasBg)};color:${escXml(t.textPrimary)};font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.6;">
+  <header style="border-bottom:1px solid ${escXml(t.border)};background:#FFFFFF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="/" style="font-weight:800;font-size:18px;color:${escXml(t.textPrimary)};text-decoration:none;">${escXml(cfg.brandName)}</a>
-      <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'SIDE-BY-SIDE COMPARISON' : 'FREE INTERACTIVE TOOL')}</span>
+      <span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'SIDE-BY-SIDE COMPARISON' : 'FREE INTERACTIVE TOOL')}</span>
     </div>
-    <nav aria-label="Primary" style="display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600;">
+    <nav aria-label="Primary" style="display:flex;gap:16px;align-items:center;font-size:14px;font-weight:600;">
       <a href="/" style="color:${escXml(t.textSecondary)};text-decoration:none;">Home Calculator</a>
+      <a href="/leaderboard" style="color:${escXml(t.textSecondary)};text-decoration:none;">🏆 Leaderboard</a>
       <a href="/directory" style="color:${escXml(t.textSecondary)};text-decoration:none;">All Guides</a>
-      <a href="/llms.txt" style="color:${escXml(t.textSecondary)};text-decoration:none;">/llms.txt</a>
-      <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
+      <a href="/buy/flash_pass" style="padding:8px 16px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
     </nav>
   </header>
   <main style="max-width:1240px;margin:0 auto;padding:24px;">
-    <nav aria-label="Breadcrumb" style="font-size:12px;color:#64748B;margin-bottom:10px;">
+    <nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:10px;">
       <a href="/" style="color:${escXml(g.badgeColor)};text-decoration:none;font-weight:600;">Home</a> / <a href="/directory" style="color:${escXml(g.badgeColor)};text-decoration:none;font-weight:600;">Directory</a> / <span>${escXml(item.slug)}</span>
     </nav>
-    <h1>${escXml(item.title)}</h1>
-    <p class="pseo-lead">${escXml(item.summary)}</p>
-    <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' — Live Check';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
-    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <span style="font-size:11px;font-weight:800;color:#38BDF8;font-family:monospace;">⚡ LIVE INTERACTIVE CALCULATOR:</span>
-        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:4px 9px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:11px;width:135px;" />
-        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:4px 10px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Check Score ↗</button>
-        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="font-size:11px;font-weight:600;color:#94A3B8;text-decoration:underline;padding:2px 6px;">Full Report ↗</a>
+    <h1 style="font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;margin:0 0 8px 0;">${escXml(item.title)}</h1>
+    <p class="pseo-lead" style="font-size:16px;color:${escXml(t.textSecondary)};margin:0 0 14px 0;">${escXml(item.summary)}</p>
+    <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' : Live Check';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
+    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:14px 18px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:13px;font-weight:800;color:#38BDF8;font-family:monospace;">⚡ LIVE INTERACTIVE CALCULATOR:</span>
+        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:6px 11px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:13.5px;width:155px;" />
+        <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:6px 13px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13.5px;font-weight:700;cursor:pointer;">Check Score ↗</button>
+        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:600;color:#94A3B8;text-decoration:underline;padding:2px 6px;">Full Report ↗</a>
       </div>
-      <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:11.5px;color:#34D399;font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
+      <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:13px;color:#34D399;font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
     </section>
-    <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:16px;margin-top:14px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-        <h2 style="font-size:16px;margin:0;">Side-by-Side Results &amp; Action Plan</h2>
+    <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:18px;margin-top:14px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+        <h2 style="font-size:18px;margin:0;">Side-by-Side Results &amp; Action Plan</h2>
         <img id="eb-growth-badge-img" src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
       </div>
-      <table aria-label="${escXml(item.title)} Benchmark Matrix" style="width:100%;border-collapse:collapse;font-size:13px;">
-        <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Option / Check</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Measured Result</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Recommended Step</th><th scope="col" style="padding:10px 12px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
+      <table aria-label="${escXml(item.title)} Benchmark Matrix" style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Option / Check</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Measured Result</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Recommended Step</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
-      <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:11px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div id="eb-inline-row4-unlock" style="margin-top:14px;padding:12px 16px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="font-size:12px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
-          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:6px 10px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:12px;width:185px;" />
-          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Action Plan Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:12px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:6px 12px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:12px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+          <span style="font-size:13.5px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
+          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:7px 12px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:13.5px;width:195px;" />
+          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Action Plan Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:13.5px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:7px 14px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:13.5px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/micro_pass" style="padding:6px 12px;border-radius:8px;border:1px solid ${escXml(g.badgeColor)};color:${escXml(g.badgeColor)};font-size:12px;font-weight:700;text-decoration:none;">99¢ Single File</a>
-          <a href="/buy/flash_pass" style="padding:6px 12px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:12px;font-weight:700;text-decoration:none;">Unlock 3-File Pack ($1.99) ↗</a>
+          <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13.5px;font-weight:700;text-decoration:none;">Unlock 3-File Pack ($1.99) ↗</a>
         </div>
       </div>
     </section>
-    <details style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:12px 16px;margin-top:16px;">
-      <summary style="cursor:pointer;font-size:13px;font-weight:700;color:${escXml(t.textPrimary)};">🔗 Embed Live Verified Badge &amp; Technical Specs (Layer-3)</summary>
+    <details style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:14px 18px;margin-top:16px;">
+      <summary style="cursor:pointer;font-size:14px;font-weight:700;color:${escXml(t.textPrimary)};">🔗 Embed Live Verified Badge &amp; Technical Specs (Layer-3)</summary>
       <div style="margin-top:10px;">
-        <p style="font-size:12.5px;color:${escXml(t.textSecondary)};margin:0 0 8px 0;">Copy and paste this live SVG badge into your GitHub <code>README.md</code>, documentation, or media kit:</p>
-        <pre style="background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};border-radius:8px;padding:9px 12px;font-size:11.5px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
+        <p style="font-size:13.5px;color:${escXml(t.textSecondary)};margin:0 0 8px 0;">Copy and paste this live SVG badge into your GitHub <code>README.md</code>, documentation, or media kit:</p>
+        <pre style="background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};border-radius:8px;padding:10px 12px;font-size:13px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
       </div>
     </details>
   </main>
@@ -305,7 +306,7 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
   // 4. 1-Line Embeddable Widget (`GET /embed.js`) & Copyable Embed Snippet API (`GET /api/growth/embed-snippet`)
   app.get('/embed.js', (req, res) => {
     const t = String(req.query.target || '').replace(/[^a-zA-Z0-9._+-]/g, '').slice(0, 36) || cfg.presets[0]?.key || 'verified';
-    const js = `(function(){var s=document.currentScript;var t=(s&&s.getAttribute('data-target'))||'${t}';var d=document.createElement('div');d.style.cssText='display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#FFFFFF;border:1px solid #CBD5E1;font-family:system-ui,sans-serif;font-size:12px;box-shadow:0 2px 8px rgba(15,23,42,0.06);';d.innerHTML='<a href="https://${cfg.domain}/?q='+encodeURIComponent(t)+'&utm_source=embed_widget" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#0F172A;font-weight:700;"><img src="https://${cfg.domain}/badge/'+encodeURIComponent(t)+'.svg" alt="${cfg.brandName}" width="210" height="20" style="height:20px;width:auto;vertical-align:middle;"/><span>Run Free Audit ↗</span></a>';if(s&&s.parentNode)s.parentNode.insertBefore(d,s.nextSibling);})();`;
+    const js = `(function(){var s=document.currentScript;var t=(s&&s.getAttribute('data-target'))||'${t}';var d=document.createElement('div');d.style.cssText='display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#FFFFFF;border:1px solid #CBD5E1;font-family:system-ui,sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(15,23,42,0.06);';d.innerHTML='<a href="https://${cfg.domain}/?q='+encodeURIComponent(t)+'&utm_source=embed_widget" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#0F172A;font-weight:700;"><img src="https://${cfg.domain}/badge/'+encodeURIComponent(t)+'.svg" alt="${cfg.brandName}" width="210" height="20" style="height:20px;width:auto;vertical-align:middle;"/><span>Run Free Audit ↗</span></a>';if(s&&s.parentNode)s.parentNode.insertBefore(d,s.nextSibling);})();`;
     res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
     res.setHeader('Cache-Control', edgeCacheHdr);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -333,7 +334,7 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
       openapi: '3.1.0',
-      info: { title: `${cfg.brandName} Deterministic API & Benchmark Engine`, version: '2.8.0', description: `${g.categoryTag} — Free deterministic benchmark lookup, live SVG badges, and production deliverable compiler.` },
+      info: { title: `${cfg.brandName} Deterministic API & Benchmark Engine`, version: '2.8.0', description: `${g.categoryTag}: Free deterministic benchmark lookup, live SVG badges, and production deliverable compiler.` },
       servers: [{ url: `https://${cfg.domain}`, description: 'Production Server' }],
       paths: {
         '/api/github-upgrade/fuse-search': {

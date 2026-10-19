@@ -1,5 +1,5 @@
 /**
- * SponsorRadar (#2) — Passionfroot + Beehiiv + Ramp Editorial Media Intelligence Design System
+ * SponsorRadar (#2): Passionfroot + Beehiiv + Ramp Editorial Media Intelligence Design System
  * Core Personas:
  *   1. DTC & B2B Brand Media Buyers / Growth & Partnerships Managers (AG1, Eight Sleep, Ramp, Deel, Notion)
  *   2. Creator Economy Operators, Newsletter Publishers & Talent Agencies (Substack, Beehiiv, Passionfroot, Spotify)
@@ -152,7 +152,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       border-bottom: 1px solid var(--border-hairline);
       padding: 8px 18px;
       font-family: var(--font-mono);
-      font-size: 11.5px;
+      font-size: 13px;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
@@ -216,8 +216,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .brand-subtag {
       display: block;
       font-family: var(--font-mono);
-      font-size: 9.5px;
-      letter-spacing: 0.12em;
+      font-size: 12.5px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-top: 2px;
@@ -225,8 +225,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
-      font-size: 14px;
+      gap: 20px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--text-secondary);
       flex-wrap: wrap;
@@ -245,7 +245,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       gap: 9px;
       font-family: var(--font-sans);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 14.5px;
       padding: 10px 18px;
       border-radius: 10px;
       border: 1px solid transparent;
@@ -288,7 +288,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       height: 22px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
-      font-size: 12px;
+      font-size: 13px;
       transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .btn:hover .btn-icon-circle {
@@ -303,9 +303,9 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       padding: 4px 10px;
       border-radius: 6px;
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
     }
     .pill-vermilion {
       background: var(--vermilion-soft);
@@ -392,7 +392,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     .textarea-field {
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.55;
       min-height: 124px;
       resize: vertical;
@@ -415,15 +415,15 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13.5px;
+      font-size: 14.5px;
     }
     table.ledger-table th {
       background: var(--bg-parchment);
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       padding: 12px 14px;
       border-bottom: 1px solid var(--border-hairline);
       white-space: nowrap;
@@ -463,17 +463,24 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       font-size: clamp(32px, 4.1vw, 52px);
       font-weight: 600;
       letter-spacing: -0.025em;
-      line-height: 1.08;
+      line-height: 1.1;
       margin: 14px 0;
       color: var(--text-primary);
       text-wrap: balance;
     }
     .subhead {
       color: var(--text-secondary);
-      font-size: 16px;
+      font-size: 16.5px;
       max-width: 60ch;
       margin-bottom: 20px;
       line-height: 1.65;
+    }
+    @media (max-width: 767px) {
+      .nav-inner { min-height: 52px; padding: 6px 0; gap: 8px; }
+      .nav-links { gap: 10px; font-size: 13px; }
+      .hero-section { padding: 16px 0 24px; }
+      .headline-xl { font-size: 27px; margin: 8px 0; }
+      .subhead { font-size: 14.5px; line-height: 1.5; margin-bottom: 10px; }
     }
 
     /* Mode Tabs */
@@ -492,7 +499,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       text-align: center;
       padding: 8px 10px;
       border-radius: 7px;
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
       color: var(--text-secondary);
@@ -519,8 +526,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       border: 1px solid var(--border-strong);
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 11.5px;
-      padding: 6px 11px;
+      font-size: 13px;
+      padding: 6px 12px;
       border-radius: 7px;
       cursor: pointer;
       transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -546,7 +553,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       padding: 12px 14px;
     }
     .kpi-label {
-      font-size: 10.5px;
+      font-size: 13px;
       font-family: var(--font-mono);
       text-transform: uppercase;
       color: var(--text-muted);
@@ -572,7 +579,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       white-space: pre-wrap;
       word-break: break-word;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 13.5px;
       color: var(--text-primary);
       background: var(--bg-surface);
       border: 1px solid var(--border-hairline);
@@ -593,7 +600,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       .pricing-grid { grid-template-columns: 1fr 1fr; }
     }
 
-    /* Docked Non-Overlapping Cookie Consent Bar (Zero Floating-Box Collision on Mobile/Desktop) */
+    /* Docked Non-Overlapping Cookie Consent Bar */
     .cookie-bar {
       background: var(--bg-parchment);
       border-top: 1px solid var(--border-strong);
@@ -623,7 +630,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         order: 3;
         justify-content: flex-start;
         gap: 14px;
-        font-size: 13px;
+        font-size: 13.5px;
         padding-top: 6px;
         border-top: 1px solid var(--border-hairline);
       }
@@ -655,14 +662,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </a>
       <nav class="nav-links" aria-label="Primary Navigation">
         <a href="/#radar-tool">Spend Radar</a>
-        <a href="/#verified-ledger">3x+ Renewal Ledger</a>
+        <a href="/#home-executive-brief">Executive Brief</a>
+        <a href="/leaderboard" style="font-weight:700;color:var(--vermilion);">🏆 Leaderboard</a>
         <a href="/directory">60+ Spend Reports</a>
-        <a href="/lp">Brand Buyer Brief</a>
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center;">
-        <a href="/directory" class="btn btn-ghost nav-cta-secondary" style="padding:8px 14px; min-height:40px; font-size:13px;">Browse 60+ Reports</a>
-        <a href="/#radar-tool" class="btn btn-vermilion" style="padding:8px 14px; min-height:40px; font-size:13px;">
+        <a href="/#radar-tool" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
           <span>Search Sponsor Ledger</span>
           <span class="btn-icon-circle" aria-hidden="true">↗</span>
         </a>
@@ -677,17 +683,17 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   <!-- Docked Non-Overlapping GDPR/CCPA Cookie & Attribution Bar -->
   <aside id="cookie-banner" class="cookie-bar" role="region" aria-label="Cookie and attribution consent">
     <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
-      <div style="font-size:13px; color:var(--text-secondary);">
+      <div style="font-size:13.5px; color:var(--text-secondary);">
         <strong style="color:var(--text-primary);">Editorial Privacy &amp; Attribution Control:</strong> We use first-party UTM &amp; Meta CAPI deduplication cookies only after consent. Read our <a href="/privacy" style="text-decoration:underline; color:var(--vermilion);">Privacy Policy</a>.
       </div>
       <div style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-ghost" style="padding:7px 14px; min-height:38px; font-size:12.5px;" onclick="setCookieConsent('rejected')">Reject Non-Essential</button>
-        <button type="button" class="btn btn-vermilion" style="padding:7px 14px; min-height:38px; font-size:12.5px;" onclick="setCookieConsent('accepted')">Accept Attribution</button>
+        <button type="button" class="btn btn-ghost" style="padding:7px 14px; min-height:38px; font-size:13px;" onclick="setCookieConsent('rejected')">Reject Non-Essential</button>
+        <button type="button" class="btn btn-vermilion" style="padding:7px 14px; min-height:38px; font-size:13px;" onclick="setCookieConsent('accepted')">Accept Attribution</button>
       </div>
     </div>
   </aside>
 
-  <footer style="border-top:1px solid var(--border-hairline); background:var(--bg-parchment); padding:48px 0; color:var(--text-secondary); font-size:13.5px;">
+  <footer style="border-top:1px solid var(--border-hairline); background:var(--bg-parchment); padding:48px 0; color:var(--text-secondary); font-size:14px;">
     <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:28px;">
       <div>
         <a href="/" class="brand-logo" style="margin-bottom:10px;">
@@ -703,17 +709,17 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </div>
       <div style="display:flex; gap:36px; flex-wrap:wrap;">
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:11.5px; margin-bottom:10px;">PLATFORM</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">PLATFORM</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/#radar-tool">Interactive Spend Radar</a>
-            <a href="/#verified-ledger">3x+ Renewal Ledger</a>
+            <a href="/#home-executive-brief">Executive Brief</a>
+            <a href="/leaderboard">🏆 Industry Leaderboard</a>
             <a href="/directory">60+ pSEO Spend Reports</a>
-            <a href="/lp">Paid-Social Landing Page</a>
             <a href="/sitemap.xml">XML Sitemap</a>
           </div>
         </div>
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:11.5px; margin-bottom:10px;">VERIFIED SPEND LEDGERS</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">VERIFIED SPEND LEDGERS</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/seo/ag1-podcast-sponsorship-spend-and-roi">AG1 Spend &amp; 3x ROI</a>
             <a href="/seo/deel-newsletter-and-podcast-ad-spend">Deel B2B Ad Ledger</a>
@@ -722,7 +728,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
           </div>
         </div>
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:11.5px; margin-bottom:10px;">LEGAL &amp; TRUST</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">LEGAL &amp; TRUST</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms of Service</a>

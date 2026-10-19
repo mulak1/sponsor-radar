@@ -11,7 +11,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'SponsorRadar 2026 Programmatic SEO Directory — 42+ Brands, 46+ Shows & 60+ Spend Reports',
+    name: 'SponsorRadar 2026 Programmatic SEO Directory: 42+ Brands, 46+ Shows & 60+ Spend Reports',
     description: 'Complete directory of verified podcast, newsletter, and YouTube sponsor spend reports, CPM rate cards, and 3x-renewal ROI benchmarks.'
   };
 
@@ -35,7 +35,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${nichePages.map(p => `
             <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
-              <div class="mono" style="font-size:11px; color:var(--amber-gold); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • Avg $${p.avg_cpm} CPM</div>
+              <div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • Avg $${p.avg_cpm} CPM</div>
               <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
@@ -51,7 +51,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${brandPages.map(p => `
             <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
-              <div class="mono" style="font-size:11px; color:var(--emerald-roi); font-weight:700; margin-bottom:4px;">$${(p.est_monthly_spend / 1000).toFixed(0)}K/mo Est. Spend • $${p.avg_cpm} CPM</div>
+              <div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-bottom:4px;">$${(p.est_monthly_spend / 1000).toFixed(0)}K/mo Est. Spend • $${p.avg_cpm} CPM</div>
               <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
@@ -67,7 +67,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:12px;">
           ${showPages.map(p => `
             <a href="/seo/${escapeHtml(p.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
-              <div class="mono" style="font-size:11px; color:var(--cyan-info); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • $${p.avg_cpm} Base CPM</div>
+              <div class="mono" style="font-size:13px; color:var(--cyan-info); font-weight:700; margin-bottom:4px;">${escapeHtml(p.category)} • $${p.avg_cpm} Base CPM</div>
               <div style="font-weight:700; font-size:14px; color:var(--text-primary);">${escapeHtml(p.title)}</div>
             </a>
           `).join('')}
@@ -110,7 +110,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
   `;
 
   return renderShell({
-    title: 'SponsorRadar Directory — 60+ Verified Podcast & Newsletter Sponsorship Spend Reports',
+    title: 'SponsorRadar Directory: 60+ Verified Podcast & Newsletter Sponsorship Spend Reports',
     description: 'Browse 60+ programmatic SEO reports covering 42 sponsor brands, 46 top podcasts/newsletters/YouTube channels, CPM benchmarks, and 3x-renewal rates.',
     canonicalPath: '/directory',
     ogSlug: 'directory',
@@ -168,7 +168,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   <article style="padding:36px 0;">
     <div class="container">
       <!-- Breadcrumbs -->
-      <nav aria-label="Breadcrumb" class="mono" style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+      <nav aria-label="Breadcrumb" class="mono" style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
         <a href="/" style="color:var(--vermilion); font-weight:600;">SponsorRadar Home</a> /
         <a href="/directory" style="color:var(--vermilion); font-weight:600;">60+ pSEO Reports</a> /
         <span>${escapeHtml(page.slug)}</span>
@@ -233,12 +233,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                   <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}</td>
                   <td>
                     <div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div>
-                    <div class="mono" style="font-size:11px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div>
+                    <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div>
                   </td>
                   <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
                   <td class="mono" style="font-weight:700; color:var(--emerald-roi);">${p.renewal_score}/100</td>
-                  <td class="mono" style="font-size:12px;">${escapeHtml(p.slot_type)} (${escapeHtml(p.timestamp_range)})</td>
-                  <td class="mono" style="font-size:12px;">
+                  <td class="mono" style="font-size:13px;">${escapeHtml(p.slot_type)} (${escapeHtml(p.timestamp_range)})</td>
+                  <td class="mono" style="font-size:13px;">
                     <span style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--amber-gold);">${escapeHtml(p.promo_code)}</strong>
                   </td>
                   <td class="mono" style="font-weight:700; color:var(--amber-gold);">$${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM)</td>
@@ -255,7 +255,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <div>
             <span class="pill-emerald">READY-TO-SEND 3-FLIGHT PILOT PITCH</span>
-            <span class="mono" style="font-size:12px; color:var(--text-secondary); margin-left:8px;">To: ${escapeHtml(outboundPitch.to_email)} (${escapeHtml(outboundPitch.decision_maker_role)})</span>
+            <span class="mono" style="font-size:13px; color:var(--text-secondary); margin-left:8px;">To: ${escapeHtml(outboundPitch.to_email)} (${escapeHtml(outboundPitch.decision_maker_role)})</span>
           </div>
           <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier');return false;}" class="btn btn-emerald" style="padding:7px 14px; min-height:36px; font-size:12.5px;">Unlock Full Contact Vault ($49/mo) →</a>
         </div>
@@ -282,7 +282,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
           ${relatedPages.map(r => `
             <a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
-              <div class="mono" style="font-size:11px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM</div>
+              <div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM</div>
               <div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div>
             </a>
           `).join('')}
@@ -310,7 +310,7 @@ function renderLegalPage(type) {
     <div class="container" style="max-width:820px;">
       <span class="pill-slate">LEGAL &amp; GDPR / CCPA COMPLIANCE</span>
       <h1 class="headline-xl">${escapeHtml(title)}</h1>
-      <p class="mono" style="font-size:12px; color:var(--text-muted); margin-bottom:24px;">Last Updated: October 14, 2026 • Effective Immediately</p>
+      <p class="mono" style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Last Updated: October 14, 2026 • Effective Immediately</p>
       <div class="panel" style="padding:24px; display:flex; flex-direction:column; gap:16px; color:var(--text-secondary); font-size:14.5px;">
         ${isPrivacy ? `
           <p><strong style="color:var(--text-primary);">1. Data We Collect:</strong> SponsorRadar collects work email addresses voluntarily submitted during Creator Pro or Agency Feed checkout, query inputs submitted to our sponsor lookup and transcript analyzer, and first-party UTM/Meta CAPI attribution parameters after explicit cookie consent.</p>

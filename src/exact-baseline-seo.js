@@ -150,7 +150,7 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [Model Context Protocol (MCP) Registry](${host}/.well-known/mcp-registry.json): Official MCP Registry manifest & JSON-RPC endpoint (${host}/api/mcp/rpc).`,
     `- [Live Dynamic SVG Benchmark Badges](${host}/badge/${encodeURIComponent(cfg.presets[0].key)}.svg): Embeddable README/media-kit badges & 1-line JS widget (${host}/embed.js).`,
     '',
-    '## Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect — Zero JS Required)',
+    '## Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect: Zero JS Required)',
     `- [99¢ Single-File Instant Export Pass](${host}/buy/micro_pass): Direct 1-click Stripe Checkout for any single production remediation file.`,
     `- [$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName})](${host}/buy/flash_pass): Direct 1-click Stripe Checkout for the complete single-audit bundle.`,
     `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/complete_dossier): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
@@ -158,7 +158,7 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     '',
     '## Public Scan Permalinks & Hall of Fame Leaderboard (/leaderboard & /scan/:target)',
     `- [Public Hall of Fame (A+) & Wall of Shame Leaderboard](${host}/leaderboard) ([.md](${host}/leaderboard.md)): Ranked public entity scorecards with CNN visual/acoustic sensor readouts.`,
-    ...loadPublicScanLedger(cfg).slice(0, 12).map((s) => `- [${s.target} — Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
+    ...loadPublicScanLedger(cfg).slice(0, 12).map((s) => `- [${s.target}: Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
     '',
     '## Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
     ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
@@ -181,14 +181,14 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
   const host = `https://${cfg.domain}`;
   const lines = [
     '---',
-    `title: "${cfg.brandName} — Complete 2026 Deterministic Knowledge Corpus & Benchmark Ledger (llms-full.txt)"`,
+    `title: "${cfg.brandName}: Complete 2026 Deterministic Knowledge Corpus & Benchmark Ledger (llms-full.txt)"`,
     `url: "${host}/llms-full.txt"`,
     `canonical_domain: "${cfg.domain}"`,
     `total_indexed_benchmarks: ${seoEntries.length}`,
     'schema_standard: "AnswerDotAI/llms-txt + mendableai/firecrawl + unclecode/crawl4ai"',
     '---',
     '',
-    `# ${cfg.brandName} — Full AI Search & RAG Knowledge Corpus`,
+    `# ${cfg.brandName}: Full AI Search & RAG Knowledge Corpus`,
     '',
     `> ${cfg.explainerText}`,
     '',
@@ -376,13 +376,13 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const growthUrls = includeStatic ? [
       ...g.tools.map((t) => ({ loc: `${hostUrl}/tools/${escXml(t.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(t.target)}`, title: t.title })),
       ...g.comparisons.map((c) => ({ loc: `${hostUrl}/compare/${escXml(c.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(c.target)}`, title: c.title })),
-      ...loadPublicScanLedger(cfg).slice(0, 16).map((s) => ({ loc: `${hostUrl}/scan/${escXml(encodeURIComponent(s.target))}`, priority: '0.85', changefreq: 'daily', img: `${hostUrl}/api/badge/cnn/${encodeURIComponent(s.target)}.svg`, title: `${s.target} — ${cfg.brandName} Audit (${s.grade})` }))
+      ...loadPublicScanLedger(cfg).slice(0, 16).map((s) => ({ loc: `${hostUrl}/scan/${escXml(encodeURIComponent(s.target))}`, priority: '0.85', changefreq: 'daily', img: `${hostUrl}/api/badge/cnn/${encodeURIComponent(s.target)}.svg`, title: `${s.target}: ${cfg.brandName} Audit (${s.grade})` }))
     ] : [];
     const staticUrls = includeStatic ? [
-      { loc: `${hostUrl}/`, priority: '1.0', changefreq: 'daily', img: `${hostUrl}/api/og?slug=home`, title: `${cfg.brandName} — Official Workbench` },
-      { loc: `${hostUrl}/leaderboard`, priority: '0.95', changefreq: 'daily', img: `${hostUrl}/api/og?slug=leaderboard`, title: `${cfg.brandName} — Public Hall of Fame & Wall of Shame Leaderboard` },
-      { loc: `${hostUrl}/directory`, priority: '0.9', changefreq: 'daily', img: `${hostUrl}/api/og?slug=directory`, title: `${cfg.brandName} — Full 60+ Benchmark Directory` },
-      { loc: `${hostUrl}/lp`, priority: '0.8', changefreq: 'weekly', img: `${hostUrl}/api/og?slug=lp`, title: `${cfg.brandName} — Direct Audit` },
+      { loc: `${hostUrl}/`, priority: '1.0', changefreq: 'daily', img: `${hostUrl}/api/og?slug=home`, title: `${cfg.brandName}: Official Workbench` },
+      { loc: `${hostUrl}/leaderboard`, priority: '0.95', changefreq: 'daily', img: `${hostUrl}/api/og?slug=leaderboard`, title: `${cfg.brandName}: Public Hall of Fame & Wall of Shame Leaderboard` },
+      { loc: `${hostUrl}/directory`, priority: '0.9', changefreq: 'daily', img: `${hostUrl}/api/og?slug=directory`, title: `${cfg.brandName}: Full 60+ Benchmark Directory` },
+      { loc: `${hostUrl}/lp`, priority: '0.8', changefreq: 'weekly', img: `${hostUrl}/api/og?slug=lp`, title: `${cfg.brandName}: Direct Audit` },
       { loc: `${hostUrl}/llms.txt`, priority: '0.9', changefreq: 'daily' },
       { loc: `${hostUrl}/llms-full.txt`, priority: '0.9', changefreq: 'daily' },
       { loc: `${hostUrl}/openapi.json`, priority: '0.8', changefreq: 'weekly' },
@@ -428,7 +428,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       type: 'rich',
       provider_name: cfg.brandName,
       provider_url: hostUrl,
-      title: `${cfg.brandName} — ${cfg.explainerText.slice(0, 90)}`,
+      title: `${cfg.brandName}: ${cfg.explainerText.slice(0, 90)}`,
       author_name: `${cfg.brandName} Research`,
       author_url: hostUrl,
       thumbnail_url: `${hostUrl}/api/og?slug=home`,
@@ -501,13 +501,13 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       module_id: cfg.moduleId,
       domain: cfg.domain,
       github_standards: [
-        'AnswerDotAI/llms-txt (★ 2,661) — /llms.txt, /.well-known/llms.txt & .md URL Twins (/seo/:slug.md)',
-        'mendableai/firecrawl (★ 191,999) — /llms-full.txt Complete Inline RAG Corpus',
-        'unclecode/crawl4ai (★ 85,643) — High-Signal Markdown Twins & Semantic Tables',
-        'AgriciDaniel/claude-seo (★ 19,026) — Answer-First Lead, SpeakableSpecification & Visible FAQ Parity',
-        'google/schema-dts (★ 1,250) — Unified @graph JSON-LD (8 Linked Entities)',
-        'ekalinin/sitemap.js (★ 1,711) — Segmented Sitemaps + Image OG Sitemaps',
-        'unjs/unhead (★ 1,310) + iamcal/oembed (★ 1,453) — Canonical Normalizer, X-Robots-Tag & oEmbed 1.0'
+        'AnswerDotAI/llms-txt (★ 2,661): /llms.txt, /.well-known/llms.txt & .md URL Twins (/seo/:slug.md)',
+        'mendableai/firecrawl (★ 191,999): /llms-full.txt Complete Inline RAG Corpus',
+        'unclecode/crawl4ai (★ 85,643): High-Signal Markdown Twins & Semantic Tables',
+        'AgriciDaniel/claude-seo (★ 19,026): Answer-First Lead, SpeakableSpecification & Visible FAQ Parity',
+        'google/schema-dts (★ 1,250): Unified @graph JSON-LD (8 Linked Entities)',
+        'ekalinin/sitemap.js (★ 1,711): Segmented Sitemaps + Image OG Sitemaps',
+        'unjs/unhead (★ 1,310) + iamcal/oembed (★ 1,453): Canonical Normalizer, X-Robots-Tag & oEmbed 1.0'
       ],
       explicit_ai_bots_allowed: AI_CRAWLER_AGENTS.length,
       indexed_pseo_pages: entries.length,
@@ -523,9 +523,9 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 9,
       module_id: cfg.moduleId,
       github_repos: [
-        'resend/react-email (★ 15,400+) & nodemailer/nodemailer (★ 16,600+) — Inline Diagnostic Scorecard & Permalink Saver + Post-Lead VIP 99¢ One-Time Offer (OTO)',
-        'PrismJS/prism (★ 12,300+) & floating-ui/floating-ui (★ 31,400+) — Interactive 3-File Tab Preview Switcher (__ebSelectManifestFile) & Dynamic Single-File 99¢ Pass',
-        'carlosedna/ouibounce (★ 5,400+) — Mobile Scroll-Depth + 12s Dwell Rescue Toast Trigger'
+        'resend/react-email (★ 15,400+) & nodemailer/nodemailer (★ 16,600+): Inline Diagnostic Scorecard & Permalink Saver + Post-Lead VIP 99¢ One-Time Offer (OTO)',
+        'PrismJS/prism (★ 12,300+) & floating-ui/floating-ui (★ 31,400+): Interactive 3-File Tab Preview Switcher (__ebSelectManifestFile) & Dynamic Single-File 99¢ Pass',
+        'carlosedna/ouibounce (★ 5,400+): Mobile Scroll-Depth + 12s Dwell Rescue Toast Trigger'
       ],
       features: {
         inline_scorecard_saver: true,
@@ -543,8 +543,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 10,
       module_id: cfg.moduleId,
       github_repos: [
-        'TanStack/table (★ 28,492) & javve/list.js (★ 11,207) — Interactive Table Filter, Sort & Quick-Calculate Bar (#eb-tanstack-table-bar) on / and /seo/:slug',
-        'ghosh/Micromodal (★ 3,659) & floating-ui/floating-ui (★ 31,400+) — Clickable Blurred Deliverable & Row Hotspots (.eb-blurred-deliverable) + Inline Popover Scorecard OTO'
+        'TanStack/table (★ 28,492) & javve/list.js (★ 11,207): Interactive Table Filter, Sort & Quick-Calculate Bar (#eb-tanstack-table-bar) on / and /seo/:slug',
+        'ghosh/Micromodal (★ 3,659) & floating-ui/floating-ui (★ 31,400+): Clickable Blurred Deliverable & Row Hotspots (.eb-blurred-deliverable) + Inline Popover Scorecard OTO'
       ],
       features: {
         tanstack_table_filter_bar: true,
@@ -562,8 +562,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 11,
       module_id: cfg.moduleId,
       github_repos: [
-        'emilkowalski/vaul (★ 15,000+) & emilkowalski/sonner (★ 11,500+) — Post-Calculation Spotlight & Action Drawer (__ebTriggerPostCalcSpotlight) with 99¢ Single-File Pass & 1-Tap Scorecard Email Saver',
-        'TanStack/table (★ 28,492) & AnswerDotAI/llms-txt (★ 2,661) — Above-the-Fold /seo/:slug Quick-Action & Custom Benchmark Strip (#eb-pseo-quick-bar) below Lead Paragraph'
+        'emilkowalski/vaul (★ 15,000+) & emilkowalski/sonner (★ 11,500+): Post-Calculation Spotlight & Action Drawer (__ebTriggerPostCalcSpotlight) with 99¢ Single-File Pass & 1-Tap Scorecard Email Saver',
+        'TanStack/table (★ 28,492) & AnswerDotAI/llms-txt (★ 2,661): Above-the-Fold /seo/:slug Quick-Action & Custom Benchmark Strip (#eb-pseo-quick-bar) below Lead Paragraph'
       ],
       features: {
         pseo_above_fold_quick_bar: true,
@@ -581,8 +581,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 12,
       module_id: cfg.moduleId,
       github_repos: [
-        'ag-grid/ag-grid (★ 12,800+) & SortableJS/Sortable (★ 29,500+) — Context-Aware Clicked Row Inspector in Floating Gate Popover (__ebOpenFloatingGate) + Zeigarnik Row #4 On-Screen Reciprocity Reveal',
-        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+) — Interactive Payback & ROI Scale Pills (__ebSetCurtainRoiScale) + Instant Browser Unblur Guarantee Badge'
+        'ag-grid/ag-grid (★ 12,800+) & SortableJS/Sortable (★ 29,500+): Context-Aware Clicked Row Inspector in Floating Gate Popover (__ebOpenFloatingGate) + Zeigarnik Row #4 On-Screen Reciprocity Reveal',
+        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+): Interactive Payback & ROI Scale Pills (__ebSetCurtainRoiScale) + Instant Browser Unblur Guarantee Badge'
       ],
       features: {
         clicked_row_context_popover: true,
@@ -600,8 +600,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 13,
       module_id: cfg.moduleId,
       github_repos: [
-        'algolia/autocomplete (★ 4,000+) & jaywcjlove/hotkeys-js (★ 6,900+) — Universal Above-the-Fold Quick-Action, 1-Tap Preset & Inline Row #4 Reciprocity Strip (#eb-pseo-quick-bar) across /, /lp, /directory, and /seo/:slug',
-        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+) — Above-the-Fold Inline Email Capture (#eb-quick-inline-form) + 1-Tap 99¢ Single-File Pass'
+        'algolia/autocomplete (★ 4,000+) & jaywcjlove/hotkeys-js (★ 6,900+): Universal Above-the-Fold Quick-Action, 1-Tap Preset & Inline Row #4 Reciprocity Strip (#eb-pseo-quick-bar) across /, /lp, /directory, and /seo/:slug',
+        'PostHog/posthog (★ 24,800+) & stripe/stripe-js (★ 1,900+): Above-the-Fold Inline Email Capture (#eb-quick-inline-form) + 1-Tap 99¢ Single-File Pass'
       ],
       features: {
         universal_above_fold_quick_bar: true,
@@ -619,8 +619,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 14,
       module_id: cfg.moduleId,
       github_repos: [
-        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+) — First-Scroll Above-Table Deliverable Curtain Placement + Interactive 3-File Tab Switcher & 1-Tap Row #4 Email Focus',
-        'pillarjs/path-to-regexp (★ 7,300+) & sindresorhus/slugify (★ 2,400+) — Fuzzy / Markdown-Sanitized /seo/* Canonical 301 Recovery Middleware'
+        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+): First-Scroll Above-Table Deliverable Curtain Placement + Interactive 3-File Tab Switcher & 1-Tap Row #4 Email Focus',
+        'pillarjs/path-to-regexp (★ 7,300+) & sindresorhus/slugify (★ 2,400+): Fuzzy / Markdown-Sanitized /seo/* Canonical 301 Recovery Middleware'
       ],
       features: {
         first_scroll_above_table_curtain: true,
@@ -638,8 +638,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 15,
       module_id: cfg.moduleId,
       github_repos: [
-        'Hotwired/Turbo (★ 28,900+) & alpinejs/alpine (★ 28,800+) — First-Screen Hero-Lead-Adjacent Deliverable Curtain Placement (y = 480px–760px on / and /seo/:slug) + Instant In-Place Live KPI Readout (#eb-quick-live-readout)',
-        'github/auto-complete-element (★ 4,600+) & LeaVerou/awesomplete (★ 9,900+) — Zero-Typing Mobile/Desktop Native <datalist> Instant Benchmark Selector (#eb-entity-datalist)'
+        'Hotwired/Turbo (★ 28,900+) & alpinejs/alpine (★ 28,800+): First-Screen Hero-Lead-Adjacent Deliverable Curtain Placement (y = 480px–760px on / and /seo/:slug) + Instant In-Place Live KPI Readout (#eb-quick-live-readout)',
+        'github/auto-complete-element (★ 4,600+) & LeaVerou/awesomplete (★ 9,900+): Zero-Typing Mobile/Desktop Native <datalist> Instant Benchmark Selector (#eb-entity-datalist)'
       ],
       features: {
         hero_lead_adjacent_firstfold_curtain: true,
@@ -657,8 +657,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 16,
       module_id: cfg.moduleId,
       github_repos: [
-        'formkit/auto-animate (★ 12,800+) & TanStack/query (★ 43,000+) — Post-Calculation Results-Adjacent Action Bar (#eb-postcalc-inline-cta) mounted directly above native calculator output + synchronized KPI/entity spotlight',
-        'downshift-js/downshift (★ 11,900+) & algolia/autocomplete (★ 4,000+) — 1-Tap Email Domain Auto-Chip Completer (.eb-domain-chip: @gmail.com, @icloud.com, @outlook.com) for zero-friction mobile/desktop lead capture'
+        'formkit/auto-animate (★ 12,800+) & TanStack/query (★ 43,000+): Post-Calculation Results-Adjacent Action Bar (#eb-postcalc-inline-cta) mounted directly above native calculator output + synchronized KPI/entity spotlight',
+        'downshift-js/downshift (★ 11,900+) & algolia/autocomplete (★ 4,000+): 1-Tap Email Domain Auto-Chip Completer (.eb-domain-chip: @gmail.com, @icloud.com, @outlook.com) for zero-friction mobile/desktop lead capture'
       ],
       features: {
         postcalc_results_adjacent_action_bar: true,
@@ -675,8 +675,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 17,
       module_id: cfg.moduleId,
       github_repos: [
-        'Hotwired/Stimulus (★ 12,800+) & radix-ui/primitives (★ 16,500+) — De-Stacked Hero Architecture on / + Score-Adjacent In-Results Action Bar (#eb-postcalc-inline-cta mounted directly below .score-strip / .metric-duo)',
-        'withastro/astro (★ 49,000+) & preactjs/signals (★ 4,500+) — Persona-Matched Vertical Lead Magnet & 99¢ Micro-Pass Copy (PERSONA dictionary) + Auto-Init Fetch Toast Suppression Guard (window.__ebUserInteracted)'
+        'Hotwired/Stimulus (★ 12,800+) & radix-ui/primitives (★ 16,500+): De-Stacked Hero Architecture on / + Score-Adjacent In-Results Action Bar (#eb-postcalc-inline-cta mounted directly below .score-strip / .metric-duo)',
+        'withastro/astro (★ 49,000+) & preactjs/signals (★ 4,500+): Persona-Matched Vertical Lead Magnet & 99¢ Micro-Pass Copy (PERSONA dictionary) + Auto-Init Fetch Toast Suppression Guard (window.__ebUserInteracted)'
       ],
       features: {
         destacked_hero_layout_on_home: true,
@@ -705,8 +705,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       hero_image: '/public/editorial-hero.jpg',
       dossier_image: '/public/editorial-dossier.jpg',
       github_repos: [
-        'high-end-visual-design (soft-skill) & design-taste-frontend (taste-skill) — Double-Bezel (Doppelrand) Nested Hardware-Glass Visual Showcases (#eb-doppelrand-hero-card & #eb-curtain-dossier-card) with bespoke art-directed studio photography',
-        'lovell/sharp (★ 29,600+) & CaliCastle/zola-theme — Sub-190KB compressed progressive JPEG visual anchors with frosted-glass telemetry captions and cubic-bezier(0.32,0.72,0,1) hover physics'
+        'high-end-visual-design (soft-skill) & design-taste-frontend (taste-skill): Double-Bezel (Doppelrand) Nested Hardware-Glass Visual Showcases (#eb-doppelrand-hero-card & #eb-curtain-dossier-card) with bespoke art-directed studio photography',
+        'lovell/sharp (★ 29,600+) & CaliCastle/zola-theme: Sub-190KB compressed progressive JPEG visual anchors with frosted-glass telemetry captions and cubic-bezier(0.32,0.72,0,1) hover physics'
       ],
       features: {
         doppelrand_hero_visual_anchor: true,
@@ -723,8 +723,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 19,
       module_id: cfg.moduleId,
       github_repos: [
-        'floating-ui/floating-ui (★ 32,754) — Interactive Floating Frosted-Glass Telemetry Pill (#eb-hero-sparkline-pill) + Dynamic Dossier File-Format Loupe Badge (#eb-dossier-format-pill)',
-        'recharts/recharts (★ 27,636) & tremorlabs/tremor (★ 3,667) — Inline SVG Bezier Sparkline Micro-Visualization with 1-Tap Scenario Simulation & Unblurred Table Row 1–3 Live Benchmark Trigger (tr[data-eb-live-row])'
+        'floating-ui/floating-ui (★ 32,754): Interactive Floating Frosted-Glass Telemetry Pill (#eb-hero-sparkline-pill) + Dynamic Dossier File-Format Loupe Badge (#eb-dossier-format-pill)',
+        'recharts/recharts (★ 27,636) & tremorlabs/tremor (★ 3,667): Inline SVG Bezier Sparkline Micro-Visualization with 1-Tap Scenario Simulation & Unblurred Table Row 1–3 Live Benchmark Trigger (tr[data-eb-live-row])'
       ],
       features: {
         floating_svg_sparkline_pill: true,
@@ -742,8 +742,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 20,
       module_id: cfg.moduleId,
       github_repos: [
-        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+) — Balanced 2-Column Hero & Bento Spatial Architecture, Zero H1-to-Subhead Interruptions, and 1:1:1 Horizontal Baseline Symmetry across all 3 Pricing Tier Cards (.eb-tier-card)',
-        'high-end-visual-design (soft-skill) & emil-design-eng — Symmetrical 2-Column pSEO Hero Split (#eb-pseo-hero-split: 1.35fr 1fr), Full-Width Deliverable Curtain Placement, and Uncluttered 230px Dossier Studio Preview (#eb-curtain-dossier-card)'
+        'shadcn-ui/ui (★ 82,000+) & radix-ui/primitives (★ 16,500+): Balanced 2-Column Hero & Bento Spatial Architecture, Zero H1-to-Subhead Interruptions, and 1:1:1 Horizontal Baseline Symmetry across all 3 Pricing Tier Cards (.eb-tier-card)',
+        'high-end-visual-design (soft-skill) & emil-design-eng: Symmetrical 2-Column pSEO Hero Split (#eb-pseo-hero-split: 1.35fr 1fr), Full-Width Deliverable Curtain Placement, and Uncluttered 230px Dossier Studio Preview (#eb-curtain-dossier-card)'
       ],
       features: {
         uninterrupted_h1_to_subtitle_hierarchy: true,
@@ -762,8 +762,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 21,
       module_id: cfg.moduleId,
       github_repos: [
-        'framer/motion (★ 26,400+) & radix-ui/primitives (★ 16,500+) — Native .hero-split Aware pSEO 2-Column Symmetry (zero nested splits on AbandonAlpha /seo/:slug) + Full-Height Executive Summary Lead Card (.eb-pseo-lead-card) on SponsorRadar & DermLogic /seo/:slug',
-        'tanstack/table (★ 26,100+) & AnswerDotAI/llms-txt — Deduplicated Single-Bar pSEO Benchmark Header (#eb-pseo-quick-bar) + Expanded Headless/Verifier Crawler Classifier (CRAWLER_UA_REGEX)'
+        'framer/motion (★ 26,400+) & radix-ui/primitives (★ 16,500+): Native .hero-split Aware pSEO 2-Column Symmetry (zero nested splits on AbandonAlpha /seo/:slug) + Full-Height Executive Summary Lead Card (.eb-pseo-lead-card) on SponsorRadar & DermLogic /seo/:slug',
+        'tanstack/table (★ 26,100+) & AnswerDotAI/llms-txt: Deduplicated Single-Bar pSEO Benchmark Header (#eb-pseo-quick-bar) + Expanded Headless/Verifier Crawler Classifier (CRAWLER_UA_REGEX)'
       ],
       features: {
         zero_nested_pseo_hero_splits: true,
@@ -782,8 +782,8 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       iteration: 22,
       module_id: cfg.moduleId,
       github_repos: [
-        'stripe/stripe-node (★ 4,100+) — Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
-        'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+) — Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
+        'stripe/stripe-node (★ 4,100+): Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
+        'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+): Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
       ],
       direct_buy_links: {
         micro_pass_99c: `https://${cfg.domain}/buy/micro_pass`,
@@ -805,28 +805,48 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const t = cfg.theme;
   const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
   if (entries.length === 0) return '';
-  const publicScans = loadPublicScanLedger(cfg).slice(0, 8);
-  const firstScanTarget = publicScans[0] ? publicScans[0].target : 'stripe.com';
-  const scanPillsHtml = publicScans.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'public_scan_pill',target:'${escHtml(s.target)}'})" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#FFFFFF;border:1px solid ${t.border};font-size:11.5px;font-weight:700;color:${t.textPrimary};text-decoration:none;"><span>${escHtml(s.target)}</span><span style="color:${s.score >= 86 ? t.safeColor : '#E11D48'};">${escHtml(s.grade)} (${s.score})</span></a>`).join('');
+  const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
+  const top3 = ledger.filter((s) => s.score >= 85).slice(0, 3);
+  const fix3 = ledger.filter((s) => s.score < 80).slice(0, 3);
+  const firstScanTarget = ledger[0] ? ledger[0].target : 'stripe.com';
+  const renderLbRow = (s, isTop) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'public_scan_pill',target:'${escHtml(s.target)}'})" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#FFFFFF;border:1px solid ${t.border};text-decoration:none;color:${t.textPrimary};">
+    <div style="min-width:0;flex:1;">
+      <div style="display:flex;align-items:center;gap:8px;"><strong style="font-size:14px;color:${t.textPrimary};">${escHtml(s.target)}</strong><span style="font-size:13px;color:${t.textSecondary};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">• ${escHtml(s.kpi1)}</span></div>
+      <div style="font-size:13px;color:${t.textSecondary};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${escHtml(s.cnnReadout)}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <div style="width:52px;height:6px;background:#E2E8F0;border-radius:999px;overflow:hidden;"><div style="width:${s.score}%;height:100%;background:${isTop ? t.safeColor : '#E11D48'};"></div></div>
+      <span style="padding:3px 9px;border-radius:999px;background:${isTop ? t.safeSoftBg : '#FFF1F2'};color:${isTop ? t.safeColor : '#E11D48'};font-family:monospace;font-size:13px;font-weight:800;">${escHtml(s.grade)} (${s.score})</span>
+    </div>
+  </a>`;
   const pillsHtml = entries.map((item) => {
     const active = reqPath === `/seo/${item.slug}`;
-    return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:11.5px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.3;"><span>${escHtml(item.title)}</span></a>`;
+    return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:13px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.35;"><span>${escHtml(item.title)}</span></a>`;
   }).join('');
 
-  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:16px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed ${t.border};">
+  return `<section id="eb-leaderboard-home-showcase" class="eb-panel-card" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Showcase" style="margin-top:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">🏆 Live Public Industry Leaderboard</span>
+        <h3 style="margin:4px 0 0 0;font-size:20px;font-family:${t.fontDisplay};font-weight:700;color:${t.textPrimary};">Compare Top Performers (Grade A+) vs. Common Mistakes</h3>
+      </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <a href="/leaderboard" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:${t.brandSoftBg};color:${t.brandPrimary};border:1px solid ${t.accentBorder};font-size:11.5px;font-weight:800;text-decoration:none;">🏆 Hall of Fame &amp; Wall of Shame Leaderboard →</a>
-        <a href="/api/badge/cnn/${escHtml(encodeURIComponent(firstScanTarget))}.svg" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:#0F172A;color:#38BDF8;border:1px solid #1E293B;font-size:11.5px;font-weight:700;text-decoration:none;">🔬 CNN SVG Scorecard ↗</a>
-        ${scanPillsHtml}
+        <a href="/api/badge/cnn/${escHtml(encodeURIComponent(firstScanTarget))}.svg" target="_blank" rel="noopener" style="padding:7px 13px;border-radius:999px;background:#0F172A;color:#38BDF8;border:1px solid #1E293B;font-size:13px;font-weight:700;text-decoration:none;">🔬 Live SVG Scorecard ↗</a>
+        <a href="/leaderboard" style="padding:8px 16px;border-radius:999px;background:${t.brandPrimary};color:#FFFFFF;font-size:13.5px;font-weight:700;text-decoration:none;">Explore Full Leaderboard &amp; Rank Yours →</a>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;">
+      <div style="background:${t.subtleBg};border:1px solid ${t.border};border-radius:12px;padding:12px;"><div style="font-size:13px;font-weight:800;color:${t.safeColor};margin-bottom:8px;">🏆 HALL OF FAME LEADERS (GRADE A+ / A)</div><div style="display:grid;gap:8px;">${top3.map((s) => renderLbRow(s, true)).join('')}</div></div>
+      <div style="background:${t.subtleBg};border:1px solid ${t.border};border-radius:12px;padding:12px;"><div style="font-size:13px;font-weight:800;color:#E11D48;margin-bottom:8px;">⚠️ COMMON MISTAKES &amp; NEEDS FIX (GRADE C / D)</div><div style="display:grid;gap:8px;">${fix3.map((s) => renderLbRow(s, false)).join('')}</div></div>
+    </div>
+  </section>
+  <nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
       <div>
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${t.brandPrimary};">✦ Complete ${entries.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
-        <div style="font-size:12px;color:${t.textSecondary};">1-click mobile &amp; crawler access to all ${entries.length} verified benchmarks, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">✦ Complete ${entries.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
+        <div style="font-size:13.5px;color:${t.textSecondary};">1-click access to all ${entries.length} verified guides, <a href="/leaderboard" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">Public Leaderboard</a>, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
       </div>
-      <input type="search" id="eb-mesh-filter-input" aria-label="Filter ${entries.length} benchmark guides" placeholder="Filter ${entries.length} guides by keyword..." oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid ${t.border};background:${t.surfaceBg};color:${t.textPrimary};font-size:12px;min-width:210px;" />
+      <input type="search" id="eb-mesh-filter-input" aria-label="Filter ${entries.length} benchmark guides" placeholder="Filter ${entries.length} guides by keyword..." oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:7px 12px;border-radius:8px;border:1px solid ${t.border};background:${t.surfaceBg};color:${t.textPrimary};font-size:13.5px;min-width:220px;" />
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow-y:auto;padding:2px;">${pillsHtml}</div>
   </nav>`;
@@ -846,7 +866,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const gCfg = getGrowthConfig(cfg.moduleId);
   const slugName = cleanPath.replace(/^\/(seo|tools|compare)\//, '');
   const currentEntry = entries.find((e) => e.slug === slugName) || [...gCfg.tools, ...gCfg.comparisons].find((x) => x.slug === slugName);
-  const pageTitle = currentEntry ? `${currentEntry.title} | ${cfg.brandName}` : `${cfg.brandName} — ${cfg.explainerText.slice(0, 70)}`;
+  const pageTitle = currentEntry ? `${currentEntry.title} | ${cfg.brandName}` : `${cfg.brandName}: ${cfg.explainerText.slice(0, 70)}`;
   const pageDesc = currentEntry ? currentEntry.summary : cfg.explainerText;
 
   const schemaGraph = {
@@ -892,7 +912,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
       {
         '@type': 'Dataset',
         '@id': `${canonicalUrl}#dataset`,
-        name: `${pageTitle} — Verified 2026 Dataset`,
+        name: `${pageTitle}: Verified 2026 Dataset`,
         description: pageDesc,
         url: canonicalUrl,
         creator: { '@id': `${hostUrl}/#organization` },

@@ -55,7 +55,7 @@ app.get('/favicon.svg', (req, res) => {
 app.get('/manifest.webmanifest', (req, res) => {
   res.setHeader('Content-Type', 'application/manifest+json');
   res.json({
-    name: 'SponsorRadar (#2) — 3x+ Renewal Media Intelligence',
+    name: 'SponsorRadar (#2): 3x+ Renewal Media Intelligence',
     short_name: 'SponsorRadar',
     start_url: '/',
     display: 'standalone',
@@ -95,7 +95,7 @@ app.get('/llms.txt', (req, res) => {
   `).all();
 
   const lines = [
-    '# SponsorRadar (#2) — Podcast, Newsletter & YouTube Ad-Spend Ledger & 3x-Renewal ROI Engine',
+    '# SponsorRadar (#2): Podcast, Newsletter & YouTube Ad-Spend Ledger & 3x-Renewal ROI Engine',
     '',
     '> Autonomous Podcast, Newsletter & YouTube Sponsorship Spend Ledger indexing 42 active DTC & B2B sponsor brands, 46 flagship creator shows, 60 programmatic SEO spend & CPM benchmark reports, and 96 verified multi-flight ad-read placements with timestamps, promo codes, vanity URLs, and 1-click outbound pilot pitches.',
     '',
@@ -136,7 +136,7 @@ app.get('/llms-full.txt', (req, res) => {
   `).all();
 
   const lines = [
-    '# SponsorRadar (#2) — Full LLM Knowledge Corpus (/llms-full.txt)',
+    '# SponsorRadar (#2): Full LLM Knowledge Corpus (/llms-full.txt)',
     '',
     '> Spec: AnswerDotAI/llms-txt v1.0 & mendableai/firecrawl Markdown Corpus',
     `> Canonical Origin: ${PUBLIC_URL}`,
@@ -203,7 +203,7 @@ app.get('/api/og', (req, res) => {
   const seoPage = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
   const headline = seoPage
     ? seoPage.title.slice(0, 66)
-    : 'SponsorRadar — 3x+ Renewal Audio & Newsletter Ad-Spend Ledger';
+    : 'SponsorRadar: 3x+ Renewal Audio & Newsletter Ad-Spend Ledger';
   const subline = seoPage
     ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Avg Effective CPM: $${seoPage.avg_cpm}`
     : '42+ Sponsor Brands • 46+ Podcasts, Newsletters & YouTube Shows • 1-Click Outbound Pitches';

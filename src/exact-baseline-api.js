@@ -562,7 +562,7 @@ function attachExactBaselinePack(app, options = {}) {
       ...cfg.presets.map((p) => `    <item><title>${escX(cfg.brandName)} Scenario: ${escX(p.label)}</title><link>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</link><guid>https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(cfg.explainerText)}</description></item>`),
       ...seoEntries.map((e) => `    <item><title>${escX(e.title)}</title><link>https://${cfg.domain}/seo/${escX(e.slug)}</link><guid>https://${cfg.domain}/seo/${escX(e.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(e.summary)}</description></item>`)
     ].join('\n');
-    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>${escX(cfg.brandName)} — Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>\n    <atom:link href="https://${cfg.domain}/feed.xml" rel="self" type="application/rss+xml"/>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>${escX(cfg.brandName)}: Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>\n    <atom:link href="https://${cfg.domain}/feed.xml" rel="self" type="application/rss+xml"/>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`;
     res.status(200).type('application/rss+xml; charset=utf-8').send(rss);
   });
 
@@ -572,7 +572,7 @@ function attachExactBaselinePack(app, options = {}) {
     const seoEntries = loadVerticalSeoCatalog(cfg, __dirname);
     res.json({
       version: 'https://jsonfeed.org/version/1.1',
-      title: `${cfg.brandName} — Live Benchmark Feed`,
+      title: `${cfg.brandName}: Live Benchmark Feed`,
       home_page_url: `https://${cfg.domain}/`,
       feed_url: `https://${cfg.domain}/feed.json`,
       items: [
@@ -604,9 +604,9 @@ function attachExactBaselinePack(app, options = {}) {
     const ics = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${cfg.brandName}//NONSGML v1.0//EN`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
       'BEGIN:VEVENT', `UID:${cfg.moduleId}-night1@dermlogic.io`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261015T210000Z', 'DTEND:20261015T213000Z',
-      `SUMMARY:${cfg.brandName} Cycle 1: Primary Protocol Window`, `DESCRIPTION:${cfg.explainerText} — https://${cfg.domain}`, 'END:VEVENT',
+      `SUMMARY:${cfg.brandName} Cycle 1: Primary Protocol Window`, `DESCRIPTION:${cfg.explainerText}: https://${cfg.domain}`, 'END:VEVENT',
       'BEGIN:VEVENT', `UID:${cfg.moduleId}-night2@dermlogic.io`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261016T210000Z', 'DTEND:20261016T213000Z',
-      `SUMMARY:${cfg.brandName} Cycle 2: Secondary Recovery Window`, `DESCRIPTION:Follow spacing protocol — https://${cfg.domain}`, 'END:VEVENT', 'END:VCALENDAR'
+      `SUMMARY:${cfg.brandName} Cycle 2: Secondary Recovery Window`, `DESCRIPTION:Follow spacing protocol: https://${cfg.domain}`, 'END:VEVENT', 'END:VCALENDAR'
     ].join('\r\n');
     res.status(200).type('text/calendar; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-schedule.ics"`).send(ics);
   });
@@ -616,7 +616,7 @@ function attachExactBaselinePack(app, options = {}) {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/llms-bundle.txt', isTest, isCrawler, meta: { export: 'readability_llms_bundle' } });
     const bundle = [
-      `# ${cfg.brandName} (${cfg.domain}) — Verified Protocol & Benchmark Summary`,
+      `# ${cfg.brandName} (${cfg.domain}): Verified Protocol & Benchmark Summary`,
       `> ${cfg.explainerText}`, '',
       '## 1. Before / After Remediation Diff',
       cfg.remediationDiff.beforeLine,
@@ -667,7 +667,7 @@ function attachExactBaselinePack(app, options = {}) {
         path_b_flash_pass: { price_usd: 1.99, anchor_price_usd: cfg.corePriceUsd, savings_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100), unlock: cfg.deliverableName },
         path_c_complete_pack: { price_usd: cfg.corePriceUsd, unlock: cfg.coreLabel },
         path_d_pro_anchor: { price_usd: cfg.proPriceUsd, unlock: cfg.proLabel },
-        exit_intent_downsell: '1-Page Diagnostic Summary via Email (Only on Tab Exit — Zero Paywall Cannibalization)'
+        exit_intent_downsell: '1-Page Diagnostic Summary via Email (Only on Tab Exit: Zero Paywall Cannibalization)'
       }
     });
   });
@@ -744,7 +744,7 @@ function attachExactBaselinePack(app, options = {}) {
 
   app.get('/api/github-upgrade/stripe-recovery-worker.js', (req, res) => {
     const code = [
-      '/**', ' * AbandonAlpha (#9) — Autonomous Stripe Webhook Dunning & Exit-Intent Worker', ' */',
+      '/**', ' * AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker', ' */',
       'export default {',
       '  async fetch(request) {',
       '    const payload = await request.json();',
@@ -829,7 +829,7 @@ function attachExactBaselinePack(app, options = {}) {
     const links = buildBuyLinks(email);
     const safeSum = escMailHtml(summaryText);
     const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${links.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${links.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${links.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${links.pro_b2b}\n`;
-    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${escMailHtml(cfg.brandName)} — Diagnostic Summary &amp; 1-Click Export Links</h2><p>${safeSum}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${escMailHtml(cfg.freeDeliverableName)}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${escMailHtml(cfg.coreLabel)} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${escMailHtml(cfg.proLabel)} →</strong></a></li></ul></div>`;
+    const htmlMail = `<div style="font-family:sans-serif;max-width:560px;color:#0F172A;"><h2>${escMailHtml(cfg.brandName)}: Diagnostic Summary &amp; 1-Click Export Links</h2><p>${safeSum}</p><p><strong>Instant 1-Click Stripe Checkout (Apple Pay / Link Ready):</strong></p><ul><li><a href="${links.micro_pass}"><strong>99¢ Single-File Instant Export Pass →</strong></a></li><li><a href="${links.flash_pass}"><strong>$1.99 Single-Audit Export Bundle (${escMailHtml(cfg.freeDeliverableName)}) →</strong></a></li><li><a href="${links.complete_dossier}"><strong>$${cfg.corePriceUsd} ${escMailHtml(cfg.coreLabel)} →</strong></a></li><li><a href="${links.pro_b2b}"><strong>$${cfg.proPriceUsd} ${escMailHtml(cfg.proLabel)} →</strong></a></li></ul></div>`;
     const resendKey = process.env.RESEND_API_KEY || '';
     if (SENDGRID_API_KEY && SENDGRID_API_KEY.startsWith('SG.') && !isTest) {
       try {
@@ -905,7 +905,7 @@ function attachExactBaselinePack(app, options = {}) {
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
     let sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
     const stripeKey = process.env.STRIPE_SECRET_KEY || '';
-    const prodLabel = `${cfg.brandName} — ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : (isPro ? cfg.proLabel : cfg.coreLabel))}`;
+    const prodLabel = `${cfg.brandName}: ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : (isPro ? cfg.proLabel : cfg.coreLabel))}`;
 
     const buildInlineParams = () => {
       const p = new URLSearchParams({
