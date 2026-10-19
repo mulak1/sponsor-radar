@@ -418,9 +418,10 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const clientIp = ips[0] || '';
   const isOwnerCookie = String(req.headers.cookie || '').includes('eb_owner_test=1');
   const isOwnerIp = isOwnerCookie || ips.some(isExcludedOwnerIp) || Boolean(req.query && req.query.owner === '1');
-  const isPlaywrightHeader = Boolean(req.headers['x-playwright-test'] || req.headers['x-test-mode']);
-  const isQueryTest = req.query && (req.query.test === '1' || req.query.is_test === '1');
   const emailLower = String(extraEmail || '').toLowerCase();
+  const isMirofish = Boolean(req.headers['x-mirofish-swarm'] || (req.query && req.query.utm_source === 'mirofish_swarm') || ua.includes('mirofish') || emailLower.includes('mirofish'));
+  const isPlaywrightHeader = Boolean(req.headers['x-playwright-test'] || req.headers['x-test-mode'] || isMirofish);
+  const isQueryTest = req.query && (req.query.test === '1' || req.query.is_test === '1' || isMirofish);
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
   const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/'))));
@@ -430,11 +431,11 @@ function classifyTrafficRequest(req, extraEmail = '') {
     recent.push({ ts: now, path: req.path }); ipBurstWindow.set(clientIp, recent);
     if (recent.length >= 3 || recent.filter((x) => x.path === req.path && now - x.ts < 15000).length >= 2) isBurstScrape = true;
   }
-  const isSearchOrAiCrawler = CRAWLER_UA_REGEX.test(ua) || isPrefetch || isBurstScrape;
-  if (isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua || ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') || ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') || ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') || ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') || emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')) {
-    return { isTest: 1, isCrawler: isSearchOrAiCrawler ? 1 : 0, isOwnerIp: isOwnerIp ? 1 : 0, clientIp };
+  const isSearchOrAiCrawler = !isMirofish && (CRAWLER_UA_REGEX.test(ua) || isPrefetch || isBurstScrape);
+  if (isMirofish || isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua || ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') || ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') || ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') || ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') || emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')) {
+    return { isTest: 1, isCrawler: isSearchOrAiCrawler ? 1 : 0, isOwnerIp: isOwnerIp ? 1 : 0, isMirofish: isMirofish ? 1 : 0, clientIp };
   }
-  return { isTest: 0, isCrawler: 0, isOwnerIp: 0, clientIp };
+  return { isTest: 0, isCrawler: 0, isOwnerIp: 0, isMirofish: 0, clientIp };
 }
 
 function createTelemetryStore(dataDir, moduleId) {
@@ -481,11 +482,12 @@ function createTelemetryStore(dataDir, moduleId) {
       }
       return ips;
     },
-    recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, isOwnerIp = 0, clientIp = '', meta = {} }) {
+    recordEvent({ eventType, pageUrl = '/', deviceType = 'desktop', utmSource = '', utmCampaign = '', isTest = 0, isCrawler = 0, isOwnerIp = 0, isMirofish = 0, clientIp = '', meta = {} }) {
       const nowIso = new Date().toISOString();
-      const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
+      const mfFlag = (isMirofish || utmSource === 'mirofish_swarm' || String(meta?.source || '').includes('mirofish')) ? 1 : 0;
+      const forceTest = (isTest || mfFlag || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
-      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: utmSource, utm_campaign: utmCampaign, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
+      state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: deviceType, utm_source: utmSource || (mfFlag ? 'mirofish_swarm' : ''), utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
       if (state.events.length > 5000) state.events = state.events.slice(-4000);
       if (eventType === 'visit') state.impressions += 1;
       if (eventType === 'calculate') state.calculations += 1;
@@ -512,8 +514,9 @@ function createTelemetryStore(dataDir, moduleId) {
     getPstReport(windowHours = 3) {
       const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
-      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !isExcludedOwnerIp(e.client_ip) && (e.event_type === 'visit' || Boolean(e.client_ip)) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET');
+      const isHumanEvent = (e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && !isExcludedOwnerIp(e.client_ip) && (e.event_type === 'visit' || Boolean(e.client_ip)) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET');
       const humanEvents = state.events.filter(isHumanEvent), testEvents = state.events.filter((e) => !isHumanEvent(e) && Number(e.is_crawler) === 0);
+      const mirofishEventsCount = state.events.filter((e) => e.is_mirofish || e.utm_source === 'mirofish_swarm' || (e.meta && String(e.meta.source || '').includes('mirofish'))).length;
       const winEventsList = humanEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), prevEventsList = humanEvents.filter((e) => { const t = new Date(e.created_at).getTime(); return t >= prevCutMs && t < cutoffMs; });
       const winTestList = testEvents.filter((e) => new Date(e.created_at).getTime() >= cutoffMs), winCrawlerHits = state.events.filter((e) => Number(e.is_crawler) === 1 && new Date(e.created_at).getTime() >= cutoffMs).length;
       const winCounts = {}, prevCounts = {}, winTestCounts = {}, cumCounts = {}, winDevices = { desktop: 0, mobile: 0 }, winSources = {};
@@ -522,14 +525,14 @@ function createTelemetryStore(dataDir, moduleId) {
       for (const e of winTestList) winTestCounts[e.event_type] = (winTestCounts[e.event_type] || 0) + 1;
       for (const e of humanEvents) cumCounts[e.event_type] = (cumCounts[e.event_type] || 0) + 1;
       const recentRows = winEventsList.slice(-15).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || 'direct', is_test: 0, is_crawler: 0, meta: e.meta || {} }));
-      const recentAllRows = state.events.slice(-20).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || (e.is_crawler ? 'ai_search_crawler' : 'direct'), is_test: e.is_test, is_crawler: e.is_crawler, meta: e.meta || {} }));
+      const recentAllRows = state.events.slice(-20).reverse().map((e) => ({ id: e.id, pst_ts: toPstString(e.created_at), created_at: e.created_at, module_id: moduleId, event_type: e.event_type, page_url: e.page_url || '/', device_type: e.device_type || 'desktop', utm_source: e.utm_source || (e.is_crawler ? 'ai_search_crawler' : 'direct'), is_test: e.is_test, is_mirofish: e.is_mirofish || 0, is_crawler: e.is_crawler, meta: e.meta || {} }));
       const humanLeadsList = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && Boolean(l.client_ip) && !isExcludedOwnerIp(l.client_ip)), humanLeads = humanLeadsList.length, winLeads = humanLeadsList.filter((l) => new Date(l.created_at).getTime() >= cutoffMs).length, testLeads = state.leads.length - humanLeads;
       const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && Boolean(o.client_ip) && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
       const paidOrders = paidOrdersList.length, paidRevUsd = paidOrdersList.reduce((acc, o) => acc + (Number(o.amount_usd) || 0), 0);
       return {
         ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()), pst_prev_window_start: toPstString(new Date(prevCutMs).toISOString()),
         window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '84.17.44.226', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1', ...(state.owner_ips || [])],
-        window_events: winCounts, prior_window_events: prevCounts, window_devices: winDevices, window_sources: winSources, window_leads: winLeads, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, recent_pst_events: recentRows, recent_all_events: recentAllRows,
+        window_events: winCounts, prior_window_events: prevCounts, window_devices: winDevices, window_sources: winSources, window_leads: winLeads, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, mirofish_swarm_events: mirofishEventsCount, recent_pst_events: recentRows, recent_all_events: recentAllRows,
         all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
         server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: state.crawler_hits || 0, total_events_logged: state.events.length }
       };

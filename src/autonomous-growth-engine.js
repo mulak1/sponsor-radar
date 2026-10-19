@@ -175,15 +175,15 @@ function renderGrowthPageHtml(cfg, item, kind) {
         { name: item.entityA, kpi: item.scoreA, action: 'Top Rated • Leading Option', status: 'RECOMMENDED (#1)' },
         { name: item.entityB, kpi: item.scoreB, action: 'Alternative • Comparison Baseline', status: 'GAP FOUND' },
         { name: 'Key Difference & Gain', kpi: item.winnerLift, action: `Use ${cfg.freeDeliverableName}`, status: 'VERIFIED GAIN' },
-        { name: 'Row #4 Step-by-Step Comparison Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
-        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
+        { name: 'Row #4 Step-by-Step Comparison Breakdown', kpi: 'Locked in Preview', action: 'Unlock Complete 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' },
+        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock Complete 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ]
     : [
         { name: `${item.target} : Baseline Check`, kpi: item.metricA, action: 'Test Your Own Above', status: 'VERIFIED' },
         { name: `${cfg.freeDeliverableName} Impact`, kpi: item.metricB, action: 'Ready-to-Use Action File', status: 'READY' },
         { name: 'Setup Time', kpi: '< 10 Seconds', action: 'Instant Browser Calculation', status: 'INSTANT' },
-        { name: 'Row #4 Step-by-Step Fix Breakdown', kpi: 'Locked in Preview', action: 'Reveal Free via Email or 99¢ Pass', status: 'LOCKED_PREVIEW' },
-        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
+        { name: 'Row #4 Step-by-Step Fix Breakdown', kpi: 'Locked in Preview', action: 'Unlock Complete 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' },
+        { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock Complete 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ];
 
   const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;font-size:14px;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};font-size:14px;">${escXml(r.kpi)}</td><td style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};font-size:14px;">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-size:13px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
@@ -244,13 +244,13 @@ function renderGrowthPageHtml(cfg, item, kind) {
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
       <div id="eb-inline-row4-unlock" style="margin-top:14px;padding:12px 16px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="font-size:13.5px;font-weight:800;color:${escXml(t.textPrimary)};">🔓 Reveal Row #4 Free via Email:</span>
-          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" style="padding:7px 12px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:13.5px;width:195px;" />
-          <button id="eb-growth-row4-btn" type="button" onclick="var inp=document.getElementById('eb-growth-row4-email'),em=(inp||{}).value||'';if(em.indexOf('@')===-1){if(inp){inp.style.borderColor='#E11D48';inp.focus();}return;}fetch('/api/leads/capture',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,pageUrl:window.location.pathname,summaryText:'Row 4 Unlock: ${escXml(item.slug)}'})}).then(function(){var r4=document.getElementById('eb-growth-row4-tr')||document.querySelector('tr.eb-blurred-deliverable');if(r4){r4.classList.remove('eb-blurred-deliverable');r4.style.filter='none';}var g=document.getElementById('eb-table-row4-gate-tr');if(g)g.remove();var v=document.getElementById('eb-growth-row4-val'),s=document.getElementById('eb-growth-row4-status'),m=document.getElementById('eb-growth-row4-msg');if(v)v.textContent='${escXml(item.metricA || item.winnerLift)} • Action Plan Sent';if(s){s.textContent='UNLOCKED';s.style.color='#059669';}if(m)m.innerHTML='<span style=&quot;font-size:13.5px;font-weight:800;color:#059669;&quot;>✓ Row #4 Unblurred &amp; Sent! Grab Row #5 + Full Export for 99¢ →</span>';})" style="padding:7px 14px;border-radius:8px;border:none;background:#0F172A;color:#FFFFFF;font-size:13.5px;font-weight:700;cursor:pointer;">Reveal Row #4 →</button>
+        <div style="font-size:13.5px;font-weight:800;color:${escXml(t.textPrimary)};">🔒 Rows #4 &amp; #5 Locked: Unblur your complete 3-file remediation pack via 1-Click Stripe Express</div>
+        <div id="eb-growth-row4-msg" style="display:none !important;">
+          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" />
+          <button id="eb-growth-row4-btn" type="button">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/flash_pass" style="padding:7px 14px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13.5px;font-weight:700;text-decoration:none;">Unlock 3-File Pack ($1.99) ↗</a>
+          <a href="/buy/flash_pass" style="padding:8px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 12px rgba(15,23,42,0.12);">Unlock Complete 3-File Action Pack ($1.99 Stripe Express) ↗</a>
         </div>
       </div>
     </section>
