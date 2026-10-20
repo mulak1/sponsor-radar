@@ -786,6 +786,7 @@ function attachExactBaselinePack(app, options = {}) {
       unlock_paths: [
         { path: 'micro_pass', price_usd: 0.99, buy_url: `https://${cfg.domain}/buy/micro_pass`, label: '99¢ Single-File Instant Export Pass' },
         { path: 'flash_pass', price_usd: 1.99, buy_url: `https://${cfg.domain}/buy/flash_pass`, label: `$1.99 Single-Audit Export Pass (${cfg.freeDeliverableName})` },
+        { path: 'playbook_pass', price_usd: 29, buy_url: `https://${cfg.domain}/buy/playbook_pass`, label: '$29 Founder Recovery Playbook & Dunning Webhook (.JS)' },
         { path: 'complete_dossier', price_usd: cfg.corePriceUsd, buy_url: `https://${cfg.domain}/buy/complete_dossier`, label: cfg.coreLabel },
         { path: 'pro_b2b', price_usd: cfg.proPriceUsd, buy_url: `https://${cfg.domain}/buy/pro_b2b`, label: cfg.proLabel }
       ]
@@ -892,12 +893,13 @@ function attachExactBaselinePack(app, options = {}) {
     const rawTier = String(req.params?.tier || req.query?.tier || req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
     const isMicro = rawTier.includes('micro') || rawTier.includes('099') || rawTier.includes('99c');
     const isFlash = !isMicro && (rawTier.includes('flash') || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
-    const isPro = !isMicro && !isFlash && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
-    const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd));
-    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'));
+    const isPlaybook = !isMicro && !isFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
+    const isPro = !isMicro && !isFlash && !isPlaybook && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
+    const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd)));
+    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier')));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
-    const priceId = isMicro ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv]));
-    const isOneTime = isMicro || isFlash || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
+    const priceId = isMicro ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
+    const isOneTime = isMicro || isFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
 
     const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     let { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
@@ -918,7 +920,7 @@ function attachExactBaselinePack(app, options = {}) {
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
     let sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
     const stripeKey = process.env.STRIPE_SECRET_KEY || '';
-    const prodLabel = `${cfg.brandName}: ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : (isPro ? cfg.proLabel : cfg.coreLabel))}`;
+    const prodLabel = `${cfg.brandName}: ${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? 'Single-Audit Instant Export Pass ($1.99)' : (isPlaybook ? 'Founder Stripe Recovery Audit & Dunning Playbook ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel)))}`;
 
     const buildInlineParams = () => {
       const p = new URLSearchParams({
@@ -964,7 +966,7 @@ function attachExactBaselinePack(app, options = {}) {
     }
     if (req.method === 'POST' && req.path === '/api/checkout') {
       const reqTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.planId || '').toLowerCase();
-      if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'complete_dossier' || reqTier === 'pro_b2b') return handleTierCheckout(req, res);
+      if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'playbook_pass' || reqTier === 'complete_dossier' || reqTier === 'pro_b2b') return handleTierCheckout(req, res);
       const cEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
       if (cEmail && cEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(cEmail)) {
         store.recordLead({ email: cEmail, summaryText: 'Native Checkout Form Lead', utmSource: 'native_checkout', isTest, isOwnerIp, clientIp });
