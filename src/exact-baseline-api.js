@@ -520,9 +520,11 @@ function createTelemetryStore(dataDir, moduleId) {
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
       const inferRefSrc = (r) => r.includes('google.') ? 'google_organic' : (r.includes('bing.') ? 'bing_organic' : (r.includes('chatgpt.') || r.includes('openai.') ? 'chatgpt_ai' : (r.includes('perplexity.') ? 'perplexity_ai' : (r.includes('reddit.') ? 'reddit_social' : (r.includes('github.') ? 'github_dev' : '')))));
       const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
-      const jsVerifiedIps = new Set(baseClean.filter((e) => Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid))).map((e) => e.client_ip));
-      const isJsVerifiedHuman = (e) => (e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)) || (nowMs - new Date(e.created_at).getTime() <= 20000)) : true;
-      const unhydratedAll = baseClean.filter((e) => (e.event_type === 'visit' || e.event_type === 'calculate') && !isJsVerifiedHuman(e));
+      const seoBurstUrls = new Set(baseClean.filter((e) => e.page_url && e.page_url.startsWith('/seo/') && Number(e.meta && e.meta.vw) === 1024 && !(e.meta && e.meta.ref)).filter((e, _, arr) => arr.filter((x) => x.page_url === e.page_url && Math.abs(new Date(x.created_at).getTime() - new Date(e.created_at).getTime()) <= 5000).length >= 3).map((e) => `${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
+      const isWrsBurst = (e) => Boolean(e.page_url && seoBurstUrls.has(`${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
+      const jsVerifiedIps = new Set(baseClean.filter((e) => !isWrsBurst(e) && (e.event_type === 'view_paywall' || e.event_type === 'checkout_intent' || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)))).map((e) => e.client_ip));
+      const isJsVerifiedHuman = (e) => isWrsBurst(e) ? false : ((e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)) || (nowMs - new Date(e.created_at).getTime() <= 20000)) : true);
+      const unhydratedAll = baseClean.filter((e) => !isJsVerifiedHuman(e));
       const rawCandidates = baseClean.filter(isJsVerifiedHuman);
       const humanEvents = []; const seenPw = new Map(), seenVis = new Map();
       for (const e of rawCandidates) {
@@ -706,14 +708,14 @@ function attachExactBaselinePack(app, options = {}) {
     const legacyCostUsd = verticalId === 'citation_forge' ? 299 : (verticalId === 'sponsor_radar' ? 2500 : (verticalId === 'derm_logic' ? 332 : 1800));
     const paybackMultiple = Math.round(legacyCostUsd / 1.99);
     res.json({
-      ok: true, module_id: cfg.moduleId,
-      engine: 'nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103)',
+      ok: true, module_id: cfg.moduleId, iteration: 52,
+      engine: 'nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103) + TanStack/table (★ 26,100)',
       micro_pass_usd: 0.99, flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple,
       driver_spotlight_enabled: true, one_tap_preset_chips: true, interactive_file_pill_modals: true,
-      endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, sqlite_statement_cache_active: true
+      endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, pseo_table_express_bar_enabled: true, sqlite_statement_cache_active: true
     });
   };
-  app.get(['/api/github-upgrade/roi-payback', '/api/github-upgrade/endowment-customizer', '/api/github-upgrade/driver-spotlight'], handleRoiAndEndowment);
+  app.get(['/api/github-upgrade/roi-payback', '/api/github-upgrade/endowment-customizer', '/api/github-upgrade/driver-spotlight', '/api/github-upgrade/pseo-table-express-bar'], handleRoiAndEndowment);
 
   // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {

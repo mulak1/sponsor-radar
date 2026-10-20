@@ -475,40 +475,39 @@ function buildClientRuntimeScript(cfg) {
         nd.textContent = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com');
       }
     }
+    var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
     var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
     if (tbody && !window.__ebIsUnlocked) {
       var trs = tbody.querySelectorAll('tr');
       for (var r0 = 0; r0 < Math.min(3, trs.length); r0++) {
         if (!trs[r0].hasAttribute('data-eb-live-row')) {
-          trs[r0].setAttribute('data-eb-live-row', String(r0 + 1));
-          trs[r0].title = 'Click row to benchmark & compile custom deliverable';
+          trs[r0].setAttribute('data-eb-live-row', String(r0 + 1)); trs[r0].title = 'Click row to benchmark & compile custom deliverable';
           var tdFirst = trs[r0].querySelector('td, th');
           if (tdFirst && !tdFirst.querySelector('.eb-row-sim-pill')) tdFirst.insertAdjacentHTML('beforeend', ' <span class="eb-row-sim-pill" style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;white-space:nowrap;vertical-align:middle;">⚡ Sim</span>');
           trs[r0].addEventListener('click', function(ev) {
             if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return;
+            this.style.background = CFG.theme.brandSoftBg;
             var td0 = this.querySelector('td, th'), ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : '';
             if (ent) window.__ebCompileCustomCurtain(ent);
           });
         }
       }
       for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
-      if (trs.length > 3 && !document.getElementById('eb-table-row4-gate-tr')) {
+      if ((trs.length > 3 || (isPseoOrDir && trs.length >= 2)) && !document.getElementById('eb-table-row4-gate-tr')) {
         var gateTr = document.createElement('tr'); gateTr.id = 'eb-table-row4-gate-tr'; gateTr.style.cssText = 'cursor:pointer;background:' + CFG.theme.brandSoftBg + ';';
         gateTr.onclick = function() { window.__ebCheckout('flash_pass'); };
-        gateTr.innerHTML = '<td colspan="8" style="padding:9px 14px;border-top:1.5px dashed ' + CFG.theme.accentBorder + ';border-bottom:1.5px dashed ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';font-size:13px;color:' + CFG.theme.textPrimary + ';"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span>🔒 <strong>Rows #4–#' + trs.length + ' Locked (Highest-Impact Fixes):</strong> Instant 1-Click Stripe Unlock for All ' + trs.length + ' Rows + Ready-to-Use Files</span><span style="padding:4px 11px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;font-size:12.5px;font-weight:700;white-space:nowrap;">⚡ Unlock All ' + trs.length + ' Rows ($1.99 Stripe Express →)</span></div></td>';
-        tbody.insertBefore(gateTr, trs[3]);
+        gateTr.innerHTML = '<td colspan="8" style="padding:9px 14px;border-top:1.5px dashed ' + CFG.theme.accentBorder + ';border-bottom:1.5px dashed ' + CFG.theme.accentBorder + ';font-family:' + CFG.theme.fontSans + ';font-size:13px;color:' + CFG.theme.textPrimary + ';"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><span>🔒 <strong>' + (trs.length > 3 ? ('Rows #4–#' + trs.length + ' Locked (Highest-Impact Fixes):') : 'Full Production Fix Pack &amp; Export Locked:') + '</strong> Instant 1-Click Stripe Unlock for All Rows + Ready-to-Use Files</span><span style="display:inline-flex;gap:6px;align-items:center;"><button type="button" onclick="event.stopPropagation();window.__ebCheckout(\\\'micro_pass\\\')" style="padding:4px 9px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:12px;font-weight:700;cursor:pointer;">99¢ Single File</button><span style="padding:4px 11px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;font-size:12.5px;font-weight:700;white-space:nowrap;">⚡ Unlock All Rows ($1.99 Stripe Express →)</span></span></div></td>';
+        if (trs.length > 3) tbody.insertBefore(gateTr, trs[3]); else tbody.appendChild(gateTr);
       }
       var tblEl = tbody.closest('table'), tblWrap = tblEl ? (tblEl.closest('.table-wrap, .posterior-table-wrap') || tblEl) : null;
-      var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
       if (tblWrap && tblWrap.parentNode && !document.getElementById('eb-tanstack-table-bar')) {
         var tBar = document.createElement('div'); tBar.id = 'eb-tanstack-table-bar';
         tBar.style.cssText = 'display:' + (isPseoOrDir ? 'flex' : 'none') + ';justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:9px 12px;margin-bottom:10px;border-radius:10px;background:' + CFG.theme.subtleBg + ';border:1px solid ' + CFG.theme.border + ';font-family:' + CFG.theme.fontSans + ';';
         tBar.innerHTML = '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px;"><span style="font-size:13px;font-weight:700;color:' + CFG.theme.brandPrimary + ';white-space:nowrap;">⚡ Filter Table:</span><input type="search" id="eb-tanstack-filter-input" placeholder="Search rows or test your own..." oninput="window.__ebFilterAndCalcTable(this.value)" style="flex:1;padding:6px 10px;border-radius:7px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13.5px;" /></div>'
-          + '<div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-tanstack-sort" onclick="window.__ebSortTableRows()" style="padding:6px 11px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⇅ Sort by Impact</button><button type="button" id="btn-tanstack-unlock-rows" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;cursor:pointer;">🔒 Unlock Full Table ($1.99)</button></div>';
+          + '<div style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;"><button type="button" id="btn-tanstack-sort" onclick="window.__ebSortTableRows()" style="padding:6px 11px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.textPrimary + ';border:1px solid ' + CFG.theme.border + ';font-size:13px;font-weight:600;cursor:pointer;">⇅ Sort by Impact</button><button type="button" id="btn-tanstack-micro-pass" onclick="window.__ebCheckout(\\\'micro_pass\\\')" style="padding:6px 10px;border-radius:999px;background:#FFFFFF;color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:12.5px;font-weight:700;cursor:pointer;">⚡ 99¢ Single File</button><button type="button" id="btn-tanstack-unlock-rows" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:6px 12px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;cursor:pointer;">🔒 Unlock Full Table ($1.99)</button></div>';
         tblWrap.parentNode.insertBefore(tBar, tblWrap);
       }
     }
-    var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
     var h1Node = document.querySelector('main h1, article h1, h1');
     if (h1Node && !window.__ebActiveEntity && isPseoOrDir) {
       var rawH1 = (h1Node.textContent || '').replace(/\\s+/g, ' ').trim().split(/\\s*[—–|:]\\s*/)[0];
