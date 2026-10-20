@@ -247,8 +247,8 @@ const SAMPLE_TRANSCRIPTS = [
 function buildSeoPages() {
   const pages = [];
 
-  // 1. 22 Brand Sponsorship Spend & ROI Breakdowns
-  const topBrandsForSeo = BRANDS.slice(0, 22);
+  // 1. All 42 Brand Sponsorship Spend & ROI Breakdowns
+  const topBrandsForSeo = BRANDS;
   const brandSlugOverrides = {
     'ag1': 'ag1-podcast-sponsorship-spend-and-roi',
     'deel': 'deel-newsletter-and-podcast-ad-spend',
@@ -274,8 +274,8 @@ function buildSeoPages() {
     });
   }
 
-  // 2. 22 Show Media-Kit & CPM Benchmarks
-  const topShowsForSeo = SHOWS.slice(0, 22);
+  // 2. All 46 Show Media-Kit & CPM Benchmarks
+  const topShowsForSeo = SHOWS;
   const showSlugOverrides = {
     'acquired': 'acquired-podcast-sponsors-and-cpm-rates',
     'lennys-podcast': 'lennys-podcast-sponsors-and-ad-rates',
@@ -284,6 +284,8 @@ function buildSeoPages() {
     'my-first-million': 'my-first-million-podcast-sponsors-ledger',
     'pragmatic-engineer': 'pragmatic-engineer-newsletter-ad-rates',
     'huberman-lab': 'huberman-lab-sponsor-spend-and-promo-codes',
+    'bens-bites': 'bens-bites-sponsors-and-cpm-rates',
+    'morning-brew': 'morning-brew-sponsors-and-cpm-rates',
     'lex-fridman': 'lex-fridman-podcast-sponsors-and-roi'
   };
 
