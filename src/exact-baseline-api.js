@@ -530,16 +530,18 @@ function createTelemetryStore(dataDir, moduleId) {
       for (const e of rawCandidates) {
         const ts = new Date(e.created_at).getTime(), ipKey = e.client_ip || '', ck = (e.meta && e.meta.vid) || ipKey;
         if (e.event_type === 'visit' || e.event_type === 'visit_hydrated') {
-          const prevEntry = (seenVis.has(ck) && Math.abs(ts - seenVis.get(ck).ts) <= 20000) ? seenVis.get(ck) : ((ipKey && seenVis.has(ipKey) && Math.abs(ts - seenVis.get(ipKey).ts) <= 20000) ? seenVis.get(ipKey) : null);
+          const SESSION_MS = 1800000; // one visit = same vid/IP within 30 min of last activity (standard analytics session)
+          const prevEntry = (seenVis.has(ck) && Math.abs(ts - seenVis.get(ck).ts) <= SESSION_MS) ? seenVis.get(ck) : ((ipKey && seenVis.has(ipKey) && Math.abs(ts - seenVis.get(ipKey).ts) <= SESSION_MS) ? seenVis.get(ipKey) : null);
           if (prevEntry) {
+            prevEntry.ts = ts; seenVis.set(ck, prevEntry);
             if (e.meta && Object.keys(e.meta).length > 0) prevEntry.row.meta = { ...(prevEntry.row.meta || {}), ...e.meta };
-            if (Number(e.meta && e.meta.vw) > 0 && Number(e.meta.vw) <= 768) prevEntry.row.device_type = 'mobile';
+            const vwN = Number(e.meta && e.meta.vw); if (vwN > 0) prevEntry.row.device_type = vwN <= 768 ? 'mobile' : (vwN > 1024 ? 'desktop' : prevEntry.row.device_type);
             const rLower = String((e.meta && e.meta.ref) || '').toLowerCase();
             if ((!prevEntry.row.utm_source || prevEntry.row.utm_source === 'direct') && (e.utm_source || rLower)) prevEntry.row.utm_source = e.utm_source || inferRefSrc(rLower) || prevEntry.row.utm_source;
             continue;
           }
           const rLow = String((e.meta && e.meta.ref) || '').toLowerCase();
-          const dev = (Number(e.meta && e.meta.vw) > 0 && Number(e.meta.vw) <= 768) ? 'mobile' : e.device_type;
+          const vw0 = Number(e.meta && e.meta.vw), dev = vw0 > 0 ? (vw0 <= 768 ? 'mobile' : (vw0 > 1024 ? 'desktop' : e.device_type)) : e.device_type;
           const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), device_type: dev, utm_source: e.utm_source || inferRefSrc(rLow) };
           const rec = { ts, row }; seenVis.set(ck, rec); if (ipKey) seenVis.set(ipKey, rec);
           humanEvents.push(row); continue;
