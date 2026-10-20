@@ -492,7 +492,7 @@ function createTelemetryStore(dataDir, moduleId) {
       const inferredSrc = utmSource || (mfFlag ? 'mirofish_swarm' : (refStr.includes('google.') ? 'google_organic' : (refStr.includes('bing.') ? 'bing_organic' : (refStr.includes('chatgpt.') || refStr.includes('openai.') ? 'chatgpt_ai' : (refStr.includes('perplexity.') ? 'perplexity_ai' : (refStr.includes('reddit.') ? 'reddit_social' : (refStr.includes('github.') ? 'github_dev' : '')))))));
       if (isCrawler) state.crawler_hits = (state.crawler_hits || 0) + 1;
       state.events.push({ id: state.events.length + 1, module_id: moduleId, event_type: eventType, page_url: pageUrl, device_type: resolvedDev, utm_source: inferredSrc, utm_campaign: utmCampaign, is_test: forceTest, is_mirofish: mfFlag, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, is_crawler: isCrawler ? 1 : 0, meta, created_at: nowIso });
-      if (state.events.length > 5000) state.events = state.events.slice(-4000);
+      if (state.events.length > 5000) { const noise = state.events.filter((x) => x.is_crawler || Number(x.is_test)), drop = new Set(noise.slice(0, Math.min(state.events.length - 4000, noise.length))); state.events = state.events.filter((x) => !drop.has(x)); } // trim oldest crawler/test rows only; real human rows are never deleted
       if (eventType === 'visit') state.impressions += 1;
       if (eventType === 'calculate') state.calculations += 1;
       if (eventType === 'checkout_intent') state.checkout_intents += 1;
