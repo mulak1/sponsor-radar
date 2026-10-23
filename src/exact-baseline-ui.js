@@ -447,7 +447,7 @@ function buildClientRuntimeScript(cfg) {
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var hdr = document.getElementById('eb-curtain-title-span'), qRd = document.getElementById('eb-quick-live-readout') || document.getElementById('eb-mobile-live-readout');
-        if (hdr) hdr.textContent = '✦ Step 3 Ready for ' + q + ': Unlock Your Custom 3-File Fix Pack';
+        if (hdr) hdr.textContent = '✦ Diagnostic Ready for ' + q + ': Unlock Your 3-File Fix Pack';
         if (badgeEl && !customBadge && data && data.kpis && data.kpis[0]) badgeEl.textContent = 'Est. Impact: ' + data.kpis[0];
         if (qRd && data && data.kpis) { qRd.style.display = 'inline-flex'; qRd.style.alignItems = 'center'; qRd.style.gap = '6px'; qRd.innerHTML = '<span>✓ ' + q.slice(0, 16).replace(/[<>"']/g, '') + ': ' + data.kpis.slice(0, 2).join(' • ') + '</span><button type="button" onclick="window.__ebCheckout(\\\'flash_pass\\\')" style="padding:2px 8px;border-radius:999px;background:' + CFG.theme.brandPrimary + ';color:#FFFFFF;border:none;font-size:12px;font-weight:700;cursor:pointer;">Unlock ($1.99) →</button>'; }
         var pills = document.getElementById('eb-manifest-pills-left') || document.getElementById('eb-zod-manifest-pills');
@@ -586,7 +586,7 @@ function buildClientRuntimeScript(cfg) {
       var prevBox = document.getElementById('eb-prism-proof-preview');
       if (prevBox) { prevBox.setAttribute('data-demo-open', '0'); prevBox.textContent = (customDiagLine || CFG.remDiff.beforeLine) + '\\n' + CFG.remDiff.afterLine + '\\n' + previewLines; window.__ebLastCurtainPreview = prevBox.textContent; }
       var hdrSpan = document.getElementById('eb-curtain-title-span'), rBadge = document.getElementById('eb-curtain-roi-badge'), cBtn = document.getElementById('btn-curtain-flash-pass'), pcBtn = document.getElementById('btn-postcalc-flash-pass');
-      if (hdrSpan) hdrSpan.textContent = (window.__ebUserInteracted ? '✦ Step 3 Ready for ' + activeEnt + ': Unlock Your Custom 3-File Fix Pack' : '✦ Step 3 • Diagnostic Summary & Locked 3-File Fix Pack' + entityTag);
+      if (hdrSpan) hdrSpan.textContent = (window.__ebUserInteracted ? '✦ Diagnostic Ready for ' + activeEnt + ': Unlock Your 3-File Fix Pack' : '✦ Diagnostic Summary & Locked 3-File Fix Pack' + entityTag);
       if (rBadge && customBadge) rBadge.textContent = customBadge;
       if (cBtn && window.__ebUserInteracted && window.__ebActiveEntity) cBtn.textContent = '⚡ Unlock Custom ' + window.__ebActiveEntity.slice(0, 16) + ' Pack ($1.99 Stripe Express →)';
       if (pcBtn && window.__ebUserInteracted && window.__ebActiveEntity) pcBtn.textContent = '⚡ Unlock ' + window.__ebActiveEntity.slice(0, 14) + ' Fix Pack ($1.99) →';
@@ -601,7 +601,7 @@ function buildClientRuntimeScript(cfg) {
     var curtain = document.createElement('div');
     curtain.id = 'eb-deliverable-curtain';
     curtain.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">'
-      + '<span id="eb-curtain-title-span" style="font-size:13px;font-weight:800;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ Step 3 • Diagnostic Summary &amp; Locked 3-File Fix Pack' + entityTag + '</span>'
+      + '<span id="eb-curtain-title-span" style="font-size:13px;font-weight:800;color:' + CFG.theme.brandPrimary + ';text-transform:uppercase;letter-spacing:0.04em;">✦ Diagnostic Summary &amp; Locked 3-File Fix Pack' + entityTag + '</span>'
       + '<div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;"><span id="eb-curtain-roi-badge" style="font-size:12.5px;color:' + CFG.theme.safeColor + ';font-weight:700;background:' + CFG.theme.safeSoftBg + ';border:1px solid ' + CFG.theme.safeBorder + ';padding:3px 10px;border-radius:999px;">' + CFG.remDiff.roiBadge + '</span></div></div>'
       + '<div id="eb-curtain-customizer-bar" style="display:none;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">'
       + '<input type="text" id="eb-curtain-entity-input" list="eb-entity-datalist" onchange="if(this.value)window.__ebCompileCustomCurtain(this.value)" placeholder="' + CFG.searchPlaceholder + '..." onkeydown="if(event.keyCode===13){event.preventDefault();window.__ebCompileCustomCurtain();}" style="flex:1;min-width:170px;padding:6px 10px;border-radius:8px;border:1px solid ' + CFG.theme.border + ';background:#FFFFFF;color:' + CFG.theme.textPrimary + ';font-size:13px;" />'
