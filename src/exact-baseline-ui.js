@@ -321,6 +321,7 @@ function buildClientRuntimeScript(cfg) {
   } catch (_) {}
 
   try {
+    window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); return false; });
     window.__ebVid = localStorage.getItem('vs_vid') || ('v_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36));
     localStorage.setItem('vs_vid', window.__ebVid);
     window.__ebSid = sessionStorage.getItem('vs_sid') || ('s_' + Math.random().toString(36).slice(2, 10));

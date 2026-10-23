@@ -447,7 +447,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       short_name: cfg.brandName,
       description: cfg.explainerText,
       start_url: '/',
-      display: 'standalone',
+      display: 'browser',
       background_color: cfg.theme.canvasBg,
       theme_color: cfg.theme.brandPrimary,
       icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }]
@@ -952,7 +952,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
 
   const headLinks = [
     '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
-    !out.includes('rel="manifest"') ? '<link rel="manifest" href="/manifest.webmanifest" />' : '',
+    '' /* PWA prompt disabled */,
     !out.includes('rel="apple-touch-icon"') ? '<link rel="apple-touch-icon" href="/favicon.svg" />' : '',
     `<link rel="alternate" type="application/rss+xml" title="${escHtml(cfg.brandName)} RSS 2.0 Feed" href="${hostUrl}/feed.xml" />`,
     `<link rel="alternate" type="application/feed+json" title="${escHtml(cfg.brandName)} JSON Feed" href="${hostUrl}/feed.json" />`,

@@ -58,7 +58,7 @@ app.get('/manifest.webmanifest', (req, res) => {
     name: 'SponsorRadar (#2): 3x+ Renewal Media Intelligence',
     short_name: 'SponsorRadar',
     start_url: '/',
-    display: 'standalone',
+    display: 'browser',
     background_color: '#FBF8F3',
     theme_color: '#E84E36',
     icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }]
