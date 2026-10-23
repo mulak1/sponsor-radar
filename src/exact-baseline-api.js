@@ -176,15 +176,15 @@ const VERTICAL_CONFIGS = {
       { label: 'Host-Read Lift', val: '1.44x', sub: 'vs. Pre-Recorded Ads' }
     ],
     presetKpis: {
-      'ag1': ['98/100', '$1,420,000', '$42.00', '1.48x'],
-      'deel': ['95/100', '$680,000', '$46.50', '1.44x'],
-      'linear': ['91/100', '$310,000', '$39.00', '1.39x'],
-      'ramp': ['96/100', '$790,000', '$48.00', '1.46x'],
-      'eight-sleep': ['93/100', '$620,000', '$37.50', '1.41x']
+      'ag1': ['98/100', '$1,420,000', '$42.00', '1.48x'], 'AG1': ['98/100', '$1,420,000', '$42.00', '1.48x'],
+      'deel': ['95/100', '$680,000', '$46.50', '1.44x'], 'Deel': ['95/100', '$680,000', '$46.50', '1.44x'],
+      'linear': ['91/100', '$310,000', '$39.00', '1.39x'], 'Linear': ['91/100', '$310,000', '$39.00', '1.39x'],
+      'ramp': ['96/100', '$790,000', '$48.00', '1.46x'], 'Ramp': ['96/100', '$790,000', '$48.00', '1.46x'],
+      'eight-sleep': ['93/100', '$620,000', '$37.50', '1.41x'], 'Eight Sleep': ['93/100', '$620,000', '$37.50', '1.41x']
     },
     presets: [
-      { key: 'ag1', label: 'AG1' }, { key: 'deel', label: 'Deel' },
-      { key: 'linear', label: 'Linear' }, { key: 'ramp', label: 'Ramp' }, { key: 'eight-sleep', label: '8Sleep' }
+      { key: 'AG1', label: 'AG1' }, { key: 'Deel', label: 'Deel' },
+      { key: 'Linear', label: 'Linear' }, { key: 'Ramp', label: 'Ramp' }, { key: 'Eight Sleep', label: '8Sleep' }
     ],
     coMarketingPills: [
       { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Spend Signal: 68% of single-episode test ads churn; 3x+ renewed mid-rolls reveal proven ROI.' },
