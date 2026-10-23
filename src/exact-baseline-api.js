@@ -267,15 +267,15 @@ const VERTICAL_CONFIGS = {
       { label: 'Pore & Fungal Check', val: '1 Trigger', sub: 'Heavy Ester Found' }
     ],
     presetKpis: {
-      'preset-tiktok-destroyer': ['20/100', '2.8 pH', '76% Pass', '1 Trigger'],
-      'preset-copper-vitc-trap': ['54/100', '2.6 pH', '88% Pass', '0 Triggers'],
-      'preset-acne-rx-bpo-tret': ['49/100', '1.9 pH', '91% Pass', '0 Triggers'],
-      'preset-fungal-safe-barrier': ['96/100', '0.6 pH', '94% Pass', '0 Triggers'],
-      'preset-glass-skin': ['94/100', '0.8 pH', '89% Pass', '0 Triggers']
+      'preset-tiktok-destroyer': ['20/100', '2.8 pH', '76% Pass', '1 Trigger'], 'TikTok 7-Active Stack': ['20/100', '2.8 pH', '76% Pass', '1 Trigger'],
+      'preset-copper-vitc-trap': ['54/100', '2.6 pH', '88% Pass', '0 Triggers'], 'Vitamin C + Copper Peptides': ['54/100', '2.6 pH', '88% Pass', '0 Triggers'],
+      'preset-acne-rx-bpo-tret': ['49/100', '1.9 pH', '91% Pass', '0 Triggers'], 'Tretinoin + Benzoyl Peroxide': ['49/100', '1.9 pH', '91% Pass', '0 Triggers'],
+      'preset-fungal-safe-barrier': ['96/100', '0.6 pH', '94% Pass', '0 Triggers'], 'Fungal-Safe Barrier Care': ['96/100', '0.6 pH', '94% Pass', '0 Triggers'],
+      'preset-glass-skin': ['94/100', '0.8 pH', '89% Pass', '0 Triggers'], 'Glass Skin Hydration': ['94/100', '0.8 pH', '89% Pass', '0 Triggers']
     },
     presets: [
-      { key: 'preset-tiktok-destroyer', label: 'TikTok' }, { key: 'preset-copper-vitc-trap', label: 'VitC+Cu' },
-      { key: 'preset-acne-rx-bpo-tret', label: 'Tret+BPO' }, { key: 'preset-fungal-safe-barrier', label: 'Fungal' }, { key: 'preset-glass-skin', label: 'Barrier' }
+      { key: 'TikTok 7-Active Stack', label: 'TikTok 7-Active' }, { key: 'Vitamin C + Copper Peptides', label: 'VitC + Copper' },
+      { key: 'Tretinoin + Benzoyl Peroxide', label: 'Tret + BPO' }, { key: 'Fungal-Safe Barrier Care', label: 'Fungal-Safe' }, { key: 'Glass Skin Hydration', label: 'Glass Skin' }
     ],
     coMarketingPills: [
       { key: 'sephora', label: 'pH Clash Risk', rowText: 'Formulation Alert: Mixing low-pH direct acids (pH 3.2) with neutral peptides (pH 6.0) causes rapid hydrolysis.' },
@@ -358,15 +358,15 @@ const VERTICAL_CONFIGS = {
       { label: 'Pre-Exit Hesitation', val: '< 12.0s', sub: 'Cursor Velocity Vector' }
     ],
     presetKpis: {
-      'shopify_dtc': ['$56,722', '$49,076', '$7,646', '< 10.5s'],
-      'b2b_saas': ['$8,940', '$5,110', '$3,830', '< 12.0s'],
-      'creator_checkout': ['$12,680', '$8,490', '$4,190', '< 9.5s'],
-      'subscription_app': ['$31,200', '$18,900', '$12,300', '< 11.0s'],
-      'enterprise_annual': ['$74,800', '$46,200', '$28,600', '< 14.0s']
+      'shopify_dtc': ['$56,722', '$49,076', '$7,646', '< 10.5s'], 'Shopify DTC Store': ['$56,722', '$49,076', '$7,646', '< 10.5s'],
+      'b2b_saas': ['$8,940', '$5,110', '$3,830', '< 12.0s'], 'B2B SaaS Checkout': ['$8,940', '$5,110', '$3,830', '< 12.0s'],
+      'creator_checkout': ['$12,680', '$8,490', '$4,190', '< 9.5s'], 'Creator Checkout Flow': ['$12,680', '$8,490', '$4,190', '< 9.5s'],
+      'subscription_app': ['$31,200', '$18,900', '$12,300', '< 11.0s'], 'Subscription App Flow': ['$31,200', '$18,900', '$12,300', '< 11.0s'],
+      'enterprise_annual': ['$74,800', '$46,200', '$28,600', '< 14.0s'], 'Enterprise Annual Invoicing': ['$74,800', '$46,200', '$28,600', '< 14.0s']
     },
     presets: [
-      { key: 'shopify_dtc', label: 'Shopify' }, { key: 'b2b_saas', label: 'B2B SaaS' },
-      { key: 'creator_checkout', label: 'Creator' }, { key: 'subscription_app', label: 'Sub App' }, { key: 'enterprise_annual', label: 'Enterprise' }
+      { key: 'Shopify DTC Store', label: 'Shopify DTC' }, { key: 'B2B SaaS Checkout', label: 'B2B SaaS' },
+      { key: 'Creator Checkout Flow', label: 'Creator Store' }, { key: 'Subscription App Flow', label: 'Sub App' }, { key: 'Enterprise Annual Invoicing', label: 'Enterprise' }
     ],
     coMarketingPills: [
       { key: 'stripe', label: 'Stripe Billing', rowText: 'Stripe Decline Alert: Naive 24h cron retries on insufficient_funds burn 4-retry Visa limits before balances clear.' },
