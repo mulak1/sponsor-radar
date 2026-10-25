@@ -400,10 +400,11 @@ app.get('/', (req, res) => {
   `).all();
   const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY est_monthly_spend DESC').all();
   const pubQuery = String(req.query.pub || '').trim();
-  const initialQuery = String(req.query.q || req.query.brand || req.query.show || pubQuery || 'Deel').trim() || 'Deel';
+  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Linear').trim() || 'Linear';
   const initialReach = Math.max(500, Number(req.query.reach) || 75000);
   const defaultAnalysis = analyzeSponsorLookup(db, {
     query: initialQuery,
+    sender_show_name: pubQuery || 'Creator Media Network',
     sender_audience_size: initialReach
   });
 
@@ -437,8 +438,25 @@ app.get('/directory', (req, res) => {
 // Programmatic SEO Route (/seo/:slug)
 app.get('/seo/:slug', (req, res) => {
   const slug = String(req.params.slug || '').trim();
-  const page = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
+  let page = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
   if (!page) {
+    const cleanCand = slug.toLowerCase().replace(/[^a-z0-9-_]/g, '');
+    const allSeo = db.prepare('SELECT slug FROM seo_pages').all();
+    const candTokens = cleanCand.split('-').filter(t => t.length >= 2);
+    const firstToken = candTokens[0] || '';
+    let bestSlug = null;
+    let bestScore = 0;
+    for (const row of allSeo) {
+      const rSlug = String(row.slug || '').toLowerCase();
+      if (rSlug.startsWith(cleanCand) || cleanCand.startsWith(rSlug)) { bestSlug = row.slug; break; }
+      const rTokens = rSlug.split('-');
+      let score = (firstToken && rTokens[0] === firstToken) ? 5 : 0;
+      for (const t of candTokens) {
+        if (rTokens.includes(t) || rSlug.includes(t)) score += 2;
+      }
+      if (score > bestScore && score >= 4) { bestScore = score; bestSlug = row.slug; }
+    }
+    if (bestSlug) return res.redirect(301, `/seo/${bestSlug}`);
     return res.status(404).send(renderNotFoundPage(req.originalUrl));
   }
 

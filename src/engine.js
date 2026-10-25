@@ -353,6 +353,14 @@ function analyzeSponsorLookup(db, payload = {}) {
     senderNiche: show ? show.niche : brand.category
   });
 
+  const moneyballBundle = generateMoneyballLookalikeBundle({
+    targetShowName: show ? show.name : (activePlacements[0] && activePlacements[0].show_name) || "Lenny's Podcast",
+    baseCpm: matchedType === 'show' && show ? show.base_cpm : brand.avg_cpm,
+    rackRateUsd: matchedType === 'show' && show ? (show.midroll_rate_usd || 9500) : Math.max(4500, Math.round(((activePlacements[0] && activePlacements[0].audience_size) || 180000) / 1000 * (brand.avg_cpm || 45))),
+    category: show ? show.niche : brand.category,
+    placements: activePlacements
+  });
+
   const safeBrand = {
     ...brand,
     sponsor_email: maskSponsorEmail(brand.sponsor_email)
@@ -396,7 +404,8 @@ function analyzeSponsorLookup(db, payload = {}) {
     },
     placements: activePlacements,
     show_placements: showPlacements,
-    outbound_pitch: pitch
+    outbound_pitch: pitch,
+    moneyball_bundle: moneyballBundle
   };
 }
 

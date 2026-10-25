@@ -106,7 +106,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       --shadow-subtle: 0 4px 14px rgba(24, 20, 16, 0.04);
       --font-serif: 'Newsreader', Georgia, serif;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html {
@@ -322,7 +322,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       background: var(--bg-surface);
       border: 1px solid var(--border-hairline);
       border-radius: 16px;
-      box-shadow: var(--shadow-editorial);
+      box-shadow: none;
       max-width: 100%;
     }
     .double-bezel {
@@ -332,7 +332,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       border: 1px solid var(--border-hairline);
     }
     .panel-header {
-      padding: 16px 20px;
+      padding: 14px 20px;
       border-bottom: 1px solid var(--border-hairline);
       background: var(--bg-elevated);
       border-top-left-radius: 15px;
@@ -429,40 +429,40 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     /* Editorial Hero Section */
     .hero-section {
-      padding: 44px 0 40px;
+      padding: 36px 0 36px;
       border-bottom: 1px solid var(--border-hairline);
-      background: radial-gradient(circle at 85% 12%, rgba(232, 78, 54, 0.05), transparent 45%);
+      background: var(--bg-canvas);
     }
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: 24px;
     }
     .hero-grid > *, .two-col-grid > *, .pricing-grid > *, .lookup-form-grid > * {
       min-width: 0;
     }
     @media (min-width: 1024px) {
       .hero-grid {
-        grid-template-columns: 5fr 7fr;
-        align-items: start;
+        grid-template-columns: 6fr 6fr;
+        align-items: stretch;
       }
     }
     .headline-xl {
       font-family: var(--font-serif);
-      font-size: clamp(32px, 4.1vw, 52px);
+      font-size: clamp(30px, 3.3vw, 44px);
       font-weight: 600;
       letter-spacing: -0.025em;
-      line-height: 1.1;
-      margin: 14px 0;
+      line-height: 1.12;
+      margin: 10px 0 12px;
       color: var(--text-primary);
       text-wrap: balance;
     }
     .subhead {
       color: var(--text-secondary);
-      font-size: 16.5px;
-      max-width: 60ch;
-      margin-bottom: 20px;
-      line-height: 1.65;
+      font-size: 16px;
+      max-width: 58ch;
+      margin-bottom: 16px;
+      line-height: 1.6;
     }
     @media (max-width: 767px) {
       .ticker-bar { display: none; }
@@ -561,8 +561,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .pitch-box {
       background: var(--emerald-soft);
       border: 1px solid var(--emerald-border);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 20px 22px;
       margin-top: 16px;
     }
     .pitch-pre {
@@ -570,14 +570,15 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       word-break: break-word;
       font-family: var(--font-mono);
       font-size: 13.5px;
+      line-height: 1.65;
       color: var(--text-primary);
       background: var(--bg-surface);
       border: 1px solid var(--border-hairline);
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 10px;
-      max-height: 250px;
-      overflow-y: auto;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 12px;
+      max-height: none;
+      overflow: visible;
     }
 
     /* Pricing Grid */
@@ -660,14 +661,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </a>
       <nav class="nav-links" aria-label="Primary Navigation">
         <a href="/#radar-tool">Spend Radar</a>
-        <a href="/leaderboard" style="font-weight:700;color:var(--vermilion);">🏆 Leaderboard</a>
-        <a href="/directory">60+ Spend Reports</a>
+        <a href="/leaderboard" style="font-weight:700;color:var(--vermilion);">Leaderboard</a>
+        <a href="/directory">Spend Directory</a>
         <a href="/#pricing">Pricing</a>
       </nav>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <a href="/#radar-results-container" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
-          <span>Check Live Spend Ledger</span>
-          <span class="btn-icon-circle" aria-hidden="true">↓</span>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="/buy/flash_pass?source=header_nav" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:9px 18px; min-height:40px; font-size:13.5px; text-decoration:none;">
+          <span>Unlock Sponsor Pack ($1.99) →</span>
         </a>
       </div>
     </div>

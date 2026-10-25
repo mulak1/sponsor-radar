@@ -79,11 +79,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div class="two-col-grid">
         <div class="panel">
           <div class="panel-header"><span style="font-weight:800;">All ${brands.length} Indexed Sponsor Brands</span></div>
-          <div class="panel-body" style="max-height:380px; overflow-y:auto;">
+          <div class="panel-body">
             ${brands.map(b => {
               const bSeo = brandSlugMap.get(b.slug);
               return `
-              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-hairline); font-size:13px; gap:8px; flex-wrap:wrap;">
+              <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-hairline); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>${bSeo ? `<a href="/seo/${escapeHtml(bSeo)}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(b.name)}</a>` : `<strong>${escapeHtml(b.name)}</strong>`} <span style="color:var(--text-muted);">(${escapeHtml(b.domain)})</span></span>
                 <span class="mono" style="color:var(--amber-gold); font-weight:700;">$${(b.est_monthly_spend / 1000).toFixed(0)}K/mo • ${b.renewal_rate_pct}% 3x</span>
               </div>
@@ -93,7 +93,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         </div>
         <div class="panel">
           <div class="panel-header"><span style="font-weight:800;">All ${shows.length} Indexed Podcasts, Newsletters &amp; YouTube Shows</span></div>
-          <div class="panel-body" style="max-height:380px; overflow-y:auto;">
+          <div class="panel-body">
             ${shows.map(s => {
               const sSeo = showSlugMap.get(s.slug);
               return `
@@ -280,16 +280,16 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         const sampleMailto = outboundPitch ? outboundPitch.mailto_href || 'mailto:partnerships@drinkag1.com' : 'mailto:partnerships@drinkag1.com';
         const sampleBuyerEmail = outboundPitch ? outboundPitch.unmasked_sample_email || 'partnerships@drinkag1.com' : 'partnerships@drinkag1.com';
         return outboundPitch ? `
-      <div class="pitch-box" data-ui="true" style="margin-bottom:28px; background:var(--bg-surface); border:1px solid var(--border-strong); color:var(--text-primary); padding:20px; border-radius:16px; box-shadow:var(--shadow-editorial);">
+      <div class="pitch-box" data-ui="true" style="margin-bottom:28px; background:var(--bg-surface); border:1px solid var(--border-strong); color:var(--text-primary); padding:20px; border-radius:16px;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border-hairline);">
           <div style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center;">
-            <span class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">Select Your Mode (Option E Engine):</span>
-            <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type === 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">Brand Media Buyer (Moneyball Budget Slider &amp; Rep Pack)</button>
-            <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type !== 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">Creator Pitching Sponsors (1-Click R.O.P.E. Pitch + .EML)</button>
+            <span class="mono" style="font-size:12.5px; color:var(--text-secondary); font-weight:700;">Choose Your View:</span>
+            <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:7px 14px; border-radius:999px; font-size:12.5px; font-weight:700; cursor:pointer; border:1px solid ${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type === 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">For Brand Media Buyers (Budget &amp; Lookalike Calculator)</button>
+            <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:7px 14px; border-radius:999px; font-size:12.5px; font-weight:700; cursor:pointer; border:1px solid ${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type !== 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">For Creators &amp; Shows (Ready-to-Send Sponsor Pitch)</button>
           </div>
           <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-            <a href="/buy/micro_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="padding:6px 12px; border-radius:999px; background:var(--emerald-soft); color:var(--emerald-roi); border:1px solid var(--emerald-roi); font-size:12px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center;">$1.00 Trial Campaign Pass (15 Brands)</a>
-            <a href="/buy/flash_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:6px 14px; min-height:34px; font-size:12.5px; text-decoration:none;">
+            <a href="/buy/micro_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="padding:7px 13px; border-radius:999px; background:var(--emerald-soft); color:var(--emerald-roi); border:1px solid var(--emerald-roi); font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center;">$1.00 Trial Campaign Pass (15 Brands)</a>
+            <a href="/buy/flash_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:12.5px; text-decoration:none;">
               <span>Unlock Full 85-Brand Vault ($1.99 Express)</span>
             </a>
           </div>
@@ -415,7 +415,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
       <!-- FAQ Section -->
       <div class="panel" style="margin-bottom:28px;">
-        <div class="panel-header"><span style="font-weight:800;">Frequently Asked Questions (Structured JSON-LD FAQPage)</span></div>
+        <div class="panel-header"><span style="font-weight:800;">Frequently Asked Questions</span></div>
         <div class="panel-body" style="display:flex; flex-direction:column; gap:16px;">
           ${faqItems.map(item => `
             <div>

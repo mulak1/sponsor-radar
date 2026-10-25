@@ -355,14 +355,21 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     if (req.method === 'GET' && req.path.startsWith('/seo/') && !req.path.endsWith('.md')) {
       let rawTail = req.path.slice(5);
       try { rawTail = decodeURIComponent(rawTail); } catch (_) {}
-      const entries = getEntries();
-      const exact = entries.find((e) => e.slug === rawTail);
-      if (!exact) {
-        const cleanCand = rawTail.split(/[\]\(\s"'<>.,;]/)[0].replace(/[^a-zA-Z0-9-_]/g, '').toLowerCase();
-        if (cleanCand) {
-          const matched = entries.find((e) => e.slug === cleanCand || e.slug.startsWith(cleanCand) || cleanCand.startsWith(e.slug));
-          if (matched) return res.redirect(301, `/seo/${matched.slug}`);
+      const entries = getEntries(), exact = entries.find((e) => e.slug === rawTail);
+      const cleanCand = rawTail.split(/[\]\(\s"'<>.,;]/)[0].replace(/[^a-zA-Z0-9-_]/g, '').toLowerCase();
+      if (!exact && cleanCand) {
+        let matched = entries.find((e) => e.slug === cleanCand || e.slug.startsWith(cleanCand) || cleanCand.startsWith(e.slug));
+        if (!matched) {
+          const candTokens = cleanCand.split('-').filter((t) => t.length >= 2), firstToken = candTokens[0] || '';
+          let bestScore = 0;
+          for (const e of entries) {
+            const eSlug = String(e.slug || '').toLowerCase(), eTokens = eSlug.split('-');
+            let score = (firstToken && eTokens[0] === firstToken) ? 5 : 0;
+            for (const t of candTokens) { if (eTokens.includes(t) || eSlug.includes(t)) score += 2; }
+            if (score > bestScore && score >= 4) { bestScore = score; matched = e; }
+          }
         }
+        if (matched) return res.redirect(301, `/seo/${matched.slug}`);
       }
     }
     next();
@@ -974,19 +981,9 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
     `<!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526471751"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18526471751');</script>`
   ].filter(Boolean).join('\n  ');
 
-  if (out.includes('</head>')) {
-    out = out.replace('</head>', () => `  ${headLinks}\n</head>`);
-  }
+  if (out.includes('</head>')) out = out.replace('</head>', () => `  ${headLinks}\n</head>`);
   return out;
 }
 
-module.exports = {
-  AI_CRAWLER_AGENTS,
-  CRAWLER_UA_REGEX,
-  loadVerticalSeoCatalog,
-  attachUniversalSeoAndAiRoutes,
-  buildTopLeaderboardPodiumShowcaseHtml,
-  buildMobileSeoCrawlMeshHtml,
-  enhanceHtmlForSearchAndAiBots
-};
+module.exports = { AI_CRAWLER_AGENTS, CRAWLER_UA_REGEX, loadVerticalSeoCatalog, attachUniversalSeoAndAiRoutes, buildTopLeaderboardPodiumShowcaseHtml, buildMobileSeoCrawlMeshHtml, enhanceHtmlForSearchAndAiBots };
 

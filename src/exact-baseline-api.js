@@ -892,14 +892,15 @@ function attachExactBaselinePack(app, options = {}) {
   async function handleTierCheckout(req, res) {
     const rawTier = String(req.params?.tier || req.query?.tier || req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
     const isMicro = rawTier.includes('micro') || rawTier.includes('099') || rawTier.includes('99c');
-    const isFlash = !isMicro && (rawTier.includes('flash') || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
-    const isPlaybook = !isMicro && !isFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
-    const isPro = !isMicro && !isFlash && !isPlaybook && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
-    const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd)));
-    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier')));
+    const isFlash = !isMicro && (rawTier.includes('flash') && !rawTier.includes('upgrade') || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
+    const isUpgradeFlash = !isMicro && !isFlash && (rawTier.includes('upgrade_from_flash') || rawTier.includes('2701'));
+    const isPlaybook = !isMicro && !isFlash && !isUpgradeFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
+    const isPro = !isMicro && !isFlash && !isUpgradeFlash && !isPlaybook && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
+    const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isUpgradeFlash ? 27.01 : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd))));
+    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'))));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
-    const priceId = isMicro ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
-    const isOneTime = isMicro || isFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
+    const priceId = (isMicro || isUpgradeFlash) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
+    const isOneTime = isMicro || isFlash || isUpgradeFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
 
     const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     const vid = String(req.body?.vid || req.query?.vid || (String(req.headers.cookie || '').match(/vs_vid=([^;]+)/) || [])[1] || '');
@@ -918,14 +919,10 @@ function attachExactBaselinePack(app, options = {}) {
 
     store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid } });
 
-    const baseUrl = `https://${cfg.domain}`;
-    let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`;
-    let sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
-    const stripeKey = process.env.STRIPE_SECRET_KEY || '';
-    const targetPrefix = rawTarget ? `${rawTarget} — ` : '';
-    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? 'Instant 15-Brand Campaign & Lookalike Pass ($1 Trial)' : (isFlash ? `${cfg.freeDeliverableName || 'Full 85-Brand Vault & .EML Pack'} ($1.99)` : (isPlaybook ? 'CFO Moneyball Media Plan & Agency Rep Vault ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel)))}`;
-    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack';
-    const prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`;
+    const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} — ` : '';
+    let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
+    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? 'Instant 15-Brand Campaign & Lookalike Pass ($1 Trial)' : (isFlash ? `${cfg.freeDeliverableName || 'Full 85-Brand Vault & .EML Pack'} ($1.99)` : (isUpgradeFlash ? 'CFO Moneyball Media Plan & Agency Rep Vault ($27.01 — $1.99 Pass Credit Applied)' : (isPlaybook ? 'CFO Moneyball Media Plan & Agency Rep Vault ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel))))}`;
+    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`;
 
     const buildInlineParams = () => {
       const p = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&target=${encodeURIComponent(rawTarget)}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}&target=${encodeURIComponent(rawTarget)}`, 'mode': isOneTime ? 'payment' : 'subscription', 'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)), 'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][price_data][product_data][description]': prodDesc, 'line_items[0][quantity]': '1', 'custom_text[submit][message]': `Instant browser redirect: your ${filesList} download automatically the second payment completes.`, 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[target]': rawTarget, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
