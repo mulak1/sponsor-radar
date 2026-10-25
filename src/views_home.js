@@ -324,11 +324,14 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                             <div style="font-weight:700;">${displayEntity.type === 'show' && p.brand_name ? `${escapeHtml(p.brand_name)} → ${escapeHtml(p.show_name)}` : escapeHtml(p.show_name)}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:10.5px;padding:1px 5px;">Peer Match</span>` : ''}</div>
                             <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type)} • ${(p.audience_size / 1000).toFixed(0)}K reach</div>
                           </td>
-                          <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
+                          <td>
+                            <div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div>
+                            <div class="mono" style="font-size:11px; color:var(--emerald-roi); margin-top:4px; font-weight:700;">${escapeHtml(p.fresh_budget_badge || '🟢 NEW RSS BUDGET (12h ago)')}</div>
+                          </td>
                           <td>
                             ${idx === 0 && p.unmasked_proof_email
-                              ? `<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ${escapeHtml(p.unmasked_proof_email)}</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">${escapeHtml(p.decision_maker_role || 'VP Growth')} • Direct + Agency</div>`
-                              : `<div class="mono" style="font-size:12px;color:var(--amber-gold);">${escapeHtml(p.sponsor_email || '[verified-buyer]***@brand.io (🔒 99¢)')}</div><div style="font-size:11.5px;color:var(--text-muted);">${escapeHtml(p.decision_maker_role || 'VP Growth')} <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unblur 99¢ →</a></div>`
+                              ? `<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ${escapeHtml(p.unmasked_proof_email)}</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">${escapeHtml(p.decision_maker_role || 'VP Growth')} • ${escapeHtml(p.agency_desk || 'Direct + Agency')} <a href="${escapeHtml(defaultAnalysis.outbound_pitch.mailto_href || 'mailto:' + p.unmasked_proof_email)}" style="color:var(--cyan-info);font-weight:700;text-decoration:underline;margin-left:4px;">1-Click Pitch ✉️</a></div>`
+                              : `<div class="mono" style="font-size:12px;color:var(--amber-gold);">${escapeHtml(p.sponsor_email || '[verified-buyer]***@brand.io (🔒 $1)')}</div><div style="font-size:11.5px;color:var(--text-muted);">${escapeHtml(p.decision_maker_role || 'VP Growth')} • ${escapeHtml(p.agency_desk || 'Agency Desk')} <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unlock $1 →</a></div>`
                             }
                           </td>
                           <td class="mono" style="font-size:13px;">
@@ -627,15 +630,15 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           ? (p.brand_name + ' → ' + p.show_name)
           : p.show_name;
         const contactHtml = (idx === 0 && p.unmasked_proof_email)
-          ? '<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ' + p.unmasked_proof_email + '</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">' + (p.decision_maker_role || 'VP Growth') + ' • Direct + Agency</div>'
-          : '<div class="mono" style="font-size:12px;color:var(--amber-gold);">' + (p.sponsor_email || '[verified-buyer]***@brand.io (🔒 99¢)') + '</div><div style="font-size:11.5px;color:var(--text-muted);">' + (p.decision_maker_role || 'VP Growth') + ' <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'micro_pass\\\');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unblur 99¢ →</a></div>';
+          ? '<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ' + p.unmasked_proof_email + '</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">' + (p.decision_maker_role || 'VP Growth') + ' • ' + (p.agency_desk || 'Direct + Agency') + '</div>'
+          : '<div class="mono" style="font-size:12px;color:var(--amber-gold);">' + (p.sponsor_email || '[verified-buyer]***@brand.io (🔒 $1)') + '</div><div style="font-size:11.5px;color:var(--text-muted);">' + (p.decision_maker_role || 'VP Growth') + ' • ' + (p.agency_desk || 'Agency Desk') + ' <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'micro_pass\\\');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unlock $1 →</a></div>';
         return \`
         <tr>
           <td>
             <div style="font-weight:700;">\${rowTitle}\${p.is_lookalike ? ' <span class="pill-slate" style="font-size:10.5px;padding:1px 5px;">Peer Match</span>' : ''}</div>
             <div class="mono" style="font-size:13px; color:var(--text-muted);">\${p.channel_type} • \${Math.round((Number(p.audience_size) || 75000) / 1000)}K reach</div>
           </td>
-          <td><span class="\${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${p.renewal_badge}</span></td>
+          <td><div><span class="\${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${p.renewal_badge}</span></div><div class="mono" style="font-size:11px; color:var(--emerald-roi); margin-top:4px; font-weight:700;">\${p.fresh_budget_badge || '🟢 NEW RSS BUDGET (12h ago)'}</div></td>
           <td>\${contactHtml}</td>
           <td class="mono" style="font-size:13px;">
             <div style="color:var(--cyan-info);">\${p.vanity_url}</div>

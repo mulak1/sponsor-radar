@@ -922,7 +922,7 @@ function attachExactBaselinePack(app, options = {}) {
     let sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
     const stripeKey = process.env.STRIPE_SECRET_KEY || '';
     const targetPrefix = rawTarget ? `${rawTarget} — ` : '';
-    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? 'Single-File Instant Export Pass (99¢)' : (isFlash ? `${cfg.freeDeliverableName || '3-File Instant Export Pack'} ($1.99)` : (isPlaybook ? 'Founder Stripe Recovery Audit & Dunning Playbook ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel)))}`;
+    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? 'Instant 15-Brand Campaign & Lookalike Pass ($1 Trial)' : (isFlash ? `${cfg.freeDeliverableName || 'Full 85-Brand Vault & .EML Pack'} ($1.99)` : (isPlaybook ? 'CFO Moneyball Media Plan & Agency Rep Vault ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel)))}`;
     const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack';
     const prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`;
 
