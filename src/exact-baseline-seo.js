@@ -285,11 +285,15 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   const hostUrl = `https://${cfg.domain}`;
   const todayIso = new Date().toISOString().split('T')[0];
 
-  // 1. Universal 27-Bot AI & Search Crawler /robots.txt
+  // 1. Universal 27-Bot AI & Search Crawler /robots.txt + Zero-404 Favicon Handler
+  app.get(['/favicon.ico', '/favicon.svg', '/apple-touch-icon.png', '/apple-touch-icon-precomposed.png'], (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex'); res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.status(200).type('image/svg+xml; charset=utf-8').send(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${cfg.theme?.brandPrimary || '#0F172A'}"/><text x="32" y="43" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,sans-serif" font-size="32" font-weight="800">${escXml((cfg.brandName || 'A')[0])}</text></svg>`);
+  });
   app.get('/robots.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_robots', pageUrl: '/robots.txt', isTest, isCrawler });
-    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /scan/\nAllow: /leaderboard\nAllow: /tools/\nAllow: /compare/\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /openapi.json\n`).join('\n');
+    const botStanzas = AI_CRAWLER_AGENTS.map((bot) => `User-agent: ${bot}\nAllow: /\nAllow: /seo/\nAllow: /scan/\nAllow: /leaderboard\nAllow: /tools/\nAllow: /compare/\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /openapi.json\nDisallow: /buy/\nDisallow: /api/buy/\n`).join('\n');
     const txt = [
       'User-agent: *',
       'Allow: /',
@@ -310,14 +314,14 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       'Allow: /index.md',
       'Allow: /feed.xml',
       'Allow: /feed.json',
+      'Disallow: /buy/',
+      'Disallow: /api/buy/',
       '',
       botStanzas,
       `Host: ${cfg.domain}`,
       `Sitemap: ${hostUrl}/sitemap-index.xml`,
       `Sitemap: ${hostUrl}/sitemap.xml`,
-      `Sitemap: ${hostUrl}/sitemap-scans.xml`,
-      `Sitemap: ${hostUrl}/sitemap-images.xml`,
-      `Sitemap: ${hostUrl}/feed.xml`
+      `Sitemap: ${hostUrl}/sitemap-scans.xml`
     ].join('\n');
     res.status(200).type('text/plain; charset=utf-8').send(txt);
   });
@@ -343,6 +347,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: '/index.md', isTest, isCrawler });
     res.setHeader('X-Robots-Tag', 'all, index, follow');
+    res.setHeader('Link', `<${hostUrl}/>; rel="canonical"`);
     res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), 'index'));
   });
 
@@ -367,10 +372,11 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, isTest, isCrawler });
     res.setHeader('X-Robots-Tag', 'all, index, follow');
+    res.setHeader('Link', `<${hostUrl}/seo/${encodeURIComponent(req.params.slug)}>; rel="canonical"`);
     res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), req.params.slug));
   });
 
-  // 3. ekalinin/sitemap.js Segmented & Image-Enriched XML Sitemaps
+  // 3. ekalinin/sitemap.js Segmented & Image-Enriched XML Sitemaps (strictly canonical 200 OK HTML URLs)
   const buildSitemapXml = (entries, includeStatic = true) => {
     const g = getGrowthConfig(cfg.moduleId);
     const growthUrls = includeStatic ? [
@@ -383,9 +389,6 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       { loc: `${hostUrl}/leaderboard`, priority: '0.95', changefreq: 'daily', img: `${hostUrl}/api/og?slug=leaderboard`, title: `${cfg.brandName}: Public Hall of Fame & Wall of Shame Leaderboard` },
       { loc: `${hostUrl}/directory`, priority: '0.9', changefreq: 'daily', img: `${hostUrl}/api/og?slug=directory`, title: `${cfg.brandName}: Full 60+ Benchmark Directory` },
       { loc: `${hostUrl}/lp`, priority: '0.8', changefreq: 'weekly', img: `${hostUrl}/api/og?slug=lp`, title: `${cfg.brandName}: Direct Audit` },
-      { loc: `${hostUrl}/llms.txt`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${hostUrl}/llms-full.txt`, priority: '0.9', changefreq: 'daily' },
-      { loc: `${hostUrl}/openapi.json`, priority: '0.8', changefreq: 'weekly' },
       { loc: `${hostUrl}/dossier/sample`, priority: '0.8', changefreq: 'weekly' },
       ...growthUrls
     ] : [];
@@ -407,7 +410,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
   };
 
   app.get('/sitemap-index.xml', (req, res) => {
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${hostUrl}/sitemap.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-pages.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-seo.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-scans.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-images.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n</sitemapindex>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${hostUrl}/sitemap-pages.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-seo.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n  <sitemap><loc>${hostUrl}/sitemap-scans.xml</loc><lastmod>${todayIso}</lastmod></sitemap>\n</sitemapindex>`;
     res.status(200).type('application/xml; charset=utf-8').send(xml);
   });
   app.get('/sitemap.xml', (req, res) => {
@@ -848,18 +851,26 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const t = cfg.theme;
   const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
   if (entries.length === 0) return '';
-  const pillsHtml = entries.map((item) => {
-    const active = reqPath === `/seo/${item.slug}`;
-    return `<a href="/seo/${escHtml(item.slug)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.category).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:13px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.35;"><span>${escHtml(item.title)}</span></a>`;
+  const gCfg = getGrowthConfig(cfg.moduleId);
+  const scanItems = loadPublicScanLedger(cfg).slice(0, 10).map((s) => ({ href: `/scan/${encodeURIComponent(s.target)}`, title: `${s.target} (${s.grade})`, cat: 'public-scan' }));
+  const growthItems = [
+    ...gCfg.tools.map((x) => ({ href: `/tools/${x.slug}`, title: x.title, cat: 'interactive-tool' })),
+    ...gCfg.comparisons.map((x) => ({ href: `/compare/${x.slug}`, title: x.title, cat: 'comparison' })),
+    ...scanItems,
+    ...entries.map((item) => ({ href: `/seo/${item.slug}`, title: item.title, cat: item.category || 'guide' }))
+  ];
+  const pillsHtml = growthItems.map((item) => {
+    const active = reqPath === item.href;
+    return `<a href="${escHtml(item.href)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.cat).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;background:${active ? t.brandSoftBg : t.surfaceBg};color:${active ? t.brandPrimary : t.textPrimary};border:1px solid ${active ? t.accentBorder : t.border};font-size:13px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.35;"><span>${escHtml(item.title)}</span></a>`;
   }).join('');
 
-  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${entries.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
+  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${growthItems.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};border:1px solid ${t.border};">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
       <div>
-        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">✦ Complete ${entries.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
-        <div style="font-size:13.5px;color:${t.textSecondary};">1-click access to all ${entries.length} verified guides, <a href="/leaderboard" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">Public Leaderboard</a>, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:${t.brandPrimary};">✦ Complete ${growthItems.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh</div>
+        <div style="font-size:13.5px;color:${t.textSecondary};">1-click access to all ${growthItems.length} verified guides, interactive tools, comparisons, <a href="/leaderboard" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">Public Leaderboard</a>, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
       </div>
-      <input type="search" id="eb-mesh-filter-input" aria-label="Filter ${entries.length} benchmark guides" placeholder="Filter ${entries.length} guides by keyword..." oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:7px 12px;border-radius:8px;border:1px solid ${t.border};background:${t.surfaceBg};color:${t.textPrimary};font-size:13.5px;min-width:220px;" />
+      <input type="search" id="eb-mesh-filter-input" aria-label="Filter ${growthItems.length} benchmark guides" placeholder="Filter ${growthItems.length} guides by keyword..." oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:7px 12px;border-radius:8px;border:1px solid ${t.border};background:${t.surfaceBg};color:${t.textPrimary};font-size:13.5px;min-width:220px;" />
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow-y:auto;padding:2px;">${pillsHtml}</div>
   </nav>`;
@@ -952,14 +963,15 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
 
   const headLinks = [
     '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />',
-    '' /* PWA prompt disabled */,
+    !/rel=["']canonical["']/i.test(out) ? `<link rel="canonical" href="${canonicalUrl}" />` : '',
     !out.includes('rel="apple-touch-icon"') ? '<link rel="apple-touch-icon" href="/favicon.svg" />' : '',
     `<link rel="alternate" type="application/rss+xml" title="${escHtml(cfg.brandName)} RSS 2.0 Feed" href="${hostUrl}/feed.xml" />`,
     `<link rel="alternate" type="application/feed+json" title="${escHtml(cfg.brandName)} JSON Feed" href="${hostUrl}/feed.json" />`,
     `<link rel="alternate" type="text/markdown" title="${escHtml(cfg.brandName)} LLM Manifest (llms.txt)" href="${hostUrl}/llms.txt" />`,
     `<link rel="alternate" type="text/markdown" title="Markdown Twin (.md)" href="${hostUrl}${mdTwinPath}" />`,
     `<link rel="alternate" type="application/json+oembed" title="${escHtml(cfg.brandName)} oEmbed" href="${hostUrl}/api/oembed?url=${encodeURIComponent(canonicalUrl)}&amp;format=json" />`,
-    `<script id="eb-schema-dts-graph" type="application/ld+json">${JSON.stringify(schemaGraph)}</script>`
+    `<script id="eb-schema-dts-graph" type="application/ld+json">${JSON.stringify(schemaGraph)}</script>`,
+    `<!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526471751"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-18526471751');</script>`
   ].filter(Boolean).join('\n  ');
 
   if (out.includes('</head>')) {
