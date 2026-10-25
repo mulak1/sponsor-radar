@@ -215,7 +215,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <a href="/" style="color:${escXml(t.textSecondary)};text-decoration:none;">Home Calculator</a>
       <a href="/leaderboard" style="color:${escXml(t.textSecondary)};text-decoration:none;">🏆 Leaderboard</a>
       <a href="/directory" style="color:${escXml(t.textSecondary)};text-decoration:none;">All Guides</a>
-      <a href="/buy/flash_pass" style="padding:8px 16px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
+      <a href="/buy/flash_pass" rel="nofollow" style="padding:8px 16px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
     </nav>
   </header>
   <main style="max-width:1240px;margin:0 auto;padding:24px;">
@@ -250,7 +250,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
           <button id="eb-growth-row4-btn" type="button">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/flash_pass" style="padding:8px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 12px rgba(15,23,42,0.12);">Unlock Complete 3-File Action Pack ($1.99 Stripe Express) ↗</a>
+          <a href="/buy/flash_pass" rel="nofollow" style="padding:8px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 12px rgba(15,23,42,0.12);">Unlock Complete 3-File Action Pack ($1.99 Stripe Express) ↗</a>
         </div>
       </div>
     </section>
