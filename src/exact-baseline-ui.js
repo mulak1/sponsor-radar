@@ -80,7 +80,7 @@ function buildExactBaselineStyles(cfg) {
   #tripwire-upsell-box { display: none; margin-top: 8px; padding: 9px 13px; border-radius: 8px; background: ${t.safeSoftBg}; color: ${t.textPrimary}; border: 1px solid ${t.safeBorder}; font-size: 13px; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   #sticky-mobile-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 9990; display: flex !important; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 20px; background: ${t.dockBg}; backdrop-filter: blur(14px); border-top: 1px solid ${t.border}; color: ${t.textPrimary}; box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.05); font-family: ${t.fontSans}; transform: translateY(120%); opacity: 0; pointer-events: none; transition: transform 250ms ease, opacity 250ms ease; }
   #sticky-mobile-bar.eb-dock-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  #eb-sticky-email-form, #btn-sticky-micro-unlock, #eb-save-scorecard-bar, #btn-curtain-micro-pass, #btn-copy-readme-badge, #btn-nuqs-share-url, #btn-popover-micro-pass, #eb-popover-scorecard-form, #btn-toast-micro-pass { display: none !important; }
+  #eb-sticky-email-form, #btn-sticky-micro-unlock, #btn-copy-readme-badge, #btn-nuqs-share-url { display: none !important; }
   #stickyDock { display: none !important; }
   #eb-ouibounce-toast { display: none; position: fixed; bottom: 62px; right: 16px; max-width: 350px; z-index: 9991; background: ${t.cardBg}; color: ${t.textPrimary}; border: 1.5px solid ${t.accentBorder}; border-radius: 14px; padding: 15px; box-shadow: 0 18px 38px rgba(15, 23, 42, 0.14); font-family: ${t.fontSans}; }
   #eb-cmdk-modal { display: none; position: fixed; inset: 0; z-index: 9995; background: rgba(15, 23, 42, 0.35); backdrop-filter: blur(4px); align-items: flex-start; justify-content: center; padding-top: 70px; font-family: ${t.fontSans}; }
@@ -324,6 +324,7 @@ function buildClientRuntimeScript(cfg) {
     window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); return false; });
     window.__ebVid = localStorage.getItem('vs_vid') || ('v_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36));
     localStorage.setItem('vs_vid', window.__ebVid);
+    document.cookie = 'vs_vid=' + window.__ebVid + '; Path=/; Max-Age=31536000; SameSite=Lax';
     window.__ebSid = sessionStorage.getItem('vs_sid') || ('s_' + Math.random().toString(36).slice(2, 10));
     sessionStorage.setItem('vs_sid', window.__ebSid);
   } catch (_) { window.__ebVid = 'v_anon'; window.__ebSid = 's_anon'; }
@@ -468,14 +469,7 @@ function buildClientRuntimeScript(cfg) {
   window.__ebMountDeliverableCurtain = function(entityOverride, customBadge, customDiagLine) {
     if (entityOverride) window.__ebActiveEntity = String(entityOverride);
     var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('walletConflicts') || document.getElementById('appleWalletCardPreview');
-    if (CFG.moduleId === 'sponsor_radar') {
-      var nd = document.getElementById('res-dm-email');
-      if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('***') === -1) {
-        nd.setAttribute('data-raw-email', nd.textContent);
-        var parts = nd.textContent.trim().split('@');
-        nd.textContent = (parts[0] ? parts[0].slice(0, 2) + '***@' + (parts[1] || 'brand.com').slice(0, 18) : 'p***@brand.com');
-      }
-    }
+    if (CFG.moduleId === 'sponsor_radar') { var nd = document.getElementById('res-dm-email'); if (nd && nd.textContent.indexOf('@') !== -1 && nd.textContent.indexOf('***') === -1) { nd.setAttribute('data-raw-email', nd.textContent); var parts = nd.textContent.trim().split('@'); nd.textContent = '[verified-buyer]***@' + (parts[1] || 'brand.com').slice(0, 18) + ' + Agency Desk'; } }
     var isPseoOrDir = window.location.pathname.indexOf('/seo/') === 0 || window.location.pathname.indexOf('/tools/') === 0 || window.location.pathname.indexOf('/compare/') === 0 || window.location.pathname === '/directory';
     var tbody = document.getElementById('prompt-matrix-tbody') || document.getElementById('res-placements-tbody') || document.querySelector('main table tbody, article table tbody');
     if (tbody && !window.__ebIsUnlocked) {
@@ -485,12 +479,7 @@ function buildClientRuntimeScript(cfg) {
           trs[r0].setAttribute('data-eb-live-row', String(r0 + 1)); trs[r0].title = 'Click row to benchmark & compile custom deliverable';
           var tdFirst = trs[r0].querySelector('td, th');
           if (tdFirst && !tdFirst.querySelector('.eb-row-sim-pill')) tdFirst.insertAdjacentHTML('beforeend', ' <span class="eb-row-sim-pill" style="display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;background:' + CFG.theme.brandSoftBg + ';color:' + CFG.theme.brandPrimary + ';border:1px solid ' + CFG.theme.accentBorder + ';font-size:13px;font-weight:700;white-space:nowrap;vertical-align:middle;">⚡ Sim</span>');
-          trs[r0].addEventListener('click', function(ev) {
-            if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return;
-            this.style.background = CFG.theme.brandSoftBg;
-            var td0 = this.querySelector('td, th'), ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : '';
-            if (ent) window.__ebCompileCustomCurtain(ent);
-          });
+          trs[r0].addEventListener('click', function(ev) { if (ev.target && ev.target.closest && ev.target.closest('a, button, input')) return; this.style.background = CFG.theme.brandSoftBg; var td0 = this.querySelector('td, th'), ent = td0 ? (td0.textContent || '').replace('⚡ Sim', '').trim().slice(0, 36) : ''; if (ent) window.__ebCompileCustomCurtain(ent); });
         }
       }
       for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
@@ -949,13 +938,22 @@ function buildClientRuntimeScript(cfg) {
     if (hostBtn) { try { hostBtn.click(); } catch (_) {} }
   };
   window.__ebCheckout = function(tier) {
-    var cleanTier = typeof tier === 'string' ? tier : 'flash_pass';
-    var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname, vid: window.__ebVid, sid: window.__ebSid };
-    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); window.location.href = targetUrl || ('/buy/' + encodeURIComponent(cleanTier)); }).catch(function(){ window.location.href = '/buy/' + encodeURIComponent(cleanTier); });
+    var cleanTier = typeof tier === 'string' ? tier : 'flash_pass', actTarget = window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
+    var emEl = document.getElementById('eb-inline-scorecard-email') || document.getElementById('eb-ouibounce-email'), emVal = emEl && emEl.value && emEl.value.indexOf('@') > 0 ? emEl.value.trim() : '';
+    var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname, vid: window.__ebVid, sid: window.__ebSid, target: actTarget, email: emVal };
+    var fbUrl = '/buy/' + encodeURIComponent(cleanTier) + '?vid=' + encodeURIComponent(window.__ebVid || '') + '&target=' + encodeURIComponent(actTarget || '');
+    origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); window.location.href = targetUrl || fbUrl; }).catch(function(){ window.location.href = fbUrl; });
   };
   var __ebBootAll = function() {
     if (!window.__ebHydratedSent) { window.__ebHydratedSent = true; window.__ebLogEvent('visit_hydrated', { vw: window.innerWidth || 0, vh: window.innerHeight || 0, ref: document.referrer || '' }); }
     window.__ebMountDeliverableCurtain();
+    if (window.location.search.indexOf('checkout=cancel') !== -1) {
+      window.__ebLogEvent('view_paywall', { target: 'stripe_cancel_return' });
+      var toast = document.getElementById('eb-ouibounce-toast'), tTitle = document.getElementById('eb-ouibounce-title'), tDesc = document.getElementById('eb-ouibounce-desc');
+      if (tTitle) tTitle.textContent = '✦ Hesitating on Checkout? Unlock Row #4 + Sample First';
+      if (tDesc) tDesc.innerHTML = 'Not ready for the full bundle? <strong>Enter your email to reveal Row #4 right now</strong>, or grab just <strong>1 Single File for 99¢</strong>:';
+      if (toast) toast.style.display = 'block';
+    }
     try { var sp = new URLSearchParams(window.location.search || ''), qp = sp.get('q') || sp.get('preset') || sp.get('domain') || sp.get('brand') || sp.get('active'), refRx = new RegExp('/(?:seo|tools|compare|scan)/([a-z0-9._-]+)', 'i'), refM = (!qp && window.location.pathname === '/' && document.referrer) ? document.referrer.match(refRx) : null; if (refM && refM[1]) { qp = decodeURIComponent(refM[1]).replace(new RegExp('-(?:sponsors-and-cpm-rates|ad-rates|layering|conflict|recovery|retry-schedule|ai-visibility-audit)$', 'i'), '').replace(new RegExp('^stripe-decline-code-', 'i'), '').replace(/-/g, ' '); var hostIn = document.querySelector('#lookup-query, #domain-input, #rawInciTextarea, #input-store, #eb-fuse-search-input'); if (hostIn && !hostIn.value) hostIn.value = qp; window.__ebLogEvent('calculate', { trigger: 'seo_referrer_carryover', query: qp }); } if (qp) setTimeout(function() { window.__ebCompileCustomCurtain(qp); }, 110); } catch (_) {}
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', __ebBootAll); else __ebBootAll();

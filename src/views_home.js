@@ -312,22 +312,24 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                       <tr>
                         <th>${displayEntity.type === 'show' ? 'Sponsor Brand → Show' : 'Show / Publication'}</th>
                         <th>Renewal Signal</th>
-                        <th>Placement &amp; Timestamp</th>
+                        <th>Buyer Contact &amp; Agency Desk</th>
                         <th>Vanity URL &amp; Code</th>
                         <th>Est. Spend</th>
                       </tr>
                     </thead>
                     <tbody id="res-placements-tbody">
-                      ${defaultAnalysis.placements.map(p => `
+                      ${defaultAnalysis.placements.map((p, idx) => `
                         <tr>
                           <td>
-                            <div style="font-weight:700;">${displayEntity.type === 'show' && p.brand_name ? `${escapeHtml(p.brand_name)} → ${escapeHtml(p.show_name)}` : escapeHtml(p.show_name)}</div>
+                            <div style="font-weight:700;">${displayEntity.type === 'show' && p.brand_name ? `${escapeHtml(p.brand_name)} → ${escapeHtml(p.show_name)}` : escapeHtml(p.show_name)}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:10.5px;padding:1px 5px;">Peer Match</span>` : ''}</div>
                             <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type)} • ${(p.audience_size / 1000).toFixed(0)}K reach</div>
                           </td>
                           <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
-                          <td class="mono" style="font-size:13px;">
-                            <div>${escapeHtml(p.slot_type)}</div>
-                            <div style="color:var(--text-muted);">${escapeHtml(p.timestamp_range)}</div>
+                          <td>
+                            ${idx === 0 && p.unmasked_proof_email
+                              ? `<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ${escapeHtml(p.unmasked_proof_email)}</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">${escapeHtml(p.decision_maker_role || 'VP Growth')} • Direct + Agency</div>`
+                              : `<div class="mono" style="font-size:12px;color:var(--amber-gold);">${escapeHtml(p.sponsor_email || '[verified-buyer]***@brand.io (🔒 99¢)')}</div><div style="font-size:11.5px;color:var(--text-muted);">${escapeHtml(p.decision_maker_role || 'VP Growth')} <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unblur 99¢ →</a></div>`
+                            }
                           </td>
                           <td class="mono" style="font-size:13px;">
                             <div style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</div>
@@ -620,21 +622,21 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       document.getElementById('res-table-title').textContent = entity.table_title;
 
       const tbody = document.getElementById('res-placements-tbody');
-      tbody.innerHTML = (data.placements || []).map(p => {
+      tbody.innerHTML = (data.placements || []).map((p, idx) => {
         const rowTitle = entity.type === 'show' && p.brand_name
           ? (p.brand_name + ' → ' + p.show_name)
           : p.show_name;
+        const contactHtml = (idx === 0 && p.unmasked_proof_email)
+          ? '<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ' + p.unmasked_proof_email + '</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">' + (p.decision_maker_role || 'VP Growth') + ' • Direct + Agency</div>'
+          : '<div class="mono" style="font-size:12px;color:var(--amber-gold);">' + (p.sponsor_email || '[verified-buyer]***@brand.io (🔒 99¢)') + '</div><div style="font-size:11.5px;color:var(--text-muted);">' + (p.decision_maker_role || 'VP Growth') + ' <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'micro_pass\\\');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unblur 99¢ →</a></div>';
         return \`
         <tr>
           <td>
-            <div style="font-weight:700;">\${rowTitle}</div>
+            <div style="font-weight:700;">\${rowTitle}\${p.is_lookalike ? ' <span class="pill-slate" style="font-size:10.5px;padding:1px 5px;">Peer Match</span>' : ''}</div>
             <div class="mono" style="font-size:13px; color:var(--text-muted);">\${p.channel_type} • \${Math.round((Number(p.audience_size) || 75000) / 1000)}K reach</div>
           </td>
           <td><span class="\${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${p.renewal_badge}</span></td>
-          <td class="mono" style="font-size:13px;">
-            <div>\${p.slot_type}</div>
-            <div style="color:var(--text-muted);">\${p.timestamp_range}</div>
-          </td>
+          <td>\${contactHtml}</td>
           <td class="mono" style="font-size:13px;">
             <div style="color:var(--cyan-info);">\${p.vanity_url}</div>
             <div>Code: <strong style="color:var(--amber-gold);">\${p.promo_code}</strong></div>
@@ -646,6 +648,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         </tr>
       \`;
       }).join('');
+      if (window.__ebMountDeliverableCurtain) window.__ebMountDeliverableCurtain(entity.name);
 
       if (data.outbound_pitch) {
         const reachK = Math.round((Number(senderReach) || 75000) / 1000);

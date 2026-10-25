@@ -2,10 +2,9 @@ const { computeRenewalScore, computeRenewalBadge, SAMPLE_TRANSCRIPTS } = require
 
 function maskSponsorEmail(email) {
   const raw = String(email || 'partnerships@brand.io').trim();
-  const [local, domain] = raw.split('@');
-  if (!domain) return 'pa***@brand.io (🔒 Locked — $1.99)';
-  const prefix = (local || 'pa').slice(0, 2);
-  return `${prefix}***@${domain} (🔒 Locked — $1.99 Pack)`;
+  const [, domain] = raw.split('@');
+  if (!domain) return '[verified-buyer]***@brand.io + Agency Desk (🔒 99¢ / $1.99)';
+  return `[verified-buyer]***@${domain} + Agency Desk (🔒 99¢ / $1.99)`;
 }
 
 function hashSeed(str) {
@@ -187,10 +186,30 @@ function analyzeSponsorLookup(db, payload = {}) {
       `).all(show.slug).map(r => ({ ...r, sponsor_email: maskSponsorEmail(r.sponsor_email) }))
     : [];
 
-  const activePlacements = (matchedType === 'show' && showPlacements.length > 0) ? showPlacements : brandPlacements;
-  const totalFlights = activePlacements.reduce((acc, r) => acc + r.flights, 0);
-  const proven3xCount = activePlacements.filter(r => r.flights >= 3).length;
-  const maxFlights = activePlacements.length ? Math.max(...activePlacements.map(r => r.flights)) : 5;
+  const rawActivePlacements = (matchedType === 'show' && showPlacements.length > 0) ? showPlacements : brandPlacements;
+  const seenKeys = new Set(rawActivePlacements.map(r => `${r.brand_slug}:${r.show_slug}`));
+  const peerPlacements = db.prepare(`
+    SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
+           s.name AS show_name, s.channel_type, s.niche, s.audience_size, s.host_names
+    FROM placements p
+    JOIN brands b ON b.slug = p.brand_slug
+    JOIN shows s ON s.slug = p.show_slug
+    WHERE p.flights >= 3
+    ORDER BY (CASE WHEN b.category = ? OR s.niche = ? THEN 0 ELSE 1 END), p.flights DESC, p.est_spend_usd DESC
+    LIMIT 14
+  `).all(brand.category || '', show ? show.niche : (brand.category || ''))
+    .filter(r => !seenKeys.has(`${r.brand_slug}:${r.show_slug}`))
+    .slice(0, Math.max(0, 9 - rawActivePlacements.length))
+    .map(r => ({ ...r, is_lookalike: true, sponsor_email: maskSponsorEmail(r.sponsor_email) }));
+  const activePlacements = [...rawActivePlacements, ...peerPlacements].map((r, idx) => ({
+    ...r,
+    unmasked_proof_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : null,
+    decision_maker_role: r.decision_maker_role || brand.decision_maker_role || 'VP Growth & Creator Partnerships',
+    sponsor_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : maskSponsorEmail(r.sponsor_email || brand.sponsor_email)
+  }));
+  const totalFlights = rawActivePlacements.reduce((acc, r) => acc + r.flights, 0);
+  const proven3xCount = rawActivePlacements.filter(r => r.flights >= 3).length;
+  const maxFlights = rawActivePlacements.length ? Math.max(...rawActivePlacements.map(r => r.flights)) : 5;
   const overallRenewalScore = computeRenewalScore(maxFlights, true, true);
 
   const pitch = generateOutboundPitch({

@@ -448,7 +448,7 @@ app.get('/seo/:slug', (req, res) => {
   if (page.page_type === 'brand_breakdown') {
     brand = db.prepare('SELECT * FROM brands WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -461,7 +461,7 @@ app.get('/seo/:slug', (req, res) => {
   } else if (page.page_type === 'show_benchmark') {
     show = db.prepare('SELECT * FROM shows WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -477,7 +477,7 @@ app.get('/seo/:slug', (req, res) => {
   } else {
     const kw = `%${page.target_slug}%`;
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -490,7 +490,7 @@ app.get('/seo/:slug', (req, res) => {
     `).all(kw, kw, kw, kw);
     if (placements.length === 0) {
       placements = db.prepare(`
-        SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type,
+        SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
                sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
         FROM placements p
         JOIN brands b ON b.slug = p.brand_slug
@@ -505,6 +505,26 @@ app.get('/seo/:slug', (req, res) => {
     brand = placements.length > 0
       ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(placements[0].brand_slug)
       : db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
+  }
+
+  if (placements.length < 9) {
+    const seen = new Set(placements.map(r => `${r.brand_slug}:${r.show_slug}`));
+    const extraPeers = db.prepare(`
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+             sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
+      FROM placements p
+      JOIN brands b ON b.slug = p.brand_slug
+      JOIN shows s ON s.slug = p.show_slug
+      LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
+      LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
+      WHERE p.flights >= 3
+      ORDER BY (CASE WHEN b.category = ? OR s.niche = ? THEN 0 ELSE 1 END), p.flights DESC, p.est_spend_usd DESC
+      LIMIT 14
+    `).all(page.category || '', show ? show.niche : (page.category || ''))
+      .filter(r => !seen.has(`${r.brand_slug}:${r.show_slug}`))
+      .slice(0, 9 - placements.length)
+      .map(r => ({ ...r, is_lookalike: true }));
+    placements = [...placements, ...extraPeers];
   }
 
   const outboundPitch = brand ? generateOutboundPitch({

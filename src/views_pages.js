@@ -223,25 +223,30 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 <th>Brand</th>
                 <th>Show / Publication</th>
                 <th>Renewal Badge</th>
-                <th>ROI Score</th>
+                <th>Buyer Contact &amp; Agency Desk</th>
                 <th>Slot &amp; Timestamp</th>
                 <th>Vanity URL &amp; Code</th>
                 <th>Est. Spend</th>
               </tr>
             </thead>
-            <tbody>
-              ${placements.map(p => {
+            <tbody id="res-placements-tbody">
+              ${placements.map((p, idx) => {
                 const bName = escapeHtml(p.brand_name || (brand && brand.name) || '');
                 const sName = escapeHtml(p.show_name || (show && show.name) || '');
+                const rawEmail = p.sponsor_email || (brand && brand.sponsor_email) || 'partnerships@drinkag1.com';
+                const dmRole = escapeHtml(p.decision_maker_role || (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships');
+                const contactCell = idx === 0
+                  ? `<div style="font-size:12px;font-weight:700;color:var(--emerald-roi);">✓ SAMPLE UNLOCKED: ${escapeHtml(rawEmail)}</div><div class="mono" style="font-size:11.5px;color:var(--text-secondary);">${dmRole} • Direct + Agency</div>`
+                  : `<div class="mono" style="font-size:12px;color:var(--amber-gold);">${escapeHtml(maskSponsorEmail(rawEmail))}</div><div style="font-size:11.5px;color:var(--text-muted);">${dmRole} <a href="/buy/micro_pass?target=${encodeURIComponent(bName)}" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;margin-left:4px;">Unblur 99¢ →</a></div>`;
                 return `
                 <tr>
-                  <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}</td>
+                  <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:10.5px;padding:1px 5px;">Peer Match</span>` : ''}</td>
                   <td>
                     <div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div>
                     <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div>
                   </td>
                   <td><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></td>
-                  <td class="mono" style="font-weight:700; color:var(--emerald-roi);">${p.renewal_score}/100</td>
+                  <td>${contactCell}</td>
                   <td class="mono" style="font-size:13px;">${escapeHtml(p.slot_type)} (${escapeHtml(p.timestamp_range)})</td>
                   <td class="mono" style="font-size:13px;">
                     <span style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--amber-gold);">${escapeHtml(p.promo_code)}</strong>
