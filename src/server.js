@@ -328,13 +328,12 @@ app.post('/api/checkout', async (req, res) => {
   const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
   const isAutomatedTest = Boolean(
     req.headers['x-playwright-test'] ||
-    /^(founder@creatorstudio\.io|creator@sponsorradar\.io|agency@sponsorradar\.io|growth@agency\.io|audit@example\.com)$/i.test(email) ||
     /headless|playwright|puppeteer|curl|python/i.test(String(req.headers['user-agent'] || ''))
   );
   let sessionId = `cs_live_sr_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   let checkoutUrl = `/directory?checkout_session=${sessionId}`;
 
-  if (!isAutomatedTest && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
+  if ((!isAutomatedTest || req.query?.live_stripe === '1') && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
     try {
       const priceId = isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49;
       const params = new URLSearchParams({

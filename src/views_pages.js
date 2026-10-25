@@ -280,15 +280,15 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         const sampleMailto = outboundPitch ? outboundPitch.mailto_href || 'mailto:partnerships@drinkag1.com' : 'mailto:partnerships@drinkag1.com';
         const sampleBuyerEmail = outboundPitch ? outboundPitch.unmasked_sample_email || 'partnerships@drinkag1.com' : 'partnerships@drinkag1.com';
         return outboundPitch ? `
-      <div class="pitch-box" data-ui="true" style="margin-bottom:28px; background:#0F172A; border:1px solid #1E293B; color:#F8FAFC; padding:18px; border-radius:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid #1E293B;">
+      <div class="pitch-box" data-ui="true" style="margin-bottom:28px; background:var(--bg-surface); border:1px solid var(--border-strong); color:var(--text-primary); padding:20px; border-radius:16px; box-shadow:var(--shadow-editorial);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border-hairline);">
           <div style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center;">
-            <span class="mono" style="font-size:12px; color:#CBD5E1; font-weight:700;">Select Your Mode (Option E Engine):</span>
-            <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type === 'show_benchmark' ? '#10B981' : '#334155'}; background:${page.page_type === 'show_benchmark' ? '#064E3B' : '#1E293B'}; color:${page.page_type === 'show_benchmark' ? '#A7F3D0' : '#E2E8F0'};">Brand Media Buyer (Moneyball Budget Slider &amp; Rep Pack)</button>
-            <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type !== 'show_benchmark' ? '#10B981' : '#334155'}; background:${page.page_type !== 'show_benchmark' ? '#064E3B' : '#1E293B'}; color:${page.page_type !== 'show_benchmark' ? '#A7F3D0' : '#E2E8F0'};">Creator Pitching Sponsors (1-Click R.O.P.E. Pitch + .EML)</button>
+            <span class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">Select Your Mode (Option E Engine):</span>
+            <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type === 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type === 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">Brand Media Buyer (Moneyball Budget Slider &amp; Rep Pack)</button>
+            <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:6px 12px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; border:1px solid ${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--border-strong)'}; background:${page.page_type !== 'show_benchmark' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'}; color:${page.page_type !== 'show_benchmark' ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">Creator Pitching Sponsors (1-Click R.O.P.E. Pitch + .EML)</button>
           </div>
           <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
-            <button type="button" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass')}" style="padding:6px 12px; border-radius:999px; background:#064E3B; color:#A7F3D0; border:1px solid #10B981; font-size:12px; font-weight:800; cursor:pointer;">$1.00 Trial Campaign Pass (15 Brands)</button>
+            <a href="/buy/micro_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="padding:6px 12px; border-radius:999px; background:var(--emerald-soft); color:var(--emerald-roi); border:1px solid var(--emerald-roi); font-size:12px; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center;">$1.00 Trial Campaign Pass (15 Brands)</a>
             <a href="/buy/flash_pass?target=${encodeURIComponent(show ? show.name : (brand ? brand.name : page.title))}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:6px 14px; min-height:34px; font-size:12.5px; text-decoration:none;">
               <span>Unlock Full 85-Brand Vault ($1.99 Express)</span>
             </a>
@@ -297,34 +297,34 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
         <!-- PANE 1: BRAND MEDIA BUYER MONEYBALL BUDGET SLIDER & LOOKALIKE SHOWS -->
         <div id="sr-pane-buyer" style="display:${page.page_type === 'show_benchmark' ? 'block' : 'none'};">
-          <div style="padding:12px 14px; border-radius:10px; background:#1E293B; border:1px solid #334155; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="padding:12px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-strong); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div style="flex:1; min-width:250px;">
-              <label for="sr-moneyball-slider" class="mono" style="font-size:12px; color:#6EE7B7; font-weight:800; display:block; margin-bottom:4px;">Slide Your Campaign Test Budget ($2,500 to $50,000):</label>
-              <input id="sr-moneyball-slider" type="range" min="2500" max="50000" step="2500" value="10000" oninput="window.__srUpdateMoneyball(this.value, ${mb.published_rack_rate_usd}, ${page.avg_cpm})" style="width:100%; accent-color:#10B981; cursor:pointer;" />
+              <label for="sr-moneyball-slider" class="mono" style="font-size:12px; color:var(--emerald-roi); font-weight:800; display:block; margin-bottom:4px;">Slide Your Campaign Test Budget ($2,500 to $50,000):</label>
+              <input id="sr-moneyball-slider" type="range" min="2500" max="50000" step="2500" value="10000" oninput="window.__srUpdateMoneyball(this.value, ${mb.published_rack_rate_usd}, ${page.avg_cpm})" style="width:100%; accent-color:var(--emerald-roi); cursor:pointer;" />
             </div>
-            <div id="sr-moneyball-readout" class="mono" style="font-size:13px; font-weight:800; color:#F8FAFC; background:#090D16; padding:8px 12px; border-radius:8px; border:1px solid #334155;">
-              $10,000 Budget → <span style="color:#FBBF24;">${mb.published_rack_rate_usd > 10000 ? '0.8 Slots on Rack Rate' : '1.4 Slots on Rack'}</span> vs. <span style="color:#6EE7B7;">5 Host-Read Flights on Lookalike Bundle (2.3x Reach)</span>
+            <div id="sr-moneyball-readout" class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary); background:var(--bg-surface); padding:8px 12px; border-radius:8px; border:1px solid var(--border-strong);">
+              $10,000 Budget → <span style="color:var(--amber-gold);">${mb.published_rack_rate_usd > 10000 ? '0.8 Slots on Rack Rate' : '1.4 Slots on Rack'}</span> vs. <span style="color:var(--emerald-roi);">5 Host-Read Flights on Lookalike Bundle (2.3x Reach)</span>
             </div>
           </div>
 
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
-            <div style="padding:10px 12px; border-radius:8px; background:#1E293B; border:1px solid #334155;">
-              <div class="mono" style="font-size:11.5px; color:#CBD5E1; font-weight:700;">Published Rack Rate vs. 3-Flight Floor</div>
-              <div class="mono" style="font-size:14px; font-weight:800; color:#F8FAFC; margin-top:2px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:#6EE7B7;">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></div>
-              <div style="font-size:12px; color:#E2E8F0; margin-top:2px;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot w/ 3-flight commitment + 1.5% CTR make-good</div>
+            <div style="padding:10px 12px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline);">
+              <div class="mono" style="font-size:11.5px; color:var(--text-secondary); font-weight:700;">Published Rack Rate vs. 3-Flight Floor</div>
+              <div class="mono" style="font-size:14px; font-weight:800; color:var(--text-primary); margin-top:2px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></div>
+              <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot w/ 3-flight commitment + 1.5% CTR make-good</div>
             </div>
-            <div style="padding:10px 12px; border-radius:8px; background:#1E293B; border:1px solid #334155;">
-              <div class="mono" style="font-size:11.5px; color:#CBD5E1; font-weight:700;">Show #1 Lookalike (Unlocked Free)</div>
-              <div class="mono" style="font-size:13px; font-weight:800; color:#6EE7B7; margin-top:2px;">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</div>
-              <div style="font-size:12px; color:#E2E8F0; margin-top:2px;">Rep: <strong>${escapeHtml(mb.lookalike_shows[0].unmasked_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
+            <div style="padding:10px 12px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline);">
+              <div class="mono" style="font-size:11.5px; color:var(--text-secondary); font-weight:700;">Show #1 Lookalike (Unlocked Free)</div>
+              <div class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi); margin-top:2px;">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</div>
+              <div style="font-size:12px; color:var(--text-primary); margin-top:2px;">Rep: <strong>${escapeHtml(mb.lookalike_shows[0].unmasked_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
             </div>
-            <div style="padding:10px 12px; border-radius:8px; background:#1E293B; border:1px solid #334155;">
-              <div class="mono" style="font-size:11.5px; color:#CBD5E1; font-weight:700;">Shows #2 to #10 Moneyball Arbitrage Pack</div>
-              <div class="mono" style="font-size:13px; font-weight:800; color:#FBBF24; margin-top:2px;">9 Peer Shows @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} CPM ($1 Pass)</div>
-              <div style="font-size:12px; color:#E2E8F0; margin-top:2px;">Agency Desk: ${escapeHtml(getAgencyDesk(brand && brand.slug, page.category))}</div>
+            <div style="padding:10px 12px; border-radius:8px; background:var(--bg-elevated); border:1px solid var(--border-hairline);">
+              <div class="mono" style="font-size:11.5px; color:var(--text-secondary); font-weight:700;">Shows #2 to #10 Moneyball Arbitrage Pack</div>
+              <div class="mono" style="font-size:13px; font-weight:800; color:var(--amber-gold); margin-top:2px;">9 Peer Shows @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} CPM ($1 Pass)</div>
+              <div style="font-size:12px; color:var(--text-primary); margin-top:2px;">Agency Desk: ${escapeHtml(getAgencyDesk(brand && brand.slug, page.category))}</div>
             </div>
           </div>
-          <pre style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-mono); font-size:13px; color:#F8FAFC; background:#090D16; border:1px solid #10B981; border-radius:8px; padding:12px; margin:0 0 8px 0;">${escapeHtml(
+          <pre style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-mono); font-size:13px; color:var(--text-primary); background:var(--bg-elevated); border:1px solid var(--emerald-roi); border-radius:8px; padding:12px; margin:0 0 8px 0;">${escapeHtml(
             `# FREE SAMPLE — CFO MONEYBALL LOOKALIKE #1 (${mb.target_show})\n` +
             `• Target Show Published Rack Rate: $${mb.published_rack_rate_usd.toLocaleString()}/insertion ($${page.avg_cpm} CPM) | Negotiated 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/insertion\n` +
             `• [UNLOCKED SAMPLE] Lookalike #1: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) — $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot | Direct Booking Rep: ${mb.lookalike_shows[0].unmasked_rep}`
@@ -338,30 +338,30 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
         <!-- PANE 2: CREATOR OUTBOUND R.O.P.E. PITCH & 1-CLICK MAILTO GENERATOR -->
         <div id="sr-pane-creator" style="display:${page.page_type === 'show_benchmark' ? 'none' : 'block'};">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 10px 0;padding:10px 12px;border-radius:8px;background:#1E293B;border:1px solid #334155;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 10px 0;padding:10px 12px;border-radius:8px;background:var(--bg-parchment);border:1px solid var(--border-strong);">
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              <span class="mono" style="font-size:12px;color:#A7F3D0;font-weight:800;">Your Reach:</span>
-              <button type="button" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:#090D16;color:#F8FAFC;border:1px solid #475569;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">10K</button>
-              <button type="button" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm : 38})" style="background:#090D16;color:#F8FAFC;border:1px solid #475569;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">25K</button>
-              <button type="button" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:#090D16;color:#F8FAFC;border:1px solid #475569;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">75K</button>
-              <button type="button" onclick="window.__srCalcPseoReach(150000, ${brand ? brand.avg_cpm : 38})" style="background:#090D16;color:#F8FAFC;border:1px solid #475569;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">150K</button>
-              <span id="sr-pseo-quote-readout" class="mono" style="font-size:12.5px;font-weight:800;color:#6EE7B7;margin-left:4px;">3-Flight Pilot: $${Math.round(35 * (brand ? brand.avg_cpm : 38) * 3 * 0.88).toLocaleString()}</span>
+              <span class="mono" style="font-size:12px;color:var(--emerald-roi);font-weight:800;">Your Reach:</span>
+              <button type="button" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">10K</button>
+              <button type="button" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">25K</button>
+              <button type="button" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">75K</button>
+              <button type="button" onclick="window.__srCalcPseoReach(150000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:6px;padding:4px 9px;font-size:12px;font-weight:700;cursor:pointer;">150K</button>
+              <span id="sr-pseo-quote-readout" class="mono" style="font-size:12.5px;font-weight:800;color:var(--emerald-roi);margin-left:4px;">3-Flight Pilot: $${Math.round(35 * (brand ? brand.avg_cpm : 38) * 3 * 0.88).toLocaleString()}</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('sr-free-pitch-pre').innerText);this.textContent='Pitch #1 Copied!';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'free_pitch_1'});" style="background:#10B981;color:#052E16;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;">Copy Free Pitch #1 (${escapeHtml(sampleBuyerEmail)})</button>
-              <a href="${escapeHtml(sampleMailto)}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_pitch_1'});" style="background:#090D16;color:#7DD3FC;border:1px solid #0284C7;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">1-Click Open in Gmail / Mail</a>
+              <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('sr-free-pitch-pre').innerText);this.textContent='Pitch #1 Copied!';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'free_pitch_1'});" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;">Copy Free Pitch #1 (${escapeHtml(sampleBuyerEmail)})</button>
+              <a href="${escapeHtml(sampleMailto)}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_pitch_1'});" style="background:var(--bg-surface);color:var(--cyan-info);border:1px solid var(--cyan-info);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;">1-Click Open in Gmail / Mail</a>
             </div>
           </div>
-          <pre id="sr-free-pitch-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-mono); font-size:13px; color:#F8FAFC; background:#090D16; border:1px solid #10B981; border-radius:8px; padding:12px; margin:0 0 8px 0;">${escapeHtml('# FREE UNLOCKED SAMPLE — PITCH #1 (READY TO SEND)\nTo: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n' + samplePitchText)}</pre>
+          <pre id="sr-free-pitch-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-mono); font-size:13px; color:var(--text-primary); background:var(--bg-elevated); border:1px solid var(--emerald-roi); border-radius:8px; padding:12px; margin:0 0 8px 0;">${escapeHtml('# FREE UNLOCKED SAMPLE — PITCH #1 (READY TO SEND)\nTo: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n' + samplePitchText)}</pre>
           <pre class="pitch-pre">${escapeHtml('🔒 [PITCHES #2–#15 + 3-STEP FOLLOW-UP .EML SEQUENCE + 42-BRAND CSV]: Unlock Instant Campaign Pass ($1.00 Trial / $1.99 Full Pack)')}</pre>
         </div>
 
         <!-- MOBILE-TO-DESKTOP MAGIC BRIDGE BAR -->
-        <form onsubmit="return window.__srSendDesktopBridge(event)" style="margin-top:12px; padding:10px 12px; border-radius:8px; background:#1E293B; border:1px solid #334155; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-          <span class="mono" style="font-size:12px; color:#F8FAFC; font-weight:700;">On mobile or in a rush? Email yourself this live Pitch #1 + Desktop Unlock Link (Free):</span>
+        <form onsubmit="return window.__srSendDesktopBridge(event)" style="margin-top:12px; padding:10px 12px; border-radius:8px; background:var(--bg-parchment); border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <span class="mono" style="font-size:12px; color:var(--text-primary); font-weight:700;">On mobile or in a rush? Email yourself this live Pitch #1 + Desktop Unlock Link (Free):</span>
           <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1; max-width:420px;">
-            <input id="sr-bridge-email" type="email" required placeholder="you@work-email.com" aria-label="Work email for desktop link" style="flex:1; min-width:170px; padding:6px 10px; border-radius:6px; border:1px solid #475569; background:#090D16; color:#F8FAFC; font-size:12.5px;" />
-            <button id="sr-bridge-btn" type="submit" style="padding:6px 12px; border-radius:6px; border:none; background:#38BDF8; color:#0F172A; font-size:12px; font-weight:800; cursor:pointer;">Send to My Inbox →</button>
+            <input id="sr-bridge-email" type="email" required placeholder="you@work-email.com" aria-label="Work email for desktop link" style="flex:1; min-width:170px; padding:6px 10px; border-radius:6px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:12.5px;" />
+            <button id="sr-bridge-btn" type="submit" style="padding:6px 12px; border-radius:6px; border:none; background:var(--emerald-roi); color:#FFFFFF; font-size:12px; font-weight:800; cursor:pointer;">Send to My Inbox →</button>
           </div>
         </form>
 
@@ -371,8 +371,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             var bBtn = document.getElementById('btn-sr-persona-buyer'), cBtn = document.getElementById('btn-sr-persona-creator');
             if (bPane && cPane) { bPane.style.display = mode === 'buyer' ? 'block' : 'none'; cPane.style.display = mode === 'creator' ? 'block' : 'none'; }
             if (bBtn && cBtn) {
-              bBtn.style.borderColor = mode === 'buyer' ? '#10B981' : '#334155'; bBtn.style.background = mode === 'buyer' ? '#064E3B' : '#1E293B'; bBtn.style.color = mode === 'buyer' ? '#A7F3D0' : '#E2E8F0';
-              cBtn.style.borderColor = mode === 'creator' ? '#10B981' : '#334155'; cBtn.style.background = mode === 'creator' ? '#064E3B' : '#1E293B'; cBtn.style.color = mode === 'creator' ? '#A7F3D0' : '#E2E8F0';
+              bBtn.style.borderColor = mode === 'buyer' ? 'var(--emerald-roi)' : 'var(--border-strong)'; bBtn.style.background = mode === 'buyer' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'; bBtn.style.color = mode === 'buyer' ? 'var(--emerald-roi)' : 'var(--text-secondary)';
+              cBtn.style.borderColor = mode === 'creator' ? 'var(--emerald-roi)' : 'var(--border-strong)'; cBtn.style.background = mode === 'creator' ? 'var(--emerald-soft)' : 'var(--bg-parchment)'; cBtn.style.color = mode === 'creator' ? 'var(--emerald-roi)' : 'var(--text-secondary)';
             }
             if (window.__ebLogEvent) window.__ebLogEvent('tab_switch', { store_pill: 'persona_' + mode });
           };
@@ -381,7 +381,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             var rackSlots = (b / Math.max(1000, rackRate)).toFixed(1);
             var lookalikeSlots = Math.max(2, Math.round(b / Math.max(750, rackRate * 0.22)));
             var el = document.getElementById('sr-moneyball-readout');
-            if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → <span style="color:#fbbf24;">' + rackSlots + ' Slot(s) on Rack Rate</span> vs. <span style="color:#6ee7b7;">' + lookalikeSlots + ' Host-Read Flights on Lookalike Bundle (2.3x Reach)</span>';
+            if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → <span style="color:var(--amber-gold);">' + rackSlots + ' Slot(s) on Rack Rate</span> vs. <span style="color:var(--emerald-roi);">' + lookalikeSlots + ' Host-Read Flights on Lookalike Bundle (2.3x Reach)</span>';
             if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });
           };
           window.__srSendDesktopBridge = function(ev) {

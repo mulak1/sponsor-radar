@@ -88,21 +88,24 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           <div class="pitch-box" style="margin-top:0; display:flex; flex-direction:column;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
-                <span class="pill-emerald">DIAGNOSTIC QUOTE &amp; LOCKED PITCH PACK</span>
+                <span class="pill-emerald">FREE SAMPLE PITCH #1 UNLOCKED • MONEYBALL ENGINE</span>
                 <span class="mono" style="font-size:13px; color:var(--text-secondary); margin-left:6px;" id="res-pitch-meta">
                   Pilot Quote: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} (3 Episodes @ $${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)
                 </span>
               </div>
-              <button type="button" class="btn btn-vermilion" style="padding:6px 12px; min-height:36px; font-size:13px;" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass')}else{window.location.href='/buy/micro_pass?source=hero_pitch_pack'}">
-                <span id="copy-pitch-label">Unlock Buyer Email &amp; Pitch Pack ($1.99) ↗</span>
-              </button>
+              <div style="display:inline-flex; gap:6px; flex-wrap:wrap;">
+                <a href="/buy/micro_pass?source=hero_trial_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="padding:6px 10px; border-radius:8px; background:var(--bg-surface); color:var(--emerald-roi); border:1px solid var(--emerald-roi); font-size:12px; font-weight:800; text-decoration:none; display:inline-flex; align-items:center;">$1.00 Trial Pass (15 Brands)</a>
+                <a href="/buy/flash_pass?source=hero_pitch_pack" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:6px 12px; min-height:36px; font-size:13px; text-decoration:none;">
+                  <span id="copy-pitch-label">Unlock Full 85-Brand Vault ($1.99) ↗</span>
+                </a>
+              </div>
             </div>
             <pre class="pitch-pre" id="res-pitch-body" style="margin-top:8px;">${escapeHtml(
-              "# SponsorRadar Diagnostic Summary (" + displayEntity.name + ")\n" +
+              "# SponsorRadar Diagnostic Summary & Free Sample Pitch #1 (" + displayEntity.name + ")\n" +
               "• Verified 3x+ Renewal Score: " + defaultAnalysis.metrics.renewal_velocity_score + "/100 (" + defaultAnalysis.metrics.proven_3x_shows_count + " Proven 3x+ Placements)\n" +
               "• Recommended 3-Episode Pilot Quote (" + (initialReach / 1000).toFixed(0) + "K Reach): $" + defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString() + " ($" + defaultAnalysis.outbound_pitch.effective_cpm_usd + " Effective CPM)\n" +
-              "• Target Buyer Role: " + defaultAnalysis.brand.decision_maker_role + " (" + defaultAnalysis.outbound_pitch.to_email + ")\n" +
-              "• Verified Buyer Email & Direct Pitch Copy: [LOCKED IN FREE PREVIEW — UNLOCK 3-FILE PACK ($1.99)]"
+              "• [UNLOCKED SAMPLE #1] Target Buyer: " + (defaultAnalysis.outbound_pitch.unmasked_sample_email || 'partnerships@deel.com') + " (" + (defaultAnalysis.outbound_pitch.agency_desk || defaultAnalysis.brand.decision_maker_role) + ")\n" +
+              "• Pitches #2–#15 + 10 CFO Moneyball Lookalike Shows + .EML Sequence: [LOCKED IN PREVIEW — $1.00 TRIAL / $1.99 FULL PACK]"
             )}</pre>
           </div>
 
@@ -447,7 +450,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <div class="mono" style="font-size:36px; font-weight:800; color:var(--vermilion); line-height:1;">$1.99 <span style="font-size:14px; font-weight:600; color:var(--text-secondary);">USD one-time pass</span></div>
               <div style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">✓ 42+ Verified Brand Sponsor Emails (.CSV) + 3-Flight Pitch Templates + Negotiated CPM Ledger</div>
             </div>
-            <a href="/buy/flash_pass" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass');return false;}" class="btn btn-vermilion" style="padding:14px 24px; font-size:15px; text-decoration:none;">
+            <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:14px 24px; font-size:15px; text-decoration:none;">
               <span>Unlock 3-File Sponsor Pack ($1.99 Stripe Express)</span>
               <span class="btn-icon-circle" aria-hidden="true">↗</span>
             </a>
@@ -895,7 +898,7 @@ function renderLandingPage({ defaultAnalysis }) {
           Get the 3-File Sponsor Email &amp; Pitch Pack for a one-time $1.99 micro-pass, or start continuous Creator Pro access below.
         </p>
         <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
-          <a href="/buy/flash_pass?source=lp_express" onclick="if(window.__ebQuickBuy){window.__ebQuickBuy('flash_pass');return false;}" class="btn btn-vermilion" style="padding:12px 22px; font-size:15px; text-decoration:none;">
+          <a href="/buy/flash_pass?source=lp_express" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:12px 22px; font-size:15px; text-decoration:none;">
             <span>Unlock 3-File Sponsor Pack ($1.99 Stripe Express)</span>
             <span class="btn-icon-circle" aria-hidden="true">↗</span>
           </a>
