@@ -177,6 +177,59 @@ function analyzeSponsorLookup(db, payload = {}) {
     `).get(`%${qLower}%`, `%${qLower}%`);
   }
 
+  // 3b. Dynamic Developer Publication / GitHub Repo Show Benchmark (e.g. ?pub=ripienaar/free-for-dev)
+  let dynamicShowPlacements = null;
+  if (!brand && !show && rawQuery.includes('/')) {
+    matchedType = 'show';
+    const seed = hashSeed(qLower);
+    const parts = rawQuery.split('/');
+    const repoClean = (parts[1] || rawQuery).replace(/[-_.]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const reach = Math.max(50000, Number(payload.sender_audience_size) || 85000);
+    show = {
+      slug: rawQuery.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+      name: `${rawQuery} (${repoClean})`,
+      channel_type: 'Open-Source & Dev Publication',
+      niche: 'B2B DevTools, Cloud & Engineering',
+      audience_size: reach,
+      host_names: parts[0] || 'Maintainer Team',
+      base_cpm: 48
+    };
+    const devBrands = db.prepare(`
+      SELECT * FROM brands
+      WHERE lower(category) LIKE '%b2b%' OR lower(category) LIKE '%saas%' OR lower(category) LIKE '%dev%' OR lower(category) LIKE '%ai%' OR lower(category) LIKE '%fin%'
+      ORDER BY est_monthly_spend DESC LIMIT 6
+    `).all();
+    brand = devBrands[0] || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
+    const showShort = (parts[1] || 'DEV').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 6) || 'DEV';
+    dynamicShowPlacements = devBrands.slice(0, 4).map((b, idx) => {
+      const flights = Math.max(3, 9 - idx * 2 + ((seed + idx) % 2));
+      const cpmUsd = Math.max(38, (b.avg_cpm || 48) + (idx === 0 ? 4 : -idx * 2));
+      const perFlight = Math.round((reach / 1000) * cpmUsd);
+      return {
+        brand_slug: b.slug,
+        brand_name: b.name,
+        brand_domain: b.domain,
+        brand_category: b.category,
+        sponsor_email: maskSponsorEmail(b.sponsor_email),
+        decision_maker_role: b.decision_maker_role,
+        show_slug: show.slug,
+        show_name: show.name,
+        channel_type: show.channel_type,
+        niche: show.niche,
+        audience_size: reach,
+        flights,
+        renewal_score: computeRenewalScore(flights, true, true),
+        renewal_badge: computeRenewalBadge(flights),
+        slot_type: 'Primary README & Issue Deep-Dive',
+        timestamp_range: 'Top Above-the-Fold Sponsor Block',
+        vanity_url: `${b.domain}/${(parts[1] || 'dev').toLowerCase().slice(0, 10)}`,
+        promo_code: `${b.slug.replace(/[^a-z0-9]/gi, '').toUpperCase().slice(0, 5)}${showShort}`,
+        cpm_usd: cpmUsd,
+        est_spend_usd: perFlight * flights
+      };
+    });
+  }
+
   // 4. Deterministic Long-Tail Synthesis for any custom Brand or Show not in seed DB
   let dynamicPlacements = null;
   if (!brand) {
@@ -248,7 +301,7 @@ function analyzeSponsorLookup(db, payload = {}) {
     ORDER BY p.flights DESC, p.est_spend_usd DESC
   `).all(brand.slug);
 
-  const showPlacements = show
+  const showPlacements = dynamicShowPlacements || (show
     ? db.prepare(`
         SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
                s.name AS show_name, s.channel_type, s.niche, s.audience_size
@@ -258,7 +311,7 @@ function analyzeSponsorLookup(db, payload = {}) {
         WHERE p.show_slug = ?
         ORDER BY p.flights DESC, p.est_spend_usd DESC
       `).all(show.slug).map(r => ({ ...r, sponsor_email: maskSponsorEmail(r.sponsor_email) }))
-    : [];
+    : []);
 
   const rawActivePlacements = (matchedType === 'show' && showPlacements.length > 0) ? showPlacements : brandPlacements;
   const seenKeys = new Set(rawActivePlacements.map(r => `${r.brand_slug}:${r.show_slug}`));

@@ -613,7 +613,15 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       pointer-events: none;
     }
 
+    .hero-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 0;
+    }
+
     @media (max-width: 768px) {
+      .hero-steps-grid { grid-template-columns: 1fr; }
       .nav-inner { gap: 10px; }
       .nav-links {
         width: 100%;
@@ -657,9 +665,9 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center;">
-        <a href="/buy/micro_pass?source=nav_cta" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
-          <span>Unlock 3-File Pack ($1.99)</span>
-          <span class="btn-icon-circle" aria-hidden="true">↗</span>
+        <a href="/#radar-results-container" class="btn btn-vermilion" style="padding:9px 16px; min-height:42px; font-size:14px;">
+          <span>Check Live Spend Ledger</span>
+          <span class="btn-icon-circle" aria-hidden="true">↓</span>
         </a>
       </div>
     </div>

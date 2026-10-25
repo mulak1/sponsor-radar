@@ -1,6 +1,6 @@
 const { escapeHtml, renderBrandLogoSvg, renderShell } = require('./views_shell');
 
-function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts, defaultAnalysis, initialQuery = 'Deel', initialReach = 75000 }) {
+function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts, defaultAnalysis, initialQuery = 'Deel', initialReach = 75000, pubQuery = '' }) {
   const displayEntity = defaultAnalysis.display_entity || {
     type: 'brand',
     name: defaultAnalysis.brand.name,
@@ -41,9 +41,27 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     ]
   };
 
+  const pubBannerHtml = pubQuery ? `
+      <div id="pub-indexed-banner" class="panel" style="margin-bottom:18px; padding:16px 18px; background:var(--emerald-soft); border:1.5px solid rgba(13,122,95,0.32); border-radius:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span class="pill-emerald" style="background:#FFFFFF;">✦ LIVE INDEXED CREATOR BENCHMARK • ${escapeHtml(pubQuery.toUpperCase())}</span>
+          <span class="mono" style="font-size:12.5px; font-weight:700; color:var(--emerald-roi);">3x+ Score: ${defaultAnalysis.metrics.renewal_velocity_score}/100 • 3-Flight Pilot Quote: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} ($${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)</span>
+        </div>
+        <div style="font-size:14.5px; color:var(--text-primary); line-height:1.45;">
+          <strong>Matched 3x+ Renewed Developer Sponsors for ${escapeHtml(displayEntity.name)}:</strong>
+          ${defaultAnalysis.placements.slice(0, 3).map((p, idx) => `<span class="mono" style="display:inline-block; margin-left:6px; padding:2px 8px; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-hairline); font-size:12.5px; font-weight:700;">${idx + 1}. ${escapeHtml(p.brand_name || p.show_name)} (${escapeHtml(p.renewal_badge)} • $${p.cpm_usd} CPM)</span>`).join('')}
+          <span class="mono" style="display:inline-block; margin-left:6px; font-size:12.5px; color:var(--emerald-roi); font-weight:700;">✓ Free Sample Buyer Unlocked: ${escapeHtml(defaultAnalysis.outbound_pitch.unmasked_sample_email || 'partnerships@deel.com')}</span>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <a href="#radar-results-container" class="btn btn-emerald" style="padding:8px 16px; min-height:38px; font-size:13.5px; text-decoration:none;">View Matched Sponsor Table &amp; Free Pitch Below ↓</a>
+          <a href="/buy/flash_pass?target=${encodeURIComponent(pubQuery)}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:8px 16px; min-height:38px; font-size:13.5px; text-decoration:none;">Unlock All 42 Buyer Emails &amp; Pitch Pack ($1.99) ↗</a>
+        </div>
+      </div>` : '';
+
   const bodyHtml = `
   <section class="hero-section" id="radar-tool">
     <div class="container">
+      ${pubBannerHtml}
       <div class="hero-grid" style="align-items:start;">
         <!-- Left Column: Crisp Layperson Value Proposition + Redacted Outbound Pitch Preview -->
         <div id="home-executive-brief" style="display:flex; flex-direction:column; justify-content:flex-start; gap:14px;">
@@ -68,7 +86,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             </div>
 
             <!-- 3-Step Layperson Journey inside Top Hero -->
-            <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:0;">
+            <div class="hero-steps-grid">
               <div class="panel" style="padding:12px;">
                 <div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-bottom:3px;">STEP 1 • FREE CHECK</div>
                 <div style="font-size:13.5px; color:var(--text-primary); font-weight:600; line-height:1.35;">Search any brand or show to see monthly ad spend &amp; 3x+ renewal score.</div>

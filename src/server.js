@@ -399,7 +399,8 @@ app.get('/', (req, res) => {
     ORDER BY p.flights DESC, p.est_spend_usd DESC
   `).all();
   const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY est_monthly_spend DESC').all();
-  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Deel').trim() || 'Deel';
+  const pubQuery = String(req.query.pub || '').trim();
+  const initialQuery = String(req.query.q || req.query.brand || req.query.show || pubQuery || 'Deel').trim() || 'Deel';
   const initialReach = Math.max(500, Number(req.query.reach) || 75000);
   const defaultAnalysis = analyzeSponsorLookup(db, {
     query: initialQuery,
@@ -414,7 +415,8 @@ app.get('/', (req, res) => {
     sampleTranscripts: SAMPLE_TRANSCRIPTS,
     defaultAnalysis,
     initialQuery,
-    initialReach
+    initialReach,
+    pubQuery
   }));
 });
 
