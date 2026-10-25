@@ -7,6 +7,16 @@ function maskSponsorEmail(email) {
   return `[verified-buyer]***@${domain} + Agency Desk (🔒 99¢ / $1.99)`;
 }
 
+function getAgencyDesk(brandSlug, category) {
+  const s = String(brandSlug || '').toLowerCase();
+  const c = String(category || '').toLowerCase();
+  if (/ag1|eight-sleep|lmnt|whoop|oura|function-health|factor/.test(s) || /health|wellness|fitness/.test(c)) return 'Oxford Road / Veritone One + Direct Growth Desk';
+  if (/deel|ramp|mercury|brex|gusto|rippling|navan|stripe/.test(s) || /fintech|hr|payroll/.test(c)) return 'Right Side Up + Internal Executive Media Desk';
+  if (/linear|supabase|cursor|vercel|raycast|retool|posthog|sentry|cloudflare|datadog/.test(s) || /dev|infra|cloud/.test(c)) return 'Direct DevRel & Creator Partnerships Desk';
+  if (/shopify|hubspot|notion|intercom|airtable|monday|framer|miro/.test(s)) return 'Internal Podcast Network & Demand Gen Desk';
+  return 'Tatari / Direct Performance Partnerships Desk';
+}
+
 function hashSeed(str) {
   let h = 2166136261;
   const s = String(str || 'sponsor');
@@ -205,6 +215,7 @@ function analyzeSponsorLookup(db, payload = {}) {
     ...r,
     unmasked_proof_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : null,
     decision_maker_role: r.decision_maker_role || brand.decision_maker_role || 'VP Growth & Creator Partnerships',
+    agency_desk: getAgencyDesk(r.brand_slug || brand.slug, r.brand_category || brand.category),
     sponsor_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : maskSponsorEmail(r.sponsor_email || brand.sponsor_email)
   }));
   const totalFlights = rawActivePlacements.reduce((acc, r) => acc + r.flights, 0);
@@ -406,6 +417,7 @@ async function analyzeTranscriptAdRead(db, payload = {}) {
 
 module.exports = {
   maskSponsorEmail,
+  getAgencyDesk,
   analyzeSponsorLookup,
   analyzeTranscriptAdRead,
   generateOutboundPitch

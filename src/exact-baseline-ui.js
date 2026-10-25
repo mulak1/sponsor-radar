@@ -242,7 +242,8 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     <span id="eb-ouibounce-title" style="font-size:13px;font-weight:700;color:${t.brandPrimary};text-transform:uppercase;">✦ Save Your Results Before Leaving</span>
     <button type="button" onclick="try{localStorage.setItem('eb_toast_dismissed_ts',String(Date.now()));}catch(_){}document.getElementById('eb-ouibounce-toast').style.display='none'" style="background:none;border:none;color:${t.textMuted};font-size:14px;">✕</button>
   </div>
-  <p id="eb-ouibounce-desc" style="font-size:13px;color:${t.textSecondary};margin:0 0 8px 0;line-height:1.4;">Email yourself the 1-Page Summary &amp; reveal Row #4 free, or grab the complete 3-file bundle for <strong>$1.99</strong>:</p>
+  <p id="eb-ouibounce-desc" style="font-size:13px;color:${t.textSecondary};margin:0 0 6px 0;line-height:1.4;">Email yourself the 1-Page Summary &amp; reveal Row #4 free, or grab the complete 3-file bundle for <strong>$1.99</strong>:</p>
+  <div id="eb-objection-poll-strip" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px;align-items:center;"><span style="font-size:11px;font-weight:700;color:${t.textMuted};">Quick feedback:</span><button type="button" class="eb-obj-pill" onclick="window.__ebLogObjection('just_browsing', this)" style="padding:2px 7px;border-radius:999px;border:1px solid ${t.border};background:${t.subtleBg};color:${t.textSecondary};font-size:11px;font-weight:600;cursor:pointer;">📊 Just checking rates</button><button type="button" class="eb-obj-pill" onclick="window.__ebLogObjection('need_agency_depth', this)" style="padding:2px 7px;border-radius:999px;border:1px solid ${t.border};background:${t.subtleBg};color:${t.textSecondary};font-size:11px;font-weight:600;cursor:pointer;">👤 Need Agency / Direct proof</button><button type="button" class="eb-obj-pill" onclick="window.__ebLogObjection('skip_card', this)" style="padding:2px 7px;border-radius:999px;border:1px solid ${t.border};background:${t.subtleBg};color:${t.textSecondary};font-size:11px;font-weight:600;cursor:pointer;">💳 No card right now</button></div>
   <form onsubmit="return window.__ebSendExitSummary(event)" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:8px;">
     <input type="email" id="eb-ouibounce-email" placeholder="Your email (Reveal Row #4)..." required style="padding:6px 9px;border-radius:7px;border:1px solid ${t.border};background:#FFFFFF;color:${t.textPrimary};font-size:13px;" />
     <button type="submit" id="btn-ouibounce-submit" style="padding:6px 11px;border-radius:${t.radiusPill};background:${t.brandSoftBg};color:${t.brandPrimary};font-size:13px;font-weight:700;border:1px solid ${t.accentBorder};">Send Summary →</button>
@@ -729,17 +730,18 @@ function buildClientRuntimeScript(cfg) {
     if (!btn) return;
     e.preventDefault(); e.stopPropagation(); window.__ebOpenFloatingGate(btn);
   }, true);
+  window.__ebLogObjection = function(code, btn) {
+    window.__ebLogEvent('tab_switch', { store_pill: 'objection_' + code, page: window.location.pathname });
+    if (btn) { btn.style.background = CFG.theme.brandSoftBg; btn.style.color = CFG.theme.brandPrimary; btn.style.borderColor = CFG.theme.accentBorder; }
+    var desc = document.getElementById('eb-ouibounce-desc'), em = document.getElementById('eb-ouibounce-email');
+    if (code === 'need_agency_depth' && desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #1 Sample Unmasked on Page!</strong> Or grab 1 Single File for <strong>99¢</strong> via 1-tap Apple Pay / Link below:';
+    else if (desc) { desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ No card required!</strong> Enter your email below to reveal Row #4 free on-screen right now:'; if (em) em.focus(); }
+  };
   window.__ebSendExitSummary = function(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
-    var input = document.getElementById('eb-ouibounce-email'), email = input ? input.value.trim() : '';
-    if (!email) return false;
+    var input = document.getElementById('eb-ouibounce-email'), email = input ? input.value.trim() : ''; if (!email) return false;
     var r4 = document.querySelector('tr.eb-blurred-deliverable'); if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
-    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) })
-      .then(function() {
-        var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc');
-        if (btn) btn.textContent = '✓ Row #4 Revealed!';
-        if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; 1-Click Links Sent!</strong> <a href="/buy/micro_pass" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;">Unblur all remaining rows + file for 99¢ →</a>';
-      }).catch(function() {});
+    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) }).then(function() { var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc'); if (btn) btn.textContent = '✓ Row #4 Revealed!'; if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ Row #4 Unblurred &amp; 1-Click Links Sent!</strong> <a href="/buy/micro_pass" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;">Unblur all remaining rows + file for 99¢ →</a>'; }).catch(function() {});
     return false;
   };
 
