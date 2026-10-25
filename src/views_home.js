@@ -53,8 +53,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           <span class="mono" style="display:inline-block; margin-left:6px; font-size:12.5px; color:var(--emerald-roi); font-weight:700;">✓ Free Sample Buyer Unlocked: ${escapeHtml(defaultAnalysis.outbound_pitch.unmasked_sample_email || 'partnerships@deel.com')}</span>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <a href="#radar-results-container" class="btn btn-emerald" style="padding:8px 16px; min-height:38px; font-size:13.5px; text-decoration:none;">View Matched Sponsor Table &amp; Free Pitch Below ↓</a>
-          <a href="/buy/flash_pass?target=${encodeURIComponent(pubQuery)}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:8px 16px; min-height:38px; font-size:13.5px; text-decoration:none;">Unlock All 42 Buyer Emails &amp; Pitch Pack ($1.99) ↗</a>
+          <a href="#radar-results-container" class="btn btn-emerald" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none;">View Matched Sponsor Table ↓</a>
+          <a href="/buy/flash_pass?target=${encodeURIComponent(pubQuery)}" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none;">Unlock 42 Buyer Emails ($1.99) ↗</a>
         </div>
       </div>` : '';
 
