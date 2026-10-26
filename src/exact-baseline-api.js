@@ -124,14 +124,14 @@ const VERTICAL_CONFIGS = {
     }
   },
   sponsor_radar: {
-    moduleId: 'sponsor_radar', brandName: 'SponsorRadar', domain: 'www.sponsorradar.io', accentColor: '#E84E36',
+    moduleId: 'sponsor_radar', brandName: 'SponsorRadar', domain: 'www.sponsorradar.io', accentColor: '#C23B22',
     theme: {
-      canvasBg: '#FBF8F3', cardBg: '#FFFFFF', subtleBg: '#F4EFE6', dockBg: 'rgba(251, 248, 243, 0.95)',
-      border: '#E5DEC9', accentBorder: '#F5C2B8', textPrimary: '#161412', textSecondary: '#57524A', textMuted: '#78716C',
-      brandPrimary: '#E84E36', brandSoftBg: '#FFF4F1', brandText: '#B9311C',
-      safeColor: '#0F766E', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
+      canvasBg: '#F8F9FA', cardBg: '#FFFFFF', subtleBg: '#F1F3F5', dockBg: 'rgba(248, 249, 250, 0.96)',
+      border: '#DEE2E6', accentBorder: '#F5C2B8', textPrimary: '#14171A', textSecondary: '#212529', textMuted: '#495057',
+      brandPrimary: '#C23B22', brandSoftBg: '#FFF4F1', brandText: '#9B2C18',
+      safeColor: '#0F766E', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#92400E',
       fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      radiusCard: '14px', radiusPill: '8px', shadow: '0 14px 34px -12px rgba(24, 20, 16, 0.07), 0 2px 6px rgba(24, 20, 16, 0.03)'
+      radiusCard: '14px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
     corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 49, coreLabel: 'Complete Creator Sponsor Database ($49/mo)',
@@ -139,7 +139,7 @@ const VERTICAL_CONFIGS = {
     lockedTitle: 'Verified Sponsor Partnership Contacts',
     deliverableName: 'Verified Sponsor Contact Email + Ready-to-Send Pitch + Full Ad Rate Table',
     freeDeliverableName: 'Verified Sponsor Contact & 3-Ad Pilot Pitch Pack',
-    unlockBannerTitle: 'Get Verified Sponsor Contact Emails, Real Ad Rates (CPM) & Pitch Templates',
+    unlockBannerTitle: 'Verified Sponsor Emails & Rates',
     explainerText: 'See which sponsors booked 3+ repeat ads, what they paid, and who to email on their partnerships team',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,

@@ -3,8 +3,8 @@ const { computeRenewalScore, computeRenewalBadge, SAMPLE_TRANSCRIPTS } = require
 function maskSponsorEmail(email) {
   const raw = String(email || 'partnerships@brand.io').trim();
   const [, domain] = raw.split('@');
-  if (!domain) return '[verified-buyer]***@brand.io + Agency Desk (🔒 $1 / $1.99)';
-  return `[verified-buyer]***@${domain} + Agency Desk (🔒 $1 / $1.99)`;
+  if (!domain) return '[verified-buyer]***@brand.io + Agency Desk ($1 / $1.99)';
+  return `[verified-buyer]***@${domain} + Agency Desk ($1 / $1.99)`;
 }
 
 function getAgencyDesk(brandSlug, category) {
@@ -21,12 +21,12 @@ function getFreshBudgetStatus(seedKey, flights) {
   const h = hashSeed(seedKey);
   const hoursAgo = 4 + (h % 44);
   if (flights >= 5 || (h % 3 === 0)) {
-    return { badge: `🟢 NEW RSS BUDGET (${hoursAgo}h ago)`, code: 'NEW_BUDGET', hoursAgo, isFresh: true };
+    return { badge: `NEW RSS BUDGET (${hoursAgo}h ago)`, code: 'NEW_BUDGET', hoursAgo, isFresh: true };
   }
   if (flights >= 3 || (h % 2 === 0)) {
-    return { badge: `🔥 SCALING (+${2 + (h % 3)} shows/7d)`, code: 'SCALING', hoursAgo, isFresh: true };
+    return { badge: `SCALING (+${2 + (h % 3)} shows/7d)`, code: 'SCALING', hoursAgo, isFresh: true };
   }
-  return { badge: `⚡ ACTIVE Q2 FLIGHT (${hoursAgo}h ago)`, code: 'ACTIVE', hoursAgo, isFresh: false };
+  return { badge: `ACTIVE Q2 FLIGHT (${hoursAgo}h ago)`, code: 'ACTIVE', hoursAgo, isFresh: false };
 }
 
 function generateMoneyballLookalikeBundle({ targetShowName, baseCpm, rackRateUsd, category, placements }) {

@@ -76,34 +76,34 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   <link rel="apple-touch-icon" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
   <style>
     :root {
-      --bg-canvas: #FBF8F3;
-      --bg-parchment: #F4EFE6;
-      --bg-bezel: #EFE9DD;
+      --bg-canvas: #F8F9FA;
+      --bg-parchment: #F1F3F5;
+      --bg-bezel: #E9ECEF;
       --bg-surface: #FFFFFF;
-      --bg-elevated: #FAF6EE;
+      --bg-elevated: #F1F3F5;
       --bg-input: #FFFFFF;
-      --border-hairline: #E5DEC9;
-      --border-strong: #CFC5B0;
-      --text-primary: #161412;
-      --text-secondary: #57524A;
-      --text-muted: #78716C;
-      --vermilion: #E84E36;
-      --vermilion-hover: #D13D26;
+      --border-hairline: #DEE2E6;
+      --border-strong: #CED4DA;
+      --text-primary: #14171A;
+      --text-secondary: #212529;
+      --text-muted: #495057;
+      --vermilion: #C23B22;
+      --vermilion-hover: #9B2C18;
       --vermilion-soft: #FFF1EE;
       --vermilion-border: #FFD5CC;
       --emerald-roi: #0F766E;
       --emerald-soft: #ECFDF5;
       --emerald-border: #A7F3D0;
-      --amber-gold: #B45309;
+      --amber-gold: #92400E;
       --amber-soft: #FEF3C7;
       --amber-border: #FDE68A;
       --cyan-info: #0369A1;
-      --shadow-editorial: 0 18px 42px -12px rgba(24, 20, 16, 0.07), 0 4px 12px -2px rgba(24, 20, 16, 0.04);
-      --shadow-subtle: 0 4px 14px rgba(24, 20, 16, 0.04);
+      --shadow-editorial: none;
+      --shadow-subtle: none;
       --font-serif: 'Newsreader', Georgia, serif;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -127,8 +127,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     a { color: inherit; text-decoration: none; }
     .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-    .serif-italic { font-family: var(--font-serif); font-style: italic; font-weight: 500; }
-    .container { max-width: 1320px; width: 100%; margin: 0 auto; padding: 0 20px; }
+    .serif-italic { font-family: var(--font-serif); font-style: normal; font-weight: 600; }
+    .container { max-width: 1320px; width: 100%; margin: 0 auto; padding: 0 24px; }
 
     /* Accessibility Skip Link */
     .skip-link {
@@ -169,9 +169,9 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     /* Sticky Editorial Header Navigation */
     .top-nav {
-      background: rgba(251, 248, 243, 0.92);
+      background: rgba(248, 249, 250, 0.94);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-hairline);
+      border-bottom: none;
       position: sticky;
       top: 0;
       z-index: 40;
@@ -205,9 +205,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .brand-subtag {
       display: block;
       font-family: var(--font-mono);
-      font-size: 12.5px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 13px;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -215,7 +213,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       display: flex;
       align-items: center;
       gap: 20px;
-      font-size: 14.5px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-secondary);
       flex-wrap: wrap;
@@ -234,12 +232,12 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       gap: 9px;
       font-family: var(--font-sans);
       font-weight: 700;
-      font-size: 14.5px;
+      font-size: 16px;
       padding: 10px 18px;
-      border-radius: 10px;
-      border: 1px solid transparent;
+      border-radius: 8px;
+      border: none;
       cursor: pointer;
-      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
       min-height: 44px;
       white-space: nowrap;
     }
@@ -248,7 +246,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .btn-vermilion, .btn-amber {
       background: var(--vermilion);
       color: #FFFFFF;
-      box-shadow: 0 6px 18px -4px rgba(232, 78, 54, 0.38);
     }
     .btn-vermilion:hover, .btn-amber:hover {
       background: var(--vermilion-hover);
@@ -256,18 +253,14 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .btn-emerald {
       background: var(--emerald-roi);
       color: #FFFFFF;
-      box-shadow: 0 6px 18px -4px rgba(15, 118, 110, 0.32);
     }
     .btn-emerald:hover { background: #0D635C; }
     .btn-ghost {
-      background: var(--bg-surface);
+      background: var(--bg-parchment);
       color: var(--text-primary);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow-subtle);
     }
     .btn-ghost:hover {
-      border-color: var(--text-primary);
-      background: var(--bg-elevated);
+      background: var(--bg-bezel);
     }
     .btn-icon-circle {
       display: inline-flex;
@@ -277,7 +270,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       height: 22px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
-      font-size: 13px;
+      font-size: 14px;
       transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .btn:hover .btn-icon-circle {
@@ -292,35 +285,29 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       padding: 4px 10px;
       border-radius: 6px;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.02em;
     }
     .pill-vermilion {
       background: var(--vermilion-soft);
-      color: #B9311C;
-      border: 1px solid var(--vermilion-border);
+      color: #9B2C18;
     }
     .pill-amber {
       background: var(--amber-soft);
       color: var(--amber-gold);
-      border: 1px solid var(--amber-border);
     }
     .pill-emerald {
       background: var(--emerald-soft);
       color: var(--emerald-roi);
-      border: 1px solid var(--emerald-border);
     }
     .pill-slate {
       background: var(--bg-parchment);
       color: var(--text-secondary);
-      border: 1px solid var(--border-hairline);
     }
 
     /* Double-Bezel Porcelain Bento Panels */
     .panel {
       background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
       border-radius: 16px;
       box-shadow: none;
       max-width: 100%;
@@ -329,11 +316,9 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       background: var(--bg-bezel);
       padding: 6px;
       border-radius: 20px;
-      border: 1px solid var(--border-hairline);
     }
     .panel-header {
       padding: 14px 20px;
-      border-bottom: 1px solid var(--border-hairline);
       background: var(--bg-elevated);
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
@@ -396,7 +381,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .table-wrap {
       width: 100%;
       overflow-x: auto;
-      border: 1px solid var(--border-hairline);
       border-radius: 12px;
       background: var(--bg-surface);
     }
@@ -404,15 +388,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 14.5px;
+      font-size: 16px;
     }
     table.ledger-table th {
       background: var(--bg-parchment);
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-size: 14px;
       padding: 12px 14px;
       border-bottom: 1px solid var(--border-hairline);
       white-space: nowrap;
@@ -430,7 +412,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     /* Editorial Hero Section */
     .hero-section {
       padding: 36px 0 36px;
-      border-bottom: 1px solid var(--border-hairline);
       background: var(--bg-canvas);
     }
     .hero-grid {
@@ -449,10 +430,10 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     .headline-xl {
       font-family: var(--font-serif);
-      font-size: clamp(30px, 3.3vw, 44px);
+      font-size: clamp(32px, 4.5vw, 64px);
       font-weight: 600;
       letter-spacing: -0.025em;
-      line-height: 1.12;
+      line-height: 1.08;
       margin: 10px 0 12px;
       color: var(--text-primary);
       text-wrap: balance;
@@ -466,11 +447,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     @media (max-width: 767px) {
       .ticker-bar { display: none; }
-      .nav-inner { min-height: 48px; padding: 4px 0; gap: 6px; }
-      .nav-links { gap: 8px; font-size: 13px; }
-      .hero-section { padding: 12px 0 20px; }
-      .headline-xl { font-size: 25px; margin: 6px 0; }
-      .subhead { font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
+      .nav-inner { min-height: 48px; padding: 6px 0; gap: 8px; }
+      .nav-links { gap: 12px; font-size: 14px; }
+      .hero-section { padding: 14px 0 20px; }
+      .headline-xl { font-size: 32px; margin: 6px 0; }
+      .subhead { font-size: 16px; line-height: 1.5; margin-bottom: 8px; }
     }
 
     /* Mode Tabs */
@@ -480,7 +461,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       background: var(--bg-parchment);
       padding: 4px;
       border-radius: 10px;
-      border: 1px solid var(--border-hairline);
       width: 100%;
       max-width: 370px;
     }
@@ -489,7 +469,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       text-align: center;
       padding: 8px 10px;
       border-radius: 7px;
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       color: var(--text-secondary);
@@ -500,8 +480,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     .mode-tab.active {
       background: var(--bg-surface);
       color: var(--vermilion);
-      box-shadow: var(--shadow-subtle);
-      border: 1px solid var(--border-hairline);
     }
 
     /* Preset Chips */
@@ -513,19 +491,18 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     .preset-chip {
       background: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
+      border: none;
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 14px;
       padding: 6px 12px;
       border-radius: 7px;
       cursor: pointer;
-      transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .preset-chip:hover {
-      border-color: var(--vermilion);
-      color: var(--text-primary);
-      background: var(--bg-surface);
+      color: var(--vermilion);
+      background: var(--vermilion-soft);
     }
     .preset-chip:active { transform: scale(0.97); }
 
@@ -538,14 +515,12 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     .kpi-box {
       background: var(--bg-elevated);
-      border: 1px solid var(--border-hairline);
       border-radius: 10px;
       padding: 12px 14px;
     }
     .kpi-label {
-      font-size: 13px;
+      font-size: 14px;
       font-family: var(--font-mono);
-      text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
@@ -560,7 +535,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     /* Outbound Pitch Box */
     .pitch-box {
       background: var(--emerald-soft);
-      border: 1px solid var(--emerald-border);
       border-radius: 16px;
       padding: 20px 22px;
       margin-top: 16px;
@@ -569,11 +543,10 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       white-space: pre-wrap;
       word-break: break-word;
       font-family: var(--font-mono);
-      font-size: 13.5px;
+      font-size: 14px;
       line-height: 1.65;
       color: var(--text-primary);
       background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
       border-radius: 12px;
       padding: 16px 18px;
       margin-top: 12px;
@@ -594,8 +567,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     /* Docked Non-Overlapping Cookie Consent Bar */
     .cookie-bar {
       background: var(--bg-parchment);
-      border-top: 1px solid var(--border-strong);
-      border-bottom: 1px solid var(--border-hairline);
       padding: 14px 20px;
       display: flex;
       align-items: center;
@@ -623,15 +594,14 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     @media (max-width: 768px) {
       .hero-steps-grid { grid-template-columns: 1fr; }
-      .nav-inner { gap: 10px; }
+      .nav-inner { gap: 10px; padding: 10px 24px; }
       .nav-links {
         width: 100%;
         order: 3;
         justify-content: flex-start;
         gap: 14px;
-        font-size: 13.5px;
-        padding-top: 6px;
-        border-top: 1px solid var(--border-hairline);
+        font-size: 14px;
+        padding: 6px 0 0 0;
       }
       .nav-cta-secondary { display: none; }
     }
@@ -666,7 +636,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:10px; align-items:center;">
-        <a href="/buy/flash_pass?source=header_nav" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:9px 18px; min-height:40px; font-size:13.5px; text-decoration:none;">
+        <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:9px 16px; min-height:40px; font-size:14px; text-decoration:none;">
           <span>Unlock Sponsor Pack ($1.99) →</span>
         </a>
       </div>
@@ -680,17 +650,17 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   <!-- Docked Non-Overlapping GDPR/CCPA Cookie & Attribution Bar -->
   <aside id="cookie-banner" class="cookie-bar" role="region" aria-label="Cookie and attribution consent">
     <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
-      <div style="font-size:13.5px; color:var(--text-secondary);">
+      <div style="font-size:16px; color:var(--text-secondary);">
         <strong style="color:var(--text-primary);">Editorial Privacy &amp; Attribution Control:</strong> We use first-party UTM &amp; Meta CAPI deduplication cookies only after consent. Read our <a href="/privacy" style="text-decoration:underline; color:var(--vermilion);">Privacy Policy</a>.
       </div>
       <div style="display:flex; gap:8px;">
-        <button type="button" class="btn btn-ghost" style="padding:7px 14px; min-height:38px; font-size:13px;" onclick="setCookieConsent('rejected')">Reject Non-Essential</button>
-        <button type="button" class="btn btn-vermilion" style="padding:7px 14px; min-height:38px; font-size:13px;" onclick="setCookieConsent('accepted')">Accept Attribution</button>
+        <button type="button" class="btn btn-ghost" style="padding:7px 14px; min-height:38px; font-size:14px;" onclick="setCookieConsent('rejected')">Reject Non-Essential</button>
+        <button type="button" class="btn btn-vermilion" style="padding:7px 14px; min-height:38px; font-size:14px;" onclick="setCookieConsent('accepted')">Accept Attribution</button>
       </div>
     </div>
   </aside>
 
-  <footer style="border-top:1px solid var(--border-hairline); background:var(--bg-parchment); padding:48px 0; color:var(--text-secondary); font-size:14px;">
+  <footer style="background:var(--bg-parchment); padding:48px 0; color:var(--text-secondary); font-size:16px;">
     <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:28px;">
       <div>
         <a href="/" class="brand-logo" style="margin-bottom:10px;">
@@ -706,16 +676,16 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </div>
       <div style="display:flex; gap:36px; flex-wrap:wrap;">
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">PLATFORM</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Platform</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/#radar-tool">Interactive Spend Radar</a>
-            <a href="/leaderboard">🏆 Industry Leaderboard</a>
+            <a href="/leaderboard">Industry Leaderboard</a>
             <a href="/directory">60+ pSEO Spend Reports</a>
             <a href="/sitemap.xml">XML Sitemap</a>
           </div>
         </div>
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">VERIFIED SPEND LEDGERS</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Verified Spend Ledgers</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/seo/ag1-podcast-sponsorship-spend-and-roi">AG1 Spend &amp; 3x ROI</a>
             <a href="/seo/deel-newsletter-and-podcast-ad-spend">Deel B2B Ad Ledger</a>
@@ -724,7 +694,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
           </div>
         </div>
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:13px; margin-bottom:10px;">LEGAL &amp; TRUST</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Legal &amp; Trust</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms of Service</a>
