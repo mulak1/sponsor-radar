@@ -134,16 +134,49 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   </div>
                 </div>
 
-                <details id="mode-b-details" style="margin-top:10px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment);">
-                  <summary id="mode-b-summary" style="cursor:pointer; font-size:14px; font-weight:700; color:var(--text-secondary);">Or Extract Sponsor Reads from a Raw Podcast / YouTube Transcript ▾</summary>
-                  <div class="mode-tabs" role="tablist" style="margin-top:8px;">
+                <!-- Live 2x2 KPI Readout Inside Hero Search Card (Eliminates Empty White Space) -->
+                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px;">
+                  <div class="kpi-box" style="background:var(--bg-parchment); padding:12px 14px; border-radius:10px;">
+                    <div class="kpi-label" id="res-entity-label">${isInitialShow ? 'Matched Creator Show' : 'Sponsor / Entity'}</div>
+                    <div class="kpi-val" id="res-brand-name" style="color:var(--text-primary); font-size:19px;">${escapeHtml(displayEntity.name)}</div>
+                    <div class="mono" id="res-brand-domain" style="font-size:13.5px; color:var(--vermilion);">${escapeHtml(displayEntity.subtitle)}</div>
+                  </div>
+                  <div class="kpi-box" style="background:var(--bg-parchment); padding:12px 14px; border-radius:10px;">
+                    <div class="kpi-label">Est. Monthly Ad Spend</div>
+                    <div class="kpi-val" id="res-monthly-spend" style="color:var(--amber-gold); font-size:19px;">$${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}</div>
+                    <div class="mono" id="res-avg-cpm" style="font-size:13.5px; color:var(--text-secondary);">Avg CPM: $${defaultAnalysis.metrics.avg_cpm_usd} (Floor: $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)})</div>
+                  </div>
+                  <div class="kpi-box" style="background:var(--bg-parchment); padding:12px 14px; border-radius:10px;">
+                    <div class="kpi-label">3x+ Renewal Score</div>
+                    <div class="kpi-val" id="res-renewal-score" style="color:var(--emerald-roi); font-size:19px;">${defaultAnalysis.metrics.renewal_velocity_score}/100</div>
+                    <div class="mono" id="res-flights-summary" style="font-size:13.5px; color:var(--emerald-roi);">${defaultAnalysis.metrics.proven_3x_shows_count} Proven 3x+ (${defaultAnalysis.metrics.verified_total_flights} Flights)</div>
+                  </div>
+                  <div class="kpi-box" style="background:var(--bg-parchment); padding:12px 14px; border-radius:10px;">
+                    <div class="kpi-label">Partnerships &amp; Booking Desk</div>
+                    <div class="kpi-val" id="res-dm-role" style="font-size:15.5px; color:var(--text-primary);">${escapeHtml(displayEntity.lead_role)}</div>
+                    <div class="mono" id="res-dm-email" style="font-size:13.5px; color:var(--amber-gold);">Domain Verified • ${totalContacts} Contacts ($1.99)</div>
+                  </div>
+                </div>
+
+                <!-- Instant Action Strip Inside Search Card -->
+                <div style="margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--emerald-soft); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                  <span class="mono" style="font-size:13.5px; font-weight:700; color:var(--emerald-roi);">3-Flight Floor: -18% vs. Rack + 1.5% CTR Make-Good</span>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-ghost" style="padding:6px 12px; min-height:34px; font-size:13.5px; background:var(--bg-surface);" onclick="window.__srAddToPlan((document.getElementById('res-brand-name')||{}).textContent || '${escapeHtml(displayEntity.name.replace(/'/g, "\\'"))}', '${isInitialShow ? 'show' : 'brand'}', window.__srCurrentAvgCpm || 45, window.__srCurrentRackRate || 9500, 3)">+ Add to Q4 Plan</button>
+                    <a href="#sr-home-option-e" class="btn btn-emerald" style="padding:6px 12px; min-height:34px; font-size:13.5px; text-decoration:none;">Open Counter-Offer &amp; Pitch ↓</a>
+                  </div>
+                </div>
+
+                <details id="mode-b-details" style="display:none;">
+                  <summary id="mode-b-summary">Transcript Extractor</summary>
+                  <div class="mode-tabs" role="tablist">
                     <button type="button" id="tab-mode-lookup" class="mode-tab active" onclick="switchToolMode('lookup')">Brand / Show Search</button>
                     <button type="button" id="tab-mode-transcript" class="mode-tab" onclick="switchToolMode('transcript')">Transcript Extractor</button>
                   </div>
                 </details>
               </div>
 
-              <!-- Transcript Extractor Mode -->
+              <!-- Transcript Extractor Mode (Hidden) -->
               <div id="mode-transcript-pane" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                   <span class="mono" style="font-size:14px; font-weight:700; color:var(--emerald-roi);">Raw Transcript Sponsor Extractor</span>
@@ -176,29 +209,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 
       <!-- FULL-WIDTH LIVE RESULTS + WARM-IVORY INTERACTIVE WORKBENCH + PLACEMENTS TABLE -->
       <div id="radar-results-container" style="margin-top:24px; display:flex; flex-direction:column; gap:18px;">
-        <!-- 1. 4-Card KPI Summary Strip -->
-        <div class="kpi-grid" style="margin-bottom:0;">
-          <div class="kpi-box" style="background:var(--bg-surface);">
-            <div class="kpi-label" id="res-entity-label">${isInitialShow ? 'Matched Creator Show' : 'Sponsor / Entity'}</div>
-            <div class="kpi-val" id="res-brand-name" style="color:var(--text-primary); font-size:20px;">${escapeHtml(displayEntity.name)}</div>
-            <div class="mono" id="res-brand-domain" style="font-size:14px; color:var(--vermilion);">${escapeHtml(displayEntity.subtitle)}</div>
-          </div>
-          <div class="kpi-box" style="background:var(--bg-surface);">
-            <div class="kpi-label">Est. Monthly Ad Spend</div>
-            <div class="kpi-val" id="res-monthly-spend" style="color:var(--amber-gold);">$${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}</div>
-            <div class="mono" id="res-avg-cpm" style="font-size:14px; color:var(--text-secondary);">Avg Negotiated CPM: $${defaultAnalysis.metrics.avg_cpm_usd} (3x Floor: $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)})</div>
-          </div>
-          <div class="kpi-box" style="background:var(--bg-surface);">
-            <div class="kpi-label">3x+ Renewal Score</div>
-            <div class="kpi-val" id="res-renewal-score" style="color:var(--emerald-roi);">${defaultAnalysis.metrics.renewal_velocity_score}/100</div>
-            <div class="mono" id="res-flights-summary" style="font-size:14px; color:var(--emerald-roi);">${defaultAnalysis.metrics.proven_3x_shows_count} Proven 3x+ (${defaultAnalysis.metrics.verified_total_flights} Flights)</div>
-          </div>
-          <div class="kpi-box" style="background:var(--bg-surface);">
-            <div class="kpi-label">Partnerships &amp; Booking Desk</div>
-            <div class="kpi-val" id="res-dm-role" style="font-size:16px; color:var(--text-primary);">${escapeHtml(displayEntity.lead_role)}</div>
-            <div class="mono" id="res-dm-email" style="font-size:14px; color:var(--amber-gold);">Sample Unlocked Below • ${totalContacts} Total Contacts ($1.99)</div>
-          </div>
-        </div>
+        <div class="kpi-grid" style="display:none;"></div>
 
         <!-- 2. Warm-Ivory Interactive Buyer & Creator Workbench (Centerpiece on Homepage) -->
         <div id="sr-home-option-e" class="pitch-box" style="margin-top:0; background:var(--bg-surface); color:var(--text-primary); padding:24px 26px; border-radius:18px;">

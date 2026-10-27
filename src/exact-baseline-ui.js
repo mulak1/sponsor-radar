@@ -184,7 +184,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
       <div id="eb-field-hud-drawer" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;background:${t.cardBg};color:${t.safeColor};font-variant-numeric:tabular-nums;font-size:13.5px;">[${esc(cfg.hudLabel.toUpperCase())} ACTIVE] • Deterministic Engine Ready • Host: ${esc(cfg.domain)}</div>
     </details>
   </div>
-  <div id="eb-sovrn-affiliate-strip" class="eb-panel-card"><h3 style="margin:0 0 10px 0;font-size:18px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">Recommended Companion Tools &amp; Products</h3><div class="eb-gbb-grid">${affiliatesHtml}</div></div>
+  <div id="eb-sovrn-affiliate-strip" class="eb-panel-card"><h3 style="margin:0 0 10px 0;font-size:18px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">Recommended Companion Tools &amp; Products</h3><div class="eb-gbb-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">${affiliatesHtml}</div></div>
   ${buildMobileSeoCrawlMeshHtml(cfg, reqPath)}
 </section>
 

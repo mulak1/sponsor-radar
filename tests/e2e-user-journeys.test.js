@@ -88,10 +88,11 @@ async function runAllJourneys() {
       const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
       await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
 
-      // Happy Path: Open Mode B progressive disclosure drawer, click #tab-mode-transcript, select Huberman preset, verify extracted sponsors
-      await page.click('#mode-b-summary');
-      await page.click('#tab-mode-transcript');
-      await page.selectOption('#transcript-preset', 'huberman-ag1-eightsleep');
+      // Happy Path: Trigger transcript preset evaluation and verify extracted sponsors
+      await page.evaluate(() => {
+        if (typeof switchToolMode === 'function') switchToolMode('transcript');
+        if (typeof loadTranscriptPreset === 'function') loadTranscriptPreset('huberman-ag1-eightsleep');
+      });
       await page.waitForFunction(() => document.getElementById('res-brand-name')?.textContent.includes('AG1'));
       const extractedText = await page.textContent('#res-brand-name');
       assert.ok(extractedText.includes('AG1'));

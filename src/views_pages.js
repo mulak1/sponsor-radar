@@ -35,20 +35,19 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div style="margin-bottom:22px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:12px;">
           <div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
-              <span class="pill-vermilion">VERIFIED Q4/2026 MEDIA BUYER &amp; CREATOR INDEX</span>
-              <span class="pill-emerald">${totalReports} REPORTS • ${brands.length} BRANDS • ${shows.length} SHOWS</span>
-            </div>
-            <h1 class="headline-xl" style="font-size:clamp(2rem, 3.5vw, 3.1rem);line-height:1.08;max-width:26ch;margin:0 0 10px 0;">Verified Sponsor Spend &amp; Show Rate Card Directory</h1>
-            <p class="subhead" style="margin-bottom:0; max-width:78ch;">
+            <h1 class="headline-xl" style="font-size:clamp(1.75rem, 3.2vw, 2.75rem);line-height:1.12;max-width:22ch;margin:0 0 8px 0;">Sponsor Spend &amp; Show Rate Directory</h1>
+            <p class="subhead" style="margin-bottom:8px; max-width:64ch;">
               Browse <strong>${totalReports} verified sponsorship intelligence dossiers</strong> covering <strong>${brands.length} active sponsor brands</strong>, <strong>${shows.length} flagship podcasts, newsletters &amp; YouTube channels</strong>, negotiated 3-flight CPM floors (-18% vs. rack), and <strong>${totalContacts} direct buyer &amp; booking rep contacts</strong>.
             </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <span class="pill-emerald">${totalReports} Reports • ${brands.length} Brands • ${shows.length} Shows</span>
+            </div>
           </div>
           <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
             <a href="/buy/flash_pass?source=directory_hero" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:10px 18px; font-size:14px; text-decoration:none;">
               <span>Download Full ${totalContacts}-Contact &amp; Rate Card CSV ($1.99) →</span>
             </a>
-            <span class="mono" style="font-size:12.5px; color:var(--text-muted);">Instant CSV + EML Bundle • One-Time Pass • Ramp/Brex Receipt</span>
+            <span class="mono" style="font-size:13.5px; color:var(--text-muted);">Instant CSV + EML Bundle • One-Time Pass • Ramp/Brex Receipt</span>
           </div>
         </div>
 
@@ -57,38 +56,38 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">INDEXED RESEARCH DOSSIERS</div>
             <div class="kpi-val" style="color:var(--text-primary);">${totalReports} Verified Reports</div>
-            <div class="mono" style="font-size:13px; color:var(--emerald-roi); margin-top:2px;">${nichePages.length} Niche Hubs • ${brandPages.length} Brands • ${showPages.length} Shows</div>
+            <div class="mono" style="font-size:13.5px; color:var(--emerald-roi); margin-top:2px;">${nichePages.length} Niche Hubs • ${brandPages.length} Brands • ${showPages.length} Shows</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">TRACKED SPONSOR BRANDS</div>
             <div class="kpi-val" style="color:var(--amber-gold);">${brands.length} Active Spenders</div>
-            <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">$18.4M+/mo Tracked • 3x+ Renewal Proof</div>
+            <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">$18.4M+/mo Tracked • 3x+ Renewal Proof</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">SHOW RATE CARDS &amp; FLOORS</div>
             <div class="kpi-val" style="color:var(--emerald-roi);">${shows.length} Flagship Shows</div>
-            <div class="mono" style="font-size:13px; color:var(--emerald-roi); margin-top:2px;">Avg -18% Negotiated 3-Flight Floor CPM</div>
+            <div class="mono" style="font-size:13.5px; color:var(--emerald-roi); margin-top:2px;">Avg -18% Negotiated 3-Flight Floor CPM</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">VERIFIED DECISION MAKERS</div>
             <div class="kpi-val" style="color:var(--vermilion);">${totalContacts} Direct Emails</div>
-            <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">${brands.length} Brand Buyers + ${shows.length} Show Booking Reps</div>
+            <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">${brands.length} Brand Buyers + ${shows.length} Show Booking Reps</div>
           </div>
         </div>
 
         <!-- Interactive Filter & Search Workbench -->
-        <div style="padding:16px 18px; border-radius:14px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:16px 18px; border-radius:14px; background:var(--bg-surface); display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
             <div style="display:flex; gap:8px; flex:1; min-width:260px; align-items:center;">
               <input id="sr-dir-search" type="search" class="input-field" style="flex:1; min-width:220px;" placeholder="Filter ${totalReports} reports, ${brands.length} brands, or ${shows.length} shows by name, B2B/DTC vertical, channel, or CPM..." aria-label="Filter directory reports" oninput="window.__srFilterDirectory()" />
-              <button type="button" class="btn btn-ghost" style="padding:8px 12px; min-height:40px; font-size:13px;" onclick="document.getElementById('sr-dir-search').value='';window.__srFilterDirectory('all');">Reset</button>
+              <button type="button" class="btn btn-ghost" style="padding:8px 12px; min-height:40px; font-size:13.5px;" onclick="document.getElementById('sr-dir-search').value='';window.__srFilterDirectory('all');">Reset</button>
             </div>
-            <div id="sr-dir-match-count" class="mono" style="font-size:13px; font-weight:700; color:var(--emerald-roi); background:var(--emerald-soft); padding:6px 12px; border-radius:999px;">
+            <div id="sr-dir-match-count" class="mono" style="font-size:13.5px; font-weight:700; color:var(--emerald-roi); background:var(--emerald-soft); padding:6px 12px; border-radius:999px;">
               Showing All ${totalEntities} Indexed Dossiers &amp; Entities
             </div>
           </div>
           <div id="sr-dir-pill-bar" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;" role="tablist" aria-label="Directory Category Filters">
-            <span class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-muted);">Quick Filter:</span>
+            <span class="mono" style="font-size:13.5px; font-weight:700; color:var(--text-muted);">Quick Filter:</span>
             <button type="button" data-dir-pill="all" onclick="window.__srFilterDirectory('all', this)" class="preset-chip" style="background:var(--vermilion); color:#FFFFFF; font-weight:700;">All (${totalEntities})</button>
             <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;"><img src="/public/editorial-segment-1.jpg" alt="" width="20" height="20" loading="lazy" style="width:20px;height:20px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Ad Buyers: Show Rate Cards (${showPages.length + shows.length})</button>
             <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;"><img src="/public/editorial-segment-2.jpg" alt="" width="20" height="20" loading="lazy" style="width:20px;height:20px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Creators: Brand Spend Ledgers (${brandPages.length + brands.length})</button>
@@ -102,7 +101,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
 
         <!-- Zero-Match Custom Workbench Fallback -->
         <div id="sr-dir-empty-state" class="panel" style="display:none; margin-top:16px; padding:24px; text-align:center; background:var(--bg-surface);">
-          <div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700; margin-bottom:6px;">CUSTOM ON-DEMAND AUDIT READY</div>
+          <div class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700; margin-bottom:6px;">CUSTOM ON-DEMAND AUDIT READY</div>
           <h3 style="font-size:18px; margin:0 0 8px 0;">No pre-indexed report matched "<span id="sr-dir-empty-query"></span>" — Run a Live Custom Audit Instead</h3>
           <p style="font-size:14px; color:var(--text-secondary); max-width:60ch; margin:0 auto 14px;">Our live sponsorship engine can benchmark any custom brand domain, podcast, newsletter, or YouTube channel on the fly.</p>
           <a id="sr-dir-empty-cta" href="/#radar-tool" class="btn btn-vermilion" style="padding:10px 18px; font-size:14px; text-decoration:none;">Audit This Target in Live Workbench ↗</a>
@@ -123,12 +122,12 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:12.5px; color:var(--amber-gold); font-weight:700;">${escapeHtml(p.category)}</span>
-                  <span class="mono" style="font-size:12.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">${escapeHtml(p.category)}</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:14.5px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle); font-size:12.5px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px;">
                 <span class="mono" style="color:var(--text-secondary);">Cat. Spend: <strong>${fmtSpend(p.est_monthly_spend)}</strong></span>
                 <div style="display:flex; gap:10px;">
                   <a href="/?q=${encodeURIComponent(p.category)}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Workbench ↗</a>
@@ -159,14 +158,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:12.5px; color:var(--emerald-roi); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
-                  <span class="mono" style="font-size:12px; color:var(--amber-gold); font-weight:700;">$${p.avg_cpm} Avg CPM</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">$${p.avg_cpm} Avg CPM</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:14.5px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono" style="font-size:12px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${escapeHtml(maskedEmail)})</div>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
+                <div class="mono" style="font-size:13.5px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${escapeHtml(maskedEmail)})</div>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle); font-size:12.5px; gap:6px; flex-wrap:wrap;">
-                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'brand', ${p.avg_cpm}, ${p.est_monthly_spend || 12000}, 3)" class="pill-emerald" style="border:none; cursor:pointer; font-size:11.5px; padding:3px 8px;">+ Add to Q4 Plan</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
+                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'brand', ${p.avg_cpm}, ${p.est_monthly_spend || 12000}, 3)" class="pill-emerald" style="border:none; cursor:pointer; font-size:13.5px; padding:4px 10px;">+ Add to Q4 Plan</button>
                 <a href="/?q=${encodeURIComponent(b.name || p.title.split(' ')[0])}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Pitch / Audit ↗</a>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
               </div>
@@ -194,14 +193,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:12.5px; color:var(--cyan-info); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
-                  <span class="mono" style="font-size:12.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} CPM ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--cyan-info); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} CPM ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:14.5px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
+                <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle); font-size:12.5px; gap:6px; flex-wrap:wrap;">
-                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'show', ${p.avg_cpm}, ${rackUsd}, 3)" class="pill-emerald" style="border:none; cursor:pointer; font-size:11.5px; padding:3px 8px;">+ Add to Q4 Plan</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
+                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'show', ${p.avg_cpm}, ${rackUsd}, 3)" class="pill-emerald" style="border:none; cursor:pointer; font-size:13.5px; padding:4px 10px;">+ Add to Q4 Plan</button>
                 <a href="/?q=${encodeURIComponent(s.name || p.title.split(' ')[0])}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Audit Quote ↗</a>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
               </div>
@@ -227,11 +226,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               <div class="sr-dir-item" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(b.name)}</a>
-                  <span style="color:var(--text-muted); font-size:12.5px;">(${escapeHtml(b.domain)} • ${escapeHtml(b.vertical || b.category)})</span>
+                  <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(b.domain)} • ${escapeHtml(b.vertical || b.category)})</span>
                 </span>
                 <span style="display:inline-flex; align-items:center; gap:8px;">
-                  <span class="mono" style="color:var(--amber-gold); font-weight:700; font-size:12.5px;">${fmtSpend(b.est_monthly_spend)} • ${b.renewal_rate_pct}% 3x • $${b.avg_cpm} CPM</span>
-                  <a href="/?q=${encodeURIComponent(b.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:11.5px; padding:2px 7px;">Audit ↗</a>
+                  <span class="mono" style="color:var(--amber-gold); font-weight:700; font-size:13.5px;">${fmtSpend(b.est_monthly_spend)} • ${b.renewal_rate_pct}% 3x • $${b.avg_cpm} CPM</span>
+                  <a href="/?q=${encodeURIComponent(b.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:13.5px; padding:3px 8px;">Audit ↗</a>
                 </span>
               </div>
             `;
@@ -250,14 +249,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const floorUsd = Math.round(s.midroll_rate_usd * 0.82);
               const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || s.category || '') + ' ' + s.name);
               return `
-              <div class="sr-dir-item" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13px; gap:8px; flex-wrap:wrap;">
+              <div class="sr-dir-item" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(s.name)}</a>
-                  <span style="color:var(--text-muted); font-size:12.5px;">(${escapeHtml(s.channel_type)} • ${Math.round(s.audience_size / 1000)}K)</span>
+                  <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(s.channel_type)} • ${Math.round(s.audience_size / 1000)}K)</span>
                 </span>
                 <span style="display:inline-flex; align-items:center; gap:8px;">
-                  <span class="mono" style="color:var(--emerald-roi); font-weight:700; font-size:12.5px;">$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor • $${s.base_cpm} CPM</span>
-                  <a href="/?q=${encodeURIComponent(s.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:11.5px; padding:2px 7px;">Quote ↗</a>
+                  <span class="mono" style="color:var(--emerald-roi); font-weight:700; font-size:13.5px;">$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor • $${s.base_cpm} CPM</span>
+                  <a href="/?q=${encodeURIComponent(s.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:13.5px; padding:3px 8px;">Quote ↗</a>
                 </span>
               </div>
             `;
@@ -267,18 +266,17 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       </div>
 
       <!-- In-Page Media Buyer & Creator Dossier Vault Conversion Banner -->
-      <div class="panel" style="margin-top:28px; padding:24px 28px; background:var(--bg-surface); border:1px solid var(--emerald-border);">
+      <div class="panel" style="margin-top:28px; padding:24px 28px; background:var(--bg-surface);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-          <div style="max-width:68ch;">
-            <span class="pill-emerald">INSTANT SELF-SERVE CSV + EML BUNDLE • RAMP / BREX EXPENSE READY</span>
-            <h2 style="font-family:var(--font-serif); font-size:24px; font-weight:600; margin:8px 0 6px;">Need All ${totalContacts} Verified Contacts &amp; Negotiated Rate Floors in One Spreadsheet?</h2>
+          <div style="max-width:62ch;">
+            <h2 style="font-family:var(--font-serif); font-size:22px; font-weight:600; margin:0 0 6px;">Get All ${totalContacts} Contacts &amp; Rate Floors</h2>
             <p style="color:var(--text-secondary); font-size:14.5px; margin:0;">
               Stop opening reports one by one. Download <strong>verified-buyer-contacts.csv</strong> (${brands.length} Brand Partnerships Leads + ${shows.length} Show Booking Reps), <strong>96-flight-cpm-decay.csv</strong> (Rack vs. 3-Flight Floor CPMs, Promo Codes &amp; Vanity URLs), and <strong>3-flight-anchor-pitch.eml</strong> (Buyer Counter-Offer &amp; Creator Pilot Scripts).
             </p>
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass')" class="btn btn-ghost" style="padding:10px 16px; font-size:13.5px;">Contacts CSV Only (99¢)</button>
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass')" class="btn btn-vermilion" style="padding:12px 20px; font-size:14px;">Unlock Complete 3-File Vault ($1.99) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass')" class="btn btn-ghost" style="padding:10px 14px; font-size:13.5px;">1 Row Only (99¢)</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass')" class="btn btn-vermilion" style="padding:11px 16px; font-size:14px;">Full Q4 Ledger ($29) →</button>
           </div>
         </div>
       </div>
