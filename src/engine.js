@@ -2,9 +2,10 @@ const { computeRenewalScore, computeRenewalBadge, SAMPLE_TRANSCRIPTS } = require
 
 function maskSponsorEmail(email) {
   const raw = String(email || 'partnerships@brand.io').trim();
-  const [, domain] = raw.split('@');
-  if (!domain) return '[verified-buyer]***@brand.io + Agency Desk ($1 / $1.99)';
-  return `[verified-buyer]***@${domain} + Agency Desk ($1 / $1.99)`;
+  const [user, domain] = raw.split('@');
+  if (!domain) return 'p***@brand.io (Verified Domain • Unlock $1.99)';
+  const firstChar = (user && user[0]) ? user[0].toLowerCase() : 'p';
+  return `${firstChar}***@${domain}`;
 }
 
 function getAgencyDesk(brandSlug, category) {
@@ -51,8 +52,8 @@ function generateMoneyballLookalikeBundle({ targetShowName, baseCpm, rackRateUsd
       slot_usd: slotUsd,
       pilot_3flight_usd: Math.round(slotUsd * 3 * 0.85),
       overlap: s.overlap,
-      booking_rep: idx === 0 ? s.rep : maskSponsorEmail(s.rep),
-      unmasked_rep: idx === 0 ? s.rep : null
+      booking_rep: maskSponsorEmail(s.rep),
+      unmasked_rep: maskSponsorEmail(s.rep)
     };
   });
   return {
@@ -92,16 +93,15 @@ function generateOutboundPitch({ brand, anchorPlacements, senderShowName, sender
   const package3FlightPrice = Math.round(proposedMidrollPrice * 3 * 0.88);
   const effectiveCpm = Math.max(18, Math.round((package3FlightPrice / 3) / (audience / 1000)));
   const maskedEmail = maskSponsorEmail(brand.sponsor_email);
-  const rawBuyerEmail = brand.sponsor_email || 'partnerships@drinkag1.com';
 
   const subject = `${brand.name} x ${showTitle}: Saw your ${topAnchor.flights}x renewal on ${topAnchor.show_name} ($${effectiveCpm} CPM 3-Flight Pilot)`;
   const freePitchScript = `Hi ${brand.name} Partnerships Team (${brand.decision_maker_role}),
 
 Saw ${brand.name} renewed ${topAnchor.flights}x on ${topAnchor.show_name} (${topAnchor.vanity_url} | code: ${topAnchor.promo_code}). We reach ${audience.toLocaleString()} ${niche} builders/buyers per issue with 42%+ verified engagement.
 
-We have 1 mid-roll / primary slot open next month and can offer a 3-flight pilot at $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM — 15% below the $${brand.avg_cpm} category rack rate) with a 1.5% CTR make-good guarantee.
+We have 1 mid-roll / primary slot open next month and can offer a 3-flight pilot at $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM — 15% below the $${brand.avg_cpm} category rack rate).
 
-Open to a 3-flight test if I send over our 1-page rate card?`;
+[LOCKED IN FREE PREVIEW: Exact 1.5% CTR Make-Good Guarantee Clause, IAB 30-Day Attribution SLA & Direct Buyer Email (${maskedEmail}) — Unlock Single Row ($1.99) or Full 88-Contact Q4 Ledger ($29)]`;
 
   const body = `Hi ${brand.name} Partnerships Team (${brand.decision_maker_role}),
 
@@ -110,14 +110,14 @@ I track verified sponsorship renewals across ${niche} via SponsorRadar, and noti
 • Your Configured Reach: ${audience.toLocaleString()} active subscribers/listeners per release
 • Recommended 3-Episode Pilot Quote: $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM — 15% below $${brand.avg_cpm} category benchmark)
 • Single Insertion Rate Floor: $${proposedMidrollPrice.toLocaleString()}/episode
-• Sample Row #1 Verified Buyer Email (Unlocked Free): ${rawBuyerEmail} (${getAgencyDesk(brand.slug, brand.category)})
-• Pitches #2–#15 Custom .EML Sequence, Follow-Up Scripts & 42-Brand CSV Ledger: [UNLOCK 15-BRAND CAMPAIGN PACK ($1.00 TRIAL PASS / $1.99 FULL PACK)]`;
+• Target Buyer Contact (Domain Verified): ${maskedEmail} (${getAgencyDesk(brand.slug, brand.category)})
+• Unmasked Buyer Email, Redlined IO Clause & 88-Contact CSV Ledger: [UNLOCK SINGLE CONTACT ($1.99) OR COMPLETE 88-ROW Q4 LEDGER ($29)]`;
 
-  const mailtoHref = `mailto:${encodeURIComponent(rawBuyerEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(freePitchScript)}`;
+  const mailtoHref = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(freePitchScript)}`;
 
   return {
     to_email: maskedEmail,
-    unmasked_sample_email: rawBuyerEmail,
+    unmasked_sample_email: maskedEmail,
     agency_desk: getAgencyDesk(brand.slug, brand.category),
     decision_maker_role: brand.decision_maker_role,
     subject,
@@ -137,9 +137,9 @@ I track verified sponsorship renewals across ${niche} via SponsorRadar, and noti
  * Mode A: Dual-Entity (Brand + Creator Show + Dynamic Long-Tail) Intelligence Lookup
  */
 function analyzeSponsorLookup(db, payload = {}) {
-  const rawQuery = String(payload.query || 'Deel').trim();
+  const rawQuery = String(payload.query || 'Deel').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Deel';
   const qLower = rawQuery.toLowerCase();
-  const senderShowName = payload.sender_show_name || 'AI & SaaS Builders Weekly';
+  const senderShowName = String(payload.sender_show_name || 'AI & SaaS Builders Weekly').replace(/[<>"'`]/g, '').trim().slice(0, 80);
   const senderAudienceSize = Math.max(1000, Number(payload.sender_audience_size) || 75000);
 
   // 1. Direct Show Name / Slug / Host Match
@@ -330,14 +330,15 @@ function analyzeSponsorLookup(db, payload = {}) {
     .map(r => ({ ...r, is_lookalike: true, sponsor_email: maskSponsorEmail(r.sponsor_email) }));
   const activePlacements = [...rawActivePlacements, ...peerPlacements].map((r, idx) => {
     const fresh = getFreshBudgetStatus(`${r.brand_slug}:${r.show_slug}:${idx}`, r.flights);
+    const masked = maskSponsorEmail(r.sponsor_email || brand.sponsor_email);
     return {
       ...r,
       fresh_budget_badge: fresh.badge,
       fresh_hours_ago: fresh.hoursAgo,
-      unmasked_proof_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : null,
+      unmasked_proof_email: null,
       decision_maker_role: r.decision_maker_role || brand.decision_maker_role || 'VP Growth & Creator Partnerships',
       agency_desk: getAgencyDesk(r.brand_slug || brand.slug, r.brand_category || brand.category),
-      sponsor_email: idx === 0 ? (brand.sponsor_email || 'partnerships@drinkag1.com') : maskSponsorEmail(r.sponsor_email || brand.sponsor_email)
+      sponsor_email: masked
     };
   });
   const totalFlights = rawActivePlacements.reduce((acc, r) => acc + r.flights, 0);
@@ -383,7 +384,7 @@ function analyzeSponsorLookup(db, payload = {}) {
       name: brand.name,
       subtitle: `${brand.domain} • ${brand.category}`,
       lead_role: brand.decision_maker_role,
-      table_title: `VERIFIED AD-READ PLACEMENTS FOR ${brand.name.toUpperCase()}`
+      table_title: matchedType === 'dynamic_brand' ? `CATEGORY LOOKALIKE SPONSORS & BENCHMARK PLACEMENTS FOR ${brand.name.toUpperCase()}` : `VERIFIED AD-READ PLACEMENTS FOR ${brand.name.toUpperCase()}`
     },
     brand: safeBrand,
     show: show || null,

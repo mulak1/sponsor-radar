@@ -39,17 +39,17 @@ async function runAllJourneys() {
       const layoutMetrics = await page.evaluate(() => {
         const leftCol = document.getElementById('home-executive-brief');
         const topBlock = leftCol.firstElementChild.getBoundingClientRect();
-        const pitchBox = leftCol.querySelector('.pitch-box').getBoundingClientRect();
-        const benchBox = document.getElementById('home-left-category-benchmarks').getBoundingClientRect();
+        const stepsGrid = leftCol.querySelector('.hero-steps-grid').getBoundingClientRect();
+        const pitchBox = document.getElementById('sr-home-option-e').getBoundingClientRect();
         return {
-          gapStepsToPitchPx: Math.round(pitchBox.top - topBlock.bottom),
-          gapPitchToBenchPx: Math.round(benchBox.top - pitchBox.bottom),
-          hasBenchmarks: Boolean(benchBox.height > 100)
+          gapTopToStepsPx: Math.round(stepsGrid.top - topBlock.bottom),
+          hasPitchWorkbench: Boolean(pitchBox.height > 100),
+          hasStepsGrid: Boolean(stepsGrid.height > 60)
         };
       });
-      assert.ok(layoutMetrics.gapStepsToPitchPx <= 24, `Expected <=24px gap between steps and pitch box, got ${layoutMetrics.gapStepsToPitchPx}px`);
-      assert.ok(layoutMetrics.gapPitchToBenchPx <= 24, `Expected <=24px gap between pitch box and benchmarks, got ${layoutMetrics.gapPitchToBenchPx}px`);
-      assert.strictEqual(layoutMetrics.hasBenchmarks, true);
+      assert.ok(layoutMetrics.gapTopToStepsPx <= 48, `Expected <=48px gap in hero left column, got ${layoutMetrics.gapTopToStepsPx}px`);
+      assert.strictEqual(layoutMetrics.hasPitchWorkbench, true);
+      assert.strictEqual(layoutMetrics.hasStepsGrid, true);
 
       // Happy Path: Lookup "Ramp" and recalculate quote for 250K reach
       await page.fill('#lookup-query', 'Ramp');

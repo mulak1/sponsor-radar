@@ -152,13 +152,13 @@ function renderDynamicScorecardOgSvg(cfg, rawTarget) {
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect x="44" y="44" width="1112" height="542" rx="28" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="3"/>
   <rect x="76" y="78" width="380" height="40" rx="20" fill="#EEF2FF"/>
-  <text x="98" y="104" font-family="Inter, sans-serif" font-size="17" font-weight="700" fill="${escXml(g.badgeColor)}">✦ ${escXml(g.categoryTag.toUpperCase())}</text>
+  <text x="98" y="104" font-family="Plus Jakarta Sans, sans-serif" font-size="17" font-weight="700" fill="${escXml(g.badgeColor)}">${escXml(g.categoryTag)}</text>
   <text x="76" y="182" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#0F172A">${escXml(cfg.brandName)} Report: ${escXml(info.target.slice(0, 26))}</text>
-  <text x="76" y="236" font-family="Inter, sans-serif" font-size="24" fill="#475569">Verified Scorecard • Ready-to-Use Action Pack &amp; 1-Click Export</text>
+  <text x="76" y="236" font-family="Plus Jakarta Sans, sans-serif" font-size="24" fill="#475569">Verified Scorecard • Ready-to-Use Action Pack &amp; 1-Click Export</text>
   <rect x="76" y="278" width="1048" height="176" rx="20" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-  <text x="112" y="334" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#64748B">VERIFIED SCORE &amp; IMPACT</text>
-  <text x="112" y="402" font-family="JetBrains Mono, monospace" font-size="48" font-weight="800" fill="${escXml(g.badgeColor)}">${escXml(info.message)}</text>
-  <text x="76" y="528" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0F172A">https://${escXml(cfg.domain)}/?q=${escXml(encodeURIComponent(info.target))} • Free Interactive Check &amp; 99¢ Single-File Export</text>
+  <text x="112" y="334" font-family="Plus Jakarta Sans, sans-serif" font-size="20" font-weight="700" fill="#64748B">Verified Score &amp; Impact</text>
+  <text x="112" y="402" font-family="Plus Jakarta Sans, sans-serif" font-size="48" font-weight="800" fill="${escXml(g.badgeColor)}">${escXml(info.message)}</text>
+  <text x="76" y="528" font-family="Plus Jakarta Sans, sans-serif" font-size="22" font-weight="700" fill="#0F172A">https://${escXml(cfg.domain)}/?q=${escXml(encodeURIComponent(info.target))} • Free Interactive Check &amp; 99¢ Single-File Export</text>
 </svg>`;
 }
 
@@ -186,7 +186,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
         { name: 'Row #5 Complete 3-File Action Pack', kpi: 'Locked in Preview', action: 'Unlock Complete 3-File Pack ($1.99)', status: 'LOCKED_PREVIEW' }
       ];
 
-  const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;font-size:14px;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-family:monospace;font-weight:700;color:${escXml(g.badgeColor)};font-size:14px;">${escXml(r.kpi)}</td><td style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};font-size:14px;">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-size:13px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
+  const trsHtml = rows.map((r, idx) => `<tr${idx === 3 ? ' id="eb-growth-row4-tr"' : ''}><th${idx === 0 ? ' id="eb-growth-r1-name"' : ''} scope="row" style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-weight:700;color:${escXml(t.textPrimary)};text-align:left;font-size:14px;">${escXml(r.name)}</th><td${idx === 0 ? ' id="eb-growth-r1-kpi"' : (idx === 1 ? ' id="eb-growth-r2-kpi"' : (idx === 3 ? ' id="eb-growth-row4-val"' : ''))} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-variant-numeric:tabular-nums;font-weight:700;color:${escXml(g.badgeColor)};font-size:14px;">${escXml(r.kpi)}</td><td style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};color:${escXml(t.textSecondary)};font-size:14px;">${escXml(r.action)}</td><td${idx === 3 ? ' id="eb-growth-row4-status"' : ''} style="padding:11px 14px;border-bottom:1px solid ${escXml(t.border)};font-size:13px;font-weight:700;color:${escXml(t.safeColor)};">${escXml(r.status)}</td></tr>`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -205,15 +205,15 @@ function renderGrowthPageHtml(cfg, item, kind) {
   <meta name="twitter:title" content="${escXml(item.title)}" />
   <meta name="twitter:description" content="${escXml(item.summary.slice(0, 156))}" />
 </head>
-<body style="margin:0;background:${escXml(t.canvasBg)};color:${escXml(t.textPrimary)};font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.6;">
+<body style="margin:0;background:${escXml(t.canvasBg)};color:${escXml(t.textPrimary)};font-family:${escXml(t.fontSans || 'Plus Jakarta Sans,-apple-system,BlinkMacSystemFont,sans-serif')};font-size:16px;line-height:1.6;">
   <header style="border-bottom:1px solid ${escXml(t.border)};background:#FFFFFF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="/" style="font-weight:800;font-size:18px;color:${escXml(t.textPrimary)};text-decoration:none;">${escXml(cfg.brandName)}</a>
-      <span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'SIDE-BY-SIDE COMPARISON' : 'FREE INTERACTIVE TOOL')}</span>
+      <span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:${escXml(t.brandSoftBg)};color:${escXml(g.badgeColor)};">${escXml(kind === 'compare' ? 'Side-by-Side Comparison' : 'Free Interactive Tool')}</span>
     </div>
     <nav aria-label="Primary" style="display:flex;gap:16px;align-items:center;font-size:14px;font-weight:600;">
       <a href="/" style="color:${escXml(t.textSecondary)};text-decoration:none;">Home Calculator</a>
-      <a href="/leaderboard" style="color:${escXml(t.textSecondary)};text-decoration:none;">🏆 Leaderboard</a>
+      <a href="/leaderboard" style="color:${escXml(t.textSecondary)};text-decoration:none;">Leaderboard</a>
       <a href="/directory" style="color:${escXml(t.textSecondary)};text-decoration:none;">All Guides</a>
       <a href="/buy/flash_pass" rel="nofollow" style="padding:8px 16px;border-radius:999px;background:${escXml(g.badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">Unlock 3-File Pack ($1.99) ↗</a>
     </nav>
@@ -225,16 +225,16 @@ function renderGrowthPageHtml(cfg, item, kind) {
     <h1 style="font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;margin:0 0 8px 0;">${escXml(item.title)}</h1>
     <p class="pseo-lead" style="font-size:16px;color:${escXml(t.textSecondary)};margin:0 0 14px 0;">${escXml(item.summary)}</p>
     <script>window.__ebRunGrowthWb=function(v){if(!v)return;fetch('/api/cnn/inspect?target='+encodeURIComponent(v)).then(function(r){return r.json()}).then(function(d){if(!d||!d.scan)return;var s=d.scan,el=document.getElementById('eb-live-cnn-readout');if(el)el.textContent=s.target+' → '+s.grade+' ('+s.score+'/100) • '+s.cnnReadout;var n=document.getElementById('eb-growth-r1-name'),k1=document.getElementById('eb-growth-r1-kpi'),k2=document.getElementById('eb-growth-r2-kpi'),b=document.getElementById('eb-growth-badge-img'),pl=document.getElementById('eb-growth-permalink-btn');if(n)n.textContent=s.target+' : Live Check';if(k1)k1.textContent=s.grade+' ('+s.score+'/100) • '+s.kpi1;if(k2)k2.textContent=s.kpi2+' • '+s.cnnReadout;if(b)b.src='/badge/'+encodeURIComponent(s.target)+'.svg';if(pl)pl.href='/scan/'+encodeURIComponent(s.target);});};</script>
-    <section id="eb-onnx-cnn-workbench" style="background:#0F172A;color:#F8FAFC;border:1px solid #1E293B;border-radius:14px;padding:14px 18px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <section id="eb-onnx-cnn-workbench" style="background:#FFFFFF;color:${escXml(t.textPrimary)};border-radius:14px;padding:14px 18px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <span style="font-size:13px;font-weight:800;color:#38BDF8;font-family:monospace;">⚡ LIVE INTERACTIVE CALCULATOR:</span>
-        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:6px 11px;border-radius:8px;border:1px solid #334155;background:#090D16;color:#F8FAFC;font-size:13.5px;width:155px;" />
+        <span style="font-size:13px;font-weight:800;color:${escXml(g.badgeColor)};">Live Interactive Calculator:</span>
+        <input id="eb-cnn-wb-input" type="text" value="${escXml(item.target)}" placeholder="Enter your own..." aria-label="Custom scan target" style="padding:6px 11px;border-radius:8px;border:1px solid ${escXml(t.border)};background:${escXml(t.canvasBg)};color:${escXml(t.textPrimary)};font-size:13.5px;width:155px;" />
         <button id="eb-cnn-wb-submit" type="button" onclick="window.__ebRunGrowthWb((document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}')" style="padding:6px 13px;border-radius:8px;border:none;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13.5px;font-weight:700;cursor:pointer;">Check Score ↗</button>
-        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:600;color:#94A3B8;text-decoration:underline;padding:2px 6px;">Full Report ↗</a>
+        <a id="eb-growth-permalink-btn" href="/scan/${escXml(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:600;color:${escXml(t.textSecondary)};text-decoration:underline;padding:2px 6px;">Full Report ↗</a>
       </div>
-      <div id="eb-live-cnn-readout" style="font-family:monospace;font-size:13px;color:#34D399;font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
+      <div id="eb-live-cnn-readout" style="font-variant-numeric:tabular-nums;font-size:13px;color:${escXml(t.safeColor)};font-weight:700;">${escXml(item.target)} → ${escXml(item.metricA || item.scoreA)}</div>
     </section>
-    <section class="table-wrap" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:18px;margin-top:14px;box-shadow:0 6px 20px rgba(15,23,42,0.04);">
+    <section class="table-wrap" style="background:#FFFFFF;border-radius:14px;padding:18px;margin-top:14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
         <h2 style="font-size:18px;margin:0;">Side-by-Side Results &amp; Action Plan</h2>
         <img id="eb-growth-badge-img" src="/badge/${escXml(encodeURIComponent(item.target))}.svg" alt="${escXml(cfg.brandName)} Live Badge" width="240" height="22" decoding="async" />
@@ -243,22 +243,22 @@ function renderGrowthPageHtml(cfg, item, kind) {
         <thead><tr style="background:${escXml(t.canvasBg)};text-align:left;"><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Option / Check</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Measured Result</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Recommended Step</th><th scope="col" style="padding:11px 14px;border-bottom:2px solid ${escXml(t.border)};">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">${trsHtml}</tbody>
       </table>
-      <div id="eb-inline-row4-unlock" style="margin-top:14px;padding:12px 16px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:13.5px;font-weight:800;color:${escXml(t.textPrimary)};">🔒 Rows #4 &amp; #5 Locked: Unblur your complete 3-file remediation pack via 1-Click Stripe Express</div>
+      <div id="eb-inline-row4-unlock" style="margin-top:14px;padding:12px 16px;border-radius:10px;background:${escXml(t.canvasBg)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:13.5px;font-weight:800;color:${escXml(t.textPrimary)};">Rows #4 &amp; #5 Locked: Unblur your complete 3-file remediation pack via 1-Click Stripe Express</div>
         <div id="eb-growth-row4-msg" style="display:none !important;">
           <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" />
           <button id="eb-growth-row4-btn" type="button">Reveal Row #4 →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <a href="/buy/flash_pass" rel="nofollow" style="padding:8px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 12px rgba(15,23,42,0.12);">Unlock Complete 3-File Action Pack ($1.99 Stripe Express) ↗</a>
+          <a href="/buy/flash_pass" rel="nofollow" style="padding:8px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:14px;font-weight:800;text-decoration:none;">Unlock Complete 3-File Action Pack ($1.99 Stripe Express) ↗</a>
         </div>
       </div>
     </section>
-    <details style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:14px;padding:14px 18px;margin-top:16px;">
-      <summary style="cursor:pointer;font-size:14px;font-weight:700;color:${escXml(t.textPrimary)};">🔗 Embed Live Verified Badge &amp; Technical Specs (Layer-3)</summary>
+    <details style="background:#FFFFFF;border-radius:14px;padding:14px 18px;margin-top:16px;">
+      <summary style="cursor:pointer;font-size:14px;font-weight:700;color:${escXml(t.textPrimary)};">Embed Live Verified Badge &amp; Technical Specs (Layer-3)</summary>
       <div style="margin-top:10px;">
         <p style="font-size:13.5px;color:${escXml(t.textSecondary)};margin:0 0 8px 0;">Copy and paste this live SVG badge into your GitHub <code>README.md</code>, documentation, or media kit:</p>
-        <pre style="background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};border-radius:8px;padding:10px 12px;font-size:13px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
+        <pre style="background:${escXml(t.canvasBg)};border-radius:8px;padding:10px 12px;font-size:13px;overflow-x:auto;margin:0;"><code>${escXml(mdBadgeSnippet)}</code></pre>
       </div>
     </details>
   </main>

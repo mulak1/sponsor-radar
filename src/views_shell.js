@@ -77,7 +77,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
+  ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>` : ''}
   <style>
     :root {
       --bg-canvas: #F8F9FA;
@@ -181,7 +181,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       align-items: center;
       justify-content: space-between;
       min-height: 70px;
-      padding: 10px 0;
+      padding-top: 10px;
+      padding-bottom: 10px;
       gap: 14px;
       flex-wrap: wrap;
     }
@@ -447,7 +448,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     @media (max-width: 767px) {
       .ticker-bar { display: none; }
-      .nav-inner { min-height: 48px; padding: 6px 0; gap: 8px; }
+      .nav-inner { min-height: 48px; padding-top: 6px; padding-bottom: 6px; gap: 8px; }
       .nav-links { gap: 12px; font-size: 14px; }
       .hero-section { padding: 14px 0 20px; }
       .headline-xl { font-size: 32px; margin: 6px 0; }
@@ -631,13 +632,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       </a>
       <nav class="nav-links" aria-label="Primary Navigation">
         <a href="/#radar-tool">Spend Radar</a>
-        <a href="/leaderboard" style="font-weight:700;color:var(--vermilion);">Leaderboard</a>
+        <a href="/leaderboard">Leaderboard</a>
         <a href="/directory">Spend Directory</a>
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:10px; align-items:center;">
         <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:9px 16px; min-height:40px; font-size:14px; text-decoration:none;">
-          <span>Unlock Sponsor Pack ($1.99) →</span>
+          <span>Unlock Rate &amp; Sponsor Pack ($1.99) →</span>
         </a>
       </div>
     </div>
@@ -751,7 +752,95 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         if (el) el.style.display = 'none';
       }
       fireMetaEvent('ViewContent', 0, { path: window.location.pathname });
+      if (window.__srBootShortlistBar) window.__srBootShortlistBar();
     });
+
+    window.__srGetWorkspace = function() {
+      try {
+        var raw = localStorage.getItem('sr_workspace_v1');
+        var ws = raw ? JSON.parse(raw) : {};
+        if (!Array.isArray(ws.shortlist)) ws.shortlist = [];
+        return ws;
+      } catch (_) { return { shortlist: [] }; }
+    };
+    window.__srSaveWorkspace = function(patch) {
+      try {
+        var cur = window.__srGetWorkspace();
+        var next = Object.assign({}, cur, patch || {}, { updatedAt: Date.now() });
+        localStorage.setItem('sr_workspace_v1', JSON.stringify(next));
+        if (window.__srRenderShortlistBar) window.__srRenderShortlistBar(next);
+        return next;
+      } catch (_) { return patch || {}; }
+    };
+    window.__srAddToPlan = function(name, type, cpm, spendUsd, flights) {
+      var ws = window.__srGetWorkspace();
+      var list = Array.isArray(ws.shortlist) ? ws.shortlist.slice() : [];
+      var cleanName = String(name || 'Target').trim();
+      var exists = list.some(function(x) { return String(x.name).toLowerCase() === cleanName.toLowerCase(); });
+      if (!exists) {
+        list.push({ name: cleanName, type: type || 'show', cpm: Number(cpm) || 42, spendUsd: Number(spendUsd) || 6500, flights: Number(flights) || 3 });
+      }
+      ws = window.__srSaveWorkspace({ shortlist: list.slice(-8) });
+      if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'shortlist_add', target: cleanName, count: ws.shortlist.length });
+      if (typeof window.__srRenderComparisonMatrix === 'function') window.__srRenderComparisonMatrix();
+    };
+    window.__srRemoveFromPlan = function(name) {
+      var ws = window.__srGetWorkspace();
+      var list = (ws.shortlist || []).filter(function(x) { return String(x.name).toLowerCase() !== String(name).toLowerCase(); });
+      window.__srSaveWorkspace({ shortlist: list });
+      if (typeof window.__srRenderComparisonMatrix === 'function') window.__srRenderComparisonMatrix();
+    };
+    window.__srCopySharePlanUrl = function(btn) {
+      var ws = window.__srGetWorkspace();
+      var names = (ws.shortlist || []).map(function(x) { return x.name; });
+      if (!names.length) {
+        var qEl = document.getElementById('lookup-query');
+        if (qEl && qEl.value) names.push(qEl.value.trim());
+      }
+      var u = window.location.origin + '/?plan=' + encodeURIComponent(names.join(',')) + '&budget=' + encodeURIComponent(ws.budget || 15000) + '&mode=' + encodeURIComponent(ws.persona || 'buyer');
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).catch(function(){});
+      if (btn) btn.textContent = '✓ CFO / Client Proposal URL Copied!';
+      if (window.__ebLogEvent) window.__ebLogEvent('copy_summary', { type: 'share_cfo_plan_url', items: names.length });
+    };
+    window.__srBootShortlistBar = function() {
+      try {
+        var sp = new URLSearchParams(window.location.search || '');
+        var planParam = sp.get('plan');
+        if (planParam) {
+          var items = planParam.split(',').map(function(s) { return s.trim(); }).filter(Boolean).slice(0, 6);
+          if (items.length) {
+            var seeded = items.map(function(nm, idx) { return { name: nm, type: 'show', cpm: 42 - idx * 3, spendUsd: 7800 - idx * 900, flights: 3 }; });
+            window.__srSaveWorkspace({ shortlist: seeded, budget: Number(sp.get('budget')) || 15000, persona: sp.get('mode') || 'buyer' });
+          }
+        }
+        window.__srRenderShortlistBar(window.__srGetWorkspace());
+        if (typeof window.__srRenderComparisonMatrix === 'function') window.__srRenderComparisonMatrix();
+      } catch (_) {}
+    };
+    window.__srRenderShortlistBar = function(ws) {
+      var data = ws || window.__srGetWorkspace();
+      var list = data.shortlist || [];
+      var bar = document.getElementById('sr-shortlist-drawer');
+      if (!bar) {
+        bar = document.createElement('aside');
+        bar.id = 'sr-shortlist-drawer';
+        bar.setAttribute('aria-label', 'Q4 Media Plan & Sponsor Shortlist');
+        bar.style.cssText = 'position:fixed;bottom:56px;right:18px;z-index:88;max-width:460px;background:#161412;color:#FBF8F3;border:1px solid #0F766E;border-radius:14px;padding:12px 16px;box-shadow:0 16px 36px rgba(0,0,0,0.28);display:none;font-size:13px;';
+        document.body.appendChild(bar);
+      }
+      if (!list.length) { bar.style.display = 'none'; return; }
+      var totalFloor = list.reduce(function(acc, x) { return acc + Math.round((Number(x.spendUsd) || 6500) * 0.82); }, 0);
+      var totalSavings = list.reduce(function(acc, x) { return acc + Math.round((Number(x.spendUsd) || 6500) * 0.18); }, 0);
+      var avgCpm = Math.round(list.reduce(function(acc, x) { return acc + (Number(x.cpm) || 42); }, 0) / list.length * 0.82);
+      var pills = list.map(function(x) {
+        var safe = String(x.name).replace(/[<>"'&]/g, '');
+        return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:#262320;color:#A7F3D0;font-family:var(--font-mono);font-size:11.5px;font-weight:700;">' + safe + ' ($' + Math.round((x.cpm || 42) * 0.82) + ' Floor) <button type="button" data-rm-name="' + safe + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))" style="background:none;border:none;color:#FCA5A5;cursor:pointer;font-weight:800;padding:0 2px;">×</button></span>';
+      }).join(' ');
+      bar.style.display = 'block';
+      bar.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;"><strong style="color:#6EE7B7;font-family:var(--font-mono);font-size:12px;">MY Q4 MEDIA PLAN SHORTLIST (<span id="sr-shortlist-count">' + list.length + '</span> TARGETS • SAVED IN BROWSER)</strong><span style="font-family:var(--font-mono);font-size:11.5px;color:#FCD34D;">Save $' + totalSavings.toLocaleString() + ' @ -18% Floor</span></div>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' + pills + '</div>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;border-top:1px solid #332E2A;"><span style="font-family:var(--font-mono);font-size:12px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;"><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:11.5px;font-weight:700;cursor:pointer;">Share Plan URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\')" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:11.5px;font-weight:800;cursor:pointer;">Unlock Full Q4 Plan ($29) →</button></div></div>';
+    };
   </script>
 </body>
 </html>`;

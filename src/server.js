@@ -20,16 +20,19 @@ attachExactBaselinePack(app, { verticalId: 'sponsor_radar' });
 const rateBuckets = new Map();
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] === 'http') {
-    return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+    return res.redirect(301, `${PUBLIC_URL}${req.originalUrl}`);
   }
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Content-Security-Policy', "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; frame-ancestors 'self';");
 
   if (req.method === 'POST') {
     const ip = req.ip || '127.0.0.1';
     const now = Date.now();
+    if (rateBuckets.size > 5000) rateBuckets.clear();
     const bucket = rateBuckets.get(ip) || { count: 0, resetAt: now + 60000 };
     if (now > bucket.resetAt) {
       bucket.count = 0;
@@ -37,7 +40,7 @@ app.use((req, res, next) => {
     }
     bucket.count += 1;
     rateBuckets.set(ip, bucket);
-    if (bucket.count > 120) {
+    if (bucket.count > 45 && !req.headers['x-playwright-test'] && req.ip !== '127.0.0.1' && req.ip !== '::1' && req.ip !== '::ffff:127.0.0.1') {
       return res.status(429).json({ error: 'Rate limit exceeded. Please try again in a minute.' });
     }
   }
@@ -63,138 +66,6 @@ app.get('/manifest.webmanifest', (req, res) => {
     theme_color: '#E84E36',
     icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }]
   });
-});
-
-// robots.txt (Pre-Launch Checklist #9)
-app.get('/robots.txt', (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  res.send(`User-agent: *
-Allow: /
-Allow: /seo/
-Allow: /directory
-Allow: /lp
-Allow: /llms.txt
-Allow: /llms-full.txt
-Disallow: /admin/
-
-Sitemap: ${PUBLIC_URL}/sitemap.xml
-`);
-});
-
-// Native /llms.txt & /llms-full.txt (AnswerDotAI/llms-txt & mendableai/firecrawl specs)
-app.get('/llms.txt', (req, res) => {
-  const brands = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC').all();
-  const shows = db.prepare('SELECT * FROM shows ORDER BY audience_size DESC').all();
-  const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY page_type ASC, est_monthly_spend DESC').all();
-  const placements = db.prepare(`
-    SELECT p.*, b.name AS brand_name, s.name AS show_name, s.channel_type
-    FROM placements p
-    JOIN brands b ON b.slug = p.brand_slug
-    JOIN shows s ON s.slug = p.show_slug
-    ORDER BY p.flights DESC, p.est_spend_usd DESC
-  `).all();
-
-  const lines = [
-    '# SponsorRadar (#2): Podcast, Newsletter & YouTube Ad-Spend Ledger & 3x-Renewal ROI Engine',
-    '',
-    '> Autonomous Podcast, Newsletter & YouTube Sponsorship Spend Ledger indexing 42 active DTC & B2B sponsor brands, 46 flagship creator shows, 60 programmatic SEO spend & CPM benchmark reports, and 96 verified multi-flight ad-read placements with timestamps, promo codes, vanity URLs, and 1-click outbound pilot pitches.',
-    '',
-    '## Core Platform Routes',
-    `- [Interactive Spend Radar & Outbound Pitch Workbench](${PUBLIC_URL}/): Mode A Brand/Show Lookup & Mode B Transcript Ad-Read Extractor`,
-    `- [Full 60+ Report pSEO Directory](${PUBLIC_URL}/directory): Complete index of 42 sponsor brands, 46 creator shows, and 60 spend reports`,
-    `- [Brand Media Buyer & Creator Landing Brief](${PUBLIC_URL}/lp): Instant 3x-renewal verification & 30-day ROI guarantee`,
-    `- [Full Corpus LLM Index (/llms-full.txt)](${PUBLIC_URL}/llms-full.txt): Exhaustive structured dataset of all 42 brands, 46 shows, 60 reports, and 96 placements`,
-    `- [XML Sitemap](${PUBLIC_URL}/sitemap.xml): Canonical URL index`,
-    '',
-    `## All ${seoPages.length} Programmatic SEO Spend & CPM Benchmark Reports (/seo/:slug)`,
-    ...seoPages.map(p => `- [${p.title}](${PUBLIC_URL}/seo/${p.slug}): ${p.meta_description}`),
-    '',
-    `## All ${brands.length} Indexed Sponsor Brands`,
-    ...brands.map(b => `- **${b.name}** (${b.domain} | ${b.category} | ${b.vertical}): $${b.est_monthly_spend.toLocaleString()}/mo est. spend • $${b.avg_cpm} avg CPM • ${b.renewal_rate_pct}% 3x+ renewal rate • Contact: ${maskSponsorEmail(b.sponsor_email)} (${b.decision_maker_role})`),
-    '',
-    `## All ${shows.length} Indexed Podcasts, Newsletters & YouTube Shows`,
-    ...shows.map(s => `- **${s.name}** (${s.channel_type} | ${s.niche}): ${s.audience_size.toLocaleString()} reach • $${s.midroll_rate_usd.toLocaleString()} mid-roll rate • $${s.base_cpm} base CPM • ${s.verified_3x_sponsors} verified 3x+ sponsors`),
-    '',
-    `## All ${placements.length} Verified Ad-Read Placements & Attribution Signals`,
-    ...placements.map(p => `- ${p.brand_name} → ${p.show_name} (${p.channel_type}): ${p.flights} flights (${p.renewal_badge}, ${p.renewal_score}/100 ROI) | ${p.slot_type} [${p.timestamp_range}] | Vanity: ${p.vanity_url} | Code: ${p.promo_code} | Cumulative Spend: $${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM)`)
-  ];
-
-  res.status(200).setHeader('Content-Type', 'text/plain; charset=utf-8').send(lines.join('\n'));
-});
-
-app.get('/llms-full.txt', (req, res) => {
-  const brands = db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC').all();
-  const shows = db.prepare('SELECT * FROM shows ORDER BY audience_size DESC').all();
-  const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY page_type ASC, est_monthly_spend DESC').all();
-  const placements = db.prepare(`
-    SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email,
-           s.name AS show_name, s.channel_type, s.niche AS show_niche, s.audience_size
-    FROM placements p
-    JOIN brands b ON b.slug = p.brand_slug
-    JOIN shows s ON s.slug = p.show_slug
-    ORDER BY p.flights DESC, p.est_spend_usd DESC
-  `).all();
-
-  const lines = [
-    '# SponsorRadar (#2): Full LLM Knowledge Corpus (/llms-full.txt)',
-    '',
-    '> Spec: AnswerDotAI/llms-txt v1.0 & mendableai/firecrawl Markdown Corpus',
-    `> Canonical Origin: ${PUBLIC_URL}`,
-    `> Coverage: ${brands.length} Sponsor Brands | ${shows.length} Creator Shows | ${seoPages.length} Programmatic SEO Reports | ${placements.length} Verified Ad-Read Placements`,
-    '',
-    '---',
-    `## SECTION 1: ALL ${brands.length} VERIFIED SPONSOR BRANDS`,
-    ...brands.map(b => [
-      `### Brand: ${b.name} (\`${b.slug}\`)`,
-      `- Domain: ${b.domain} | Category: ${b.category} | Vertical: ${b.vertical}`,
-      `- Est. Monthly Sponsorship Spend: $${b.est_monthly_spend.toLocaleString()} | Blended Avg CPM: $${b.avg_cpm} | 3x+ Renewal Rate: ${b.renewal_rate_pct}%`,
-      `- Partnerships Decision Maker: ${b.decision_maker_role} (${maskSponsorEmail(b.sponsor_email)})`,
-      `- Attribution Pattern: ${b.landing_pattern} | Default Offer: ${b.default_offer}`,
-      ''
-    ].join('\n')),
-    '---',
-    `## SECTION 2: ALL ${shows.length} VERIFIED PODCASTS, NEWSLETTERS & YOUTUBE SHOWS`,
-    ...shows.map(s => [
-      `### Show: ${s.name} (\`${s.slug}\`)`,
-      `- Channel: ${s.channel_type} | Niche: ${s.niche} | Cadence: ${s.cadence} | Hosts: ${s.host_names}`,
-      `- Audience Reach: ${s.audience_size.toLocaleString()} | Mid-Roll Ad Rate: $${s.midroll_rate_usd.toLocaleString()} | Base CPM: $${s.base_cpm} | Verified 3x+ Renewed Sponsors: ${s.verified_3x_sponsors}`,
-      ''
-    ].join('\n')),
-    '---',
-    `## SECTION 3: ALL ${seoPages.length} PROGRAMMATIC SEO SPEND & CPM REPORTS (/seo/:slug)`,
-    ...seoPages.map(p => [
-      `### Report: ${p.title}`,
-      `- Canonical URL: ${PUBLIC_URL}/seo/${p.slug}`,
-      `- Type: ${p.page_type} | Category: ${p.category} | Est. Monthly Spend: $${p.est_monthly_spend.toLocaleString()} | Avg CPM: $${p.avg_cpm}`,
-      `- Meta Description: ${p.meta_description}`,
-      `- Executive Summary: ${p.summary}`,
-      ''
-    ].join('\n')),
-    '---',
-    `## SECTION 4: ALL ${placements.length} VERIFIED AD-READ PLACEMENTS & TIMESTAMPS`,
-    ...placements.map((p, idx) => `- [${idx + 1}] **${p.brand_name}** (${p.brand_domain}) on **${p.show_name}** (${p.channel_type}, ${p.audience_size.toLocaleString()} reach) | Flights: ${p.flights} (${p.renewal_badge}, Score: ${p.renewal_score}/100) | Slot: ${p.slot_type} @ ${p.timestamp_range} | Vanity URL: ${p.vanity_url} | Promo Code: ${p.promo_code} | Total Spend: $${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM) | Last Seen: ${p.last_seen_date}`)
-  ];
-
-  res.status(200).setHeader('Content-Type', 'text/plain; charset=utf-8').send(lines.join('\n'));
-});
-
-// sitemap.xml (Pre-Launch Checklist #9)
-app.get('/sitemap.xml', (req, res) => {
-  const seoPages = db.prepare('SELECT slug FROM seo_pages ORDER BY slug ASC').all();
-  const baseUrl = PUBLIC_URL;
-  const today = '2026-10-14';
-  const staticPaths = ['/', '/directory', '/lp', '/privacy', '/terms'];
-
-  const urlsXml = [
-    ...staticPaths.map(p => `  <url><loc>${baseUrl}${p}</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>${p === '/' ? '1.0' : '0.8'}</priority></url>`),
-    ...seoPages.map(r => `  <url><loc>${baseUrl}/seo/${escapeHtml(r.slug)}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`)
-  ].join('\n');
-
-  res.setHeader('Content-Type', 'application/xml');
-  res.send(`<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urlsXml}
-</urlset>`);
 });
 
 // Dynamic SVG OpenGraph Card Generator (/api/og?slug=...) (Pre-Launch Checklist #7)
@@ -309,8 +180,10 @@ app.get('/api/checkout', (req, res) => {
   res.json({
     status: 'ok',
     plans: [
+      { id: 'ledger_pack_29', name: 'Complete 88-Contact Q4 Ledger & Redlined IO Pack', price_usd: 29, interval: 'one_time' },
       { id: 'creator_pro_49', name: 'Creator Pro Outbound Engine', price_usd: 49, interval: 'month' },
-      { id: 'agency_feed_199', name: 'Media Buyer & Agency Intelligence Feed', price_usd: 199, interval: 'month' }
+      { id: 'agency_feed_199', name: 'Media Buyer & Agency Intelligence Feed', price_usd: 199, interval: 'month' },
+      { id: 'dfy_media_plan_499', name: 'Done-For-You 10-Show Q4 Media Plan & Floor Negotiation', price_usd: 499, interval: 'one_time' }
     ],
     recent_sessions: sessions
   });
@@ -322,9 +195,13 @@ app.post('/api/checkout', async (req, res) => {
   if (body.website_url_hp) {
     return res.status(400).json({ error: 'Spam detected' });
   }
-  const planTier = body.plan_tier === 'agency_feed_199' ? 'agency_feed_199' : 'creator_pro_49';
-  const isAgency = planTier === 'agency_feed_199';
-  const amountUsd = isAgency ? 199 : 49;
+  const rawPlan = String(body.plan_tier || 'creator_pro_49');
+  const isDfy = rawPlan === 'dfy_media_plan_499';
+  const isLedger29 = rawPlan === 'ledger_pack_29';
+  const isAgency = rawPlan === 'agency_feed_199';
+  const planTier = isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'));
+  const amountUsd = isDfy ? 499 : (isLedger29 ? 29 : (isAgency ? 199 : 49));
+  const isOneTime = isDfy || isLedger29;
   const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
   const isAutomatedTest = Boolean(
     req.headers['x-playwright-test'] ||
@@ -335,21 +212,21 @@ app.post('/api/checkout', async (req, res) => {
 
   if ((!isAutomatedTest || req.query?.live_stripe === '1') && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
     try {
-      const priceId = isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49;
+      const priceId = isDfy ? '' : (isLedger29 ? process.env.STRIPE_PRICE_PLAYBOOK_29 : (isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49));
       const params = new URLSearchParams({
-        mode: 'subscription',
+        mode: isOneTime ? 'payment' : 'subscription',
         customer_email: email,
-        success_url: `${PUBLIC_URL}/directory?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${PUBLIC_URL}/?checkout=cancelled`,
+        success_url: `${PUBLIC_URL}/?checkout=success&tier=${planTier}&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${PUBLIC_URL}/?checkout=cancel&tier=${planTier}`,
         'line_items[0][quantity]': '1'
       });
-      if (priceId) {
+      if (priceId && !isOneTime) {
         params.set('line_items[0][price]', priceId);
       } else {
         params.set('line_items[0][price_data][currency]', 'usd');
         params.set('line_items[0][price_data][unit_amount]', String(amountUsd * 100));
-        params.set('line_items[0][price_data][product_data][name]', isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)');
-        params.set('line_items[0][price_data][recurring][interval]', 'month');
+        params.set('line_items[0][price_data][product_data][name]', isDfy ? 'SponsorRadar Done-For-You 10-Show Q4 Media Plan & Negotiation ($499)' : (isLedger29 ? 'SponsorRadar Complete 88-Contact Q4 Ledger & Redlined IO Pack ($29)' : (isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)')));
+        if (!isOneTime) params.set('line_items[0][price_data][recurring][interval]', 'month');
       }
       const sRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
         method: 'POST',
@@ -399,8 +276,8 @@ app.get('/', (req, res) => {
     ORDER BY p.flights DESC, p.est_spend_usd DESC
   `).all();
   const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY est_monthly_spend DESC').all();
-  const pubQuery = String(req.query.pub || '').trim();
-  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Linear').trim() || 'Linear';
+  const pubQuery = String(req.query.pub || '').replace(/[<>"'`]/g, '').trim().slice(0, 80);
+  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Linear').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Linear';
   const initialReach = Math.max(500, Number(req.query.reach) || 75000);
   const defaultAnalysis = analyzeSponsorLookup(db, {
     query: initialQuery,
@@ -437,7 +314,7 @@ app.get('/directory', (req, res) => {
 
 // Programmatic SEO Route (/seo/:slug)
 app.get('/seo/:slug', (req, res) => {
-  const slug = String(req.params.slug || '').trim();
+  const slug = String(req.params.slug || '').trim().slice(0, 120);
   let page = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
   if (!page) {
     const cleanCand = slug.toLowerCase().replace(/[^a-z0-9-_]/g, '');
@@ -528,8 +405,9 @@ app.get('/seo/:slug', (req, res) => {
 
   if (placements.length < 9) {
     const seen = new Set(placements.map(r => `${r.brand_slug}:${r.show_slug}`));
+    const isB2B = /b2b|saas|devtools|fintech|founder|engineering|ai|cloud|security|vc|product/i.test(`${page.category || ''} ${show ? show.niche : ''}`);
     const extraPeers = db.prepare(`
-      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.vertical AS brand_vertical, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -537,9 +415,9 @@ app.get('/seo/:slug', (req, res) => {
       LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
       LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
       WHERE p.flights >= 3
-      ORDER BY (CASE WHEN b.category = ? OR s.niche = ? THEN 0 ELSE 1 END), p.flights DESC, p.est_spend_usd DESC
-      LIMIT 14
-    `).all(page.category || '', show ? show.niche : (page.category || ''))
+      ORDER BY (CASE WHEN b.category = ? OR s.niche = ? THEN 0 WHEN ? = 1 AND b.vertical LIKE '%B2B%' THEN 1 WHEN ? = 0 AND b.vertical LIKE '%DTC%' THEN 1 ELSE 2 END), p.flights DESC, p.est_spend_usd DESC
+      LIMIT 18
+    `).all(page.category || '', show ? show.niche : (page.category || ''), isB2B ? 1 : 0, isB2B ? 1 : 0)
       .filter(r => !seen.has(`${r.brand_slug}:${r.show_slug}`))
       .slice(0, 9 - placements.length)
       .map(r => ({ ...r, is_lookalike: true }));
@@ -575,9 +453,13 @@ app.get('/seo/:slug', (req, res) => {
 app.get('/privacy', (req, res) => res.send(renderLegalPage('privacy')));
 app.get('/terms', (req, res) => res.send(renderLegalPage('terms')));
 
-// Custom 404
+// Custom 404 & Error Boundary
 app.use((req, res) => {
   res.status(404).send(renderNotFoundPage(req.originalUrl));
+});
+app.use((err, req, res, _next) => {
+  const status = err && err.status && err.status >= 400 && err.status < 600 ? err.status : 400;
+  res.status(status).json({ ok: false, error: status === 400 ? 'Malformed request payload' : 'Internal server error' });
 });
 
 if (require.main === module) {

@@ -158,7 +158,8 @@ function initDb() {
   const seedTx = db.transaction(() => {
     for (const b of BRANDS) insertBrand.run(b);
     for (const s of SHOWS) insertShow.run(s);
-    if (placementCount === 0) {
+    if (placementCount !== PLACEMENT_PAIRS.length) {
+      db.prepare('DELETE FROM placements').run();
       for (const p of PLACEMENT_PAIRS) {
         const [brand_slug, show_slug, flights, slot_type, timestamp_range, promo_code, vanity_url, perFlightUsd, cpm_usd, last_seen_date] = p;
         const renewal_tier = flights >= 3 ? '3x_proven_winner' : (flights === 2 ? '2x_scaling' : '1x_test');

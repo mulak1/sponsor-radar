@@ -33,7 +33,7 @@ const VERTICAL_CONFIGS = {
       brandPrimary: '#0F172A', brandSoftBg: '#F1F5F9', brandText: '#0F172A',
       safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
       fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      radiusCard: '14px', radiusPill: '8px', shadow: 'none'
+      radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199',
     flashPriceDefault: 'price_1UQjMqIaoGnkXxS84yeYo8HG',
@@ -113,14 +113,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Compiles spec-compliant /llms-full.txt manifests and schema-dts @graph blocks with Zod contract verification.'
     },
     deliverableFiles: [
-      { file: 'llms-full.txt', size: '18.4 KB', schema: 'AI Crawler Guide File', status: 'VALID' },
-      { file: 'schema-graph.jsonld', size: '3.2 KB', schema: 'Structured Data Code', status: 'VALID' },
-      { file: '25-buyer-prompts.csv', size: '6.1 KB', schema: '25 Buyer Questions Table', status: 'VALID' }
+      { file: 'llms-full.txt', label: 'AI Crawler Guide (llms.txt)', size: '18.4 KB', schema: 'Plain-English guide that tells ChatGPT & Perplexity what your product does and how it is priced', status: 'VALID' },
+      { file: 'schema-graph.jsonld', label: 'Product Schema Code (.JSON)', size: '3.2 KB', schema: 'Copy-paste structured data so Google AI and search engines cite your facts accurately', status: 'VALID' },
+      { file: '25-buyer-prompts.csv', label: '25 Buyer Questions (.CSV)', size: '6.1 KB', schema: 'Spreadsheet of the 25 questions buyers ask AI in your category and who currently ranks #1', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [DIAGNOSIS] 3 AI Crawler & Schema Gaps Detected | Current AI Mention Share: 22.9%',
-      afterLine: '+ [LOCKED FIX] Custom /llms-full.txt + JSON-LD @graph [REDACTED IN PREVIEW] -> 29.2% (+6.3% Lift)',
-      roiBadge: '+6.3% to +27% More AI Mentions'
+      beforeLine: 'What we found: ChatGPT, Perplexity, and Google AI mention this site in only 22.9% of buyer searches because 3 key AI crawler and product-summary files are missing.',
+      afterLine: 'How the $1.99 pack fixes it: Gives you the ready-to-upload llms.txt guide, copy-paste product schema code, and 25 buyer-question rankings to lift AI mentions to an estimated 29.2%.',
+      roiBadge: 'Est. +6.3% to +27% more AI mentions'
     }
   },
   sponsor_radar: {
@@ -131,65 +131,65 @@ const VERTICAL_CONFIGS = {
       brandPrimary: '#C23B22', brandSoftBg: '#FFF4F1', brandText: '#9B2C18',
       safeColor: '#0F766E', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#92400E',
       fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      radiusCard: '14px', radiusPill: '8px', shadow: 'none'
+      radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
     corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 49, coreLabel: 'Complete Creator Sponsor Database ($49/mo)',
     proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'Agency & Media-Buyer Pro Feed ($199/mo)',
-    lockedTitle: 'Verified Sponsor Partnership Contacts',
-    deliverableName: 'Verified Sponsor Contact Email + Ready-to-Send Pitch + Full Ad Rate Table',
-    freeDeliverableName: 'Verified Sponsor Contact & 3-Ad Pilot Pitch Pack',
-    unlockBannerTitle: 'Verified Sponsor Emails & Rates',
-    explainerText: 'See which sponsors booked 3+ repeat ads, what they paid, and who to email on their partnerships team',
+    lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (88 Direct Emails)',
+    deliverableName: '88 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
+    freeDeliverableName: '88 Brand & Show Contacts + Rate-Card Floor & Counter-Offer Pack',
+    unlockBannerTitle: 'Verified Sponsor Contacts, Show Rate Floors & Counter-Offer Scripts',
+    explainerText: 'See which sponsors renewed 3+ times, audit -18% 3-flight floor CPMs vs. rack rates, and unlock 88 direct buyer & show booking rep emails',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
-    searchPlaceholder: 'Search sponsor or show (e.g. HubSpot)...',
-    tier1Tag: 'SINGLE-SPONSOR PITCH PASS • SAVE 96% VS $49',
-    tier1Desc: 'Instantly unlocks the verified partnerships contact email, ready-to-send 3-ad pilot pitch (.EML), and full show rate table (.CSV).',
+    searchPlaceholder: 'Search sponsor or show (e.g. HubSpot, Indie Hackers)...',
+    tier1Tag: 'SINGLE-AUDIT BUYER & CREATOR PASS • SAVE 96% VS $49',
+    tier1Desc: 'Instantly unlocks 88 verified brand buyer & show booking rep emails (.CSV), 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send 3-flight counter-offer & pilot scripts (.EML). Includes Ramp/Brex expense receipt.',
     tier2Tag: 'CREATOR PRO SPONSOR DATABASE',
-    tier2Desc: 'Full access to 42+ active sponsor brands, 46+ top shows, verified partnership contacts, and unlimited pitch templates.',
+    tier2Desc: 'Full access to 42 active sponsor brands, 46 flagship shows, 88 verified contacts, weekly new-sponsor alerts, and unlimited pitch templates.',
     tier3Tag: 'AGENCY & MEDIA BUYER FEED',
-    tier3Desc: '5 team seats, competitor promo-code tracking, negotiated ad rate benchmarks, and instant CSV exports for your CRM.',
+    tier3Desc: '5 team seats, live show rate-card floor benchmarks (-18% vs rack), competitor promo-code tracking, and instant CSV exports for your media plan.',
     battlecard: {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
       colLegacy: '25%-Fee Ad Networks', colManual: 'Guessing from Media Kits',
       rows: [
-        ['Proof That Ads Actually Convert', 'Shows sponsors that renewed 3 to 24 times on the same show', 'Pushes untested 1-time ad slots', 'No way to know if a sponsor lost money'],
-        ['Direct Sponsor Outreach', 'Verified partnerships email + ready-to-send pitch email', 'Takes 20%–30% commission middleman cut', 'Cold emailing generic info@ addresses'],
-        ['Simple Pricing', '$1.99 Single-Sponsor Pass or $49/mo Creator Pro', 'Takes thousands in commission fees', 'Weeks of listening to episodes by hand']
+        ['Proof That Ads Actually Convert', 'Tracks 96+ placements that renewed 3 to 18 times on the same show', 'Pushes untested 1-time ad slots (68% churn)', 'No way to know if a sponsor lost money'],
+        ['Rate-Card Floor & Direct Contacts', '88 verified buyer/show emails + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
+        ['Simple Pricing & Expense Receipt', '$1.99 One-Time 3-File Pass or $49–$199/mo Team Feed', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
       ]
     },
     exportActions: [
-      { id: 'btn-copy-shopping-list', label: 'Copy Pitch Summary', type: 'copy' },
-      { id: 'btn-export-csv', label: 'Export Ad Rates (.CSV)', href: '/api/github-upgrade/export.csv' },
-      { id: 'btn-export-llms', label: 'Download Pitch Email (.EML)', href: '/api/github-upgrade/pitch.eml' },
-      { id: 'btn-export-ics', label: 'Follow-Up Reminder (.ICS)', href: '/api/github-upgrade/skin-cycling.ics' },
+      { id: 'btn-copy-shopping-list', label: 'Copy Rate & Pitch Summary', type: 'copy' },
+      { id: 'btn-export-csv', label: 'Export 96-Flight Rates (.CSV)', href: '/api/github-upgrade/export.csv' },
+      { id: 'btn-export-llms', label: 'Download Counter-Offer / Pitch (.EML)', href: '/api/github-upgrade/pitch.eml' },
+      { id: 'btn-export-ics', label: 'Protocol & Rate Dossier (.TXT)', href: '/api/github-upgrade/llms-bundle.txt' },
       { id: 'btn-print-summary', label: 'Print Rate Card PDF', type: 'print' },
       { id: 'btn-showroom-hud', label: 'Media Buyer HUD', type: 'hud' },
       { id: 'btn-cmdk-trigger', label: '⌘K Actions', type: 'cmdk' },
-      { id: 'btn-reddit-share', label: 'Copy Creator Post', type: 'reddit' }
+      { id: 'btn-reddit-share', label: 'Copy Benchmark Post', type: 'reddit' }
     ],
     kpis: [
       { label: 'Repeat Renewal Score', val: '95/100', sub: '3+ Repeat Bookings' },
       { label: 'Est. Monthly Ad Spend', val: '$680,000', sub: 'Across Tracked Shows' },
-      { label: 'Avg Ad Rate (CPM)', val: '$46.50', sub: 'Cost Per 1,000 Listeners' },
-      { label: 'Host-Read Lift', val: '1.44x', sub: 'vs. Pre-Recorded Ads' }
+      { label: 'Rack vs. 3x Floor CPM', val: '$46 / $38', sub: '-18% Negotiated 3-Flight Floor' },
+      { label: 'Host-Read CTR Lift', val: '1.8% CTR', sub: '~$2.11 Implied Floor CPC' }
     ],
     presetKpis: {
-      'ag1': ['98/100', '$1,420,000', '$42.00', '1.48x'], 'AG1': ['98/100', '$1,420,000', '$42.00', '1.48x'],
-      'deel': ['95/100', '$680,000', '$46.50', '1.44x'], 'Deel': ['95/100', '$680,000', '$46.50', '1.44x'],
-      'linear': ['91/100', '$310,000', '$39.00', '1.39x'], 'Linear': ['91/100', '$310,000', '$39.00', '1.39x'],
-      'ramp': ['96/100', '$790,000', '$48.00', '1.46x'], 'Ramp': ['96/100', '$790,000', '$48.00', '1.46x'],
-      'eight-sleep': ['93/100', '$620,000', '$37.50', '1.41x'], 'Eight Sleep': ['93/100', '$620,000', '$37.50', '1.41x']
+      'ag1': ['98/100', '$1,420,000', '$42 / $34', '1.9% CTR'], 'AG1': ['98/100', '$1,420,000', '$42 / $34', '1.9% CTR'],
+      'deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR'], 'Deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR'],
+      'linear': ['91/100', '$310,000', '$39 / $32', '1.8% CTR'], 'Linear': ['91/100', '$310,000', '$39 / $32', '1.8% CTR'],
+      'ramp': ['96/100', '$790,000', '$48 / $39', '1.9% CTR'], 'Ramp': ['96/100', '$790,000', '$48 / $39', '1.9% CTR'],
+      'eight-sleep': ['93/100', '$620,000', '$38 / $31', '1.7% CTR'], 'Eight Sleep': ['93/100', '$620,000', '$38 / $31', '1.7% CTR']
     },
     presets: [
       { key: 'AG1', label: 'AG1' }, { key: 'Deel', label: 'Deel' },
       { key: 'Linear', label: 'Linear' }, { key: 'Ramp', label: 'Ramp' }, { key: 'Eight Sleep', label: '8Sleep' }
     ],
     coMarketingPills: [
-      { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Spend Signal: 68% of single-episode test ads churn; 3x+ renewed mid-rolls reveal proven ROI.' },
-      { key: 'youtube', label: 'YouTube Creators', rowText: 'YouTube Spend Signal: Track which sponsors book 3+ consecutive creator integrations vs. 1-off tests.' },
-      { key: 'beehiiv', label: 'Newsletters', rowText: 'Newsletter Spend Signal: Compare verified multi-issue newsletter sponsors and negotiated rate tiers.' }
+      { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Buyer & Creator Signal: 68% of 1-off test ads churn; 3-flight mid-roll commitments clear at -18% below published rack.' },
+      { key: 'youtube', label: 'YouTube Creators', rowText: 'YouTube Integration Signal: Track which sponsors book 3+ consecutive creator integrations and compare implied CPCs.' },
+      { key: 'beehiiv', label: 'Newsletters', rowText: 'Newsletter Rate Signal: Compare primary sponsorship blocks ($26–$42 CPM) and multi-issue discount tiers.' }
     ],
     affiliates: [
       { title: 'Riverside.fm 4K Podcast & Video Studio', badge: 'Creator Studio Pick', cpa: 'Explore Creator Studio', url: 'https://riverside.fm/' },
@@ -199,19 +199,19 @@ const VERTICAL_CONFIGS = {
     githubRepo: {
       name: 'pyannote/pyannote-audio + colinhacks/zod + parallax/jsPDF',
       stars: '216,756 Combined Stars', url: 'https://github.com/pyannote/pyannote-audio',
-      badge: 'Host-Read Diarization + Zod-Verified Buyer Contact Ledger',
-      title: 'Host-Voiced Ad-Read Diarization & 3-Flight Pitch Engine',
-      summary: 'Verifies host-voiced ad reads vs. spliced dynamic insertions and compiles 3x-renewal anchored sponsorship pitches.'
+      badge: 'IAB 30-Day Download + Zod-Verified Buyer & Rate-Card Ledger',
+      title: 'Sponsorship Rate-Card Floor & 3x-Renewal Verification Engine',
+      summary: 'Verifies multi-flight sponsor renewals, promo-code persistence, and -18% 3-flight agency floor CPMs across 42 brands and 46 shows.'
     },
     deliverableFiles: [
-      { file: 'verified-buyer-contacts.csv', size: '3.8 KB', schema: 'Sponsor Contact Emails', status: 'VALID' },
-      { file: '3-flight-anchor-pitch.eml', size: '2.5 KB', schema: 'Ready-to-Send Pitch Email', status: 'VALID' },
-      { file: '96-flight-cpm-decay.csv', size: '14.2 KB', schema: '96 Ad Placements & Rates', status: 'VALID' }
+      { file: 'verified-buyer-contacts.csv', label: '88 Brand & Show Contacts (.CSV)', size: '6.4 KB', schema: '42 Brand Partnerships Leads + 46 Show Booking Rep emails, roles & agency desks', status: 'VALID' },
+      { file: '96-flight-cpm-decay.csv', label: '96-Flight Rate-Card Floor Ledger (.CSV)', size: '14.2 KB', schema: 'Published rack rates vs. -18% 3-flight negotiated floor CPMs, implied CPCs & promo codes', status: 'VALID' },
+      { file: '3-flight-anchor-pitch.eml', label: 'Counter-Offer & Pilot Scripts (.EML)', size: '3.1 KB', schema: 'Media Buyer -18% rate-card counter-offer script (w/ 1.5% CTR make-good) + Creator 3-flight pilot pitch', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [DIAGNOSIS] 14 Verified 3x+ Renewed Placements Found | Generic Cold Outreach Reply: 1.1%',
-      afterLine: '+ [LOCKED FIX] Verified Partnerships Email + 3-Flight Pitch [REDACTED IN PREVIEW] -> 18.4% Reply',
-      roiBadge: '16.7x Higher Sponsor Reply Rate'
+      beforeLine: 'What we found: Paying published media-kit rack rates costs +18% to +28% more than the negotiated 3-flight agency floor, while cold-emailing generic info@ addresses gets a 1.1% reply rate.',
+      afterLine: 'How the $1.99 pack pays for itself on 1 booking: Unlocks all 88 verified brand buyer & show booking rep emails (.CSV), the 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send counter-offer & pilot scripts (.EML).',
+      roiBadge: '88 Direct Contacts + -18% Floor Ledger Verified'
     }
   },
   derm_logic: {
@@ -274,7 +274,7 @@ const VERTICAL_CONFIGS = {
       'preset-glass-skin': ['94/100', '0.8 pH', '89% Pass', '0 Triggers'], 'Glass Skin Hydration': ['94/100', '0.8 pH', '89% Pass', '0 Triggers']
     },
     presets: [
-      { key: 'TikTok 7-Active Stack', label: 'TikTok 7-Active' }, { key: 'Vitamin C + Copper Peptides', label: 'VitC + Copper' },
+      { key: 'TikTok 7-Active Stack', label: '7-Active' }, { key: 'Vitamin C + Copper Peptides', label: 'VitC + Cu' },
       { key: 'Tretinoin + Benzoyl Peroxide', label: 'Tret + BPO' }, { key: 'Fungal-Safe Barrier Care', label: 'Fungal-Safe' }, { key: 'Glass Skin Hydration', label: 'Glass Skin' }
     ],
     coMarketingPills: [
@@ -295,14 +295,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Calculates free-acid bio-availability, Cu2+/Retinoid redox inactivation, and 4-night skin-cycling schedules.'
     },
     deliverableFiles: [
-      { file: 'am-pm-vanity-card-9x16.pdf', size: '48.2 KB', schema: '9:16 Phone & Print Card', status: 'VALID' },
-      { file: '4-night-skin-cycling.ics', size: '3.1 KB', schema: 'Apple & Google Calendar', status: 'VALID' },
-      { file: 'non-comedogenic-swaps.csv', size: '5.5 KB', schema: 'Pore-Safe Product Swaps', status: 'VALID' }
+      { file: 'am-pm-vanity-card-9x16.pdf', label: 'Phone Routine Card (PDF)', size: '48.2 KB', schema: 'Step-by-step Morning & Bedtime order tailored to your selected bottles with exact pH dry-down wait times', status: 'VALID' },
+      { file: '4-night-skin-cycling.ics', label: '4-Night Calendar (.ICS)', size: '3.1 KB', schema: '1-click Apple & Google Calendar rotation separating your conflicting acids, retinoids, and peptides across 4 nights', status: 'VALID' },
+      { file: 'non-comedogenic-swaps.csv', label: 'Pore-Safe Swaps (.CSV)', size: '5.5 KB', schema: '1-to-1 non-comedogenic, fungal-safe product swaps that layer cleanly with your active serums without pilling', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [DIAGNOSIS] High-Risk Active Clash & 2.8 pH Gap Detected | Current Routine Harmony: 20/100',
-      afterLine: '+ [LOCKED FIX] Custom AM/PM Split Order + 4-Night Schedule [REDACTED IN PREVIEW] -> 96/100 Harmony',
-      roiBadge: 'Saves $182+ in Wasted Serums'
+      beforeLine: 'Morning (7:30 AM): Gentle Rinse -> Antioxidant Serum (exact wait time locked in PDF) -> Barrier Moisturizer & SPF 50.',
+      afterLine: 'Bedtime (9:30 PM): Separates conflicting night actives onto alternating nights -> 3:1:1 Ceramide Barrier Cream.',
+      roiBadge: 'Tailored to Your Shelf · Protects Active Serums'
     }
   },
   abandon_alpha: {
@@ -313,7 +313,7 @@ const VERTICAL_CONFIGS = {
       brandPrimary: '#0F172A', brandSoftBg: '#F1F5F9', brandText: '#0F172A',
       safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
       fontDisplay: "'Playfair Display', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      radiusCard: '16px', radiusPill: '999px', shadow: 'none'
+      radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMtIaoGnkXxS8fAEYjqnp',
     corePriceEnv: 'STRIPE_PRICE_STARTER_49', corePriceUsd: 49, coreLabel: 'Complete Store Recovery Suite ($49/mo)',
@@ -386,14 +386,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Replaces naive 24h card retries and static popups with decline-code aware scheduling and Thompson Sampling.'
     },
     deliverableFiles: [
-      { file: 'abandon-alpha-bandit-sdk.js', size: '8.9 KB', schema: 'Beta-Bernoulli C1–C6 SDK', status: 'VALID' },
-      { file: 'stripe-recovery-worker.js', size: '4.6 KB', schema: 'Decline-Code Retry Worker', status: 'VALID' },
-      { file: 'payday-retry-schedule.csv', size: '5.2 KB', schema: 'Visa/MC Compliance Matrix', status: 'VALID' }
+      { file: 'abandon-alpha-bandit-sdk.js', label: 'Smart Exit-Offer Script (.JS)', size: '8.9 KB', schema: 'Shows leaving shoppers the right offer (free shipping, payment plan, or small discount) without giving coupons to full-price buyers', status: 'VALID' },
+      { file: 'stripe-recovery-worker.js', label: 'Payday Card Retry Script (.JS)', size: '4.6 KB', schema: 'Retries declined Stripe cards on payday mornings and bank-approval windows instead of blind daily retries', status: 'VALID' },
+      { file: 'payday-retry-schedule.csv', label: 'Bank Retry Schedule (.CSV)', size: '5.2 KB', schema: 'Day-and-hour retry calendar for every Stripe decline code (insufficient funds, do not honor, expired card)', status: 'VALID' }
     ],
     remediationDiff: {
-      beforeLine: '- [DIAGNOSIS] $214,523/mo Leaking Across Checkout Exits & Failed Stripe Card Renewals',
-      afterLine: '+ [LOCKED FIX] Issuer-Timed Retry Schedule + C1–C6 Bandit SDK [REDACTED IN PREVIEW] -> +$56,722/mo',
-      roiBadge: '+$56,722/mo Net Recovery'
+      beforeLine: 'What we found: Your checkout is losing an estimated $214,523/mo from shoppers leaving at checkout and declined Stripe cards retried at the wrong time.',
+      afterLine: 'How the $1.99 pack fixes it: Matches leaving shoppers with the right exit offer and retries failed cards on payday mornings when bank balances clear, recovering an estimated +$36,620/mo.',
+      roiBadge: 'Est. +$36,620/mo recoverable sales'
     }
   }
 };
@@ -629,7 +629,7 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/skin-cycling.ics', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/skin-cycling.ics', isTest, isCrawler, meta: { export: 'ics_calendar' } });
-    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${cfg.brandName}//NONSGML v1.0//EN`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night1@dermlogic.io`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261015T210000Z', 'DTEND:20261015T213000Z', `SUMMARY:${cfg.brandName} Cycle 1: Primary Protocol Window`, `DESCRIPTION:${cfg.explainerText}: https://${cfg.domain}`, 'END:VEVENT', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night2@dermlogic.io`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261016T210000Z', 'DTEND:20261016T213000Z', `SUMMARY:${cfg.brandName} Cycle 2: Secondary Recovery Window`, `DESCRIPTION:Follow spacing protocol: https://${cfg.domain}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${cfg.brandName}//NONSGML v2.0//EN`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night1@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261015T210000Z', 'DTEND:20261015T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Night 1: Exfoliation & Active Window`, `DESCRIPTION:${cfg.explainerText} (Wait 60s before barrier moisturizer): https://${cfg.domain}`, 'END:VEVENT', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night2@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261016T210000Z', 'DTEND:20261016T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Night 2: Retinoid / Secondary Active Window`, `DESCRIPTION:Pea-sized retinoid on dry skin + ceramide buffer: https://${cfg.domain}`, 'END:VEVENT', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night3@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261017T210000Z', 'DTEND:20261017T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Nights 3-4: Barrier Recovery & Peptide Cushion`, `DESCRIPTION:Zero acids or retinoids; hydrate + seal moisture barrier: https://${cfg.domain}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
     res.status(200).type('text/calendar; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-schedule.ics"`).send(ics);
   });
 
@@ -653,7 +653,7 @@ function attachExactBaselinePack(app, options = {}) {
 
   // 4C. krisk/Fuse Instant Fuzzy-Search & Custom Scenario Scorer
   app.get('/api/github-upgrade/fuse-search', (req, res) => {
-    const q = String(req.query.q || cfg.presets[0].key).trim();
+    const q = String(req.query.q || cfg.presets[0].key).replace(/[<>"'`]/g, '').trim().slice(0, 80);
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/fuse-search', isTest, isCrawler, meta: { query: q, engine: 'fuse_bitap' } });
     let hash = 0;
@@ -766,12 +766,14 @@ function attachExactBaselinePack(app, options = {}) {
 
   app.get('/api/github-upgrade/stripe-recovery-worker.js', (req, res) => {
     const code = [
-      '/** AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker */',
-      'export default { async fetch(request) {',
-      '  const payload = await request.json();',
-      '  const code = payload?.data?.object?.last_payment_error?.decline_code || "insufficient_funds";',
-      '  const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 4 : 12);',
-      '  return new Response(JSON.stringify({ ok: true, decline_code: code, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });',
+      '/** AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker (Cloudflare / Edge) */',
+      'export default { async fetch(request, env) {',
+      '  const sig = request.headers.get("stripe-signature") || ""; if (!sig) return new Response("Missing signature", { status: 400 });',
+      '  const payload = await request.json(); const obj = payload?.data?.object || {};',
+      '  const code = obj?.last_payment_error?.decline_code || "insufficient_funds";',
+      '  const action = code === "expired_card" ? "SEND_1TAP_PORTAL_LINK_ZERO_RETRY" : (code === "insufficient_funds" ? "SCHEDULE_FRIDAY_0905_PAYDAY_RETRY" : "COOLDOWN_24H_SOFT_RETRY");',
+      '  const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 24 : 0);',
+      '  return new Response(JSON.stringify({ ok: true, idempotency_key: `aa_${obj.id || Date.now()}_${code}`, decline_code: code, recovery_action: action, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });',
       '} };'
     ].join('\n');
     res.status(200).type('application/javascript; charset=utf-8').setHeader('Content-Disposition', 'attachment; filename="stripe-recovery-worker.js"').send(code);
@@ -834,14 +836,9 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/reactive-live-calc-dual-pass', (req, res) => res.json({ ok: true, iteration: 49, module_id: cfg.moduleId, repo: 'hotwired/stimulus (★ 12,400) + alpinejs/alpine (★ 28,900) + stripe/stripe-js (★ 4,200)', features: { reactive_input_auto_calculation: true, visible_99c_micro_pass_anchoring: true, visible_inline_scorecard_email_bar: true, scroll_and_exit_rescue_toast: true } }));
   app.get('/api/github-upgrade/floating-ui-firstfold-pill', (req, res) => res.json({ ok: true, iteration: 51, module_id: cfg.moduleId, repo: 'floating-ui/floating-ui (★ 31,400) + zenorocha/clipboard.js (★ 34,200) + stripe/stripe-js (★ 4,200)', features: { default_visible_firstfold_score_pill: true, one_tap_firstfold_99c_199_unlock: true, js_hydrated_calculate_bot_guard: true, mobile_viewport_device_attribution: true } }));
 
-  // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher (/api/leads/capture, /api/leads/resend-backfill)
+  // 7. Transactional Lead Capture & Automated Backfill Resend Dispatcher
   const escMailHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const buildBuyLinks = (email) => ({
-    micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`,
-    flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`,
-    complete_dossier: `https://${cfg.domain}/buy/complete_dossier?email=${encodeURIComponent(email)}`,
-    pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}`
-  });
+  const buildBuyLinks = (email) => ({ micro_pass: `https://${cfg.domain}/buy/micro_pass?email=${encodeURIComponent(email)}`, flash_pass: `https://${cfg.domain}/buy/flash_pass?email=${encodeURIComponent(email)}`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier?email=${encodeURIComponent(email)}`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b?email=${encodeURIComponent(email)}` });
   async function sendOneClickLeadEmail(email, summaryText, isTest) {
     const links = buildBuyLinks(email), safeSum = escMailHtml(summaryText);
     const textMail = `${summaryText}\n\n1-Click Direct Stripe Checkout Links (No Login Required):\n• 99¢ Single-File Instant Export Pass: ${links.micro_pass}\n• $1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName}): ${links.flash_pass}\n• $${cfg.corePriceUsd} ${cfg.coreLabel}: ${links.complete_dossier}\n• $${cfg.proPriceUsd} ${cfg.proLabel}: ${links.pro_b2b}\n`;
@@ -896,7 +893,7 @@ function attachExactBaselinePack(app, options = {}) {
     const isUpgradeFlash = !isMicro && !isFlash && (rawTier.includes('upgrade_from_flash') || rawTier.includes('2701'));
     const isPlaybook = !isMicro && !isFlash && !isUpgradeFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
     const isPro = !isMicro && !isFlash && !isUpgradeFlash && !isPlaybook && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
-    const priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isUpgradeFlash ? 27.01 : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd))));
+    const upgPrice = Math.max(1, Number(((cfg.corePriceUsd || 29) - 1.99).toFixed(2))), priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isUpgradeFlash ? upgPrice : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd))));
     const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'))));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
     const priceId = (isMicro || isUpgradeFlash) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
@@ -919,9 +916,9 @@ function attachExactBaselinePack(app, options = {}) {
 
     store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid } });
 
-    const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} — ` : '';
-    let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`;
-    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? 'Instant 15-Brand Campaign & Lookalike Pass ($1 Trial)' : (isFlash ? `${cfg.freeDeliverableName || 'Full 85-Brand Vault & .EML Pack'} ($1.99)` : (isUpgradeFlash ? 'CFO Moneyball Media Plan & Agency Rep Vault ($27.01 — $1.99 Pass Credit Applied)' : (isPlaybook ? 'CFO Moneyball Media Plan & Agency Rep Vault ($29)' : (isPro ? cfg.proLabel : cfg.coreLabel))))}`;
+    const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} · ` : '';
+    let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`, f0Lbl = (cfg.deliverableFiles && cfg.deliverableFiles[0] && (cfg.deliverableFiles[0].label || cfg.deliverableFiles[0].file)) || 'Single Deliverable File';
+    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? `Single-File Pass: ${f0Lbl} (99¢)` : (isFlash ? `${cfg.freeDeliverableName || 'Full 3-File Deliverable Pack'} ($1.99)` : (isUpgradeFlash ? `${cfg.coreLabel} ($${upgPrice.toFixed(2)}, $1.99 Pass Credit Applied)` : (isPlaybook ? cfg.coreLabel : (isPro ? cfg.proLabel : cfg.coreLabel))))}`;
     const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`;
 
     const buildInlineParams = () => {
