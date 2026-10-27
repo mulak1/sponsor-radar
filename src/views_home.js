@@ -382,10 +382,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   <!-- FULL VERIFIED 3x+ RENEWAL AD-SPEND LEDGER -->
   <section id="verified-ledger" style="padding:52px 0;">
     <div class="container">
-      <div style="display:flex; justify-content:space-between; align-items:end; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
+      <div style="display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin-bottom:22px;">
         <div>
           <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin:0;">3x+ Renewed Sponsor Ledger</h2>
-          <p style="color:var(--text-secondary); font-size:16px; margin-top:6px;">
+          <p style="color:var(--text-secondary); font-size:16px; margin-top:6px; max-width:62ch;">
             Filter verified multi-flight sponsorships by renewal frequency, channel, or B2B/DTC vertical. Click any <strong>Brand</strong> to inspect its spend or any <strong>Show</strong> to audit its rate card.
           </p>
         </div>
@@ -453,12 +453,11 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       </div>
 
       <!-- SIDE-BY-SIDE SHOW & SPONSOR COMPARISON MATRIX + Q4 MEDIA PLAN BUILDER (Choices 1A, 3A & 3C) -->
-      <div id="sr-comparison-matrix-card" class="panel" style="margin-top:22px; padding:20px 22px; background:var(--bg-surface); border:1px solid var(--emerald-border);">
+      <div id="sr-comparison-matrix-card" class="panel" style="margin-top:22px; padding:20px 22px; background:var(--bg-surface);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
           <div>
-            <span class="pill-emerald">SIDE-BY-SIDE SHOW &amp; SPONSOR COMPARISON MATRIX</span>
-            <h3 style="font-family:var(--font-serif); font-size:21px; font-weight:600; margin:6px 0 2px;">Compare 3 Flagship Shows &amp; Share Your Q4 Media Plan Proposal</h3>
-            <p style="font-size:14px; color:var(--text-secondary); margin:0;">Compare Effective CPM, -18% 3-Flight Agency Floor, Implied CPC, and Shared 3x+ Sponsors side-by-side—or click <strong>+ Plan</strong> on any row above to customize your shortlist.</p>
+            <h3 style="font-family:var(--font-serif); font-size:21px; font-weight:600; margin:0 0 4px;">Compare 3 Flagship Shows &amp; Share Your Q4 Media Plan</h3>
+            <p style="font-size:14px; color:var(--text-secondary); margin:0; max-width:64ch;">Compare Effective CPM, -18% 3-Flight Agency Floor, Implied CPC, and Shared 3x+ Sponsors side-by-side—or click <strong>+ Plan</strong> on any row above to customize your shortlist.</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button type="button" onclick="window.__srCopySharePlanUrl(this)" class="btn btn-ghost" style="padding:8px 14px; font-size:13.5px;">Copy CFO / Client Proposal URL (?plan=...)</button>
@@ -469,9 +468,9 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           <table class="ledger-table" id="sr-compare-matrix-table">
             <thead><tr><th>Show / Media Property</th><th>Published Rack vs. -18% 3-Flight Floor</th><th>Effective CPM &amp; Implied CPC</th><th>3x+ Renewal Velocity &amp; Shared Sponsors</th><th>Shortlist Action</th></tr></thead>
             <tbody id="sr-compare-matrix-tbody">
-              <tr><td><strong>Lenny's Podcast &amp; Newsletter</strong><div class="mono" style="font-size:12.5px;color:var(--text-muted);">Podcast + Newsletter • 440K reach</div></td><td class="mono">$14,500 Rack → <strong style="color:var(--emerald-roi);">$11,890 Floor (Save $2,610/flight)</strong></td><td class="mono">$54 Rack / <strong>$44 Floor eCPM</strong> (~$2.44 CPC)</td><td><span class="pill-emerald">96/100 ROI • 14 Proven 3x+</span><div class="mono" style="font-size:12px;color:var(--text-secondary);margin-top:3px;">Shared: Deel (12x), Linear (8x), Notion (9x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:5px 10px;min-height:32px;font-size:12.5px;" onclick="window.__srAddToPlan('Lenny\\'s Podcast', 'show', 54, 14500, 3)">+ Add to Q4 Plan</button></td></tr>
-              <tr><td><strong>The Pragmatic Engineer</strong><div class="mono" style="font-size:12.5px;color:var(--text-muted);">Newsletter • 380K reach</div></td><td class="mono">$12,500 Rack → <strong style="color:var(--emerald-roi);">$10,250 Floor (Save $2,250/flight)</strong></td><td class="mono">$48 Rack / <strong>$39 Floor eCPM</strong> (~$2.17 CPC)</td><td><span class="pill-emerald">95/100 ROI • 11 Proven 3x+</span><div class="mono" style="font-size:12px;color:var(--text-secondary);margin-top:3px;">Shared: Linear (8x), Vercel (6x), Retool (7x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:5px 10px;min-height:32px;font-size:12.5px;" onclick="window.__srAddToPlan('The Pragmatic Engineer', 'show', 48, 12500, 3)">+ Add to Q4 Plan</button></td></tr>
-              <tr><td><strong>Syntax.fm / Latent Space AI</strong><div class="mono" style="font-size:12.5px;color:var(--text-muted);">Podcast • 95K–140K reach (Moneyball Arbitrage)</div></td><td class="mono">$3,400 Rack → <strong style="color:var(--emerald-roi);">$2,788 Floor (Save $612/flight)</strong></td><td class="mono">$36 Rack / <strong>$29 Floor eCPM</strong> (~$1.61 CPC)</td><td><span class="pill-emerald">91/100 ROI • 86% Audience Overlap</span><div class="mono" style="font-size:12px;color:var(--text-secondary);margin-top:3px;">Shared: Supabase (9x), Sentry (11x), Raycast (6x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:5px 10px;min-height:32px;font-size:12.5px;" onclick="window.__srAddToPlan('Latent Space AI', 'show', 36, 3400, 3)">+ Add to Q4 Plan</button></td></tr>
+              <tr><td><strong>Lenny's Podcast &amp; Newsletter</strong><div class="mono" style="font-size:13.5px;color:var(--text-muted);">Podcast + Newsletter • 440K reach</div></td><td class="mono">$14,500 Rack → <strong style="color:var(--emerald-roi);">$11,890 Floor (Save $2,610/flight)</strong></td><td class="mono">$54 Rack / <strong>$44 Floor eCPM</strong> (~$2.44 CPC)</td><td><span class="pill-emerald">96/100 ROI • 14 Proven 3x+</span><div class="mono" style="font-size:13.5px;color:var(--text-secondary);margin-top:3px;">Shared: Deel (12x), Linear (8x), Notion (9x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:6px 10px;min-height:34px;font-size:13.5px;" onclick="window.__srAddToPlan('Lenny\\'s Podcast', 'show', 54, 14500, 3)">+ Add to Q4 Plan</button></td></tr>
+              <tr><td><strong>The Pragmatic Engineer</strong><div class="mono" style="font-size:13.5px;color:var(--text-muted);">Newsletter • 380K reach</div></td><td class="mono">$12,500 Rack → <strong style="color:var(--emerald-roi);">$10,250 Floor (Save $2,250/flight)</strong></td><td class="mono">$48 Rack / <strong>$39 Floor eCPM</strong> (~$2.17 CPC)</td><td><span class="pill-emerald">95/100 ROI • 11 Proven 3x+</span><div class="mono" style="font-size:13.5px;color:var(--text-secondary);margin-top:3px;">Shared: Linear (8x), Vercel (6x), Retool (7x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:6px 10px;min-height:34px;font-size:13.5px;" onclick="window.__srAddToPlan('The Pragmatic Engineer', 'show', 48, 12500, 3)">+ Add to Q4 Plan</button></td></tr>
+              <tr><td><strong>Syntax.fm / Latent Space AI</strong><div class="mono" style="font-size:13.5px;color:var(--text-muted);">Podcast • 95K–140K reach (Moneyball Arbitrage)</div></td><td class="mono">$3,400 Rack → <strong style="color:var(--emerald-roi);">$2,788 Floor (Save $612/flight)</strong></td><td class="mono">$36 Rack / <strong>$29 Floor eCPM</strong> (~$1.61 CPC)</td><td><span class="pill-emerald">91/100 ROI • 86% Audience Overlap</span><div class="mono" style="font-size:13.5px;color:var(--text-secondary);margin-top:3px;">Shared: Supabase (9x), Sentry (11x), Raycast (6x)</div></td><td><button type="button" class="btn btn-ghost" style="padding:6px 10px;min-height:34px;font-size:13.5px;" onclick="window.__srAddToPlan('Latent Space AI', 'show', 36, 3400, 3)">+ Add to Q4 Plan</button></td></tr>
             </tbody>
           </table>
         </div>
@@ -497,24 +496,20 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   <section id="pricing" style="padding:52px 0;">
     <div class="container">
       <div class="double-bezel" style="max-width:960px; margin:0 auto;">
-        <div class="panel" style="padding:32px;">
+        <div class="panel" style="padding:28px 24px;">
           <div style="margin-bottom:14px;">
             <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin:0 0 8px 0;">
               Unlock ${totalContacts} Contacts &amp; Rate Floors
             </h2>
-            <p style="color:var(--text-secondary); font-size:15.5px; margin:0; max-width:74ch;">
+            <p style="color:var(--text-secondary); font-size:15.5px; margin:0; max-width:62ch;">
               Instant browser download of all 3 production files (with Ramp/Brex expense-ready receipt): <strong>verified-buyer-contacts.csv</strong> (${brands.length} Brand Partnerships Leads + ${shows.length} Show Booking Reps), <strong>96-flight-cpm-decay.csv</strong> (Rack vs. -18% 3-Flight Floor CPMs), and <strong>3-flight-anchor-pitch.eml</strong> (Buyer Counter-Offer &amp; Creator Pilot Scripts).
             </p>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding:18px 20px; border-radius:12px; background:var(--bg-parchment); margin-bottom:18px; border:1px solid var(--emerald-border);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding:18px 20px; border-radius:12px; background:var(--bg-parchment); margin-bottom:18px;">
             <div>
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                <span class="pill-emerald">MOST POPULAR • SAVE 84% PER CONTACT</span>
-                <span class="mono" style="font-size:12.5px; color:var(--text-secondary);">Ramp / Brex Expense-Ready</span>
-              </div>
-              <div class="mono" style="font-size:32px; font-weight:800; color:var(--text-primary); line-height:1;">$29 <span style="font-size:15px; font-weight:600; color:var(--text-secondary);">Complete ${totalContacts}-Row Q4 Ledger + CSV (or $1.99 Single-Target Pass)</span></div>
-              <p style="font-size:14.5px; color:var(--text-secondary); margin:4px 0 0 0;">All ${totalContacts} Verified Brand &amp; Show Emails (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Redlined IO &amp; Pitch Scripts (.EML)</p>
+              <div class="mono" style="font-size:20px; font-weight:800; color:var(--text-primary); line-height:1.25;">$29 Q4 Ledger (${totalContacts} Contacts)</div>
+              <p style="font-size:14.5px; color:var(--text-secondary); margin:4px 0 0 0; max-width:60ch;">Most popular • All ${totalContacts} Verified Brand &amp; Show Emails (.CSV) + 96-Flight Floor Ledger (.CSV) + Redlined IO &amp; Pitch Scripts (.EML)</p>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
               <a href="/buy/micro_pass" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" class="btn btn-ghost" style="padding:10px 14px; font-size:13.5px; text-decoration:none;">1 Row Only (99¢)</a>
@@ -527,22 +522,22 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           </div>
 
           <!-- Continuous Team, Agency & Done-For-You $499 Media Plan Tiers (Choice 2D) -->
-          <div style="padding:18px 20px; border-radius:12px; background:var(--bg-elevated); border:1px solid var(--border-subtle);">
+          <div style="padding:18px 20px; border-radius:12px; background:var(--bg-elevated);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
               <div>
                 <div style="font-weight:800; font-size:16px; color:var(--text-primary);">Need Weekly RSS Spend Alerts or a Done-For-You 10-Show Q4 Media Plan?</div>
-                <div style="font-size:13.5px; color:var(--text-secondary);">Start Creator Pro ($49/mo), Agency Feed ($199/mo), or book our Done-For-You 10-Show Media Plan &amp; -18% Floor Negotiation ($499 one-time).</div>
+                <div style="font-size:13.5px; color:var(--text-secondary); max-width:60ch;">Start Creator Pro ($49/mo), Agency Feed ($199/mo), or book our Done-For-You 10-Show Media Plan &amp; -18% Floor Negotiation ($499 one-time).</div>
               </div>
               <input id="checkout-work-email" type="email" class="input-field" placeholder="you@company.com (for Stripe receipt &amp; access)" aria-label="Work email for team subscription" style="max-width:280px; min-height:38px; padding:6px 12px; font-size:14px;" />
             </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; padding:0 4px;">
               <input type="text" id="hp-creator" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
               <input id="checkout-email-creator" type="email" style="display:none;" value="creator@sponsorradar.io" />
               <input type="text" id="hp-agency" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
               <input id="checkout-email-agency" type="email" style="display:none;" value="agency@sponsorradar.io" />
-              <button type="button" class="btn btn-ghost" style="justify-content:space-between; padding:12px 14px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-creator').value=w.value;startStripeCheckout('creator_pro_49', 49, 'checkout-email-creator', 'hp-creator')"><span>Creator Pro ($49/mo)</span><span class="mono" style="color:var(--emerald-roi); font-size:13px;">All ${brands.length} Brands + Alerts →</span></button>
-              <button type="button" class="btn btn-ghost" style="justify-content:space-between; padding:12px 14px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-agency').value=w.value;startStripeCheckout('agency_feed_199', 199, 'checkout-email-agency', 'hp-agency')"><span>Agency Feed ($199/mo)</span><span class="mono" style="color:var(--vermilion); font-size:13px;">5 Seats + CSV API →</span></button>
-              <button type="button" class="btn btn-emerald" style="justify-content:space-between; padding:12px 14px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-agency').value=w.value;startStripeCheckout('dfy_media_plan_499', 499, 'checkout-email-agency', 'hp-agency', true)"><span>Done-For-You 10-Show Plan ($499)</span><span class="mono" style="color:#FFFFFF; font-size:13px;">We Negotiate -18% Floor →</span></button>
+              <button type="button" class="btn btn-ghost" style="justify-content:space-between; padding:12px 16px; flex-wrap:wrap; gap:6px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-creator').value=w.value;startStripeCheckout('creator_pro_49', 49, 'checkout-email-creator', 'hp-creator')"><span>Creator Pro ($49/mo)</span><span class="mono" style="color:var(--emerald-roi); font-size:13.5px;">All ${brands.length} Brands →</span></button>
+              <button type="button" class="btn btn-ghost" style="justify-content:space-between; padding:12px 16px; flex-wrap:wrap; gap:6px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-agency').value=w.value;startStripeCheckout('agency_feed_199', 199, 'checkout-email-agency', 'hp-agency')"><span>Agency Feed ($199/mo)</span><span class="mono" style="color:var(--vermilion); font-size:13.5px;">5 Seats + CSV →</span></button>
+              <button type="button" class="btn btn-emerald" style="justify-content:space-between; padding:12px 16px; flex-wrap:wrap; gap:6px;" onclick="var w=document.getElementById('checkout-work-email');if(w&&w.value)document.getElementById('checkout-email-agency').value=w.value;startStripeCheckout('dfy_media_plan_499', 499, 'checkout-email-agency', 'hp-agency', true)"><span>Done-For-You Plan ($499)</span><span class="mono" style="color:#FFFFFF; font-size:13.5px;">10 Shows (-18%) →</span></button>
             </div>
           </div>
         </div>
@@ -616,7 +611,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (list.length < 1) return;
       tb.innerHTML = list.map(function(item) {
         var cpm = Number(item.cpm) || 44, floorCpm = Math.round(cpm * 0.82), rack = Number(item.spendUsd) || 9500, floor = Math.round(rack * 0.82), save = rack - floor, cpc = (floorCpm / 18).toFixed(2);
-        return '<tr><td><strong>' + escHtml(item.name) + '</strong><div class="mono" style="font-size:12.5px;color:var(--text-muted);">Shortlisted ' + escHtml(item.type || 'show') + ' • 3-Flight Target</div></td><td class="mono">$' + rack.toLocaleString() + ' Rack → <strong style="color:var(--emerald-roi);">$' + floor.toLocaleString() + ' Floor (Save $' + save.toLocaleString() + '/flight)</strong></td><td class="mono">$' + cpm + ' Rack / <strong>$' + floorCpm + ' Floor eCPM</strong> (~$' + cpc + ' CPC)</td><td><span class="pill-emerald">Verified 3x+ Benchmark</span></td><td><button type="button" class="btn btn-ghost" style="padding:5px 10px;min-height:32px;font-size:12.5px;" data-rm-name="' + escHtml(item.name) + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))">Remove ×</button></td></tr>';
+        return '<tr><td><strong>' + escHtml(item.name) + '</strong><div class="mono" style="font-size:13.5px;color:var(--text-muted);">Shortlisted ' + escHtml(item.type || 'show') + ' • 3-Flight Target</div></td><td class="mono">$' + rack.toLocaleString() + ' Rack → <strong style="color:var(--emerald-roi);">$' + floor.toLocaleString() + ' Floor (Save $' + save.toLocaleString() + '/flight)</strong></td><td class="mono">$' + cpm + ' Rack / <strong>$' + floorCpm + ' Floor eCPM</strong> (~$' + cpc + ' CPC)</td><td><span class="pill-emerald">Verified 3x+ Benchmark</span></td><td><button type="button" class="btn btn-ghost" style="padding:6px 10px;min-height:34px;font-size:13.5px;" data-rm-name="' + escHtml(item.name) + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))">Remove ×</button></td></tr>';
       }).join('');
     };
     window.__srRunHomeQuoteAudit = function() {

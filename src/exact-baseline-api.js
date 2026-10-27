@@ -139,7 +139,7 @@ const VERTICAL_CONFIGS = {
     lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (88 Direct Emails)',
     deliverableName: '88 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
     freeDeliverableName: '88 Brand & Show Contacts + Rate-Card Floor & Counter-Offer Pack',
-    unlockBannerTitle: 'Verified Sponsor Contacts, Show Rate Floors & Counter-Offer Scripts',
+    unlockBannerTitle: 'Sponsor Contacts & Rate Floors',
     explainerText: 'See which sponsors renewed 3+ times, audit -18% 3-flight floor CPMs vs. rack rates, and unlock 88 direct buyer & show booking rep emails',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
