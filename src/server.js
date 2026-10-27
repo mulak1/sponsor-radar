@@ -432,12 +432,20 @@ app.get('/seo/:slug', (req, res) => {
     senderNiche: page.category
   }) : null;
 
+  const isDtcCategory = /health|wellness|fitness|therapy|mental|consumer|dtc|ecommerce|lifestyle/i.test(String(page.category || ''));
   const relatedPages = db.prepare(`
     SELECT * FROM seo_pages
     WHERE slug != ?
-    ORDER BY (CASE WHEN category = ? THEN 0 WHEN page_type = ? THEN 1 ELSE 2 END), ((rowid * 7) % 60) ASC
+    ORDER BY (
+      CASE
+        WHEN category = ? THEN 0
+        WHEN ? = 1 AND (category LIKE '%Health%' OR category LIKE '%Consumer%' OR category LIKE '%Fitness%' OR category LIKE '%Sleep%' OR slug LIKE '%ag1%' OR slug LIKE '%eight-sleep%' OR slug LIKE '%lmnt%' OR slug LIKE '%whoop%' OR slug LIKE '%diary-of-a-ceo%' OR slug LIKE '%huberman%' OR slug LIKE '%lex-fridman%') THEN 1
+        WHEN page_type = ? THEN 2
+        ELSE 3
+      END
+    ), ((rowid * 7) % 60) ASC
     LIMIT 8
-  `).all(page.slug, page.category, page.page_type);
+  `).all(page.slug, page.category, isDtcCategory ? 1 : 0, page.page_type);
 
   res.send(renderSeoPage({
     page,

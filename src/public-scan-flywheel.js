@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 let SR_SEED = null;
 try { SR_SEED = require('./seed_data'); } catch (_) {}
+let SR_SHELL = null;
+try { SR_SHELL = require('./views_shell'); } catch (_) {}
 
 /**
  * Phase A: Zero-HITL Public Scan Permalink, URL-Prefix / curl Terminal Magic,
@@ -31,24 +33,25 @@ const FLYWHEEL_SEED = {
   sponsor_radar: {
     cnnModel: 'IAB 30-Day Download + Promo-Code Renewal Verifier',
     cnnSensorLabel: '3x+ Renewal Velocity & Negotiated Floor Audit',
-    inputPlaceholder: "AG1, Deel, Ramp, Huberman Lab, Lenny's Podcast, Indie Hackers...",
+    inputPlaceholder: "AG1, BetterHelp, Deel, Ramp, Huberman Lab, Lenny's Podcast, Indie Hackers...",
     entities: [
-      { target: 'AG1', entityType: 'brand', channel: 'Podcast & YouTube', spendUsd: 1420000, fairCpmUsd: 34, seoSlug: 'ag1-athletic-greens-podcast-sponsors-spend', grade: 'A+', score: 97, status: 'HALL_OF_FAME', kpi1: '$1.42M/mo Spend', kpi2: '18x Renewal Streak • $34 Floor CPM', cnnReadout: '99.1% Mid-Roll Completion • 24 Proven 3x+ Shows', issue: 'Benchmark: Lock 3-Flight Host-Read Bundle w/ Dedicated Offer URL' },
-      { target: 'Huberman Lab', entityType: 'show', channel: 'Podcast & YouTube', spendUsd: 22500, fairCpmUsd: 34, seoSlug: 'huberman-lab-sponsors-and-cpm-rates', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$22,500 Rack → $18,450 Floor', kpi2: '520K Reach • $42 Rack / $34 Floor CPM', cnnReadout: '94% 3x+ Sponsor Renewal Rate (AG1 18x, Eight Sleep 14x, LMNT 15x)', issue: 'Media Buyer Verdict: High-ROI Flagship Buy at -18% 3-Flight Floor' },
-      { target: 'Ramp', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 790000, fairCpmUsd: 39, seoSlug: 'ramp-podcast-newsletter-ad-spend', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$790K/mo Spend', kpi2: '14x Renewal Streak • $39 Floor CPM', cnnReadout: '97.4% CFO & Founder Audience Match Across Acquired & All-In', issue: 'Cleared $39.40 Net eCPM on 3-Flight B2B Finance Bundles' },
-      { target: "Lenny's Podcast", entityType: 'show', channel: 'Podcast & Newsletter', spendUsd: 11500, fairCpmUsd: 44, seoSlug: 'lennys-podcast-sponsors-and-cpm-rates', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '$11,500 Rack → $9,430 Floor', kpi2: '210K Reach • $54 Rack / $44 Floor CPM', cnnReadout: '92% B2B SaaS 3x+ Renewal Rate (Deel 12x, Linear 9x, Vanta 8x)', issue: 'Media Buyer Verdict: #1 Product/SaaS Conversion Show at $9,430 Floor' },
-      { target: 'Acquired', entityType: 'show', channel: 'Podcast', spendUsd: 24000, fairCpmUsd: 45, seoSlug: 'acquired-podcast-sponsors-and-cpm-rates', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '$24,000 Rack → $19,680 Floor', kpi2: '430K Reach • $55 Rack / $45 Floor CPM', cnnReadout: '96% Executive Deep-Dive Completion (Ramp 10x, ServiceNow, Pilot)', issue: 'Media Buyer Verdict: Highest Enterprise ACV Lift in Tech Audio' },
-      { target: 'Deel', entityType: 'brand', channel: 'Newsletter & Podcast', spendUsd: 680000, fairCpmUsd: 38, seoSlug: 'deel-sponsorship-spend-and-cpm-rates', grade: 'A', score: 93, status: 'HALL_OF_FAME', kpi1: '$680K/mo Spend', kpi2: '12x Renewal Streak • $38 Floor CPM', cnnReadout: "95.0% Multi-Quarter Retention on Lenny's, TLDR & Pragmatic Engineer", issue: 'High-Converting Primary Newsletter + Host Mid-Roll Stack' },
-      { target: 'TLDR Newsletter', entityType: 'show', channel: 'Newsletter', spendUsd: 15000, fairCpmUsd: 26, seoSlug: 'tldr-newsletter-ad-rates-and-sponsors', grade: 'A', score: 92, status: 'HALL_OF_FAME', kpi1: '$15,000 Rack → $12,300 Floor', kpi2: '1.25M Opens • $32 Rack / $26 Floor CPM', cnnReadout: '89% DevTools Repeat Booking Rate • ~$1.45 Verified Developer CPC', issue: 'Media Buyer Verdict: Best High-Volume Developer Click Arbitrage' },
-      { target: 'Linear', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 310000, fairCpmUsd: 32, seoSlug: 'linear-podcast-newsletter-sponsors', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '$310K/mo Spend', kpi2: '9x Renewal Streak • $32 Floor CPM', cnnReadout: '93.2% Engineering & Founder Conversion on Indie Hackers & Syntax.fm', issue: 'Top DevTools Sponsorship CAC Efficiency ($32 Floor eCPM)' },
+      { target: 'AG1', entityType: 'brand', channel: 'Podcast & YouTube', spendUsd: 1420000, fairCpmUsd: 34, seoSlug: 'ag1-podcast-sponsorship-spend-and-roi', grade: 'A+', score: 97, status: 'HALL_OF_FAME', kpi1: '$1.42M/mo Spend', kpi2: '18x Renewal Streak • $34 Floor CPM', cnnReadout: '99.1% Mid-Roll Completion • 24 Proven 3x+ Shows', issue: 'Benchmark: Lock 3-Flight Host-Read Bundle w/ Dedicated Offer URL' },
+      { target: 'BetterHelp', entityType: 'brand', channel: 'Podcast & YouTube', spendUsd: 1650000, fairCpmUsd: 24, seoSlug: 'betterhelp-podcast-and-newsletter-sponsorship-spend', grade: 'A+', score: 97, status: 'HALL_OF_FAME', kpi1: '$1.65M/mo Spend', kpi2: '21x Renewal Streak • $24 Floor CPM', cnnReadout: '92% 3x+ Renewal Rate (The Diary Of A CEO 21x, Huberman Lab, Lex Fridman)', issue: 'Benchmark: High-Volume Direct-Response Mid-Roll Floor @ $24 eCPM' },
+      { target: 'Huberman Lab', entityType: 'show', channel: 'Podcast & YouTube', spendUsd: 67500, fairCpmUsd: 44, seoSlug: 'huberman-lab-sponsor-spend-and-promo-codes', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$67,500 Rack → $55,350 Floor', kpi2: '1.25M Reach • $54 Rack / $44 Floor CPM', cnnReadout: '94% 3x+ Sponsor Renewal Rate (AG1 18x, Eight Sleep 16x, LMNT 17x)', issue: 'Media Buyer Verdict: High-ROI Flagship Buy at -18% 3-Flight Floor' },
+      { target: 'Ramp', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 790000, fairCpmUsd: 39, seoSlug: 'ramp-b2b-podcast-sponsorship-strategy', grade: 'A+', score: 96, status: 'HALL_OF_FAME', kpi1: '$790K/mo Spend', kpi2: '15x Renewal Streak • $39 Floor CPM', cnnReadout: '97.4% CFO & Founder Audience Match Across Acquired, All-In & Morning Brew', issue: 'Cleared $39.40 Net eCPM on 3-Flight B2B Finance Bundles' },
+      { target: "Lenny's Podcast", entityType: 'show', channel: 'Podcast & Newsletter', spendUsd: 31600, fairCpmUsd: 59, seoSlug: 'lennys-podcast-sponsors-and-ad-rates', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '$31,600 Rack → $25,912 Floor', kpi2: '440K Reach • $72 Rack / $59 Floor CPM', cnnReadout: '92% B2B SaaS 3x+ Renewal Rate (Deel 12x, Vanta 13x, Linear 8x)', issue: 'Media Buyer Verdict: #1 Product/SaaS Conversion Show at $25,912 Floor' },
+      { target: 'Acquired', entityType: 'show', channel: 'Podcast', spendUsd: 40500, fairCpmUsd: 64, seoSlug: 'acquired-podcast-sponsors-and-cpm-rates', grade: 'A+', score: 95, status: 'HALL_OF_FAME', kpi1: '$40,500 Rack → $33,210 Floor', kpi2: '520K Reach • $78 Rack / $64 Floor CPM', cnnReadout: '96% Executive Deep-Dive Completion (Ramp 10x, Vanta 11x, Mercury 9x)', issue: 'Media Buyer Verdict: Highest Enterprise ACV Lift in Tech Audio' },
+      { target: 'Deel', entityType: 'brand', channel: 'Newsletter & Podcast', spendUsd: 680000, fairCpmUsd: 38, seoSlug: 'deel-newsletter-and-podcast-ad-spend', grade: 'A', score: 93, status: 'HALL_OF_FAME', kpi1: '$680K/mo Spend', kpi2: '14x Renewal Streak • $38 Floor CPM', cnnReadout: "95.0% Multi-Quarter Retention on Lenny's, TLDR & Pragmatic Engineer", issue: 'High-Converting Primary Newsletter + Host Mid-Roll Stack' },
+      { target: 'TLDR Newsletter', entityType: 'show', channel: 'Newsletter', spendUsd: 28000, fairCpmUsd: 43, seoSlug: 'tldr-newsletter-sponsor-pricing-and-roi', grade: 'A', score: 92, status: 'HALL_OF_FAME', kpi1: '$28,000 Rack → $22,960 Floor', kpi2: '1.35M Opens • $52 Rack / $43 Floor CPM', cnnReadout: '89% DevTools Repeat Booking Rate (Deel 14x, Supabase 11x, Cloudflare 10x)', issue: 'Media Buyer Verdict: Best High-Volume Developer Click Arbitrage' },
+      { target: 'Linear', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 310000, fairCpmUsd: 32, seoSlug: 'linear-developer-newsletter-and-podcast-sponsors', grade: 'A', score: 91, status: 'HALL_OF_FAME', kpi1: '$310K/mo Spend', kpi2: '9x Renewal Streak • $32 Floor CPM', cnnReadout: '93.2% Engineering & Founder Conversion on Indie Hackers & Pragmatic Engineer', issue: 'Top DevTools Sponsorship CAC Efficiency ($32 Floor eCPM)' },
       { target: 'Indie Hackers', entityType: 'show', channel: 'Podcast & Newsletter', spendUsd: 9540, fairCpmUsd: 43, seoSlug: 'indie-hackers-sponsors-and-cpm-rates', grade: 'A', score: 90, status: 'HALL_OF_FAME', kpi1: '$9,540 Rack → $7,823 Floor', kpi2: '180K Reach • $53 Rack / $43 Floor CPM', cnnReadout: '9 Verified B2B Repeat Sponsors (Linear, Supabase, Stripe, Mercury, Loom)', issue: 'Media Buyer Verdict: Newsletter ($2,150) + 3-Flight Mid-Roll Floor ($7,823)' },
-      { target: 'The Pragmatic Engineer', entityType: 'show', channel: 'Newsletter & Podcast', spendUsd: 12500, fairCpmUsd: 39, seoSlug: 'pragmatic-engineer-newsletter-ad-rates', grade: 'A', score: 90, status: 'HALL_OF_FAME', kpi1: '$12,500 Rack → $10,250 Floor', kpi2: '260K Subscribers • $48 Rack / $39 Floor CPM', cnnReadout: '91% Engineering Manager Reach (WorkOS, Retool, Sonar, Vanta)', issue: 'Media Buyer Verdict: High-Intent VP Eng & CTO Newsletter Placement' },
-      { target: 'Eight Sleep', entityType: 'brand', channel: 'Podcast & YouTube', spendUsd: 620000, fairCpmUsd: 31, seoSlug: 'eight-sleep-podcast-sponsors-spend', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '$620K/mo Spend', kpi2: '11x Renewal Streak • $31 Floor CPM', cnnReadout: '91.8% High-Ticket DTC Promo-Code Redemption Velocity', issue: '$2,400+ AOV Clears Profitably on $31–$38 Host-Read Mid-Rolls' },
-      { target: 'Vanta', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 410000, fairCpmUsd: 41, seoSlug: 'vanta-b2b-podcast-sponsorship-spend', grade: 'A', score: 88, status: 'HALL_OF_FAME', kpi1: '$410K/mo Spend', kpi2: '8x Renewal Streak • $41 Floor CPM', cnnReadout: '88.6% SOC2/ISO Compliance Buyer Conversion on SaaS Shows', issue: 'Strong 3-Flight Renewal Velocity Across SaaS & Security Shows' },
-      { target: 'All-In Podcast', entityType: 'show', channel: 'Podcast & YouTube', spendUsd: 32000, fairCpmUsd: 49, seoSlug: 'all-in-podcast-sponsors-and-ad-rates', grade: 'B+', score: 84, status: 'WATCHLIST', kpi1: '$32,000 Rack → $26,240 Floor', kpi2: '530K Reach • $60 Rack / $49 Floor CPM', cnnReadout: '84.0% Founder/VC Reach • Premium Rack Requires 3-Flight Floor Negotiation', issue: 'Watchlist: Do Not Pay $60 Rack CPM; Counter at $49 3-Flight Floor (-18%)' },
-      { target: 'Notion', entityType: 'brand', channel: 'YouTube & Newsletter', spendUsd: 440000, fairCpmUsd: 36, seoSlug: 'notion-youtube-newsletter-sponsorships', grade: 'B', score: 81, status: 'WATCHLIST', kpi1: '$440K/mo Spend', kpi2: '5x Renewal Streak • $36 Floor CPM', cnnReadout: '82.4% YouTube Integrated Segment Performance', issue: 'Reallocating Spend from Broad Audio to Creator YouTube Integrations' },
-      { target: 'Unbundled 1-Off Tech Pre-Roll', entityType: 'show', channel: 'Podcast', spendUsd: 8500, fairCpmUsd: 32, seoSlug: 'b2b-saas-podcast-sponsors-and-cpm-rates', grade: 'C', score: 56, status: 'WALL_OF_SHAME', kpi1: '$8,500 Asked ($68 CPM)', kpi2: '1x Test (68% Churn Rate)', cnnReadout: '49.2% Pre-Roll Skip Spike (+38% Drop) • Overpriced by +112% vs. Floor', issue: 'Overcharge Alert: Switch to 60s Host Mid-Roll at $32–$42 3-Flight Floor' },
-      { target: 'Untracked Generic Homepage Read', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 42000, fairCpmUsd: 35, seoSlug: 'developer-tools-podcast-newsletter-sponsors', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '$42K/mo Wasted Spend', kpi2: '0 Renewals (No Vanity URL)', cnnReadout: '38.1% Dead Homepage CTA (Zero Promo Code or Vanity Slug Attribution)', issue: '62% Attribution Leakage: Require Dedicated /show Vanity URL + 1.5% CTR Clause' }
+      { target: 'The Pragmatic Engineer', entityType: 'show', channel: 'Newsletter & Podcast', spendUsd: 26500, fairCpmUsd: 61, seoSlug: 'pragmatic-engineer-newsletter-ad-rates', grade: 'A', score: 90, status: 'HALL_OF_FAME', kpi1: '$26,500 Rack → $21,730 Floor', kpi2: '720K Subscribers • $74 Rack / $61 Floor CPM', cnnReadout: '91% Engineering Manager Reach (Linear 9x, PostHog 9x, Deel 7x, Retool 6x)', issue: 'Media Buyer Verdict: High-Intent VP Eng & CTO Newsletter Placement' },
+      { target: 'Eight Sleep', entityType: 'brand', channel: 'Podcast & YouTube', spendUsd: 620000, fairCpmUsd: 31, seoSlug: 'eight-sleep-creator-sponsorship-rates', grade: 'A', score: 89, status: 'HALL_OF_FAME', kpi1: '$620K/mo Spend', kpi2: '16x Renewal Streak • $31 Floor CPM', cnnReadout: '91.8% High-Ticket DTC Promo-Code Redemption Velocity', issue: '$2,400+ AOV Clears Profitably on $31-$38 Host-Read Mid-Rolls' },
+      { target: 'Vanta', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 580000, fairCpmUsd: 41, seoSlug: 'vanta-podcast-and-newsletter-sponsorship-spend', grade: 'A', score: 88, status: 'HALL_OF_FAME', kpi1: '$580K/mo Spend', kpi2: '13x Renewal Streak • $41 Floor CPM', cnnReadout: '88.6% SOC2/ISO Compliance Buyer Conversion on SaaS Shows', issue: 'Strong 3-Flight Renewal Velocity Across SaaS & Security Shows' },
+      { target: 'All-In Podcast', entityType: 'show', channel: 'Podcast & YouTube', spendUsd: 44200, fairCpmUsd: 53, seoSlug: 'all-in-podcast-sponsorship-cost-and-brands', grade: 'B+', score: 84, status: 'WATCHLIST', kpi1: '$44,200 Rack → $36,244 Floor', kpi2: '680K Reach • $65 Rack / $53 Floor CPM', cnnReadout: '84.0% Founder/VC Reach • Premium Rack Requires 3-Flight Floor Negotiation', issue: 'Watchlist: Do Not Pay $65 Rack CPM; Counter at $53 3-Flight Floor (-18%)' },
+      { target: 'Notion', entityType: 'brand', channel: 'YouTube & Newsletter', spendUsd: 540000, fairCpmUsd: 36, seoSlug: 'notion-podcast-and-newsletter-sponsorship-spend', grade: 'B', score: 81, status: 'WATCHLIST', kpi1: '$540K/mo Spend', kpi2: '10x Renewal Streak • $36 Floor CPM', cnnReadout: '82.4% YouTube Integrated Segment Performance', issue: 'Reallocating Spend from Broad Audio to Creator YouTube Integrations' },
+      { target: 'Unbundled 1-Off Tech Pre-Roll', entityType: 'show', channel: 'Podcast', spendUsd: 8500, fairCpmUsd: 32, seoSlug: 'top-verified-b2b-saas-podcast-sponsors-2026', grade: 'C', score: 56, status: 'WALL_OF_SHAME', kpi1: '$8,500 Asked ($68 CPM)', kpi2: '1x Test (68% Churn Rate)', cnnReadout: '49.2% Pre-Roll Skip Spike (+38% Drop) • Overpriced by +112% vs. Floor', issue: 'Overcharge Alert: Switch to 60s Host Mid-Roll at $32-$42 3-Flight Floor' },
+      { target: 'Untracked Generic Homepage Read', entityType: 'brand', channel: 'Podcast & Newsletter', spendUsd: 42000, fairCpmUsd: 35, seoSlug: 'how-to-track-competitor-podcast-ad-spend-and-promo-codes', grade: 'D', score: 44, status: 'WALL_OF_SHAME', kpi1: '$42K/mo Wasted Spend', kpi2: '0 Renewals (No Vanity URL)', cnnReadout: '38.1% Dead Homepage CTA (Zero Promo Code or Vanity Slug Attribution)', issue: '62% Attribution Leakage: Require Dedicated /show Vanity URL + 1.5% CTR Clause' }
     ]
   },
   derm_logic: {
@@ -91,18 +94,27 @@ const MEM_SCAN_LEDGERS = {};
 
 function loadPublicScanLedger(cfg) {
   const cat = getFlywheelCatalog(cfg.moduleId);
+  const seedByNorm = new Map(cat.entities.map((e) => [e.target.toLowerCase().replace(/[^a-z0-9]/g, ''), e]));
   const filterClean = (arr) => arr.filter((x) => {
     if (!x || !x.target) return false;
     const t = String(x.target).toLowerCase();
     if (cfg.moduleId !== 'citation_forge' && t === 'stripe.com') return false;
+    if (/^(oneshot-crypto-app|generic-vpn-flight|unverified-saas-ad)$/i.test(t)) return false;
     if (/^(test|playwright|synthetic|bot|localhost|127\.0\.0\.1|99\.112\.|84\.17\.)/i.test(t) || /(onload|alert|xss|script)/i.test(t)) return false;
     return true;
+  }).map((x) => {
+    const seed = seedByNorm.get(String(x.target).toLowerCase().replace(/[^a-z0-9]/g, ''));
+    return seed ? { ...x, ...seed } : x;
   });
   if (Array.isArray(MEM_SCAN_LEDGERS[cfg.moduleId]) && MEM_SCAN_LEDGERS[cfg.moduleId].length > 0) return filterClean(MEM_SCAN_LEDGERS[cfg.moduleId]);
   const filePath = path.join(process.cwd(), 'data', `public_scans_${cfg.moduleId}.json`);
   try {
     if (fs.existsSync(filePath)) {
       const parsed = filterClean(JSON.parse(fs.readFileSync(filePath, 'utf8')) || []);
+      const seen = new Set(parsed.map((x) => String(x.target).toLowerCase().replace(/[^a-z0-9]/g, '')));
+      for (const s of cat.entities) {
+        if (!seen.has(s.target.toLowerCase().replace(/[^a-z0-9]/g, ''))) parsed.push({ ...s });
+      }
       if (Array.isArray(parsed) && parsed.length > 0) return (MEM_SCAN_LEDGERS[cfg.moduleId] = parsed);
     }
   } catch (_) {}
@@ -237,17 +249,18 @@ function renderScanCnnOverlaySvg(cfg, scan, badgeColor) {
 
 function renderFlywheelHeaderHtml(cfg, t, badgeColor, activeRoute, pillText) {
   const isSr = cfg.moduleId === 'sponsor_radar';
-  return `<header style="border-bottom:1px solid ${esc(t.border)};background:#FFFFFF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+  const srIcon = isSr ? `<svg width="34" height="34" viewBox="0 0 48 48" role="img" aria-label="SponsorRadar Crest" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><rect x="1.5" y="1.5" width="45" height="45" rx="13" fill="#161412" stroke="#D8CEBE" stroke-width="1.5"/><circle cx="24" cy="24" r="14.5" fill="none" stroke="rgba(251,248,243,0.22)" stroke-width="1.25" stroke-dasharray="3 2.5"/><circle cx="24" cy="24" r="9.5" fill="none" stroke="rgba(251,248,243,0.38)" stroke-width="1.25"/><path d="M 24 9.5 A 14.5 14.5 0 0 1 38.5 24" fill="none" stroke="#E84E36" stroke-width="2.4" stroke-linecap="round"/><path d="M 24 14.5 A 9.5 9.5 0 0 1 33.5 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="24" x2="35.5" y2="12.5" stroke="#E84E36" stroke-width="2.2" stroke-linecap="round"/><circle cx="33.5" cy="14.5" r="3" fill="#10B981" stroke="#161412" stroke-width="1.2"/><circle cx="24" cy="24" r="3" fill="#FBF8F3"/></svg>` : '';
+  return `<header style="border-bottom:1px solid ${esc(t.border)};background:#FFFFFF;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:40;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <a href="/" style="font-weight:800;font-size:18px;color:${esc(t.textPrimary)};text-decoration:none;">${esc(cfg.brandName)}</a>
-      <span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">${esc(pillText)}</span>
+      <a href="/" style="display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:${esc(t.textPrimary)};text-decoration:none;font-family:${esc(t.fontDisplay || 'Georgia,serif')};">${srIcon}<span>${esc(cfg.brandName)}</span></a>
+      <span style="font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:${esc(t.brandSoftBg)};color:${esc(badgeColor)};">${esc(pillText)}</span>
     </div>
-    <nav aria-label="Primary" style="display:flex;gap:16px;align-items:center;font-size:14px;font-weight:600;flex-wrap:wrap;">
+    <nav aria-label="Primary" style="display:flex;gap:18px;align-items:center;font-size:14.5px;font-weight:600;flex-wrap:wrap;">
       <a href="/" style="color:${esc(t.textSecondary)};text-decoration:none;">${isSr ? 'Spend Radar & Quote Auditor' : 'Home Calculator'}</a>
       <a href="/leaderboard" style="color:${activeRoute === 'leaderboard' ? esc(badgeColor) : esc(t.textSecondary)};text-decoration:none;font-weight:${activeRoute === 'leaderboard' ? '800' : '600'};">Leaderboard</a>
       <a href="/directory" style="color:${esc(t.textSecondary)};text-decoration:none;">${isSr ? 'Spend Directory (104)' : 'All Guides'}</a>
       ${isSr ? `<a href="/#pricing" style="color:${esc(t.textSecondary)};text-decoration:none;">Pricing</a>` : ''}
-      <a href="/buy/flash_pass" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" style="padding:8px 16px;border-radius:999px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;">${isSr ? 'Unlock Rate & Sponsor Pack ($1.99) →' : 'Unlock 3-File Pack ($1.99) ↗'}</a>
+      <a href="/buy/flash_pass" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" style="padding:9px 16px;border-radius:8px;background:${esc(badgeColor)};color:#FFFFFF;text-decoration:none;font-weight:700;font-size:14px;">${isSr ? 'Unlock Rate & Sponsor Pack ($1.99) →' : 'Unlock 3-File Pack ($1.99) ↗'}</a>
     </nav>
   </header>`;
 }
@@ -264,29 +277,12 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
   const row4Label = isSr ? 'Row #4 Verified Partnerships & Booking Rep Emails (88 Contacts .CSV)' : 'Row #4 Step-by-Step Fix Guide';
   const row5Label = isSr ? 'Row #5 96-Flight Negotiated CPM Floor Ledger & 3-Flight Counter-Offer Script (.EML)' : 'Row #5 Complete 3-File Action Pack';
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard &amp; Rate Audit (${esc(scan.grade)} ${scan.score}/100)</title>
-  <meta name="description" content="Live ${esc(cfg.brandName)} scorecard for ${esc(scan.target)}: Grade ${esc(scan.grade)} (${scan.score}/100), ${esc(scan.kpi1)}, ${esc(scan.kpi2)}. View full rate-card floor and buyer contacts." />
-  <link rel="canonical" href="${esc(canonicalUrl)}" />
-  <meta property="og:title" content="${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard (${esc(scan.grade)})" />
-  <meta property="og:description" content="Verified ${esc(cfg.brandName)} Results: ${esc(scan.kpi1)} • ${esc(scan.cnnReadout)}" />
-  <meta property="og:url" content="${esc(canonicalUrl)}" />
-  <meta property="og:image" content="https://${esc(cfg.domain)}/api/og/scorecard?target=${esc(encodeURIComponent(scan.target))}" />
-  <meta name="twitter:card" content="summary_large_image" />
-</head>
-<body style="margin:0;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-family:${esc(t.fontSans || 'Plus Jakarta Sans,-apple-system,BlinkMacSystemFont,sans-serif')};font-size:16px;line-height:1.6;">
-  ${renderFlywheelHeaderHtml(cfg, t, badgeColor, 'scan', `Verified Report • Grade ${scan.grade}`)}
-  <main style="max-width:1240px;margin:0 auto;padding:24px;">
-    <nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:10px;">
+  const innerHtml = `<nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:10px;">
       <a href="/" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Home</a> / <a href="/leaderboard" style="color:${esc(badgeColor)};text-decoration:none;font-weight:600;">Leaderboard</a> / <span id="eb-scan-bc-target">${esc(scan.target)}</span>
     </nav>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
       <div>
-        <h1 id="eb-scan-h1" style="margin:0 0 6px 0;font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;">${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard &amp; Rate Audit</h1>
+        <h1 id="eb-scan-h1" class="headline-xl" style="margin:0 0 6px 0;font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;">${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard &amp; Rate Audit</h1>
         <p class="pseo-lead" style="margin:0;color:${esc(t.textSecondary)};font-size:16px;">Shareable benchmark report for <strong id="eb-scan-lead-target">${esc(scan.target)}</strong>. Rated <strong id="eb-scan-lead-grade">${esc(scan.grade)} (${scan.score}/100)</strong> based on ${esc(scan.kpi1)} and ${esc(scan.kpi2)}.</p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -332,7 +328,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
     </section>
     <article style="background:#FFFFFF;border-radius:14px;padding:20px;margin-top:16px;">
       <h2 style="font-size:18px;margin:0 0 10px 0;">Detailed Sponsorship &amp; Rate-Card Benchmark: ${esc(scan.target)}</h2>
-      <p style="font-size:14.5px;color:${esc(t.textSecondary)};margin:0 0 12px 0;line-height:1.65;">Our deterministic audit evaluated <strong>${esc(scan.target)}</strong> using the <strong>${esc(scan.cnnModel)}</strong> ledger (${esc(scan.cnnSensorLabel)}). Across 2026 benchmarks, ${esc(scan.target)} achieved a composite grade of <strong>${esc(scan.grade)} (${scan.score}/100)</strong>, recording <strong>${esc(scan.kpi1)}</strong> and <strong>${esc(scan.kpi2)}</strong>. Finding: <code>${esc(scan.cnnReadout)}</code> — Recommended next step: <strong>${esc(scan.issue)}</strong>.</p>
+      <p style="font-size:14.5px;color:${esc(t.textSecondary)};margin:0 0 12px 0;line-height:1.65;">Our deterministic audit evaluated <strong>${esc(scan.target)}</strong> using the <strong>${esc(scan.cnnModel)}</strong> ledger (${esc(scan.cnnSensorLabel)}). Across 2026 benchmarks, ${esc(scan.target)} achieved a composite grade of <strong>${esc(scan.grade)} (${scan.score}/100)</strong>, recording <strong>${esc(scan.kpi1)}</strong> and <strong>${esc(scan.kpi2)}</strong>. Finding: <code>${esc(scan.cnnReadout)}</code> - Recommended next step: <strong>${esc(scan.issue)}</strong>.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px;">
         <div style="padding:14px;border-radius:10px;background:${esc(t.canvasBg)};"><div style="font-size:13px;font-weight:800;color:${esc(badgeColor)};margin-bottom:4px;">1. Renewal &amp; Floor Verification</div><div style="font-size:13.5px;color:${esc(t.textPrimary)};">Verified <strong>${esc(scan.cnnReadout)}</strong> (${esc(scan.status)}). Compare this entity directly against Grade A+ leaders on the <a href="/leaderboard" style="color:${esc(badgeColor)};font-weight:700;">Public Leaderboard</a>.</div></div>
         <div style="padding:14px;border-radius:10px;background:${esc(t.canvasBg)};"><div style="font-size:13px;font-weight:800;color:${esc(badgeColor)};margin-bottom:4px;">2. Recommended Negotiation / Pitch Action</div><div style="font-size:13.5px;color:${esc(t.textPrimary)};">Priority action for <strong>${esc(scan.target)}</strong>: ${esc(scan.issue)}. Explore our <a href="/directory" style="color:${esc(badgeColor)};font-weight:700;">104 Verified Spend &amp; Rate Reports</a> for full rate-card breakdowns.</div></div>
@@ -349,10 +345,17 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
     <section style="margin-top:18px;">
       <h2 style="font-size:16px;margin:0 0 10px 0;">Recent Public Reports (<a href="/leaderboard" style="color:${esc(badgeColor)};">View Full Leaderboard →</a>)</h2>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">${recentLinks}</div>
-    </section>
-  </main>
-</body>
-</html>`;
+    </section>`;
+  if (SR_SHELL && typeof SR_SHELL.renderShell === 'function') {
+    return SR_SHELL.renderShell({
+      title: `${scan.target} : ${cfg.brandName} Scorecard & Rate Audit (${scan.grade} ${scan.score}/100)`,
+      description: `Live ${cfg.brandName} scorecard for ${scan.target}: Grade ${scan.grade} (${scan.score}/100), ${scan.kpi1}, ${scan.kpi2}. View full rate-card floor and buyer contacts.`,
+      canonicalPath: `/scan/${encodeURIComponent(scan.target)}`,
+      ogSlug: scan.target,
+      bodyHtml: `<div class="container" style="padding:28px 24px 48px;">${innerHtml}</div>`
+    });
+  }
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>${esc(scan.target)}</title></head><body>${renderFlywheelHeaderHtml(cfg, t, badgeColor, 'scan', `Verified Report • Grade ${scan.grade}`)}<main style="max-width:1240px;margin:0 auto;padding:24px;">${innerHtml}</main></body></html>`;
 }
 
 function renderLeaderboardPageHtml(cfg, badgeColor) {
@@ -362,8 +365,10 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
   const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
   const brandCount = ledger.filter((x) => x.entityType === 'brand').length;
   const showCount = ledger.filter((x) => x.entityType === 'show').length;
-  const podium = ledger.slice(0, 3);
-  const medals = ['#1 Hall of Fame Leader', '#2 Verified Runner-Up', '#3 Top Category Benchmark'];
+  const fameCount = ledger.filter((x) => x.score >= 86).length;
+  const fixCount = ledger.filter((x) => x.score < 86).length;
+  const podium = isSr ? [ledger.find((x) => x.entityType === 'brand') || ledger[0], ledger.find((x) => x.entityType === 'show') || ledger[1], ledger.find((x) => x.target === 'BetterHelp' || x.target === 'Ramp') || ledger[2]].filter(Boolean) : ledger.slice(0, 3);
+  const medals = isSr ? ['#1 Brand Spend Leader', '#1 Show Rate-Card Benchmark', '#2 Direct-Response Renewal Leader'] : ['#1 Hall of Fame Leader', '#2 Verified Runner-Up', '#3 Top Category Benchmark'];
   const podiumHtml = podium.map((item, idx) => `<div style="background:#FFFFFF;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;border:1px solid ${esc(t.border)};">
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
@@ -407,7 +412,8 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
     <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};">
       <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
         ${item.seoSlug ? `<a href="/seo/${esc(item.seoSlug)}" style="font-size:13px;font-weight:800;color:${esc(badgeColor)};text-decoration:underline;">Full Rate / Spend Report →</a>` : `<a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:800;color:${barColor};text-decoration:none;">View Scorecard →</a>`}
-        <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:12px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:12px;align-items:center;">
+          ${isSr ? `<button type="button" onclick="if(window.__srAddToPlan){window.__srAddToPlan('${esc(item.target.replace(/'/g, "\\'"))}','${esc(eType)}',${cpmNum},${spendNum},3);this.textContent='✓ Added to Plan';}" style="padding:2px 8px;border-radius:999px;border:none;background:#ECFDF5;color:#059669;font-size:11.5px;font-weight:700;cursor:pointer;">+ Add to Plan</button>` : ''}
           <a href="/?q=${esc(encodeURIComponent(item.target))}#radar-tool" style="color:${esc(t.textSecondary)};font-weight:700;text-decoration:underline;">Audit Quote ↗</a>
           <a href="/buy/micro_pass?target=${esc(encodeURIComponent(item.target))}" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass');return false;}" style="color:#059669;font-weight:700;text-decoration:underline;">Unlock Contact (99¢)</a>
         </div>
@@ -416,21 +422,9 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
   </tr>`;
   }).join('');
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${esc(cfg.brandName)} Public Leaderboard : Top Sponsor Brands, Show Rate Cards &amp; Negotiated Floors (2026)</title>
-  <meta name="description" content="Live public sponsorship &amp; rate-card leaderboard for ${esc(cfg.brandName)}. Compare 3x+ renewed sponsor brands, flagship show CPM floors, or scan any brand or show." />
-  <link rel="canonical" href="https://${esc(cfg.domain)}/leaderboard" />
-</head>
-<body style="margin:0;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-family:${esc(t.fontSans || 'Plus Jakarta Sans,-apple-system,BlinkMacSystemFont,sans-serif')};font-size:16px;line-height:1.6;">
-  ${renderFlywheelHeaderHtml(cfg, t, badgeColor, 'leaderboard', 'Public Benchmark Leaderboard')}
-  <main style="max-width:1240px;margin:0 auto;padding:24px;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:16px;">
+  const innerHtml = `<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:16px;">
       <div>
-        <h1 style="margin:0 0 8px 0;font-size:clamp(1.95rem,3vw,2.55rem);line-height:1.15;">${isSr ? 'Sponsorship Spend &amp; Show Rate-Card Leaderboard (2026)' : `${esc(cfg.brandName)} Industry Leaderboard: Top Performers (A+) &amp; Common Mistakes`}</h1>
+        <h1 class="headline-xl" style="margin:0 0 8px 0;font-size:clamp(1.95rem,3vw,2.55rem);line-height:1.15;">${isSr ? 'Sponsorship Spend &amp; Show Rate-Card Leaderboard (2026)' : `${esc(cfg.brandName)} Industry Leaderboard: Top Performers (A+) &amp; Common Mistakes`}</h1>
         <p class="pseo-lead" style="margin:0;font-size:16px;color:${esc(t.textSecondary)};max-width:78ch;">${isSr ? 'Compare verified 3x+ repeat sponsor brands and flagship creator show rate cards side-by-side. Filter by Brands vs. Shows, Podcast vs. Newsletter, sort by Negotiated Floor CPM, or benchmark any show quote below.' : 'Compare verified grades side-by-side across top industry benchmarks, filter between Hall of Fame leaders and Needs-Fix examples, or test any target below.'}</p>
       </div>
       ${isSr ? `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#FFFFFF;padding:10px 14px;border-radius:12px;border:1px solid ${esc(t.border)};">
@@ -448,8 +442,8 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
           <button type="button" onclick="window.__lbFilter('all',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(badgeColor)};color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer;">All Ranked (${ledger.length})</button>
           ${isSr ? `<button type="button" onclick="window.__lbFilter('brand',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">Sponsor Brands (${brandCount})</button>
           <button type="button" onclick="window.__lbFilter('show',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">Creator Shows (${showCount})</button>` : ''}
-          <button type="button" onclick="window.__lbFilter('fame',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">3x+ Hall of Fame (A+/A)</button>
-          <button type="button" onclick="window.__lbFilter('fix',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">Overpriced / Watchlist</button>
+          <button type="button" onclick="window.__lbFilter('fame',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">3x+ Hall of Fame (${fameCount})</button>
+          <button type="button" onclick="window.__lbFilter('fix',this)" class="lb-tab-btn" style="padding:7px 13px;border-radius:999px;border:none;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-size:13px;font-weight:700;cursor:pointer;">Overpriced / Watchlist (${fixCount})</button>
         </div>
         <form action="/scan" method="get" onsubmit="if(window.__ebTrack)window.__ebTrack('calculate',{source:'leaderboard_check'});" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0;">
           <input type="text" name="q" required aria-label="Target entity to scan" placeholder="Benchmark any brand or show: ${esc(cat.inputPlaceholder)}" style="padding:8px 12px;border-radius:8px;border:1px solid ${esc(t.border)};font-size:13.5px;min-width:240px;" />
@@ -534,10 +528,17 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
     <details style="background:#FFFFFF;border-radius:14px;padding:14px 18px;margin-top:16px;border:1px solid ${esc(t.border)};">
       <summary style="cursor:pointer;font-size:14px;font-weight:700;color:${esc(t.textSecondary)};">Technical Scoring &amp; Rate-Card Verification Methodology</summary>
       <p style="font-size:13.5px;color:${esc(t.textSecondary)};margin:8px 0 0 0;">Scores are computed deterministically from multi-flight RSS ad-read detection, active vanity URLs, promo-code persistence, and agency 3-flight floor benchmarks via <strong>${esc(cat.cnnModel)}</strong> (${esc(cat.cnnSensorLabel)}).</p>
-    </details>
-  </main>
-</body>
-</html>`;
+    </details>`;
+  if (SR_SHELL && typeof SR_SHELL.renderShell === 'function') {
+    return SR_SHELL.renderShell({
+      title: `${cfg.brandName} Public Leaderboard : Top Sponsor Brands, Show Rate Cards & Negotiated Floors (2026)`,
+      description: `Live public sponsorship & rate-card leaderboard for ${cfg.brandName}. Compare 3x+ renewed sponsor brands, flagship show CPM floors, or scan any brand or show.`,
+      canonicalPath: '/leaderboard',
+      ogSlug: 'sponsor-radar-leaderboard',
+      bodyHtml: `<div class="container" style="padding:28px 24px 48px;">${innerHtml}</div>`
+    });
+  }
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>${esc(cfg.brandName)} Public Leaderboard</title></head><body>${renderFlywheelHeaderHtml(cfg, t, badgeColor, 'leaderboard', 'Public Benchmark Leaderboard')}<main style="max-width:1240px;margin:0 auto;padding:24px;">${innerHtml}</main></body></html>`;
 }
 
 function getAllPublicScanUrls(cfg) {

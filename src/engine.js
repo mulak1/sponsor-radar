@@ -11,7 +11,7 @@ function maskSponsorEmail(email) {
 function getAgencyDesk(brandSlug, category) {
   const s = String(brandSlug || '').toLowerCase();
   const c = String(category || '').toLowerCase();
-  if (/ag1|eight-sleep|lmnt|whoop|oura|function-health|factor/.test(s) || /health|wellness|fitness/.test(c)) return 'Oxford Road / Veritone One + Direct Growth Desk';
+  if (/betterhelp|ag1|eight-sleep|lmnt|whoop|oura|function-health|factor|hims|ro|athletic-greens/.test(s) || /health|wellness|fitness|therapy|mental/.test(c)) return 'Oxford Road / Veritone One + Direct Growth Desk';
   if (/deel|ramp|mercury|brex|gusto|rippling|navan|stripe/.test(s) || /fintech|hr|payroll/.test(c)) return 'Right Side Up + Internal Executive Media Desk';
   if (/linear|supabase|cursor|vercel|raycast|retool|posthog|sentry|cloudflare|datadog/.test(s) || /dev|infra|cloud/.test(c)) return 'Direct DevRel & Creator Partnerships Desk';
   if (/shopify|hubspot|notion|intercom|airtable|monday|framer|miro/.test(s)) return 'Internal Podcast Network & Demand Gen Desk';
@@ -32,10 +32,17 @@ function getFreshBudgetStatus(seedKey, flights) {
 
 function generateMoneyballLookalikeBundle({ targetShowName, baseCpm, rackRateUsd, category, placements }) {
   const cleanShow = targetShowName || "Lenny's Podcast";
-  const cpm = Math.max(24, Number(baseCpm) || 48);
+  const cpm = Math.max(22, Number(baseCpm) || 48);
   const rack = Math.max(1500, Number(rackRateUsd) || 12500);
   const floorRate = Math.round(rack * 0.82);
-  const peerPool = [
+  const isDtcOrHealth = /health|wellness|fitness|therapy|mental|consumer|dtc|ecommerce|retail|lifestyle/i.test(String(category || ''));
+  const peerPool = isDtcOrHealth ? [
+    { name: 'The Diary Of A CEO', reach: 680000, cpm: Math.round(cpm * 0.82), rep: 'sponsors@flightstory.com', overlap: '86% Audience Overlap' },
+    { name: 'Huberman Lab', reach: 520000, cpm: Math.round(cpm * 0.84), rep: 'partnerships@scicommmedia.com', overlap: '82% Audience Overlap' },
+    { name: 'Modern Wisdom (Chris Williamson)', reach: 340000, cpm: Math.round(cpm * 0.76), rep: 'ads@modernwisdom.fm', overlap: '79% Audience Overlap' },
+    { name: 'Feel Better, Live More', reach: 240000, cpm: Math.round(cpm * 0.72), rep: 'partnerships@drchatterjee.com', overlap: '75% Audience Overlap' },
+    { name: 'The Mindset Mentor', reach: 195000, cpm: Math.round(cpm * 0.68), rep: 'sponsors@mindsetmentor.com', overlap: '71% Audience Overlap' }
+  ] : [
     { name: 'Pragmatic Engineer Dispatch', reach: 165000, cpm: Math.round(cpm * 0.72), rep: 'sponsorships@pragmaticengineer.com', overlap: '74% Audience Overlap' },
     { name: 'Latent Space AI Podcast', reach: 95000, cpm: Math.round(cpm * 0.66), rep: 'partners@latentspace.ai', overlap: '69% Audience Overlap' },
     { name: 'TLDR Founders & Dev', reach: 220000, cpm: Math.round(cpm * 0.68), rep: 'ads@tldr.tech', overlap: '71% Audience Overlap' },
@@ -99,16 +106,16 @@ function generateOutboundPitch({ brand, anchorPlacements, senderShowName, sender
 
 Saw ${brand.name} renewed ${topAnchor.flights}x on ${topAnchor.show_name} (${topAnchor.vanity_url} | code: ${topAnchor.promo_code}). We reach ${audience.toLocaleString()} ${niche} builders/buyers per issue with 42%+ verified engagement.
 
-We have 1 mid-roll / primary slot open next month and can offer a 3-flight pilot at $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM — 15% below the $${brand.avg_cpm} category rack rate).
+We have 1 mid-roll / primary slot open next month and can offer a 3-flight pilot at $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM - 15% below the $${brand.avg_cpm} category rack rate).
 
-[LOCKED IN FREE PREVIEW: Exact 1.5% CTR Make-Good Guarantee Clause, IAB 30-Day Attribution SLA & Direct Buyer Email (${maskedEmail}) — Unlock Single Row ($1.99) or Full 88-Contact Q4 Ledger ($29)]`;
+[LOCKED IN FREE PREVIEW: Exact 1.5% CTR Make-Good Guarantee Clause, IAB 30-Day Attribution SLA & Direct Buyer Email (${maskedEmail}) - Unlock Single Row ($1.99) or Full 88-Contact Q4 Ledger ($29)]`;
 
   const body = `Hi ${brand.name} Partnerships Team (${brand.decision_maker_role}),
 
 I track verified sponsorship renewals across ${niche} via SponsorRadar, and noticed ${brand.name} has run ${topAnchor.flights} verified flights on ${topAnchor.show_name} (${topAnchor.vanity_url} | code: ${topAnchor.promo_code}) at an estimated ~$${topAnchor.cpm_usd} CPM.
 
 • Your Configured Reach: ${audience.toLocaleString()} active subscribers/listeners per release
-• Recommended 3-Episode Pilot Quote: $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM — 15% below $${brand.avg_cpm} category benchmark)
+• Recommended 3-Episode Pilot Quote: $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM - 15% below $${brand.avg_cpm} category benchmark)
 • Single Insertion Rate Floor: $${proposedMidrollPrice.toLocaleString()}/episode
 • Target Buyer Contact (Domain Verified): ${maskedEmail} (${getAgencyDesk(brand.slug, brand.category)})
 • Unmasked Buyer Email, Redlined IO Clause & 88-Contact CSV Ledger: [UNLOCK SINGLE CONTACT ($1.99) OR COMPLETE 88-ROW Q4 LEDGER ($29)]`;

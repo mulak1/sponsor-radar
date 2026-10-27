@@ -204,7 +204,7 @@ async function aggregate4ProductMetrics(localCfg, localStore, sinceHours = 3) {
 function renderMissionControlHtml(cfg) {
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Viral Studio — Mission Control: 4-Product Telemetry &amp; Autonomous Growth Engine</title><link rel="icon" type="image/svg+xml" href="/api/brand/viral-studio-logo.svg" /><meta name="robots" content="noindex, nofollow" />
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Viral Studio - Mission Control: 4-Product Telemetry &amp; Autonomous Growth Engine</title><link rel="icon" type="image/svg+xml" href="/api/brand/viral-studio-logo.svg" /><meta name="robots" content="noindex, nofollow" />
   <style>
     :root { --bg-base: #F8FAFC; --bg-surface: #FFFFFF; --bg-subtle: #F1F5F9; --border-subtle: #E2E8F0; --border-strong: #CBD5E1; --text-primary: #0F172A; --text-secondary: #334155; --text-muted: #64748B; --indigo: #4F46E5; --indigo-bg: #EEF2FF; --indigo-border: #C7D2FE; --emerald: #047857; --emerald-bg: #ECFDF5; --emerald-border: #A7F3D0; --amber: #B45309; --amber-bg: #FFFBEB; --amber-border: #FDE68A; --cobalt: #0284C7; --cobalt-bg: #F0F9FF; --cobalt-border: #BAE6FD; --bronze: #8C5A3C; --bronze-bg: #FAF7F2; --bronze-border: #E7E2DA; --rose: #BE123C; --rose-bg: #FFF1F2; --rose-border: #FECDD3; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
