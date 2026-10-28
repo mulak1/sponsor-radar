@@ -85,9 +85,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div id="sr-dir-pill-bar" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;" role="tablist" aria-label="Directory Category Filters">
             <span class="mono" style="font-size:13.5px; font-weight:700; color:var(--text-muted);">Quick Filter:</span>
             <button type="button" data-dir-pill="all" onclick="window.__srFilterDirectory('all', this)" class="preset-chip" style="background:var(--vermilion); color:#FFFFFF; font-weight:700;">All Dossiers (${totalReports})</button>
-            <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;"><img src="/public/editorial-segment-1.jpg" alt="" width="20" height="20" loading="lazy" style="width:20px;height:20px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Ad Buyers: Show Rate Cards (${showPages.length} Shows)</button>
-            <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;"><img src="/public/editorial-segment-2.jpg" alt="" width="20" height="20" loading="lazy" style="width:22px;height:22px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Buyers &amp; Creators: Brand Spend Ledgers (${brandPages.length} Brands)</button>
-            <button type="button" data-dir-pill="niche" onclick="window.__srFilterDirectory('niche', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;"><img src="/public/editorial-segment-3.jpg" alt="" width="20" height="20" loading="lazy" style="width:20px;height:20px;border-radius:999px;object-fit:cover;flex-shrink:0;" />Niche CPM Hubs (${nichePages.length} Hubs)</button>
+            <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">For Ad Buyers: Show Rate Cards (${showPages.length} Shows)</button>
+            <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">For Buyers &amp; Creators: Brand Spend Ledgers (${brandPages.length} Brands)</button>
+            <button type="button" data-dir-pill="niche" onclick="window.__srFilterDirectory('niche', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Niche CPM Hubs (${nichePages.length} Hubs)</button>
             <button type="button" data-dir-pill="b2b" onclick="window.__srFilterDirectory('b2b', this)" class="preset-chip">B2B SaaS &amp; DevTools</button>
             <button type="button" data-dir-pill="dtc" onclick="window.__srFilterDirectory('dtc', this)" class="preset-chip">DTC &amp; Consumer</button>
             <button type="button" data-dir-pill="lowcpm" onclick="window.__srFilterDirectory('lowcpm', this)" class="preset-chip">Under $45 CPM</button>
@@ -300,7 +300,8 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             }
           }
           var p = window.__srActiveDirPill || 'all';
-          var q = ((document.getElementById('sr-dir-search') || {}).value || '').trim().toLowerCase();
+          var q = ((document.getElementById('sr-dir-search') || {}).value || '').trim().toLowerCase().replace(/[_.-]+/g, ' ');
+          var qTokens = q ? q.split(/\\s+/).filter(Boolean) : [];
           var items = document.querySelectorAll('.sr-dir-item');
           var visibleCount = 0;
           for (var j = 0; j < items.length; j++) {
@@ -310,7 +311,8 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             var cpm = Number(el.getAttribute('data-cpm') || 50);
             var ren = Number(el.getAttribute('data-renewal') || 80);
             var pillMatch = (p === 'all') || (p === t) || (p === v) || (p === 'lowcpm' && cpm <= 45) || (p === 'highroi' && ren >= 85);
-            var textMatch = !q || (el.textContent || '').toLowerCase().indexOf(q) !== -1;
+            var hay = (el.textContent || '').toLowerCase().replace(/[_.-]+/g, ' ');
+            var textMatch = !qTokens.length || qTokens.every(function(tok) { return hay.indexOf(tok) !== -1; });
             var show = pillMatch && textMatch;
             el.style.display = show ? '' : 'none';
             if (show) visibleCount++;
@@ -451,7 +453,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <!-- Above-the-Fold Media Buyer Verdict & Channel Split Banner -->
       <div id="sr-seo-buyer-verdict" style="padding:14px 18px; border-radius:12px; background:var(--emerald-soft); border:1px solid var(--emerald-border); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:260px;">
-          <img src="${isShowPage ? '/public/editorial-segment-1.jpg' : (isBrandPage ? '/public/editorial-segment-2.jpg' : '/public/editorial-segment-3.jpg')}" alt="Media buyer segment portrait" width="44" height="44" loading="lazy" style="width:44px; height:44px; border-radius:10px; object-fit:cover; border:1px solid var(--emerald-border); flex-shrink:0;" />
           <div>
             <div class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi); text-transform:uppercase; letter-spacing:0.04em;">
               ${isShowPage ? `MEDIA BUYER VERDICT: HIGH-RETENTION B2B BUY AT 3-FLIGHT FLOOR ($${floorCpm} eCPM • -18% VS RACK)` : `MEDIA BUYER & CREATOR VERDICT: ${proven3xCount} OF ${placements.length} PLACEMENTS RENEWED 3+ TIMES (TOP ANCHOR: ${escapeHtml(firstShowOnBrand.toUpperCase())})`}
@@ -632,8 +633,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <div class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">STEP-BY-STEP NEGOTIATION &amp; PITCH WORKBENCH</div>
             <h2 style="font-family:var(--font-serif); font-size:21px; font-weight:700; margin:0 0 10px 0; color:var(--text-primary);">Simulate Your Budget, Compare Lookalike Shows &amp; Copy Your Offer</h2>
             <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:5px; border-radius:999px;">
-              <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:var(--emerald-soft); color:var(--emerald-roi);"><img src="/public/editorial-segment-1.jpg" alt="" width="22" height="22" loading="lazy" style="width:22px;height:22px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Brand Media Buyers (2-Step Counter-Offer)</button>
-              <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--text-secondary);"><img src="/public/editorial-segment-2.jpg" alt="" width="22" height="22" loading="lazy" style="width:22px;height:22px;border-radius:999px;object-fit:cover;flex-shrink:0;" />For Creators &amp; Shows (2-Step Sponsor Pitch)</button>
+              <button type="button" id="btn-sr-persona-buyer" onclick="window.__srSwitchPersona('buyer')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:var(--emerald-soft); color:var(--emerald-roi);">For Brand Media Buyers (2-Step Counter-Offer)</button>
+              <button type="button" id="btn-sr-persona-creator" onclick="window.__srSwitchPersona('creator')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--text-secondary);">For Creators &amp; Shows (2-Step Sponsor Pitch)</button>
             </div>
           </div>
           <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -655,12 +656,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 <label for="sr-moneyball-slider" style="font-size:16px; color:var(--text-primary); font-weight:700; cursor:pointer;">Slide Your Campaign Budget &amp; Compare Lookalike Shows</label>
               </div>
               <div id="sr-moneyball-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--text-primary); background:var(--bg-surface); padding:8px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                $10,000 Budget → <span style="color:var(--amber-gold);">${(10000 / Math.max(1000, mb.published_rack_rate_usd)).toFixed(1)} Slots on Rack</span> vs. <span style="color:var(--emerald-roi);">5 Host-Read Flights on Lookalike Bundle (~1,950 Clicks)</span>
+                $15,000 Budget → <span style="color:var(--amber-gold);">${Math.max(1, Math.round(15000 / Math.max(800, mb.negotiated_floor_rate_usd)))} Target Flight(s)</span> vs. <span style="color:var(--emerald-roi);">5 Lookalike Flights (~2,450 Clicks)</span>
               </div>
             </div>
             <div style="margin-bottom:16px; background:var(--bg-surface); padding:12px 16px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-              <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);">Test Budget ($2.5K - $50K):</span>
-              <input id="sr-moneyball-slider" type="range" min="2500" max="50000" step="2500" value="10000" oninput="window.__srUpdateMoneyball(this.value, ${mb.published_rack_rate_usd}, ${page.avg_cpm})" style="flex:1; min-width:200px; accent-color:var(--emerald-roi); cursor:pointer;" />
+              <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);">Test Budget ($5K - $50K):</span>
+              <input id="sr-moneyball-slider" type="range" min="5000" max="50000" step="2500" value="15000" oninput="window.__srUpdateMoneyball(this.value, ${mb.published_rack_rate_usd}, ${page.avg_cpm})" style="flex:1; min-width:200px; accent-color:var(--emerald-roi); cursor:pointer;" />
             </div>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:14px;">
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
@@ -755,15 +756,14 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             if (window.__ebLogEvent) window.__ebLogEvent('copy_summary', { type: 'buyer_counter_offer' });
           };
           window.__srUpdateMoneyball = function(budget, rackRate, cpm) {
-            var b = Number(budget) || 10000;
+            var b = Number(budget) || 15000;
             var rack = Math.max(1000, Number(rackRate) || 9500);
             var floor = Math.round(rack * 0.82);
-            var rackSlots = (b / rack).toFixed(1);
-            var floorSlots = (b / floor).toFixed(1);
-            var lookalikeSlots = Math.max(2, Math.round(b / Math.max(750, rack * 0.22)));
+            var targetFlights = Math.max(1, Math.round(b / Math.max(800, floor)));
+            var lookalikeSlots = Math.max(targetFlights + 2, Math.round(b / Math.max(750, Math.min(3500, rack * 0.22))));
             var estClicks = Math.round((b / Math.max(18, (Number(cpm) || 45) * 0.82)) * 18);
             var el = document.getElementById('sr-moneyball-readout');
-            if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → <span style="color:var(--amber-gold);">' + rackSlots + ' Rack Slots (' + floorSlots + ' @ Floor)</span> vs. <span style="color:var(--emerald-roi);">' + lookalikeSlots + ' Lookalike Flights (~' + estClicks.toLocaleString() + ' Clicks)</span>';
+            if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → <span style="color:var(--amber-gold);">' + targetFlights + ' Target Flight' + (targetFlights > 1 ? 's' : '') + '</span> vs. <span style="color:var(--emerald-roi);">' + lookalikeSlots + ' Lookalike Flights (~' + estClicks.toLocaleString() + ' Clicks)</span>';
             var c1Sub = document.getElementById('sr-seo-mb-card1-sub');
             if (c1Sub) c1Sub.textContent = 'Save $' + Math.round(b * 0.18).toLocaleString() + ' on a $' + b.toLocaleString() + ' budget w/ 3-flight floor + 1.5% CTR make-good';
             if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });

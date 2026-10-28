@@ -28,7 +28,7 @@ const VERTICAL_CONFIGS = {
     domain: 'www.citationforge.io',
     accentColor: '#0F172A',
     theme: {
-      canvasBg: '#FAF9F5', cardBg: '#FFFFFF', subtleBg: '#F3F1EC', dockBg: 'rgba(250, 249, 245, 0.96)',
+      canvasBg: '#F8FAFC', cardBg: '#FFFFFF', subtleBg: '#F1F5F9', dockBg: 'rgba(248, 250, 252, 0.96)',
       border: '#E4E2DD', accentBorder: '#CBD5E1', textPrimary: '#0F172A', textSecondary: '#334155', textMuted: '#475569',
       brandPrimary: '#0F172A', brandSoftBg: '#F1F5F9', brandText: '#0F172A',
       safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
@@ -85,15 +85,17 @@ const VERTICAL_CONFIGS = {
       { label: 'Expected Score After Fix', val: '29.2%', sub: '+6.3% More Mentions' }
     ],
     presetKpis: {
-      'linear.app': ['22.9%', '83/100', '70/100', '29.2%'],
+      'shopify.com': ['41.2%', '96/100', '94/100', '48.6%'],
+      'gymshark.com': ['34.8%', '92/100', '90/100', '42.4%'],
       'stripe.com': ['46.8%', '98/100', '96/100', '54.1%'],
+      'linear.app': ['22.9%', '83/100', '70/100', '29.2%'],
       'supabase.com': ['39.4%', '92/100', '89/100', '47.0%'],
       'notion.so': ['37.8%', '88/100', '85/100', '45.2%'],
       'vercel.com': ['43.5%', '95/100', '93/100', '51.4%']
     },
     presets: [
-      { key: 'linear.app', label: 'Linear' }, { key: 'stripe.com', label: 'Stripe' },
-      { key: 'supabase.com', label: 'Supabase' }, { key: 'notion.so', label: 'Notion' }, { key: 'vercel.com', label: 'Vercel' }
+      { key: 'shopify.com', label: 'Shopify' }, { key: 'gymshark.com', label: 'Gymshark' }, { key: 'stripe.com', label: 'Stripe' },
+      { key: 'notion.so', label: 'Notion' }, { key: 'linear.app', label: 'Linear' }
     ],
     coMarketingPills: [
       { key: 'perplexity', label: 'Perplexity', rowText: 'Perplexity Diagnosis: Missing root /llms-full.txt & answer-first summary blocks reduce #1 citations by up to 64%.' },
@@ -139,7 +141,7 @@ const VERTICAL_CONFIGS = {
     lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (88 Direct Emails)',
     deliverableName: '88 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
     freeDeliverableName: '88 Brand & Show Contacts + Rate-Card Floor & Counter-Offer Pack',
-    unlockBannerTitle: 'Sponsor Contacts & Rate Floors',
+    unlockBannerTitle: 'Verified Sponsor Contacts & Show Rate Floors',
     explainerText: 'See which sponsors renewed 3+ times, audit -18% 3-flight floor CPMs vs. rack rates, and unlock 88 direct buyer & show booking rep emails',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
@@ -176,15 +178,15 @@ const VERTICAL_CONFIGS = {
       { label: 'Host-Read CTR Lift', val: '1.8% CTR', sub: '~$2.11 Implied Floor CPC' }
     ],
     presetKpis: {
+      'shopify': ['97/100', '$1,340,000', '$49 / $40', '2.0% CTR'], 'Shopify': ['97/100', '$1,340,000', '$49 / $40', '2.0% CTR'],
       'ag1': ['98/100', '$1,420,000', '$42 / $34', '1.9% CTR'], 'AG1': ['98/100', '$1,420,000', '$42 / $34', '1.9% CTR'],
-      'deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR'], 'Deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR'],
-      'linear': ['91/100', '$310,000', '$39 / $32', '1.8% CTR'], 'Linear': ['91/100', '$310,000', '$39 / $32', '1.8% CTR'],
-      'ramp': ['96/100', '$790,000', '$48 / $39', '1.9% CTR'], 'Ramp': ['96/100', '$790,000', '$48 / $39', '1.9% CTR'],
-      'eight-sleep': ['93/100', '$620,000', '$38 / $31', '1.7% CTR'], 'Eight Sleep': ['93/100', '$620,000', '$38 / $31', '1.7% CTR']
+      'betterhelp': ['96/100', '$1,650,000', '$29 / $24', '2.1% CTR'], 'BetterHelp': ['96/100', '$1,650,000', '$29 / $24', '2.1% CTR'],
+      'hubspot': ['95/100', '$1,150,000', '$54 / $44', '1.8% CTR'], 'HubSpot': ['95/100', '$1,150,000', '$54 / $44', '1.8% CTR'],
+      'deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR'], 'Deel': ['95/100', '$680,000', '$46 / $38', '1.8% CTR']
     },
     presets: [
-      { key: 'AG1', label: 'AG1' }, { key: 'Deel', label: 'Deel' },
-      { key: 'Linear', label: 'Linear' }, { key: 'Ramp', label: 'Ramp' }, { key: 'Eight Sleep', label: '8Sleep' }
+      { key: 'Shopify', label: 'Shopify' }, { key: 'AG1', label: 'AG1' },
+      { key: 'BetterHelp', label: 'BetterHelp' }, { key: 'HubSpot', label: 'HubSpot' }, { key: 'Deel', label: 'Deel' }
     ],
     coMarketingPills: [
       { key: 'spotify', label: 'Podcasts', rowText: 'Podcast Buyer & Creator Signal: 68% of 1-off test ads churn; 3-flight mid-roll commitments clear at -18% below published rack.' },

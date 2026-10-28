@@ -183,41 +183,46 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       min-height: 70px;
       padding-top: 10px;
       padding-bottom: 10px;
-      gap: 14px;
-      flex-wrap: wrap;
+      gap: 12px;
+      flex-wrap: nowrap;
     }
+    p { max-width: 65ch; }
     .brand-logo {
       display: inline-flex;
       align-items: center;
       gap: 11px;
       color: var(--text-primary);
       text-decoration: none;
+      flex-shrink: 0;
       transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     .brand-logo:hover { transform: translateY(-1px); }
     .brand-wordmark {
       font-family: var(--font-serif);
       font-weight: 700;
-      font-size: 23px;
+      font-size: 22px;
       letter-spacing: -0.03em;
       color: var(--text-primary);
       line-height: 1;
+      white-space: nowrap;
     }
     .brand-subtag {
       display: block;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
       margin-top: 2px;
+      white-space: nowrap;
     }
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 20px;
-      font-size: 16px;
+      gap: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-secondary);
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
     .nav-links a {
       padding: 4px 2px;
@@ -431,13 +436,12 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     }
     .headline-xl {
       font-family: var(--font-serif);
-      font-size: clamp(32px, 4.5vw, 64px);
+      font-size: clamp(32px, 5.2vw, 72px);
       font-weight: 600;
       letter-spacing: -0.025em;
       line-height: 1.08;
       margin: 10px 0 12px;
       color: var(--text-primary);
-      text-wrap: balance;
     }
     .subhead {
       color: var(--text-secondary);
@@ -593,9 +597,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       margin-bottom: 0;
     }
 
+    @media (max-width: 900px) {
+      #master-ledger-table th:nth-child(4), #master-ledger-table td:nth-child(4),
+      #master-ledger-table th:nth-child(5), #master-ledger-table td:nth-child(5) { display: none; }
+    }
     @media (max-width: 768px) {
       .hero-steps-grid { grid-template-columns: 1fr; }
-      .nav-inner { gap: 10px; padding: 10px 24px; }
+      .nav-inner { gap: 10px; padding: 10px 24px; flex-wrap: wrap; }
       .nav-links {
         width: 100%;
         order: 3;
@@ -603,6 +611,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         gap: 14px;
         font-size: 14px;
         padding: 6px 0 0 0;
+        overflow-x: auto;
       }
       .nav-cta-secondary { display: none; }
     }
@@ -773,6 +782,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       } catch (_) { return patch || {}; }
     };
     window.__srAddToPlan = function(name, type, cpm, spendUsd, flights) {
+      try { sessionStorage.removeItem('sr_shortlist_hidden'); } catch (_) {}
       var ws = window.__srGetWorkspace();
       var list = Array.isArray(ws.shortlist) ? ws.shortlist.slice() : [];
       var cleanName = String(name || 'Target').trim();
@@ -783,6 +793,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       ws = window.__srSaveWorkspace({ shortlist: list.slice(-8) });
       if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'shortlist_add', target: cleanName, count: ws.shortlist.length });
       if (typeof window.__srRenderComparisonMatrix === 'function') window.__srRenderComparisonMatrix();
+    };
+    window.__srHideShortlistBar = function() {
+      try { sessionStorage.setItem('sr_shortlist_hidden', '1'); } catch (_) {}
+      var bar = document.getElementById('sr-shortlist-drawer');
+      if (bar) bar.style.display = 'none';
     };
     window.__srRemoveFromPlan = function(name) {
       var ws = window.__srGetWorkspace();
@@ -829,17 +844,18 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         document.body.appendChild(bar);
       }
       if (!list.length) { bar.style.display = 'none'; return; }
+      try { if (sessionStorage.getItem('sr_shortlist_hidden') === '1') { bar.style.display = 'none'; return; } } catch (_) {}
       var totalFloor = list.reduce(function(acc, x) { return acc + Math.round((Number(x.spendUsd) || 6500) * 0.82); }, 0);
       var totalSavings = list.reduce(function(acc, x) { return acc + Math.round((Number(x.spendUsd) || 6500) * 0.18); }, 0);
       var avgCpm = Math.round(list.reduce(function(acc, x) { return acc + (Number(x.cpm) || 42); }, 0) / list.length * 0.82);
       var pills = list.map(function(x) {
         var safe = String(x.name).replace(/[<>"'&]/g, '');
-        return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:#262320;color:#A7F3D0;font-family:var(--font-mono);font-size:11.5px;font-weight:700;">' + safe + ' ($' + Math.round((x.cpm || 42) * 0.82) + ' Floor) <button type="button" data-rm-name="' + safe + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))" style="background:none;border:none;color:#FCA5A5;cursor:pointer;font-weight:800;padding:0 2px;">×</button></span>';
+        return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:#262320;color:#A7F3D0;font-family:var(--font-sans);font-size:13px;font-weight:700;">' + safe + ' ($' + Math.round((x.cpm || 42) * 0.82) + ' Floor) <button type="button" data-rm-name="' + safe + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))" title="Remove target" aria-label="Remove ' + safe + '" style="background:none;border:none;color:#FCA5A5;cursor:pointer;font-weight:800;padding:0 2px;">×</button></span>';
       }).join(' ');
       bar.style.display = 'block';
-      bar.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;"><strong style="color:#6EE7B7;font-family:var(--font-mono);font-size:12px;">MY Q4 MEDIA PLAN SHORTLIST (<span id="sr-shortlist-count">' + list.length + '</span> TARGETS • SAVED IN BROWSER)</strong><span style="font-family:var(--font-mono);font-size:11.5px;color:#FCD34D;">Save $' + totalSavings.toLocaleString() + ' @ -18% Floor</span></div>'
+      bar.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;"><strong style="color:#6EE7B7;font-family:var(--font-sans);font-size:13px;line-height:1.35;">My Q4 Media Plan Shortlist (<span id="sr-shortlist-count">' + list.length + '</span> Saved in Browser)</strong><div style="display:inline-flex;align-items:center;gap:8px;flex-shrink:0;"><span style="font-family:var(--font-sans);font-size:13px;color:#FCD34D;font-weight:600;">Save $' + totalSavings.toLocaleString() + ' @ -18% Floor</span><button type="button" id="sr-shortlist-close-btn" onclick="window.__srHideShortlistBar()" aria-label="Hide shortlist tray" title="Hide shortlist tray" style="width:24px;height:24px;border-radius:6px;background:#262320;border:1px solid #3F3A34;color:#CBD5E1;font-size:15px;font-weight:700;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">×</button></div></div>'
         + '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' + pills + '</div>'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;border-top:1px solid #332E2A;"><span style="font-family:var(--font-mono);font-size:12px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;"><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:11.5px;font-weight:700;cursor:pointer;">Share Plan URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\')" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:11.5px;font-weight:800;cursor:pointer;">Unlock Full Q4 Plan ($29) →</button></div></div>';
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;"><span style="font-family:var(--font-sans);font-size:13px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;"><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:13px;font-weight:700;cursor:pointer;">Share Plan URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\')" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:13px;font-weight:800;cursor:pointer;">Unlock Full Q4 Plan ($29) →</button></div></div>';
     };
   </script>
 </body>

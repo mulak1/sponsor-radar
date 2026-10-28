@@ -277,7 +277,7 @@ app.get('/', (req, res) => {
   `).all();
   const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY est_monthly_spend DESC').all();
   const pubQuery = String(req.query.pub || '').replace(/[<>"'`]/g, '').trim().slice(0, 80);
-  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Linear').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Linear';
+  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Shopify').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Shopify';
   const initialReach = Math.max(500, Number(req.query.reach) || 75000);
   const defaultAnalysis = analyzeSponsorLookup(db, {
     query: initialQuery,

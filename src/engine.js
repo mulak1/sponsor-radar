@@ -37,17 +37,17 @@ function generateMoneyballLookalikeBundle({ targetShowName, baseCpm, rackRateUsd
   const floorRate = Math.round(rack * 0.82);
   const isDtcOrHealth = /health|wellness|fitness|therapy|mental|consumer|dtc|ecommerce|retail|lifestyle/i.test(String(category || ''));
   const peerPool = isDtcOrHealth ? [
-    { name: 'The Diary Of A CEO', reach: 680000, cpm: Math.round(cpm * 0.82), rep: 'sponsors@flightstory.com', overlap: '86% Audience Overlap' },
-    { name: 'Huberman Lab', reach: 520000, cpm: Math.round(cpm * 0.84), rep: 'partnerships@scicommmedia.com', overlap: '82% Audience Overlap' },
-    { name: 'Modern Wisdom (Chris Williamson)', reach: 340000, cpm: Math.round(cpm * 0.76), rep: 'ads@modernwisdom.fm', overlap: '79% Audience Overlap' },
-    { name: 'Feel Better, Live More', reach: 240000, cpm: Math.round(cpm * 0.72), rep: 'partnerships@drchatterjee.com', overlap: '75% Audience Overlap' },
-    { name: 'The Mindset Mentor', reach: 195000, cpm: Math.round(cpm * 0.68), rep: 'sponsors@mindsetmentor.com', overlap: '71% Audience Overlap' }
+    { name: 'Modern Wisdom', reach: 135000, cpm: Math.round(cpm * 0.74), rep: 'ads@modernwisdom.fm', overlap: '86% Audience Overlap' },
+    { name: 'FoundMyFitness', reach: 115000, cpm: Math.round(cpm * 0.72), rep: 'sponsors@foundmyfitness.com', overlap: '82% Audience Overlap' },
+    { name: 'The Proof (Simon Hill)', reach: 95000, cpm: Math.round(cpm * 0.68), rep: 'partnerships@theproof.com', overlap: '79% Audience Overlap' },
+    { name: 'Feel Better, Live More', reach: 125000, cpm: Math.round(cpm * 0.70), rep: 'partnerships@drchatterjee.com', overlap: '75% Audience Overlap' },
+    { name: 'The Mindset Mentor', reach: 105000, cpm: Math.round(cpm * 0.66), rep: 'sponsors@mindsetmentor.com', overlap: '71% Audience Overlap' }
   ] : [
-    { name: 'Pragmatic Engineer Dispatch', reach: 165000, cpm: Math.round(cpm * 0.72), rep: 'sponsorships@pragmaticengineer.com', overlap: '74% Audience Overlap' },
-    { name: 'Latent Space AI Podcast', reach: 95000, cpm: Math.round(cpm * 0.66), rep: 'partners@latentspace.ai', overlap: '69% Audience Overlap' },
-    { name: 'TLDR Founders & Dev', reach: 220000, cpm: Math.round(cpm * 0.68), rep: 'ads@tldr.tech', overlap: '71% Audience Overlap' },
-    { name: 'Software Engineering Daily', reach: 88000, cpm: Math.round(cpm * 0.64), rep: 'sponsors@softwareengineeringdaily.com', overlap: '66% Audience Overlap' },
-    { name: 'Changelog & Friends', reach: 72000, cpm: Math.round(cpm * 0.62), rep: 'partners@changelog.com', overlap: '64% Audience Overlap' }
+    { name: 'Pragmatic Engineer', reach: 120000, cpm: Math.round(cpm * 0.72), rep: 'sponsorships@pragmaticengineer.com', overlap: '84% Audience Overlap' },
+    { name: 'Latent Space AI', reach: 95000, cpm: Math.round(cpm * 0.66), rep: 'partners@latentspace.ai', overlap: '79% Audience Overlap' },
+    { name: 'TLDR Founders', reach: 140000, cpm: Math.round(cpm * 0.68), rep: 'ads@tldr.tech', overlap: '76% Audience Overlap' },
+    { name: 'Software Eng. Daily', reach: 88000, cpm: Math.round(cpm * 0.64), rep: 'sponsors@softwareengineeringdaily.com', overlap: '71% Audience Overlap' },
+    { name: 'Changelog & Friends', reach: 72000, cpm: Math.round(cpm * 0.62), rep: 'partners@changelog.com', overlap: '68% Audience Overlap' }
   ];
   const shows = peerPool.map((s, idx) => {
     const slotUsd = Math.max(650, Math.round((s.reach / 1000) * s.cpm));
