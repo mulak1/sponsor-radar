@@ -140,7 +140,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                 <div id="sr-editorial-insider-hook" style="display:none;"><span id="sr-hero-vault-locked-line"></span></div>
               </div>
               <div id="sr-step2-handoff-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px; border-radius:10px; background:var(--emerald-soft); border:1px solid var(--emerald-border); font-size:12.5px;">
-                <span class="mono" style="font-weight:800; color:var(--text-primary);">✓ Row #1 Unmasked: <strong style="color:var(--emerald-roi);">${escapeHtml(row1BuyerUnmasked)}</strong> (+95 locked)</span>
+                <span class="mono" style="font-weight:800; color:var(--text-primary);">✓ Row #1 Unmasked: <strong id="sr-step2-handoff-buyer" style="color:var(--emerald-roi);">${escapeHtml(row1BuyerUnmasked)}</strong> (+95 locked) • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--text-primary);text-decoration:underline;">IAB §4.2 Rider ↗</a></span>
                 <a href="#sr-sweetspot-bridge-form" onclick="var b=document.getElementById('sr-sweetspot-bridge-form');if(b&&b.scrollIntoView){b.scrollIntoView({behavior:'smooth',block:'center'});return false;}" class="mono" style="font-weight:800; color:var(--vermilion); text-decoration:underline; white-space:nowrap;">Unmask All 96 Buyers &amp; 3 Files &darr;</a>
               </div>
             </div>
@@ -726,6 +726,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       setTxt('sr-row1-outreach-angle', (window.__srActiveWedge === 'buyer') ? window.__srCurrentBuyerAngle : window.__srCurrentCreatorAngle);
       setTxt('sr-csv-row1-buyer', p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com');
       setTxt('sr-csv-row1-agency', p0.unmasked_agency_email || 'm.vance@rightsideup.co');
+      setTxt('sr-step2-handoff-buyer', p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com');
       if (data.moneyball_bundle) {
         const mb = data.moneyball_bundle;
         window.__srCurrentRackRate = mb.published_rack_rate_usd; window.__srCurrentAvgCpm = data.metrics.avg_cpm_usd;
