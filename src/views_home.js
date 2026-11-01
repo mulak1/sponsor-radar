@@ -283,6 +283,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                     <button type="button" class="preset-chip reach-chip" data-r="10000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(10000, this)">10K</button>
                     <button type="button" class="preset-chip reach-chip" data-r="25000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(25000, this)">25K</button>
                     <button type="button" class="preset-chip reach-chip" data-r="75000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(75000, this)">75K</button>
+                    <button type="button" class="preset-chip reach-chip" data-r="120000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(120000, this)">120K</button>
                     <button type="button" class="preset-chip reach-chip" data-r="150000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(150000, this)">150K</button>
                     <button type="button" class="preset-chip reach-chip" data-r="250000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(250000, this)">250K</button>
                   </div>
@@ -365,8 +366,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 
           <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:13px;">
             <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% Floor) or Close $3,500 Pilot (1,758x Return)</strong></div>
-            <div data-biz-criterion="no_sub_trap"><strong>✓ One-Time Pass (99¢ / $1.99 / $29 — No Subscription)</strong></div>
-            <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Zero-Bounce 30-Day Refund SLA</strong></div>
+            <div data-biz-criterion="no_sub_trap"><strong>✓ One-Time Pass ($1.99 / $29 Vault Saves 14 Hrs Research — No Sub)</strong></div>
+            <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Zero-Bounce 30-Day Refund SLA • Avoid $1,800 Mid-Roll Underpricing</strong></div>
             <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Files: <code>verified-buyer-contacts.csv</code> + <code>96-flight-cpm-decay.csv</code> + <code>.eml</code></strong></div>
           </div>
         </div>
