@@ -371,7 +371,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           </form>
           <div id="sr-click-trigger-assurance" class="mono" style="margin-top:6px; font-size:11.5px; color:var(--text-secondary); display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; padding:0 4px;">
             <span>🔒 <strong>1-Click Checkout:</strong> Opens official Stripe Checkout (Apple Pay / Card) → Instant in-browser unmask + .CSV/.EML download in 4s</span>
-            <span style="color:var(--emerald-roi); font-weight:700;">✓ Zero Account/Password Required • One-Time Charge • 30-Day Zero-Bounce Refund</span>
+            <span id="sr-counterparty-handoff-pill" style="color:var(--emerald-roi); font-weight:700;">✓ Forwardable CFO / Agency Memo + IAB §4.2 Rider • Zero Password • 30-Day Refund</span>
           </div>
           <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; font-size:12px; line-height:1.45;">
             <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% 3-Flight Floor):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.</div>
@@ -647,7 +647,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         return '<tr><td><strong>' + escHtml(item.name) + '</strong><div class="mono" style="font-size:13.5px;color:var(--text-muted);">Shortlisted ' + escHtml(item.type || 'show') + ' • 3-Flight Target</div></td><td class="mono">$' + rack.toLocaleString() + ' Rack → <strong style="color:var(--emerald-roi);">$' + floor.toLocaleString() + ' Floor (Save $' + save.toLocaleString() + '/flight)</strong></td><td class="mono">$' + cpm + ' Rack / <strong>$' + floorCpm + ' Floor eCPM</strong> (~$' + cpc + ' CPC)</td><td><span class="pill-emerald">Verified 3x+ Benchmark</span></td><td><button type="button" class="btn btn-ghost" style="padding:6px 10px;min-height:34px;font-size:13.5px;" data-rm-name="' + escHtml(item.name) + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))">Remove ×</button></td></tr>';
       }).join('');
     };
-    window.__srRunHomeQuoteAudit = function() {
+    window.__srRunHomeQuoteAudit = function(silent) {
       var pEl = document.getElementById('sr-home-qa-price'), rEl = document.getElementById('sr-home-qa-reach'), lEl = document.getElementById('sr-home-qa-ltv');
       var price = Math.max(250, Number(pEl && pEl.value) || window.__srCurrentRackRate || 9500), reach = Math.max(1000, Number(rEl && rEl.value) || 120000), ltv = Math.max(25, Number(lEl && lEl.value) || 480);
       var quotedCpm = price / (reach / 1000), fairFloorCpm = Math.max(22, Math.round((window.__srCurrentAvgCpm || 45) * 0.82)), fairFloorUsd = Math.round((reach / 1000) * fairFloorCpm);
@@ -665,9 +665,9 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       }
       if (sub) sub.innerHTML = 'Break-Even: <strong>' + beSignups + ' signups</strong> @ $' + ltv + ' LTV • Est. ~' + clicks.toLocaleString() + ' clicks → ~' + estCust + ' customers (~$' + floorCac + ' Floor CAC) • IO Rider §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) • <a href="/buy/flash_pass?source=qa_rider" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'flash_pass\\\',true);return false;}" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Unlock Rider &amp; Floor Pack ($1.99) ↗</a>';
       if (window.__srSaveWorkspace) window.__srSaveWorkspace({ qaPrice: price, qaReach: reach, qaLtv: ltv });
-      if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'home_quote_auditor', quoted_usd: price, reach: reach, floor_usd: fairFloorUsd, ltv_usd: ltv });
+      if (!silent && window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'home_quote_auditor', quoted_usd: price, reach: reach, floor_usd: fairFloorUsd, ltv_usd: ltv });
     };
-    window.__srUpdateMoneyball = function(budget, rackOverride) {
+    window.__srUpdateMoneyball = function(budget, rackOverride, silent) {
       var b = Number(budget) || 15000, rackRate = Number(rackOverride) || window.__srCurrentRackRate || 9500;
       if (window.__srSaveWorkspace) window.__srSaveWorkspace({ budget: b });
       var floorRate = Math.round(rackRate * 0.82), targetFlights = Math.max(1, Math.round(b / Math.max(800, floorRate)));
@@ -685,12 +685,12 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           + 'Lookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') for ~' + estClicks.toLocaleString() + ' est. clicks | Rep: ' + (l0.booking_rep || 'w***.b***@syntax.fm (+ r.***@rightsideup.co)') + '\\n'
           + 'Contract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Unmasked Rep Emails & Clauses in $1.99 / $29 Pack)';
       }
-      if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });
+      if (!silent && window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });
     };
     window.__srSendDesktopBridge = function(ev) {
       if (ev && ev.preventDefault) ev.preventDefault();
       var em = ((document.getElementById('sr-bridge-email') || {}).value || '').trim();
-      if (em) window.__ebSavedEmail = em;
+      if (em) { window.__ebSavedEmail = em; if (window.__ebCaptureEmailLead) window.__ebCaptureEmailLead(em, 'home_sweetspot_submit'); }
       if (window.__ebCheckout) window.__ebCheckout('flash_pass', true);
       return false;
     };
@@ -740,15 +740,17 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       const btn = document.getElementById('btn-run-lookup');
       if (btn) btn.textContent = 'Scanning...';
       try {
-        const res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'lookup', query, sender_show_name: senderShow, sender_audience_size: senderReach }) });
+        const hdrs = { 'Content-Type': 'application/json' };
+        if (!userTriggered) hdrs['X-Auto-Init'] = '1';
+        const res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: hdrs, body: JSON.stringify({ mode: 'lookup', query, sender_show_name: senderShow, sender_audience_size: senderReach }) });
         const data = await res.json();
         renderLookupResults(data, senderReach, preferredPersona, userTriggered);
         try {
           if (window.__srSaveWorkspace) window.__srSaveWorkspace({ query, reach: senderReach, senderShow, persona: preferredPersona || window.__srActiveWedge || 'creator' });
           if (window.history && window.history.replaceState) window.history.replaceState(null, '', '/?q=' + encodeURIComponent(query) + '&reach=' + encodeURIComponent(senderReach));
-          fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: 'calculate', buyer_wedge: window.__srActiveWedge || 'creator', route: window.location.pathname, target: query + ' (' + senderReach + ' reach)' }) }).catch((err) => { console.warn('[sr:telemetry]', err); });
+          if (userTriggered) fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: 'calculate', buyer_wedge: window.__srActiveWedge || 'creator', route: window.location.pathname, target: query + ' (' + senderReach + ' reach)' }) }).catch((err) => { console.warn('[sr:telemetry]', err); });
         } catch (err) { console.warn('[sr:workspace]', err); }
-        fireMetaEvent('Lead', 0, { tool_mode: 'lookup', query, reach: senderReach, buyer_wedge: window.__srActiveWedge || 'creator' });
+        if (userTriggered) fireMetaEvent('Lead', 0, { tool_mode: 'lookup', query, reach: senderReach, buyer_wedge: window.__srActiveWedge || 'creator' });
         if (userTriggered && btn) {
           btn.style.background = 'var(--emerald-roi)'; btn.innerHTML = '<span>✓ Audited: ' + escHtml((data.display_entity && data.display_entity.name) || query) + '</span><span class="btn-icon-circle" aria-hidden="true">✓</span>';
           setTimeout(() => { btn.style.background = ''; btn.innerHTML = '<span>Audit Spend &amp; Rates</span><span class="btn-icon-circle" aria-hidden="true">↗</span>'; }, 2800);
@@ -795,7 +797,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         var qaP = document.getElementById('sr-home-qa-price'), qaR = document.getElementById('sr-home-qa-reach');
         if (qaP) qaP.value = mb.published_rack_rate_usd;
         if (qaR) qaR.value = Math.max(10000, Math.round((mb.published_rack_rate_usd / Math.max(15, data.metrics.avg_cpm_usd)) * 1000));
-        window.__srRunHomeQuoteAudit();
+        window.__srRunHomeQuoteAudit(true);
         const rfEl = document.getElementById('sr-mb-rack-floor');
         if (rfEl) rfEl.innerHTML = '$' + Number(mb.published_rack_rate_usd).toLocaleString() + ' Rack → <span style="color:var(--emerald-roi);">$' + Number(mb.negotiated_floor_rate_usd).toLocaleString() + ' Floor (-18%)</span>';
         if (mb.lookalike_shows && mb.lookalike_shows.length > 0) {
@@ -804,16 +806,17 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           if (lTitle) lTitle.textContent = l0.name + ' ($' + Number(l0.slot_usd).toLocaleString() + '/slot)';
           if (lRep) lRep.textContent = 'Rep: ' + (l0.unmasked_rep || l0.booking_rep);
         }
-        window.__srUpdateMoneyball((document.getElementById('sr-moneyball-slider') || {}).value || 15000, mb.published_rack_rate_usd);
+        window.__srUpdateMoneyball((document.getElementById('sr-moneyball-slider') || {}).value || 15000, mb.published_rack_rate_usd, true);
       }
       const tbody = document.getElementById('res-placements-tbody');
       if (tbody) tbody.innerHTML = (data.placements || []).map((p, idx) => {
         const rowTitle = escHtml(isShowMatch && p.brand_name ? (p.brand_name + ' → ' + p.show_name) : p.show_name);
         const floorCpm = Math.round((Number(p.cpm_usd) || 40) * 0.82), estCpc = (floorCpm / 18).toFixed(2), sDom = String(p.show_slug || p.show_name || 'creatornetwork').toLowerCase().replace(/[^a-z0-9]/g, '');
         const uBuyer = p.unmasked_buyer_email || 'sarah.kaufman@shopify.com', uAgency = p.unmasked_agency_email || 'm.vance@rightsideup.co';
+        const r4Attr = idx === 3 ? (' data-row4-unmasked="<div class=&quot;mono&quot; style=&quot;font-size:12.5px;color:var(--emerald-roi);font-weight:800;&quot;>✓ ROW #4 UNMASKED FREE (4 of 96): ' + escHtml(uBuyer) + ' (+ ' + escHtml(uAgency) + ')</div><div style=&quot;font-size:12.5px;color:var(--text-primary);font-weight:700;&quot;>' + escHtml(p.decision_maker_role || 'VP Growth') + ' • ' + escHtml(p.agency_desk || 'Agency Desk') + ' • Unlocked via Free Email Preview</div>"') : '';
         const contactHtml = idx === 0
           ? ('<div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:800;">✓ ROW #1 UNMASKED (1 of 96): ' + escHtml(uBuyer) + '</div><div class="mono" style="font-size:12px;color:var(--text-primary);font-weight:700;">Agency: ' + escHtml(uAgency) + ' (' + escHtml(p.agency_desk || 'Agency Desk') + ') • Show: booking@' + sDom + '.fm</div><div class="mono" style="font-size:11.5px;color:var(--vermilion);font-weight:700;margin-top:3px;">' + escHtml(p.live_outreach_angle || 'Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at -18% floor.') + ' • <code>' + escHtml(p.iab_makegood_rider_preview || 'IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)') + '</code></div>')
-          : ('<div class="mono" style="font-size:13.5px;color:var(--amber-gold);">🔒 Row #' + (idx + 1) + ' of 96: ' + escHtml((p.sponsor_email || 's***.k***@brand.io').replace(/🔒\\s*/g, '')) + '</div><div style="font-size:13px;color:var(--text-muted);">' + escHtml(p.decision_maker_role || 'VP Growth') + ' • ' + escHtml(p.agency_desk || 'Agency Desk') + ' <a href="#eb-deliverable-curtain" onclick="if(window.__srFocusRowUnlock){window.__srFocusRowUnlock(' + (idx + 1) + ',\\\'' + String(p.brand_name || p.show_name || entity.name || 'Target').replace(/[^a-zA-Z0-9 .&-]/g, '') + '\\\');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unlock Row #' + (idx + 1) + ' ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'complete_dossier\\\',true);return false;}" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">All 96 Vault ($29) →</a></div>');
+          : ('<div' + r4Attr + '><div class="mono" style="font-size:13.5px;color:var(--amber-gold);">🔒 Row #' + (idx + 1) + ' of 96: ' + escHtml((p.sponsor_email || 's***.k***@brand.io').replace(/🔒\\s*/g, '')) + '</div><div style="font-size:13px;color:var(--text-muted);">' + escHtml(p.decision_maker_role || 'VP Growth') + ' • ' + escHtml(p.agency_desk || 'Agency Desk') + ' <a href="#eb-deliverable-curtain" onclick="if(window.__srFocusRowUnlock){window.__srFocusRowUnlock(' + (idx + 1) + ',\\\'' + String(p.brand_name || p.show_name || entity.name || 'Target').replace(/[^a-zA-Z0-9 .&-]/g, '') + '\\\');return false;}" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Unlock Row #' + (idx + 1) + ' ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'complete_dossier\\\',true);return false;}" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">All 96 Vault ($29) →</a></div></div>');
         const vHtml = '<div style="color:var(--cyan-info);">' + escHtml(p.vanity_url) + '</div><div>Code: <strong style="color:var(--amber-gold);">' + escHtml(p.promo_code) + '</strong></div>';
         return \`<tr style="\${idx === 0 ? 'background:var(--emerald-soft);' : ''}"><td><div style="font-weight:700;">\${rowTitle}\${p.is_lookalike ? ' <span class="pill-slate" style="font-size:13.5px;padding:2px 8px;">Category Peer</span>' : ''}</div><div class="mono" style="font-size:13.5px; color:var(--text-muted);">\${escHtml(p.channel_type)} • \${Math.round((Number(p.audience_size) || 75000) / 1000)}K reach</div></td><td><div><span class="\${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">\${escHtml(p.renewal_badge)}</span></div><div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:4px; font-weight:800;">✓ \${escHtml((p.fresh_budget_badge || 'Renewed on Peer Shows (Last 30 Days)').replace(/🟢\\s*/g, ''))}</div></td><td>\${contactHtml}</td><td class="mono" style="font-size:13.5px;">\${vHtml}</td><td class="mono" style="font-weight:700; color:var(--amber-gold);">$\${Number(p.est_spend_usd).toLocaleString()} ($\${Number(p.cpm_usd) || 0} CPM)<div style="font-size:13.5px; color:var(--emerald-roi); font-weight:600;">3x Floor: $\${floorCpm} CPM • ~$\${estCpc} CPC</div></td></tr>\`;
       }).join('') + '<tr id="sr-locked-95-summary-row" style="background:#FFFBEB;"><td colspan="5" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">🔒 +87 More Verified Buyer &amp; Agency Desk Rows Locked (95 Locked Verified Rows • 96 Total in CSV) — <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'flash_pass\\\',true);return false;}" style="color:var(--vermilion);text-decoration:underline;">Unlock Target Pack ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'complete_dossier\\\',true);return false;}" style="color:var(--emerald-roi);text-decoration:underline;">Unlock All 96 Buyers Vault ($29) →</a></td></tr>';
@@ -834,7 +837,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         if (hvLine) hvLine.innerHTML = '<strong>Insider Takeaway (' + escHtml(shortName) + '):</strong> Audience trust compounds on Flight #3. Anchor a 3-flight pilot at <strong>$' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (-18% Floor)</strong> with ' + escHtml(entity.lead_role) + '.';
         if (cDesk) cDesk.textContent = rawSample + ' • ' + (data.brand.decision_maker_role || 'VP Partnerships');
         if (freePre) freePre.textContent = 'To: ' + rawSample + ' (' + (data.outbound_pitch.agency_desk || data.brand.decision_maker_role) + ') • Subject: ' + data.outbound_pitch.subject + '\\n\\n' + (data.outbound_pitch.free_pitch_script || data.outbound_pitch.body);
-        if (copyBtn) copyBtn.textContent = 'Unlock Buyer Email & Copy Pitch (' + rawSample + ')';
+        if (copyBtn) copyBtn.textContent = 'Copy 3-Flight Pitch for ' + shortName + ' (Free)';
         setTxt('res-pitch-body', 'SponsorRadar Locked Pack (' + entity.name + ') • Score: ' + data.metrics.renewal_velocity_score + '/100 • Target: ' + rawSample + ' (' + (data.outbound_pitch.agency_desk || data.brand.decision_maker_role) + ')');
       }
     }
@@ -867,8 +870,8 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       const activeBtn = btnEl || document.getElementById('btn-filter-' + filterKey);
       if (activeBtn) { activeBtn.classList.remove('btn-ghost'); activeBtn.classList.add('btn-emerald'); }
       document.querySelectorAll('#master-ledger-table tbody tr').forEach(r => {
-        const tier = r.getAttribute('data-tier'), vert = r.getAttribute('data-vertical'), ch = r.getAttribute('data-channel');
-        r.style.display = (filterKey === 'all' || tier === filterKey || vert === filterKey || ch === filterKey) ? '' : 'none';
+        const tier = r.getAttribute('data-tier'), vert = r.getAttribute('data-vertical'), ch = r.getAttribute('data-channel'), n50 = r.getAttribute('data-niche50k');
+        r.style.display = (filterKey === 'all' || tier === filterKey || vert === filterKey || ch === filterKey || n50 === filterKey) ? '' : 'none';
       });
       if (window.__ebLogEvent) window.__ebLogEvent('tab_switch', { store_pill: 'ledger_' + filterKey });
     }
@@ -881,7 +884,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           var patch = {}; if (id === 'lookup-query') patch.query = el.value.trim(); if (id === 'sender-reach') patch.reach = Number(el.value) || 75000; if (id === 'transcript-input') patch.transcript = el.value;
           window.__srSaveWorkspace(patch);
         }
-        if (id !== 'transcript-input') { if (__srLiveTimer) clearTimeout(__srLiveTimer); __srLiveTimer = setTimeout(function() { if (document.getElementById('lookup-query')?.value?.trim().length >= 2) runBrandLookup(); }, 520); }
+        if (id !== 'transcript-input') { if (__srLiveTimer) clearTimeout(__srLiveTimer); __srLiveTimer = setTimeout(function() { if (document.getElementById('lookup-query')?.value?.trim().length >= 2) runBrandLookup(null, true); }, 520); }
       });
     });
     window.addEventListener('DOMContentLoaded', function() {
@@ -891,10 +894,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         var qEl = document.getElementById('lookup-query'), rEl = document.getElementById('sender-reach');
         var qaP = document.getElementById('sr-home-qa-price'), qaR = document.getElementById('sr-home-qa-reach'), mbS = document.getElementById('sr-moneyball-slider');
         if (ws.qaPrice && qaP) qaP.value = ws.qaPrice; if (ws.qaReach && qaR) qaR.value = ws.qaReach;
-        if (ws.budget && mbS) { mbS.value = ws.budget; if (window.__srUpdateMoneyball) window.__srUpdateMoneyball(ws.budget); }
+        if (ws.budget && mbS) { mbS.value = ws.budget; if (window.__srUpdateMoneyball) window.__srUpdateMoneyball(ws.budget, null, true); }
         var initWedge = sp.get('wedge') || ws.buyer_wedge || ws.persona;
         if (initWedge === 'buyer' || initWedge === 'creator') window.__srSwitchPersona(initWedge, 'init');
-        if (!hasUrlQuery && ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona); }
+        if (!hasUrlQuery && ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona, false); }
         else if (ws.reach && rEl && String(ws.reach) !== String(rEl.value)) { rEl.value = ws.reach; }
         if (window.__srRenderComparisonMatrix) window.__srRenderComparisonMatrix();
       } catch (err) { console.warn('[sr:init]', err); }
