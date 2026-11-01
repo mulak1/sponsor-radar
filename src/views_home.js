@@ -140,7 +140,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                 <div id="sr-editorial-insider-hook" style="display:none;"><span id="sr-hero-vault-locked-line"></span></div>
               </div>
               <div id="sr-step2-handoff-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 12px; border-radius:10px; background:var(--emerald-soft); border:1px solid var(--emerald-border); font-size:12.5px;">
-                <span class="mono" style="font-weight:800; color:var(--text-primary);">✓ Row #1 Unmasked: <strong id="sr-step2-handoff-buyer" style="color:var(--emerald-roi);">${escapeHtml(row1BuyerUnmasked)}</strong> (+95 locked) • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--text-primary);text-decoration:underline;">IAB §4.2 Rider ↗</a></span>
+                <span class="mono" style="font-weight:800; color:var(--text-primary);">✓ Row #1 Unmasked: <strong id="sr-step2-handoff-buyer" style="color:var(--emerald-roi);">${escapeHtml(row1BuyerUnmasked)}</strong> • <strong id="sr-step2-floor-savings" style="color:var(--emerald-roi);">Save $${Math.max(1800, Math.round((mb.published_rack_rate_usd - mb.negotiated_floor_rate_usd) * 3)).toLocaleString()} (3x Floor)</strong> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--text-primary);text-decoration:underline;">IAB §4.2 Rider ↗</a></span>
                 <a href="#sr-sweetspot-bridge-form" onclick="var b=document.getElementById('sr-sweetspot-bridge-form');if(b&&b.scrollIntoView){b.scrollIntoView({behavior:'smooth',block:'center'});return false;}" class="mono" style="font-weight:800; color:var(--vermilion); text-decoration:underline; white-space:nowrap;">Unmask All 96 Buyers &amp; 3 Files &darr;</a>
               </div>
             </div>
@@ -738,6 +738,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         window.__srRunHomeQuoteAudit(true);
         const rfEl = document.getElementById('sr-mb-rack-floor');
         if (rfEl) rfEl.innerHTML = '$' + Number(mb.published_rack_rate_usd).toLocaleString() + ' Rack → <span style="color:var(--emerald-roi);">$' + Number(mb.negotiated_floor_rate_usd).toLocaleString() + ' Floor (-18%)</span>';
+        setTxt('sr-step2-floor-savings', 'Save $' + Math.max(1800, Math.round((Number(mb.published_rack_rate_usd || 4500) - Number(mb.negotiated_floor_rate_usd || 3690)) * 3)).toLocaleString() + ' (3x Floor)');
         if (mb.lookalike_shows && mb.lookalike_shows.length > 0) {
           const l0 = mb.lookalike_shows[0];
           const lTitle = document.getElementById('sr-mb-look1-title'), lRep = document.getElementById('sr-mb-look1-rep');
