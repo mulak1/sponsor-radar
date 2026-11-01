@@ -497,6 +497,18 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         </div>
       </details>
 
+      <div id="sr-pseo-quick-scans" class="panel" style="padding:14px 18px; background:var(--bg-surface); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <span class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary);">⚡ 1-Tap Verified Brand &amp; Show Scans:</span>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <a href="/scan/Shopify" class="pill-slate" style="text-decoration:none; font-size:12.5px;">Shopify (4x+ Renewals)</a>
+          <a href="/scan/Linear" class="pill-slate" style="text-decoration:none; font-size:12.5px;">Linear (DevTools)</a>
+          <a href="/scan/Ramp" class="pill-slate" style="text-decoration:none; font-size:12.5px;">Ramp (Fintech)</a>
+          <a href="/scan/Deel" class="pill-slate" style="text-decoration:none; font-size:12.5px;">Deel (B2B SaaS)</a>
+          <a href="/scan/HubSpot" class="pill-slate" style="text-decoration:none; font-size:12.5px;">HubSpot (CRM)</a>
+          <a href="/scan/AG1" class="pill-slate" style="text-decoration:none; font-size:12.5px;">AG1 (DTC Health)</a>
+        </div>
+      </div>
+
       <details class="panel" style="padding:18px 22px; background:var(--bg-surface); cursor:pointer;">
         <summary style="font-family:var(--font-serif); font-size:20px; font-weight:600; color:var(--text-primary); display:flex; justify-content:space-between; align-items:center; list-style:none;">
           <span>Browse 2026 Sponsorship Spend &amp; Rate Reports (${seoPages.length} Indexed Reports)</span>
