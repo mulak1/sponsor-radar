@@ -281,14 +281,17 @@ app.post('/api/checkout', async (req, res) => {
   if (body.website_url_hp) {
     return res.status(400).json({ error: 'Spam detected' });
   }
-  const rawPlan = String(body.plan_tier || 'creator_pro_49');
+  const rawPlan = String(body.plan_tier || 'ledger_pack_29');
+  const isMicro = rawPlan === 'micro_pass';
+  const isFlash = rawPlan === 'flash_pass';
   const isDfy = rawPlan === 'dfy_media_plan_499';
-  const isLedger29 = rawPlan === 'ledger_pack_29';
-  const isAgency = rawPlan === 'agency_feed_199';
-  const planTier = isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'));
-  const amountUsd = isDfy ? 499 : (isLedger29 ? 29 : (isAgency ? 199 : 49));
-  const isOneTime = isDfy || isLedger29;
+  const isLedger29 = rawPlan === 'ledger_pack_29' || rawPlan === 'playbook_pass' || rawPlan === 'complete_dossier';
+  const isAgency = rawPlan === 'agency_feed_199' || rawPlan === 'pro_b2b';
+  const planTier = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'))));
+  const amountUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isDfy ? 499 : (isLedger29 ? 29 : (isAgency ? 199 : 49))));
+  const isOneTime = isMicro || isFlash || isDfy || isLedger29;
   const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
+  const validStripeEmail = (email && /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email) && !/^(founder@creatorstudio\.io|creator@sponsorradar\.io|agency@sponsorradar\.io|growth@agency\.io)$/i.test(email)) ? email : '';
   const buyerWedge = String(body.buyer_wedge || (planTier === 'creator_pro_49' ? 'creator' : 'buyer')).toLowerCase() === 'creator' ? 'creator' : 'buyer';
   const isAutomatedTest = Boolean(
     req.headers['x-playwright-test'] ||
@@ -299,20 +302,20 @@ app.post('/api/checkout', async (req, res) => {
 
   if ((!isAutomatedTest || req.query?.live_stripe === '1') && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
     try {
-      const priceId = isDfy ? '' : (isLedger29 ? process.env.STRIPE_PRICE_PLAYBOOK_29 : (isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49));
+      const priceId = (isMicro || isFlash || isDfy) ? '' : (isLedger29 ? process.env.STRIPE_PRICE_PLAYBOOK_29 : (isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49));
       const params = new URLSearchParams({
         mode: isOneTime ? 'payment' : 'subscription',
-        customer_email: email,
         success_url: `${PUBLIC_URL}/?checkout=success&tier=${planTier}&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${PUBLIC_URL}/?checkout=cancel&tier=${planTier}`,
         'line_items[0][quantity]': '1'
       });
+      if (validStripeEmail) params.set('customer_email', validStripeEmail);
       if (priceId && !isOneTime) {
         params.set('line_items[0][price]', priceId);
       } else {
         params.set('line_items[0][price_data][currency]', 'usd');
-        params.set('line_items[0][price_data][unit_amount]', String(amountUsd * 100));
-        params.set('line_items[0][price_data][product_data][name]', isDfy ? 'SponsorRadar Done-For-You 10-Show Q4 Media Plan & Negotiation ($499)' : (isLedger29 ? 'SponsorRadar Complete 96-Buyer Q4 Ledger & Redlined IO Pack ($29)' : (isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)')));
+        params.set('line_items[0][price_data][unit_amount]', String(Math.round(amountUsd * 100)));
+        params.set('line_items[0][price_data][product_data][name]', isMicro ? 'SponsorRadar Single-Row Contact & Floor Pass (99¢)' : (isFlash ? 'SponsorRadar Target 3-File Sponsor & Rate Floor Pack ($1.99)' : (isDfy ? 'SponsorRadar Done-For-You 10-Show Q4 Media Plan & Negotiation ($499)' : (isLedger29 ? 'SponsorRadar Complete 96-Buyer Q4 Vault & Redlined IO Pack ($29)' : (isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)')))));
         if (!isOneTime) params.set('line_items[0][price_data][recurring][interval]', 'month');
       }
       const sRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {

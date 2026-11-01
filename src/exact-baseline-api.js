@@ -827,33 +827,39 @@ function attachExactBaselinePack(app, options = {}) {
       store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { buyer_wedge: buyerWedge } });
       sendOneClickLeadEmail(rawEmail, `${cfg.brandName} Checkout Summary (${tierName})`, isTest).catch(() => {});
     }
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid, buyer_wedge: buyerWedge } });
-
     const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} · ` : '';
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`, f0Lbl = (cfg.deliverableFiles && cfg.deliverableFiles[0] && (cfg.deliverableFiles[0].label || cfg.deliverableFiles[0].file)) || 'Single Deliverable File';
-    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? `Single-File Pass: ${f0Lbl} (99¢)` : (isFlash ? `${cfg.freeDeliverableName || 'Full 3-File Deliverable Pack'} ($1.99)` : (isUpgradeFlash ? `${cfg.coreLabel} ($${upgPrice.toFixed(2)}, $1.99 Pass Credit Applied)` : (isPlaybook ? cfg.coreLabel : (isPro ? cfg.proLabel : cfg.coreLabel))))}`;
-    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`;
+    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? `Single-File Pass: ${f0Lbl} (99¢)` : (isFlash ? `${cfg.freeDeliverableName || 'Full 3-File Deliverable Pack'} ($1.99)` : (isUpgradeFlash ? `${cfg.coreLabel} ($${upgPrice.toFixed(2)}, $1.99 Pass Credit Applied)` : (isPlaybook ? cfg.coreLabel : (isPro ? cfg.proLabel : cfg.coreLabel))))}`.slice(0, 120);
+    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`.slice(0, 240);
+    const validUserEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(userEmail) ? userEmail : '';
 
-    const buildInlineParams = () => {
-      const p = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&target=${encodeURIComponent(rawTarget)}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}&target=${encodeURIComponent(rawTarget)}`, 'mode': isOneTime ? 'payment' : 'subscription', 'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)), 'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][price_data][product_data][description]': prodDesc, 'line_items[0][quantity]': '1', 'custom_text[submit][message]': `Instant browser redirect: your ${filesList} download automatically the second payment completes.`, 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[target]': rawTarget, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
+    const buildInlineParams = (minimal) => {
+      const p = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&target=${encodeURIComponent(rawTarget)}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}&target=${encodeURIComponent(rawTarget)}`, 'mode': isOneTime ? 'payment' : 'subscription', 'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)), 'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][price_data][product_data][description]': prodDesc, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[target]': rawTarget, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
       if (!isOneTime) p.set('line_items[0][price_data][recurring][interval]', verticalId === 'derm_logic' ? 'year' : 'month');
-      if (userEmail && userEmail.includes('@')) p.set('customer_email', userEmail);
-      return p;
+      if (!minimal) {
+        p.set('custom_text[submit][message]', `Instant browser redirect: your ${filesList} download automatically the second payment completes.`.slice(0, 180));
+        if (validUserEmail) p.set('customer_email', validUserEmail);
+      }
+      return p.toString();
     };
 
     const isBrowserHumanClick = !isCrawler && !Boolean(req.headers['x-playwright-test'] || req.headers['x-test-mode'] || req.query?.test === '1' || req.query?.is_test === '1' || /headlesschrome|playwright|puppeteer|cypress|curl\/|python-requests|node-fetch|undici|go-http-client/i.test(String(req.headers['user-agent'] || '')));
+    let realStripeSession = false, stripeErrMsg = '';
     if (stripeKey && stripeKey.startsWith('sk_') && (isBrowserHumanClick || req.query?.live_stripe === '1')) {
       try {
         let stData = null;
         if (!isOneTime && priceId && priceId.startsWith('price_')) {
           const params = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}`, 'mode': 'subscription', 'line_items[0][price]': priceId, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
-          if (userEmail && userEmail.includes('@')) params.set('customer_email', userEmail);
-          stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: params })).json();
+          if (validUserEmail) params.set('customer_email', validUserEmail);
+          stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })).json();
         }
-        if (!stData || !stData.url) stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: buildInlineParams() })).json();
-        if (stData && stData.url) { checkoutUrl = stData.url; sessionId = stData.id; }
-      } catch (_) {}
+        if (!stData || !stData.url) stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: buildInlineParams(false) })).json();
+        if (!stData || !stData.url) stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: buildInlineParams(true) })).json();
+        if (stData && stData.url) { checkoutUrl = stData.url; sessionId = stData.id; realStripeSession = true; }
+        else if (stData && stData.error) { stripeErrMsg = String(stData.error.message || stData.error.code || 'stripe_err').slice(0, 80); }
+      } catch (e) { stripeErrMsg = String(e && e.message ? e.message : 'fetch_err').slice(0, 80); }
     }
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid, buyer_wedge: buyerWedge, real_stripe_session: realStripeSession, stripe_error: stripeErrMsg || undefined } });
     store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, buyerWedge, isTest, isOwnerIp, clientIp }); res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     if (req.method === 'GET' && (req.query?.source === 'creator_email' || req.query?.pub) && !req.headers['x-playwright-test']) return res.redirect(302, `/?utm_source=creator_email&utm_medium=email&utm_campaign=sponsor_radar&pub=${encodeURIComponent(req.query.pub || '')}#radar-results-container`);
     if (req.method === 'GET' && req.query?.format !== 'json') return (isBrowserHumanClick && String(req.headers.accept || '').includes('text/html') && checkoutUrl.includes('#')) ? res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>window.location.replace(${JSON.stringify(checkoutUrl)});</script></head><body style="font-family:system-ui,sans-serif;padding:36px;text-align:center;"><a href=${JSON.stringify(checkoutUrl)} style="display:inline-block;padding:12px 22px;background:#C83E2B;color:#fff;border-radius:999px;text-decoration:none;font-weight:700;">Continue to Secure Stripe Checkout &rarr;</a></body></html>`) : res.redirect(303, checkoutUrl);

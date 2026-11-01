@@ -938,6 +938,8 @@ function buildClientRuntimeScript(cfg) {
     var emInputs = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).filter(function(el) { return el && el.value && el.value.indexOf('@') > 0 && !/^(creator|agency)@sponsorradar\.io$/i.test(el.value.trim()); });
     var rawEm = (emInputs[0] && emInputs[0].value.trim()) || window.__ebSavedEmail || ''; try { if (!rawEm) rawEm = localStorage.getItem('eb_lead_email') || ''; } catch (_) {}
     var emVal = rawEm ? window.__ebCaptureEmailLead(rawEm, 'checkout_prefill_' + cleanTier) : '', wedge = window.__ebGetBuyerWedge();
+    var actBtn = (document.activeElement && (document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'A')) ? document.activeElement : document.getElementById(cleanTier === 'playbook_pass' || cleanTier === 'complete_dossier' ? 'btn-curtain-vault-pass' : 'btn-curtain-flash-pass');
+    if (actBtn) { actBtn.textContent = 'Opening Secure Stripe Checkout...'; actBtn.style.opacity = '0.85'; actBtn.style.pointerEvents = 'none'; }
     var payload = { tier: cleanTier, plan: cleanTier, planTier: cleanTier, sku: CFG.moduleId + '_' + cleanTier, pageUrl: window.location.pathname, vid: window.__ebVid, sid: window.__ebSid, target: actTarget, email: emVal, buyer_wedge: wedge };
     var fbUrl = '/buy/' + encodeURIComponent(cleanTier) + '?vid=' + encodeURIComponent(window.__ebVid || '') + '&target=' + encodeURIComponent(actTarget || '') + '&wedge=' + encodeURIComponent(wedge) + (emVal ? '&email=' + encodeURIComponent(emVal) : '');
     origFetch('/api/calculators/' + CFG.moduleId + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(function(r) { return r.json(); }).then(function(data) { var targetUrl = data && (data.checkout_url || data.url); window.location.href = targetUrl || fbUrl; }).catch(function(){ window.location.href = fbUrl; });
@@ -949,10 +951,14 @@ function buildClientRuntimeScript(cfg) {
     window.__ebMountDeliverableCurtain();
     try { if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) { var revEls = Array.prototype.slice.call(document.querySelectorAll('section h2, section h3, #eb-segment-portrait-strip > div, #eb-deliverable-curtain > div > div, .porcelain-vessel-core, .panel, .card')).slice(0, 22); if (window.IntersectionObserver) { var io = new IntersectionObserver(function(entries) { entries.forEach(function(en) { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'translateY(0px)'; io.unobserve(en.target); } }); }, { threshold: 0.05 }); revEls.forEach(function(el) { if (el.getBoundingClientRect().top > 240) { el.style.opacity = '0.92'; el.style.transform = 'translateY(8px)'; el.style.transition = 'opacity 320ms cubic-bezier(0.22,1,0.36,1), transform 320ms cubic-bezier(0.22,1,0.36,1)'; io.observe(el); } }); } } } catch (_) {}
     if (window.location.search.indexOf('checkout=cancel') !== -1) {
-      window.__ebLogEvent('view_paywall', { target: 'stripe_cancel_return' });
-      var toast = document.getElementById('eb-ouibounce-toast'), tTitle = document.getElementById('eb-ouibounce-title'), tDesc = document.getElementById('eb-ouibounce-desc');
-      if (tTitle) tTitle.textContent = '✦ Hesitating on Checkout? Unlock Row #4 + Sample First';
-      if (tDesc) tDesc.innerHTML = 'Not ready for the full bundle? <strong>Enter your email to reveal Row #4 right now</strong>, or grab just <strong>1 Single File for 99¢</strong>:';
+      window.__ebLogEvent('view_paywall', { target: 'stripe_cancel_return_99c_rescue' });
+      var tr2 = document.querySelector('#res-placements-tbody tr:nth-child(2), main table tbody tr:nth-child(2)');
+      if (tr2) { tr2.classList.remove('eb-blurred-deliverable'); tr2.style.background = CFG.theme.safeSoftBg; var tdC = tr2.querySelectorAll('td')[2]; if (tdC && CFG.moduleId === 'sponsor_radar') tdC.innerHTML = '<div class="mono" style="font-size:12.5px;color:#047857;font-weight:800;">✓ ROW #2 GOODWILL UNMASKED: partnerships@linear.app</div><div class="mono" style="font-size:12px;color:#0F172A;">Agency: buying@junction37.io (Junction 37 Desk) • 3x Floor Verified</div>'; }
+      var toast = document.getElementById('eb-ouibounce-toast'), tTitle = document.getElementById('eb-ouibounce-title'), tDesc = document.getElementById('eb-ouibounce-desc'), tForm = toast ? toast.querySelector('form') : null, mBtn = document.getElementById('btn-toast-micro-pass');
+      if (tForm) tForm.style.display = 'none';
+      if (tTitle) tTitle.textContent = '✦ Row #2 Unmasked Free! Or Grab 1 Single File for 99¢';
+      if (tDesc) tDesc.innerHTML = 'We unmasked <strong>Row #2 (partnerships@linear.app)</strong> on-screen free. Want just 1 single file without the $1.99 bundle? Unlock the <strong>99¢ Single-Row Rescue Pass</strong>:';
+      if (mBtn) { mBtn.textContent = 'Unlock Single-Row Pass (99¢) →'; mBtn.style.background = CFG.theme.safeColor; mBtn.style.color = '#FFFFFF'; mBtn.style.fontWeight = '700'; }
       if (toast) toast.style.display = 'block';
     }
     try { var savedEm = localStorage.getItem('eb_lead_email') || ''; if (savedEm && savedEm.indexOf('@') > 0) { window.__ebSavedEmail = savedEm; Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).forEach(function(el) { if (el && !el.value) el.value = savedEm; }); } } catch (_) {}
