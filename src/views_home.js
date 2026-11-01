@@ -364,7 +364,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           </div>
 
           <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:13px;">
-            <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% 3-Flight Floor)</strong></div>
+            <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% Floor) or Close $3,500 Pilot (1,758x Return)</strong></div>
             <div data-biz-criterion="no_sub_trap"><strong>✓ One-Time Pass (99¢ / $1.99 / $29 — No Subscription)</strong></div>
             <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Zero-Bounce 30-Day Refund SLA</strong></div>
             <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Files: <code>verified-buyer-contacts.csv</code> + <code>96-flight-cpm-decay.csv</code> + <code>.eml</code></strong></div>
@@ -378,7 +378,11 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <span class="mono" style="font-size:16px; font-weight:700; color:var(--text-primary); display:block;" id="res-table-title">${escapeHtml(displayEntity.table_title)}</span>
               <span style="font-size:13.5px; color:var(--text-secondary);">Row #1 Unmasked Free • Enter work email above to unmask Row #4 free, or unlock all 96 rows ($1.99 / $29)</span>
             </div>
-            <span class="pill-emerald" id="res-engine-badge">Row #1 Unmasked + 95 Locked Rows</span>
+            <div id="sr-inline-renewal-filter" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <button type="button" onclick="document.querySelectorAll('#res-placements-tbody tr').forEach(function(r){r.style.display='';});" class="pill-slate" style="cursor:pointer; border:1px solid var(--border-subtle); font-size:12px;">All Flights</button>
+              <button type="button" onclick="document.querySelectorAll('#res-placements-tbody tr').forEach(function(r,i){r.style.display=(i===0||/3x|4x|5x|6x|7x|8x|9x|10x|11x|12x|Renew/i.test(r.innerText))?'':'none';});" class="pill-emerald" style="cursor:pointer; border:none; font-size:12px;">3x+ Renewals Only</button>
+              <span class="pill-emerald" id="res-engine-badge">Row #1 Unmasked + 95 Locked Rows</span>
+            </div>
           </div>
           <div class="table-wrap" style="margin-top:0;">
             <table class="ledger-table">
