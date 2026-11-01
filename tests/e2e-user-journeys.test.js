@@ -55,7 +55,7 @@ async function runAllJourneys() {
       await page.fill('#lookup-query', 'Ramp');
       await page.click('#btn-run-lookup');
       await page.waitForFunction(() => document.getElementById('res-brand-name')?.textContent.includes('Ramp'));
-      await page.click('button[onclick="setAudienceReach(250000)"]');
+      await page.click('button[data-r="250000"], button[onclick*="setAudienceReach(250000"]');
       await page.waitForFunction(() => document.getElementById('res-pitch-meta')?.textContent.includes('250K Reach'));
       const pitchMeta = await page.textContent('#res-pitch-meta');
       assert.ok(pitchMeta.includes('250K Reach'), `Expected 250K Reach in pitch meta, got: ${pitchMeta}`);

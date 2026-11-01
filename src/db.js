@@ -119,6 +119,7 @@ function initDb() {
       email TEXT NOT NULL,
       creator_or_agency_name TEXT,
       query_context TEXT,
+      buyer_wedge TEXT DEFAULT 'buyer',
       utm_source TEXT,
       utm_campaign TEXT,
       created_at TEXT DEFAULT (datetime('now'))
@@ -130,12 +131,15 @@ function initDb() {
       plan_tier TEXT NOT NULL,
       amount_usd INTEGER NOT NULL,
       customer_email TEXT,
+      buyer_wedge TEXT DEFAULT 'buyer',
       utm_source TEXT,
       utm_campaign TEXT,
       status TEXT DEFAULT 'initiated',
       created_at TEXT DEFAULT (datetime('now'))
     );
   `);
+  try { db.exec("ALTER TABLE leads ADD COLUMN buyer_wedge TEXT DEFAULT 'buyer'"); } catch (_) {}
+  try { db.exec("ALTER TABLE checkout_sessions ADD COLUMN buyer_wedge TEXT DEFAULT 'buyer'"); } catch (_) {}
 
   const placementCount = db.prepare('SELECT COUNT(*) AS cnt FROM placements').get().cnt;
   const insertBrand = db.prepare(`

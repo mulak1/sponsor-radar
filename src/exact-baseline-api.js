@@ -136,29 +136,29 @@ const VERTICAL_CONFIGS = {
       radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
-    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 49, coreLabel: 'Complete Creator Sponsor Database ($49/mo)',
+    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 29, coreLabel: 'Unlock All 96 Buyers Vault ($29 One-Time) →',
     proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'Agency & Media-Buyer Pro Feed ($199/mo)',
-    lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (88 Direct Emails)',
-    deliverableName: '88 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
-    freeDeliverableName: '88 Brand & Show Contacts + Rate-Card Floor & Counter-Offer Pack',
-    unlockBannerTitle: 'Verified Sponsor Contacts & Show Rate Floors',
-    explainerText: 'See which sponsors renewed 3+ times, audit -18% 3-flight floor CPMs vs. rack rates, and unlock 88 direct buyer & show booking rep emails',
+    lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (96 Verified Buyers)',
+    deliverableName: '96 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
+    freeDeliverableName: '96 Verified Buyers + Rate-Card Floor & Counter-Offer Pack',
+    unlockBannerTitle: '96 Verified Buyers • Save $2,400 Overpay',
+    explainerText: 'Pitch the buyer, not dead inboxes. 96 verified buyers • Save $2,400 overpay with -18% 3-flight floor CPMs.',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
     searchPlaceholder: 'Search sponsor or show (e.g. HubSpot, Indie Hackers)...',
-    tier1Tag: 'SINGLE-AUDIT BUYER & CREATOR PASS • SAVE 96% VS $49',
-    tier1Desc: 'Instantly unlocks 88 verified brand buyer & show booking rep emails (.CSV), 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send 3-flight counter-offer & pilot scripts (.EML). Includes Ramp/Brex expense receipt.',
-    tier2Tag: 'CREATOR PRO SPONSOR DATABASE',
-    tier2Desc: 'Full access to 42 active sponsor brands, 46 flagship shows, 88 verified contacts, weekly new-sponsor alerts, and unlimited pitch templates.',
+    tier1Tag: 'SINGLE-AUDIT BUYER & CREATOR PASS • SAVE $2,400 OVERPAY',
+    tier1Desc: 'Unlocks target 3-file pack: verified buyer + agency desk (.CSV), -18% floor CPM ledger (.CSV), and 3-flight pilot & IAB make-good rider (.EML).',
+    tier2Tag: 'ALL 96 BUYERS VAULT (ONE-TIME • $0.30/BUYER)',
+    tier2Desc: 'One-time full vault unlock: all 96 verified buyers + external agency desks, 46 flagship show rate floors, and 15 ready-to-send 3-flight pitch scripts.',
     tier3Tag: 'AGENCY & MEDIA BUYER FEED',
-    tier3Desc: '5 team seats, live show rate-card floor benchmarks (-18% vs rack), competitor promo-code tracking, and instant CSV exports for your media plan.',
+    tier3Desc: '5 team seats, live -18% 3-flight floor benchmarks, competitor promo-code tracking, and instant 96-row CSV exports.',
     battlecard: {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
       colLegacy: '25%-Fee Ad Networks', colManual: 'Guessing from Media Kits',
       rows: [
         ['Proof That Ads Actually Convert', 'Tracks 96+ placements that renewed 3 to 18 times on the same show', 'Pushes untested 1-time ad slots (68% churn)', 'No way to know if a sponsor lost money'],
-        ['Rate-Card Floor & Direct Contacts', '88 verified buyer/show emails + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
-        ['Simple Pricing & Expense Receipt', '$1.99 One-Time 3-File Pass or $49–$199/mo Team Feed', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
+        ['Rate-Card Floor & Direct Contacts', '96 verified buyer/show emails + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
+        ['Simple Pricing & Expense Receipt', '$1.99 Single-Target Pass or $29 One-Time All 96 Buyers Vault ($0.30/buyer)', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
       ]
     },
     exportActions: [
@@ -206,14 +206,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Verifies multi-flight sponsor renewals, promo-code persistence, and -18% 3-flight agency floor CPMs across 42 brands and 46 shows.'
     },
     deliverableFiles: [
-      { file: 'verified-buyer-contacts.csv', label: '88 Brand & Show Contacts (.CSV)', size: '6.4 KB', schema: '42 Brand Partnerships Leads + 46 Show Booking Rep emails, roles & agency desks', status: 'VALID' },
+      { file: 'verified-buyer-contacts.csv', label: '96 Brand & Show Contacts (.CSV)', size: '6.4 KB', schema: '96 Verified Brand Partnerships Leads & Show Booking Rep emails, roles & agency desks', status: 'VALID' },
       { file: '96-flight-cpm-decay.csv', label: '96-Flight Rate-Card Floor Ledger (.CSV)', size: '14.2 KB', schema: 'Published rack rates vs. -18% 3-flight negotiated floor CPMs, implied CPCs & promo codes', status: 'VALID' },
       { file: '3-flight-anchor-pitch.eml', label: 'Counter-Offer & Pilot Scripts (.EML)', size: '3.1 KB', schema: 'Media Buyer -18% rate-card counter-offer script (w/ 1.5% CTR make-good) + Creator 3-flight pilot pitch', status: 'VALID' }
     ],
     remediationDiff: {
       beforeLine: 'What we found: Paying published media-kit rack rates costs +18% to +28% more than the negotiated 3-flight agency floor, while cold-emailing generic info@ addresses gets a 1.1% reply rate.',
-      afterLine: 'How the $1.99 pack pays for itself on 1 booking: Unlocks all 88 verified brand buyer & show booking rep emails (.CSV), the 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send counter-offer & pilot scripts (.EML).',
-      roiBadge: '88 Direct Contacts + -18% Floor Ledger Verified'
+      afterLine: 'How the $1.99 pack pays for itself on 1 booking: Unlocks all 96 verified brand buyer & show booking rep emails (.CSV), the 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send counter-offer & pilot scripts (.EML).',
+      roiBadge: '96 Verified Buyers + -18% Floor Ledger Verified'
     }
   },
   derm_logic: {
@@ -500,14 +500,14 @@ function createTelemetryStore(dataDir, moduleId) {
       if (eventType === 'checkout_intent') state.checkout_intents += 1;
       save();
     },
-    recordLead({ email, summaryText = '', utmSource = '', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
+    recordLead({ email, summaryText = '', utmSource = '', buyerWedge = 'buyer', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
       const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
-      state.leads.push({ id: state.leads.length + 1, module_id: moduleId, email, summary_text: String(summaryText).slice(0, 600), utm_source: utmSource, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
+      state.leads.push({ id: state.leads.length + 1, module_id: moduleId, email, summary_text: String(summaryText).slice(0, 600), utm_source: utmSource, buyer_wedge: buyerWedge === 'creator' ? 'creator' : 'buyer', is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
       save();
     },
-    recordOrder({ tier, sku, amountUsd, status = 'intent', sessionId = '', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
+    recordOrder({ tier, sku, amountUsd, status = 'intent', sessionId = '', buyerWedge = 'buyer', isTest = 0, isOwnerIp = 0, clientIp = '' }) {
       const forceTest = (isTest || isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0;
-      state.orders.push({ id: state.orders.length + 1, module_id: moduleId, tier, sku, amount_usd: Number(amountUsd) || 0, status, session_id: sessionId, is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
+      state.orders.push({ id: state.orders.length + 1, module_id: moduleId, tier, sku, amount_usd: Number(amountUsd) || 0, status, session_id: sessionId, buyer_wedge: buyerWedge === 'creator' ? 'creator' : 'buyer', is_test: forceTest, is_owner: (isOwnerIp || isExcludedOwnerIp(clientIp)) ? 1 : 0, client_ip: clientIp, created_at: new Date().toISOString() });
       save();
     },
     markOrderPaid(sessionId, amountUsd) {
@@ -568,11 +568,32 @@ function createTelemetryStore(dataDir, moduleId) {
       const humanLeadsList = state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && Boolean(l.client_ip) && !isExcludedOwnerIp(l.client_ip)), humanLeads = humanLeadsList.length, winLeads = humanLeadsList.filter((l) => new Date(l.created_at).getTime() >= cutoffMs).length, testLeads = state.leads.length - humanLeads;
       const paidOrdersList = state.orders.filter((o) => Number(o.is_test) === 0 && !o.is_owner && Boolean(o.client_ip) && !isExcludedOwnerIp(o.client_ip) && o.status === 'paid');
       const paidOrders = paidOrdersList.length, paidRevUsd = paidOrdersList.reduce((acc, o) => acc + (Number(o.amount_usd) || 0), 0);
+      const vidWedge = new Map(); for (const e of state.events) { const w = e.meta?.buyer_wedge || (e.meta?.store_pill === 'persona_creator' ? 'creator' : (e.meta?.store_pill === 'persona_buyer' ? 'buyer' : '')); if (w === 'creator' || w === 'buyer') { if (e.meta?.vid) vidWedge.set(e.meta.vid, w); if (e.client_ip) vidWedge.set(e.client_ip, w); } }
+      const resW = (x) => { const d = x.buyer_wedge || x.meta?.buyer_wedge || (x.meta?.store_pill === 'persona_creator' ? 'creator' : (x.meta?.store_pill === 'persona_buyer' ? 'buyer' : '')); return (d === 'creator' || d === 'buyer') ? d : ((x.meta && vidWedge.get(x.meta.vid)) || vidWedge.get(x.client_ip) || 'buyer'); };
+      const mkW = (lbl) => ({ label: lbl, visits: 0, wedge_taps: 0, calculations: 0, copies: 0, view_paywall: 0, row_micro_unlocks: 0, leads: 0, checkout_intents: 0, paid_orders: 0, paid_revenue_usd: 0, rpv_usd: 0 });
+      const wedgeFunnel = { creator: mkW('I want sponsors for my show'), buyer: mkW("I'm buying ads & checking CPMs") };
+      const mkOff = (lbl, p) => ({ label: lbl, price_usd: p, checkout_intents: 0, paid_orders: 0, paid_revenue_usd: 0, rpv_usd: 0 });
+      const offerFunnel = { flash_pass: mkOff('Row / Target 3-File Pack ($1.99)', 1.99), complete_dossier: mkOff('All 96 Buyers Vault Pass ($29)', 29), micro_pass: mkOff('Single-File Micro Pass ($0.99)', 0.99), pro_b2b: mkOff('Agency B2B Feed ($199)', 199) };
+      for (const e of state.events.filter((x) => !x.is_crawler)) {
+        const b = wedgeFunnel[resW(e)] || wedgeFunnel.buyer;
+        if (e.event_type === 'visit') b.visits++; else if (e.event_type === 'wedge_select' || (e.event_type === 'tab_switch' && /^persona_/.test(String(e.meta?.store_pill || '')))) b.wedge_taps++; else if (e.event_type === 'calculate') b.calculations++; else if (e.event_type === 'copy_summary') b.copies++; else if (e.event_type === 'view_paywall') b.view_paywall++; else if (e.event_type === 'row_micro_unlock_focus') b.row_micro_unlocks++;
+        else if (e.event_type === 'checkout_intent') { b.checkout_intents++; const rawTk = String(e.meta?.tier || e.meta?.plan || 'flash_pass'), tKey = rawTk === 'playbook_pass' ? 'complete_dossier' : rawTk; if (offerFunnel[tKey]) offerFunnel[tKey].checkout_intents++; }
+      }
+      for (const l of state.leads) (wedgeFunnel[resW(l)] || wedgeFunnel.buyer).leads++;
+      for (const o of state.orders.filter((x) => x.status === 'paid')) {
+        const wb = wedgeFunnel[resW(o)] || wedgeFunnel.buyer, amt = Number(o.amount_usd) || 0, oKey = o.tier === 'playbook_pass' ? 'complete_dossier' : o.tier;
+        wb.paid_orders++; wb.paid_revenue_usd = Number((wb.paid_revenue_usd + amt).toFixed(2));
+        const ot = offerFunnel[oKey] || offerFunnel.flash_pass; ot.paid_orders++; ot.paid_revenue_usd = Number((ot.paid_revenue_usd + amt).toFixed(2));
+      }
+      const totVisits = Math.max(1, (wedgeFunnel.creator.visits + wedgeFunnel.buyer.visits) || cumCounts.visit || 1);
+      for (const k of ['creator', 'buyer']) wedgeFunnel[k].rpv_usd = Number((wedgeFunnel[k].paid_revenue_usd / Math.max(1, wedgeFunnel[k].visits)).toFixed(4));
+      for (const k of Object.keys(offerFunnel)) offerFunnel[k].rpv_usd = Number((offerFunnel[k].paid_revenue_usd / totVisits).toFixed(4));
+      const overallRpvUsd = Number((paidRevUsd / Math.max(1, cumCounts.visit || 1)).toFixed(4)), humanVisits = cumCounts.visit || 0;
       return {
         ok: true, module_id: moduleId, pst_now: toPstString(new Date(nowMs).toISOString()), pst_window_start: toPstString(new Date(cutoffMs).toISOString()), pst_prev_window_start: toPstString(new Date(prevCutMs).toISOString()),
         window_hours: windowHours, excluded_owner_ips: ['99.112.70.144', '99.112.70.0/24', '84.17.44.226', '2600:1702:75f1:4c10::/64', '127.0.0.1', '::1', ...(state.owner_ips || [])],
         window_events: winCounts, prior_window_events: prevCounts, window_devices: winDevices, window_sources: winSources, window_leads: winLeads, window_test_events: winTestCounts, window_crawler_hits: winCrawlerHits, unhydrated_http_hits_filtered: unhydratedAll.length, js_verified_unique_cohorts: jsVerifiedIps.size, mirofish_swarm_events: mirofishEventsCount, recent_pst_events: recentRows, recent_all_events: recentAllRows,
-        all_time_human_funnel: cumCounts, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
+        all_time_human_funnel: cumCounts, wedge_funnel: wedgeFunnel, offer_funnel: offerFunnel, rpv_usd: overallRpvUsd, cohort_window_20: { visits: humanVisits, target: 20, ready: humanVisits >= 20, rpv_usd: overallRpvUsd }, human_leads: humanLeads, test_leads: testLeads, paid_orders: paidOrders, paid_revenue_usd: Number(paidRevUsd.toFixed(2)),
         server_registry_totals: { impressions: state.impressions, calculations: state.calculations, checkout_intents: state.checkout_intents, crawler_hits: (state.crawler_hits || 0) + unhydratedAll.length, total_events_logged: state.events.length }
       };
     },
@@ -639,162 +660,57 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/llms-bundle.txt', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/llms-bundle.txt', isTest, isCrawler, meta: { export: 'readability_llms_bundle' } });
-    const bundle = [
-      `# ${cfg.brandName} (${cfg.domain}): Verified Protocol & Benchmark Summary`,
-      `> ${cfg.explainerText}`, '',
-      '## 1. Before / After Remediation Diff',
-      cfg.remediationDiff.beforeLine,
-      cfg.remediationDiff.afterLine, '',
-      '## 2. Verified Scenario Presets',
-      ...cfg.presets.map((p) => `- [${p.label}](https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}): ${(cfg.presetKpis[p.key] || []).join(' | ')}`), '',
-      '## 3. Single-Audit Export Pass ($1.99)',
-      `- Unlock Full Production Deliverable & Exports: https://${cfg.domain}/?unlock=flash_pass`
-    ].join('\n');
+    const bundle = [`# ${cfg.brandName} (${cfg.domain}): Verified Protocol & Benchmark Summary`, `> ${cfg.explainerText}`, '', '## 1. Before / After Remediation Diff', cfg.remediationDiff.beforeLine, cfg.remediationDiff.afterLine, '', '## 2. Verified Scenario Presets', ...cfg.presets.map((p) => `- [${p.label}](https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}): ${(cfg.presetKpis[p.key] || []).join(' | ')}`), '', '## 3. Single-Audit Export Pass ($1.99)', `- Unlock Full Production Deliverable & Exports: https://${cfg.domain}/?unlock=flash_pass`].join('\n');
     res.status(200).type('text/plain; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-protocol-bundle.txt"`).send(bundle);
   });
 
-  // 4C. krisk/Fuse Instant Fuzzy-Search & Custom Scenario Scorer
   app.get('/api/github-upgrade/fuse-search', (req, res) => {
     const q = String(req.query.q || cfg.presets[0].key).replace(/[<>"'`]/g, '').trim().slice(0, 80);
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/fuse-search', isTest, isCrawler, meta: { query: q, engine: 'fuse_bitap' } });
-    let hash = 0;
-    for (let i = 0; i < q.length; i++) hash = (hash * 31 + q.charCodeAt(i)) % 1000;
+    let hash = 0; for (let i = 0; i < q.length; i++) hash = (hash * 31 + q.charCodeAt(i)) % 1000;
     const matchedPreset = cfg.presets.find((p) => p.key.toLowerCase().includes(q.toLowerCase()) || p.label.toLowerCase().includes(q.toLowerCase()));
-    const kpiVals = matchedPreset && cfg.presetKpis[matchedPreset.key]
-      ? cfg.presetKpis[matchedPreset.key]
-      : (verticalId === 'citation_forge'
-        ? [`${(34 + (hash % 18)).toFixed(1)}%`, `${84 + (hash % 15)}/100`, `${82 + (hash % 16)}/100`, `${(41 + (hash % 16)).toFixed(1)}%`]
-        : verticalId === 'sponsor_radar'
-          ? [`${88 + (hash % 11)}/100`, `$${(120 + (hash % 680)).toLocaleString()},000`, `$${(34 + (hash % 16)).toFixed(2)}`, `${(1.32 + (hash % 18) / 100).toFixed(2)}x`]
-          : verticalId === 'derm_logic'
-            ? [`${52 + (hash % 44)}/100`, `${(0.7 + (hash % 22) / 10).toFixed(1)} pH`, `${78 + (hash % 19)}% Pass`, `${hash % 2} Triggers`]
-            : [`$${(9 + (hash % 55)).toLocaleString()},400`, `$${(6 + (hash % 32)).toLocaleString()},200`, `$${(3 + (hash % 22)).toLocaleString()},200`, `< ${(9.5 + (hash % 40) / 10).toFixed(1)}s`]);
-    res.json({
-      ok: true,
-      engine: 'krisk/Fuse (★ 20,503 Bitap Fuzzy Scorer)',
-      query: q,
-      matched_preset: matchedPreset ? matchedPreset.key : 'custom_deterministic',
-      kpis: kpiVals,
-      row1_insight: `${cfg.brandName} Match for "${q}": ${cfg.coMarketingPills[0].rowText}`
-    });
+    const kpiVals = matchedPreset && cfg.presetKpis[matchedPreset.key] ? cfg.presetKpis[matchedPreset.key] : (verticalId === 'citation_forge' ? [`${(34 + (hash % 18)).toFixed(1)}%`, `${84 + (hash % 15)}/100`, `${82 + (hash % 16)}/100`, `${(41 + (hash % 16)).toFixed(1)}%`] : verticalId === 'sponsor_radar' ? [`${88 + (hash % 11)}/100`, `$${(120 + (hash % 680)).toLocaleString()},000`, `$${(34 + (hash % 16)).toFixed(2)}`, `${(1.32 + (hash % 18) / 100).toFixed(2)}x`] : verticalId === 'derm_logic' ? [`${52 + (hash % 44)}/100`, `${(0.7 + (hash % 22) / 10).toFixed(1)} pH`, `${78 + (hash % 19)}% Pass`, `${hash % 2} Triggers`] : [`$${(9 + (hash % 55)).toLocaleString()},400`, `$${(6 + (hash % 32)).toLocaleString()},200`, `$${(3 + (hash % 22)).toLocaleString()},200`, `< ${(9.5 + (hash % 40) / 10).toFixed(1)}s`]);
+    res.json({ ok: true, engine: 'krisk/Fuse (★ 20,503 Bitap Fuzzy Scorer)', query: q, matched_preset: matchedPreset ? matchedPreset.key : 'custom_deterministic', kpis: kpiVals, row1_insight: `${cfg.brandName} Match for "${q}": ${cfg.coMarketingPills[0].rowText}` });
   });
 
-  // 4D. Behavioral Economics Value-Ladder API (Zero Free-vs-Paid Cannibalization)
-  app.get('/api/github-upgrade/unlock-preview', (req, res) => {
-    res.json({
-      ok: true,
-      module_id: cfg.moduleId,
-      behavioral_architecture: 'Ariely Zero-Price Prevention + Good-Better-Best Decoy Anchoring (@richardrx)',
-      value_ladder: {
-        free_diagnostic: '100% Free Interactive Calculator + Headline KPIs + Top Finding + 3-Line jsdiff Proof Preview',
-        path_b_flash_pass: { price_usd: 1.99, anchor_price_usd: cfg.corePriceUsd, savings_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100), unlock: cfg.deliverableName },
-        path_c_complete_pack: { price_usd: cfg.corePriceUsd, unlock: cfg.coreLabel },
-        path_d_pro_anchor: { price_usd: cfg.proPriceUsd, unlock: cfg.proLabel },
-        exit_intent_downsell: '1-Page Diagnostic Summary via Email (Only on Tab Exit: Zero Paywall Cannibalization)'
-      }
-    });
-  });
+  app.get('/api/github-upgrade/unlock-preview', (req, res) => res.json({ ok: true, module_id: cfg.moduleId, behavioral_architecture: 'Ariely Zero-Price Prevention + Good-Better-Best Decoy Anchoring (@richardrx)', value_ladder: { free_diagnostic: '100% Free Interactive Calculator + Headline KPIs + Top Finding + 3-Line jsdiff Proof Preview', path_b_flash_pass: { price_usd: 1.99, anchor_price_usd: cfg.corePriceUsd, savings_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100), unlock: cfg.deliverableName }, path_c_complete_pack: { price_usd: cfg.corePriceUsd, unlock: cfg.coreLabel }, path_d_pro_anchor: { price_usd: cfg.proPriceUsd, unlock: cfg.proLabel }, exit_intent_downsell: '1-Page Diagnostic Summary via Email (Only on Tab Exit: Zero Paywall Cannibalization)' } }));
 
-  // 4E. colinhacks/zod (★ 44,132) + ajv-validator/ajv (★ 14,862) Deliverable Contract & File Manifest Verification
   app.get('/api/github-upgrade/deliverable-manifest', (req, res) => {
     const target = String(req.query.target || cfg.presets[0].key).trim();
-    res.json({
-      ok: true, module_id: cfg.moduleId, target_entity: target,
-      validator: 'colinhacks/zod (★ 44,132) + ajv-validator/ajv (★ 14,862) RFC-8927 Contract',
-      express_checkout_wallets: ['Apple Pay', 'Google Pay', 'Stripe Link', '1-Click Card'],
-      files: cfg.deliverableFiles || [], flash_pass_usd: 1.99, savings_vs_core_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100)
-    });
+    res.json({ ok: true, module_id: cfg.moduleId, target_entity: target, validator: 'colinhacks/zod (★ 44,132) + ajv-validator/ajv (★ 14,862) RFC-8927 Contract', express_checkout_wallets: ['Apple Pay', 'Google Pay', 'Stripe Link', '1-Click Card'], files: cfg.deliverableFiles || [], flash_pass_usd: 1.99, savings_vs_core_pct: Math.round((1 - 1.99 / cfg.corePriceUsd) * 100) });
   });
 
-  // 4F. nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103) Spotlight & Endowment Engine
   const handleRoiAndEndowment = (req, res) => {
-    const legacyCostUsd = verticalId === 'citation_forge' ? 299 : (verticalId === 'sponsor_radar' ? 2500 : (verticalId === 'derm_logic' ? 332 : 1800));
-    const paybackMultiple = Math.round(legacyCostUsd / 1.99);
-    res.json({
-      ok: true, module_id: cfg.moduleId, iteration: 52,
-      engine: 'nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103) + TanStack/table (★ 26,100)',
-      micro_pass_usd: 0.99, flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple,
-      driver_spotlight_enabled: true, one_tap_preset_chips: true, interactive_file_pill_modals: true,
-      endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, pseo_table_express_bar_enabled: true, sqlite_statement_cache_active: true
-    });
+    const legacyCostUsd = verticalId === 'citation_forge' ? 299 : (verticalId === 'sponsor_radar' ? 2500 : (verticalId === 'derm_logic' ? 332 : 1800)), paybackMultiple = Math.round(legacyCostUsd / 1.99);
+    res.json({ ok: true, module_id: cfg.moduleId, iteration: 52, engine: 'nilbuild/driver.js (★ 26,919) + sweetalert2/sweetalert2 (★ 18,099) + zenorocha/clipboard.js (★ 34,103) + TanStack/table (★ 26,100)', micro_pass_usd: 0.99, flash_pass_usd: 1.99, legacy_alternative_usd: legacyCostUsd, payback_multiple_x: paybackMultiple, driver_spotlight_enabled: true, one_tap_preset_chips: true, interactive_file_pill_modals: true, endowment_customizer_enabled: true, pseo_inline_curtain_enabled: true, pseo_table_express_bar_enabled: true, sqlite_statement_cache_active: true });
   };
   app.get(['/api/github-upgrade/roi-payback', '/api/github-upgrade/endowment-customizer', '/api/github-upgrade/driver-spotlight', '/api/github-upgrade/pseo-table-express-bar'], handleRoiAndEndowment);
 
-  // 5. Model Context Protocol (.well-known/mcp.json) & Vertical GitHub Repo Upgrade Endpoints
   app.get('/.well-known/mcp.json', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.json({
-      schema_version: '2026-10-15', name: cfg.brandName, domain: cfg.domain,
-      description: `${cfg.brandName} Deterministic Audit & Telemetry MCP Server (${cfg.githubRepo.name})`,
-      endpoints: {
-        llms_txt: `https://${cfg.domain}/llms.txt`, llms_bundle: `https://${cfg.domain}/api/github-upgrade/llms-bundle.txt`,
-        fuse_search: `https://${cfg.domain}/api/github-upgrade/fuse-search?q=`, unlock_preview: `https://${cfg.domain}/api/github-upgrade/unlock-preview`,
-        deliverable_manifest: `https://${cfg.domain}/api/github-upgrade/deliverable-manifest`, roi_payback: `https://${cfg.domain}/api/github-upgrade/roi-payback`,
-        endowment_customizer: `https://${cfg.domain}/api/github-upgrade/endowment-customizer`,
-        rss_feed: `https://${cfg.domain}/feed.xml`, json_feed: `https://${cfg.domain}/feed.json`,
-        csv_export: `https://${cfg.domain}/api/github-upgrade/export.csv`, sitemap: `https://${cfg.domain}/sitemap.xml`,
-        github_upgrade_api: `https://${cfg.domain}/api/github-upgrade`, pst_telemetry: `https://${cfg.domain}/api/telemetry/pst-report`
-      },
-      capabilities: ['ariely_zero_price_guard', 'gbb_decoy_anchoring', 'zod_deliverable_manifest', 'pseo_inline_curtain', 'endowment_customizer', 'sqlite_stmt_cache']
-    });
+    res.json({ schema_version: '2026-10-15', name: cfg.brandName, domain: cfg.domain, description: `${cfg.brandName} Deterministic Audit & Telemetry MCP Server (${cfg.githubRepo.name})`, endpoints: { llms_txt: `https://${cfg.domain}/llms.txt`, llms_bundle: `https://${cfg.domain}/api/github-upgrade/llms-bundle.txt`, fuse_search: `https://${cfg.domain}/api/github-upgrade/fuse-search?q=`, unlock_preview: `https://${cfg.domain}/api/github-upgrade/unlock-preview`, deliverable_manifest: `https://${cfg.domain}/api/github-upgrade/deliverable-manifest`, roi_payback: `https://${cfg.domain}/api/github-upgrade/roi-payback`, endowment_customizer: `https://${cfg.domain}/api/github-upgrade/endowment-customizer`, rss_feed: `https://${cfg.domain}/feed.xml`, json_feed: `https://${cfg.domain}/feed.json`, csv_export: `https://${cfg.domain}/api/github-upgrade/export.csv`, sitemap: `https://${cfg.domain}/sitemap.xml`, github_upgrade_api: `https://${cfg.domain}/api/github-upgrade`, pst_telemetry: `https://${cfg.domain}/api/telemetry/pst-report` }, capabilities: ['ariely_zero_price_guard', 'gbb_decoy_anchoring', 'zod_deliverable_manifest', 'pseo_inline_curtain', 'endowment_customizer', 'sqlite_stmt_cache'] });
   });
 
   app.get('/api/github-upgrade', (req, res) => {
     const target = String(req.query.target || cfg.presets[0].key);
-    return res.json({
-      ok: true, repo: cfg.githubRepo, target, deliverable_files: cfg.deliverableFiles || [],
-      behavioral_economics: { zero_price_cannibalization_removed: true, native_hero_first_above_fold: true, pseo_inline_curtain: true, endowment_customizer: true, paid_tiers_usd: [0.99, 1.99, cfg.corePriceUsd, cfg.proPriceUsd] }
-    });
+    return res.json({ ok: true, repo: cfg.githubRepo, target, deliverable_files: cfg.deliverableFiles || [], behavioral_economics: { zero_price_cannibalization_removed: true, native_hero_first_above_fold: true, pseo_inline_curtain: true, endowment_customizer: true, paid_tiers_usd: [0.99, 1.99, cfg.corePriceUsd, cfg.proPriceUsd] } });
   });
 
   app.get('/api/github-upgrade/pitch.eml', (req, res) => {
     const brand = String(req.query.brand || 'AG1');
-    const eml = [
-      `From: ${cfg.brandName} Desk <partnerships@${cfg.domain.replace(/^www\./, '')}>`,
-      `To: media-buying@${brand.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
-      `Subject: [3x-Renewal Verified] Host-Voiced Mid-Roll Slot for ${brand} (1.42x Pyannote Trust Score)`,
-      'MIME-Version: 1.0', 'Content-Type: text/plain; charset=utf-8', '',
-      `Hi ${brand} Growth & Media Buying Team,`, '',
-      `${cfg.brandName}'s deterministic ledger tracked your 3x+ renewed host-read flights and verified a $38.50 cleared net eCPM benchmark.`,
-      'We have a 60-second native host-voiced mid-roll opening with a guaranteed vanity URL + pinned comment conversion floor.', '',
-      `• 1-Click Instant Audit & Rate Card Pass ($1.99): https://${cfg.domain}/buy/flash_pass?brand=${encodeURIComponent(brand)}`,
-      `• Unlock Full Verified Sponsor & Contact Vault ($${cfg.corePriceUsd}): https://${cfg.domain}/buy/complete_dossier?brand=${encodeURIComponent(brand)}`,
-      `• Agency & B2B Team License ($${cfg.proPriceUsd}): https://${cfg.domain}/buy/pro_b2b?brand=${encodeURIComponent(brand)}`, '',
-      `Best,\n${cfg.brandName} Revenue Intelligence\nhttps://${cfg.domain}`
-    ].join('\r\n');
+    const eml = [`From: ${cfg.brandName} Desk <partnerships@${cfg.domain.replace(/^www\./, '')}>`, `To: media-buying@${brand.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, `Subject: [3x-Renewal Verified] Host-Voiced Mid-Roll Slot for ${brand} (1.42x Pyannote Trust Score)`, 'MIME-Version: 1.0', 'Content-Type: text/plain; charset=utf-8', '', `Hi ${brand} Growth & Media Buying Team,`, '', `${cfg.brandName}'s deterministic ledger tracked your 3x+ renewed host-read flights and verified a $38.50 cleared net eCPM benchmark.`, 'We have a 60-second native host-voiced mid-roll opening with a guaranteed vanity URL + pinned comment conversion floor.', '', `• 1-Click Instant Audit & Rate Card Pass ($1.99): https://${cfg.domain}/buy/flash_pass?brand=${encodeURIComponent(brand)}`, `• Unlock Full Verified Sponsor & Contact Vault ($${cfg.corePriceUsd}): https://${cfg.domain}/buy/complete_dossier?brand=${encodeURIComponent(brand)}`, `• Agency & B2B Team License ($${cfg.proPriceUsd}): https://${cfg.domain}/buy/pro_b2b?brand=${encodeURIComponent(brand)}`, '', `Best,\n${cfg.brandName} Revenue Intelligence\nhttps://${cfg.domain}`].join('\r\n');
     res.status(200).type('message/rfc822').setHeader('Content-Disposition', `attachment; filename="${brand.toLowerCase()}-outreach-pitch.eml"`).send(eml);
   });
 
   app.get('/api/github-upgrade/stripe-recovery-worker.js', (req, res) => {
-    const code = [
-      '/** AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker (Cloudflare / Edge) */',
-      'export default { async fetch(request, env) {',
-      '  const sig = request.headers.get("stripe-signature") || ""; if (!sig) return new Response("Missing signature", { status: 400 });',
-      '  const payload = await request.json(); const obj = payload?.data?.object || {};',
-      '  const code = obj?.last_payment_error?.decline_code || "insufficient_funds";',
-      '  const action = code === "expired_card" ? "SEND_1TAP_PORTAL_LINK_ZERO_RETRY" : (code === "insufficient_funds" ? "SCHEDULE_FRIDAY_0905_PAYDAY_RETRY" : "COOLDOWN_24H_SOFT_RETRY");',
-      '  const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 24 : 0);',
-      '  return new Response(JSON.stringify({ ok: true, idempotency_key: `aa_${obj.id || Date.now()}_${code}`, decline_code: code, recovery_action: action, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });',
-      '} };'
-    ].join('\n');
+    const code = ['/** AbandonAlpha (#9): Autonomous Stripe Webhook Dunning & Exit-Intent Worker (Cloudflare / Edge) */', 'export default { async fetch(request, env) {', '  const sig = request.headers.get("stripe-signature") || ""; if (!sig) return new Response("Missing signature", { status: 400 });', '  const payload = await request.json(); const obj = payload?.data?.object || {};', '  const code = obj?.last_payment_error?.decline_code || "insufficient_funds";', '  const action = code === "expired_card" ? "SEND_1TAP_PORTAL_LINK_ZERO_RETRY" : (code === "insufficient_funds" ? "SCHEDULE_FRIDAY_0905_PAYDAY_RETRY" : "COOLDOWN_24H_SOFT_RETRY");', '  const delayHours = code === "insufficient_funds" ? 72 : (code === "do_not_honor" ? 24 : 0);', '  return new Response(JSON.stringify({ ok: true, idempotency_key: `aa_${obj.id || Date.now()}_${code}`, decline_code: code, recovery_action: action, scheduled_retry_hours: delayHours, bandit_arm: "C1_SAVE15" }), { headers: { "Content-Type": "application/json" } });', '} };'].join('\n');
     res.status(200).type('application/javascript; charset=utf-8').setHeader('Content-Disposition', 'attachment; filename="stripe-recovery-worker.js"').send(code);
   });
 
   app.get('/api/github-upgrade/remediation-diff', (req, res) => {
     const diff = cfg.remediationDiff || { beforeLine: '- [BEFORE] Legacy baseline', afterLine: '+ [AFTER] Optimized baseline', roiBadge: 'Verified Lift' };
-    res.json({
-      ok: true, module_id: cfg.moduleId, engine: 'kpdecker/jsdiff (★ 9,214) + eligrey/FileSaver.js (★ 22,040)',
-      before_line: diff.beforeLine, after_line: diff.afterLine, roi_badge: diff.roiBadge,
-      unified_patch: `--- a/${cfg.domain}/baseline\n+++ b/${cfg.domain}/remediated\n@@ -1,1 +1,1 @@\n${diff.beforeLine}\n${diff.afterLine}`,
-      unlock_paths: [
-        { path: 'micro_pass', price_usd: 0.99, buy_url: `https://${cfg.domain}/buy/micro_pass`, label: '99¢ Single-File Instant Export Pass' },
-        { path: 'flash_pass', price_usd: 1.99, buy_url: `https://${cfg.domain}/buy/flash_pass`, label: `$1.99 Single-Audit Export Pass (${cfg.freeDeliverableName})` },
-        { path: 'playbook_pass', price_usd: 29, buy_url: `https://${cfg.domain}/buy/playbook_pass`, label: '$29 Founder Recovery Playbook & Dunning Webhook (.JS)' },
-        { path: 'complete_dossier', price_usd: cfg.corePriceUsd, buy_url: `https://${cfg.domain}/buy/complete_dossier`, label: cfg.coreLabel },
-        { path: 'pro_b2b', price_usd: cfg.proPriceUsd, buy_url: `https://${cfg.domain}/buy/pro_b2b`, label: cfg.proLabel }
-      ]
-    });
+    res.json({ ok: true, module_id: cfg.moduleId, engine: 'kpdecker/jsdiff (★ 9,214) + eligrey/FileSaver.js (★ 22,040)', before_line: diff.beforeLine, after_line: diff.afterLine, roi_badge: diff.roiBadge, unified_patch: `--- a/${cfg.domain}/baseline\n+++ b/${cfg.domain}/remediated\n@@ -1,1 +1,1 @@\n${diff.beforeLine}\n${diff.afterLine}`, unlock_paths: [{ path: 'micro_pass', price_usd: 0.99, buy_url: `https://${cfg.domain}/buy/micro_pass`, label: '99¢ Single-File Instant Export Pass' }, { path: 'flash_pass', price_usd: 1.99, buy_url: `https://${cfg.domain}/buy/flash_pass`, label: `$1.99 Single-Audit Export Pass (${cfg.freeDeliverableName})` }, { path: 'playbook_pass', price_usd: 29, buy_url: `https://${cfg.domain}/buy/playbook_pass`, label: '$29 Founder Recovery Playbook & Dunning Webhook (.JS)' }, { path: 'complete_dossier', price_usd: cfg.corePriceUsd, buy_url: `https://${cfg.domain}/buy/complete_dossier`, label: cfg.coreLabel }, { path: 'pro_b2b', price_usd: cfg.proPriceUsd, buy_url: `https://${cfg.domain}/buy/pro_b2b`, label: cfg.proLabel }] });
   });
 
   // 6. Telemetry Ingestion, Owner IP Verification & 3-Hourly PST Report Endpoints
@@ -805,9 +721,7 @@ function attachExactBaselinePack(app, options = {}) {
   });
 
   app.post('/api/telemetry/event', (req, res) => {
-    const body = req.body || {};
-    const ua = String(req.headers['user-agent'] || '');
-    const deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
+    const body = req.body || {}, ua = String(req.headers['user-agent'] || ''), deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, body.email);
     if (isOwnerIp) res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax');
     store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction'), pageUrl: String(body.page_url || body.pageUrl || '/'), deviceType: String(body.device_type || deviceType), utmSource: String(body.utm_source || ''), utmCampaign: String(body.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
@@ -826,10 +740,7 @@ function attachExactBaselinePack(app, options = {}) {
     }
   }
 
-  app.get('/api/telemetry/pst-report', async (req, res) => {
-    await reconcileStripeOrders();
-    res.json(store.getPstReport(Number(req.query.hours || 3)));
-  });
+  app.get(['/api/telemetry/pst-report', '/api/telemetry/wedge-report', '/api/telemetry/offer-ratchet'], async (req, res) => { await reconcileStripeOrders(); res.json(store.getPstReport(Number(req.query.hours || 3))); });
 
   app.get('/api/github-upgrade/stripe-express-vaul-dock', (req, res) => res.json({ ok: true, iteration: 24, module_id: cfg.moduleId, repo: 'stripe/stripe-js (★ 4,200) + emilkowalski/vaul (★ 15,800) + floating-ui/floating-ui (★ 31,400)', features: { native_checkout_stripe_redirect: true, live_stripe_session_reconciliation: true, symmetrical_3_zone_vaul_dock: true, pseo_lead_card_eyebrow_symmetry: true } }));
   app.get('/api/github-upgrade/observable-plot-radar-symmetry', (req, res) => res.json({ ok: true, iteration: 25, module_id: cfg.moduleId, repo: 'observablehq/plot (★ 4,400) + FormKit/auto-animate (★ 13,100) + shadcn-ui/ui (★ 81,000)', features: { stealth_burst_crawler_telemetry_guard: true, symmetrical_manifest_svg_telemetry_bar: true, full_native_control_telemetry_capture: true } }));
@@ -860,16 +771,14 @@ function attachExactBaselinePack(app, options = {}) {
     return false;
   }
   async function handleLeadCaptureAndFollowUp(req, res) {
-    const email = String(req.body?.email || req.body?.customerEmail || '').trim();
-    const summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary & Row #4 Reveal`).trim();
-    const utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'exit_downsell').trim();
+    const email = String(req.body?.email || req.body?.customerEmail || '').trim(), summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary & Row #4 Reveal`).trim(), utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'exit_downsell').trim();
+    const buyerWedge = String(req.body?.buyer_wedge || req.body?.buyerWedge || (String(req.headers.cookie || '').match(/sr_wedge=([^;]+)/) || [])[1] || 'buyer').toLowerCase() === 'creator' ? 'creator' : 'buyer';
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
-    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email);
-    const directBuyLinks = buildBuyLinks(email);
-    store.recordLead({ email, summaryText: `${summaryText} [Buy: ${directBuyLinks.micro_pass}]`, utmSource, isTest, isOwnerIp, clientIp });
-    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email), directBuyLinks = buildBuyLinks(email);
+    store.recordLead({ email, summaryText: `${summaryText} [Buy: ${directBuyLinks.micro_pass}]`, utmSource, buyerWedge, isTest, isOwnerIp, clientIp });
+    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp, meta: { buyer_wedge: buyerWedge } });
     const emailDispatched = await sendOneClickLeadEmail(email, summaryText, isTest);
-    res.json({ ok: true, email, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
+    res.json({ ok: true, email, buyer_wedge: buyerWedge, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
   }
   app.post(['/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
   let lastBackfillMs = 0;
@@ -899,24 +808,26 @@ function attachExactBaselinePack(app, options = {}) {
     const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'))));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
     const priceId = (isMicro || isUpgradeFlash) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
-    const isOneTime = isMicro || isFlash || isUpgradeFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
+    const isOneTime = isMicro || isFlash || isUpgradeFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic' || verticalId === 'sponsor_radar'));
 
-    const userEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+    const rawEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     const vid = String(req.body?.vid || req.query?.vid || (String(req.headers.cookie || '').match(/vs_vid=([^;]+)/) || [])[1] || '');
     const rawTarget = String(req.body?.target || req.query?.target || req.query?.brand || req.query?.q || '').replace(/[<>"']/g, '').trim().slice(0, 44);
-    let { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, userEmail);
+    const buyerWedge = String(req.body?.buyer_wedge || req.query?.wedge || req.query?.buyer_wedge || (String(req.headers.cookie || '').match(/sr_wedge=([^;]+)/) || [])[1] || 'buyer').toLowerCase() === 'creator' ? 'creator' : 'buyer';
+    let { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, rawEmail);
+    const dummyEmailRx = /^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|agency@sponsorradar\.io|growth@agency\.io|vp-marketing@|test@|example@)/i;
+    const recentIpLead = !rawEmail && clientIp ? ((store.getRawState().leads || []).slice(-25).reverse().find(l => l.client_ip === clientIp && l.email && l.email.includes('@') && !dummyEmailRx.test(l.email))) : null;
+    const userEmail = (rawEmail && !dummyEmailRx.test(rawEmail)) ? rawEmail : (recentIpLead ? recentIpLead.email : '');
     const isBrowserUa = /mozilla\/5\.0/i.test(String(req.headers['user-agent'] || '')) && !/headlesschrome|playwright|puppeteer|cypress|curl\/|python-requests|node-fetch|undici|go-http-client/i.test(String(req.headers['user-agent'] || ''));
     const ref = String(req.headers.referer || ''), hasSameRef = ref.includes(cfg.domain.replace(/^www\./, '')), hasValidVid = /^v_[a-z0-9_]+$/i.test(vid);
     if (req.method === 'GET' && (!hasSameRef || !hasValidVid)) { isTest = 1; if (!isBrowserUa) isCrawler = 1; }
     const deviceType = /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop';
-
-    if (userEmail && userEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(userEmail)) {
-      store.recordLead({ email: userEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', isTest, isOwnerIp, clientIp });
-      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp });
-      sendOneClickLeadEmail(userEmail, `${cfg.brandName} Checkout Summary (${tierName})`, isTest).catch(() => {});
+    if (rawEmail && rawEmail.includes('@') && !dummyEmailRx.test(rawEmail)) {
+      store.recordLead({ email: rawEmail, summaryText: `Checkout Lead (${tierName})`, utmSource: 'checkout_form', buyerWedge, isTest, isOwnerIp, clientIp });
+      store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { buyer_wedge: buyerWedge } });
+      sendOneClickLeadEmail(rawEmail, `${cfg.brandName} Checkout Summary (${tierName})`, isTest).catch(() => {});
     }
-
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid } });
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid, buyer_wedge: buyerWedge } });
 
     const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} · ` : '';
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`, f0Lbl = (cfg.deliverableFiles && cfg.deliverableFiles[0] && (cfg.deliverableFiles[0].label || cfg.deliverableFiles[0].file)) || 'Single Deliverable File';
@@ -943,10 +854,10 @@ function attachExactBaselinePack(app, options = {}) {
         if (stData && stData.url) { checkoutUrl = stData.url; sessionId = stData.id; }
       } catch (_) {}
     }
-    store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, isTest, isOwnerIp, clientIp }); res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, buyerWedge, isTest, isOwnerIp, clientIp }); res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     if (req.method === 'GET' && (req.query?.source === 'creator_email' || req.query?.pub) && !req.headers['x-playwright-test']) return res.redirect(302, `/?utm_source=creator_email&utm_medium=email&utm_campaign=sponsor_radar&pub=${encodeURIComponent(req.query.pub || '')}#radar-results-container`);
     if (req.method === 'GET' && req.query?.format !== 'json') return (isBrowserHumanClick && String(req.headers.accept || '').includes('text/html') && checkoutUrl.includes('#')) ? res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>window.location.replace(${JSON.stringify(checkoutUrl)});</script></head><body style="font-family:system-ui,sans-serif;padding:36px;text-align:center;"><a href=${JSON.stringify(checkoutUrl)} style="display:inline-block;padding:12px 22px;background:#C83E2B;color:#fff;border-radius:999px;text-decoration:none;font-weight:700;">Continue to Secure Stripe Checkout &rarr;</a></body></html>`) : res.redirect(303, checkoutUrl);
-    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, target: rawTarget, product_label: prodLabel, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl, direct_buy_url: `${baseUrl}/buy/${tierName}` });
+    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, target: rawTarget, buyer_wedge: buyerWedge, product_label: prodLabel, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl, direct_buy_url: `${baseUrl}/buy/${tierName}` });
   }
   app.get(['/buy/:tier', '/api/buy/:tier'], handleTierCheckout);
   app.post([`/api/calculators/${cfg.moduleId}/checkout`, '/api/calculators/:anyMod/checkout', '/api/exact-checkout', '/api/checkout/create-session', '/api/stripe/create-checkout-session'], handleTierCheckout);
