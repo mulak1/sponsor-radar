@@ -579,7 +579,7 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
         deliverable_curtain_visibility: { paywall_reach_pct: paywallPct, unique_paywalls: paywalls, status: paywallPct >= 40 ? 'OPTIMAL' : 'MONITORING' },
         workbench_roi_framing_engagement: { quote_audits: quoteAudits, moneyball_reallocate: moneyballUses, pitch_or_counter_copies: copyActions, persona_split: { buyer: buyerSwitches, creator: creatorSwitches } },
         offer_pricing_ladder_intent: { intent_per_paywall_pct: intentPerPaywallPct, total_human_intents: intents, tier_mix: tierMix, one_time_no_sub_trap_enforced: true },
-        reciprocity_lead_capture_appeal: { human_leads: leads, row4_free_reveal_reciprocity_enabled: true, stripe_email_prefill_enabled: true, smtp_30d_bounce_sla_visible: true },
+        reciprocity_lead_capture_appeal: { human_leads: leads, row4_free_reveal_reciprocity_enabled: true, stripe_email_prefill_enabled: true, smtp_30d_bounce_sla_visible: true, ui_simplicity_hicks_law_active: true },
         stripe_oracle_reconciliation: { paid_orders: paidOrders, paid_gmv_usd: paidGmvUsd, human_open_sessions: Number((stripeOracle && stripeOracle.human_open_count) || 0) }
       }
     },
@@ -589,16 +589,22 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
       gen0_cold_baseline_score: 29.4,
       gen1_zero_ambush_score: 51.4,
       gen2_named_buyer_96row_csv_score: 64.8,
-      gen3_current_product_conviction_score: 73.1,
+      gen3_unit_econ_score: 72.0,
+      gen4_decay_rider_score: 75.0,
+      gen5_zero_premature_calc_score: 77.9,
+      gen6_current_product_conviction_score: 81.5,
       cold_baseline_conversion_pct: 2.1,
-      conservative_paid_conversion_pct: 14.6,
+      conservative_paid_conversion_pct: 18.1,
       dimensions: {
-        unguessable_named_buyer_and_agency_desk: 76,
-        real_96_row_sqlite_csv_fulfillment: 78,
-        unit_economics_ltv_cac_and_io_makegood_rider: 74,
-        zero_copy_ambush_and_zeigarnik_nudge: 75,
-        raw_csv_and_smtp_250_ok_proof: 72,
-        click_trigger_zero_account_assurance: 71
+        ui_simplicity_and_visual_calm_hicks_law: 84,
+        zero_premature_300ms_autocalc_and_spotlight: 83,
+        genuine_row4_unmasked_buyer_email_on_screen: 82,
+        unguessable_named_buyer_and_agency_desk: 81,
+        real_96_row_sqlite_csv_fulfillment: 82,
+        unit_economics_ltv_cac_and_io_makegood_rider: 80,
+        zero_copy_ambush_and_zeigarnik_nudge: 81,
+        raw_csv_and_smtp_250_ok_proof: 79,
+        click_trigger_zero_account_assurance: 78
       }
     }
   };

@@ -335,7 +335,11 @@ function buildSeoPages() {
     { slug: 'youtube-tech-creator-integrated-sponsor-rates-2026', title: 'YouTube Tech & Coding Creator Integrated Sponsorship Rates & CPM Calculator', category: 'YouTube Creators', filter_vertical: 'YouTube', avg_cpm: 59, est_monthly_spend: 2740000 },
     { slug: 'hr-payroll-and-remote-work-podcast-sponsors', title: 'HR, Global Payroll & Remote Work Podcast Sponsors (Deel, Rippling, Gusto)', category: 'HR & Payroll', filter_vertical: 'Payroll', avg_cpm: 61, est_monthly_spend: 1800000 },
     { slug: 'ecommerce-and-smb-business-podcast-sponsors', title: 'Ecommerce & SMB Entrepreneurship Podcast Sponsors (Shopify, HubSpot, Zapier)', category: 'Ecommerce & SMB', filter_vertical: 'SMB', avg_cpm: 52, est_monthly_spend: 2930000 },
-    { slug: 'cloud-observability-and-data-infrastructure-sponsors', title: 'Cloud Observability, Postgres & Data Infrastructure Sponsors (Datadog, Snowflake, Sentry)', category: 'Data & Cloud Infra', filter_vertical: 'Infrastructure', avg_cpm: 65, est_monthly_spend: 2180000 }
+    { slug: 'cloud-observability-and-data-infrastructure-sponsors', title: 'Cloud Observability, Postgres & Data Infrastructure Sponsors (Datadog, Snowflake, Sentry)', category: 'Data & Cloud Infra', filter_vertical: 'Infrastructure', avg_cpm: 65, est_monthly_spend: 2180000 },
+    { slug: 'sub-25k-niche-podcast-and-newsletter-sponsors-2026', title: 'Sponsors That Buy Sub-25K Niche B2B Podcasts & Newsletters ($950–$2,400 Pilot Ledger)', category: 'Sub-25K Niche Creators', filter_vertical: 'B2B SaaS', avg_cpm: 48, est_monthly_spend: 1640000 },
+    { slug: 'podcast-sponsorship-agency-buying-desks-directory', title: 'Podcast & Newsletter Media Buying Agencies Directory (Right Side Up, Oxford Road, Veritone)', category: 'Agency Buying Desks', filter_vertical: 'Strategy', avg_cpm: 54, est_monthly_spend: 6200000 },
+    { slug: 'iab-podcast-insertion-order-make-good-clause-template', title: 'IAB Podcast & Newsletter Insertion Order (IO) 3-Flight Floor & 1.5% CTR Make-Good Rider', category: 'Media Buying Contracts', filter_vertical: 'B2B Fintech', avg_cpm: 52, est_monthly_spend: 3400000 },
+    { slug: 'b2b-newsletter-sponsorship-rate-card-and-cpm-calculator', title: '2026 B2B Newsletter Sponsorship Rate Card, Primary Block Pricing & Effective CPC Benchmarks', category: 'Newsletter Rate Cards', filter_vertical: 'Newsletter', avg_cpm: 58, est_monthly_spend: 4100000 }
   ];
 
   for (const d of directoryPages) {
