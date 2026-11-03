@@ -343,7 +343,11 @@ function buildSeoPages() {
     { slug: 'fireship-youtube-sponsors-and-cpm-rates', title: 'Fireship YouTube Sponsorship Rates, 60-Second Integration CPM & 3x Renewed DevTools Sponsors', category: 'DevTools YouTube', filter_vertical: 'YouTube', avg_cpm: 64, est_monthly_spend: 3150000 },
     { slug: 'tldr-ai-newsletter-sponsors-and-cpm-rates', title: 'TLDR AI & Tech Newsletter Sponsorship Rates, Primary Ad Block CPM & Repeat B2B Sponsors', category: 'AI Newsletters', filter_vertical: 'Newsletter', avg_cpm: 62, est_monthly_spend: 4850000 },
     { slug: 'bens-bites-ai-newsletter-sponsors-and-cpm-rates', title: "Ben's Bites AI Newsletter Sponsorship Cost, Effective CPC & 3x+ Renewed AI Tool Sponsors", category: 'AI Newsletters', filter_vertical: 'AI', avg_cpm: 59, est_monthly_spend: 2620000 },
-    { slug: 'syntax-fm-podcast-sponsors-and-cpm-rates', title: 'Syntax.fm Web Development Podcast Sponsors, Host-Read Mid-Roll Rates & 3-Flight Floor CPM', category: 'Developer Podcasts', filter_vertical: 'Engineering', avg_cpm: 56, est_monthly_spend: 2290000 }
+    { slug: 'syntax-fm-podcast-sponsors-and-cpm-rates', title: 'Syntax.fm Web Development Podcast Sponsors, Host-Read Mid-Roll Rates & 3-Flight Floor CPM', category: 'Developer Podcasts', filter_vertical: 'Engineering', avg_cpm: 56, est_monthly_spend: 2290000 },
+    { slug: 'substack-newsletter-sponsorship-rates-and-cpm-2026', title: 'Substack Newsletter Sponsorship Rates, Paid vs. Free List CPM & Repeat B2B Sponsors (2026)', category: 'Substack Newsletters', filter_vertical: 'Newsletter', avg_cpm: 63, est_monthly_spend: 3680000 },
+    { slug: 'beehiiv-ad-network-vs-direct-newsletter-sponsorship-cpm', title: 'beehiiv Ad Network vs. Direct B2B Newsletter Sponsorship CPM, CPC & Payout Benchmarks', category: 'Newsletter Monetization', filter_vertical: 'Newsletter', avg_cpm: 54, est_monthly_spend: 2940000 },
+    { slug: 'podcast-promo-code-vs-vanity-url-attribution-benchmarks', title: 'Podcast Promo Code vs. Vanity URL Attribution Benchmarks & 90-Day Conversion Decay', category: 'Ad Attribution Research', filter_vertical: 'Strategy', avg_cpm: 58, est_monthly_spend: 3320000 },
+    { slug: 'b2b-saas-youtube-sponsorship-cpm-and-contract-rates', title: 'B2B SaaS YouTube Sponsorship CPM, 60s Integrated Read Rates & 3-Flight Floor Calculator', category: 'YouTube Creators', filter_vertical: 'YouTube', avg_cpm: 61, est_monthly_spend: 3490000 }
   ];
 
   for (const d of directoryPages) {
