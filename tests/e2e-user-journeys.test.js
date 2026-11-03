@@ -257,6 +257,73 @@ async function runAllJourneys() {
       report.journeys['UJ-SR-006'] = 'PASS';
     }
 
+    // =========================================================================
+    // UJ-SR-007: All 5 Acquire.com Conversion Deltas (3 Free Buyer Credits,
+    //            High-Labor Deliverable Framing, Two-Step Email Prefill,
+    //            allow_promotion_codes:false, and $149/$199 B2B Agency Desk)
+    // =========================================================================
+    {
+      // 1. POST /api/leads unlocks 3 Free Buyer Credits ($0) + LinkedIn badge
+      const leadsRes = await fetch(`${BASE_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'creator@podcaststudio.fm', summaryText: '3 Free Verified Buyer Credits Unlock' })
+      });
+      assert.strictEqual(leadsRes.status, 200);
+      const leadsJson = await leadsRes.json();
+      assert.strictEqual(leadsJson.ok, true);
+      assert.strictEqual(leadsJson.unlocked_free_credits, 3);
+      assert.strictEqual(leadsJson.customer_email, 'creator@podcaststudio.fm');
+      assert.strictEqual(leadsJson.allow_promotion_codes, false);
+
+      // 2. Two-Step Checkout Pre-Fills customer_email & enforces allow_promotion_codes: false across tiers
+      for (const [tier, expectedPrice] of [['micro_pass', 0.99], ['flash_pass', 1.99], ['creator_pass', 19.0], ['playbook_pass', 29.0], ['agency_desk', 149.0]]) {
+        const tierRes = await fetch(`${BASE_URL}/buy/${tier}?format=json&email=${encodeURIComponent('creator@podcaststudio.fm')}&target=Ramp`, {
+          headers: { Referer: `${BASE_URL}/` }
+        });
+        assert.strictEqual(tierRes.status, 200);
+        const tierJson = await tierRes.json();
+        assert.strictEqual(tierJson.ok, true);
+        assert.strictEqual(tierJson.price_usd, expectedPrice);
+        assert.strictEqual(tierJson.customer_email, 'creator@podcaststudio.fm');
+        assert.strictEqual(tierJson.allow_promotion_codes, false);
+      }
+
+      // 3. B2B Agency / Talent Management Desk CRM & White-Label Media Kit Pack endpoint
+      const agencyPackRes = await fetch(`${BASE_URL}/api/github-upgrade/agency-desk-pack.json`);
+      assert.strictEqual(agencyPackRes.status, 200);
+      const agencyPackJson = await agencyPackRes.json();
+      assert.strictEqual(agencyPackJson.ok, true);
+      assert.strictEqual(agencyPackJson.pricing_options.multi_seat_agency_desk_usd, 149);
+      assert.strictEqual(agencyPackJson.deliverables.csv_verified_rows, 109);
+
+      // 4. Interactive Browser Verification: Copy on masked row focuses #sr-bridge-email (zero Stripe hijack) & email unlocks 3 Free Buyer Credits
+      const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+      await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
+      const copyFocusesEmail = await page.evaluate(() => {
+        const btn = document.querySelector('#res-placements-tbody tr:nth-child(2) .sr-row-copy-btn');
+        if (btn) btn.click();
+        return document.activeElement && document.activeElement.id === 'sr-bridge-email';
+      });
+      assert.strictEqual(copyFocusesEmail, true, 'Clicking Copy on a masked row must focus #sr-bridge-email without Stripe hijack');
+
+      await page.fill('#sr-bridge-email', 'creator@podcaststudio.fm');
+      await page.dispatchEvent('#sr-bridge-email', 'blur');
+      await page.waitForTimeout(200);
+      const unlockedCreditsAudit = await page.evaluate(() => {
+        const unmaskedEls = Array.from(document.querySelectorAll('[data-free-credit-unmasked]'));
+        const allVisible = unmaskedEls.length >= 3 && unmaskedEls.every((el) => window.getComputedStyle(el).display !== 'none' && !el.innerText.includes('***'));
+        const badgeEl = document.getElementById('sr-free-credits-badge');
+        const badgeVisible = Boolean(badgeEl && window.getComputedStyle(badgeEl).display !== 'none' && badgeEl.innerText.includes('3 of 3 Free Buyer Credits Unlocked'));
+        return { count: unmaskedEls.length, allVisible, badgeVisible };
+      });
+      assert.strictEqual(unlockedCreditsAudit.allVisible, true, 'All 3 free buyer credit rows must unmask cleanly on screen');
+      assert.strictEqual(unlockedCreditsAudit.badgeVisible, true, '3 of 3 Free Buyer Credits Unlocked badge must be visible');
+      await page.close();
+
+      report.journeys['UJ-SR-007'] = 'PASS';
+    }
+
     console.log(JSON.stringify(report, null, 2));
   } finally {
     await browser.close();

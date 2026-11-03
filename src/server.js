@@ -283,24 +283,51 @@ app.get('/api/checkout', (req, res) => {
   });
 });
 
+app.get('/api/github-upgrade/agency-desk-pack.json', (req, res) => {
+  const target = String(req.query.target || 'Linear').trim().slice(0, 48);
+  res.json({
+    ok: true,
+    tier: 'agency_desk_b2b',
+    pricing_options: { multi_seat_agency_desk_usd: 149, enterprise_b2b_feed_usd: 199 },
+    target_entity: target,
+    deliverables: {
+      bulk_named_buyer_csv_url: '/api/github-upgrade/export.csv?unlocked=1',
+      csv_verified_rows: 109,
+      iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}`,
+      crm_webhook_schema: {
+        providers: ['HubSpot CRM', 'Clay Webhook', 'Salesforce', 'CSV Outreach Sequence'],
+        fields: ['brand_name', 'named_decision_maker_email', 'external_agency_desk_email', 'linkedin_verify_url', 'floor_3flight_cpm_usd', 'iab_makegood_clause', 'renewal_alert_90d_window']
+      },
+      white_label_media_kit_rate_card: {
+        ready: true,
+        custom_agency_branding: true,
+        floor_cpm_discount_benchmark: '-18% 3-Flight Anchor Floor',
+        make_good_protection: 'IAB v2.1 §4.2 (-18% Rate Cap) + §7.1 (85% 30-Day Download / 1.5% CTR Make-Good)'
+      }
+    }
+  });
+});
+
 app.post('/api/checkout', async (req, res) => {
   const body = req.body || {};
   // Pre-Launch Checklist #18: Honeypot Spam Protection
   if (body.website_url_hp) {
     return res.status(400).json({ error: 'Spam detected' });
   }
-  const rawPlan = String(body.plan_tier || 'ledger_pack_29');
+  const rawPlan = String(body.plan_tier || body.tier || 'ledger_pack_29');
   const isMicro = rawPlan === 'micro_pass';
   const isFlash = rawPlan === 'flash_pass';
+  const isCreator19 = rawPlan === 'creator_pass' || rawPlan === 'creator_19';
   const isDfy = rawPlan === 'dfy_media_plan_499';
   const isLedger29 = rawPlan === 'ledger_pack_29' || rawPlan === 'playbook_pass' || rawPlan === 'complete_dossier';
+  const isAgency149 = rawPlan === 'agency_desk' || rawPlan === 'agency_149';
   const isAgency = rawPlan === 'agency_feed_199' || rawPlan === 'pro_b2b';
-  const planTier = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'))));
-  const amountUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isDfy ? 499 : (isLedger29 ? 29 : (isAgency ? 199 : 49))));
-  const isOneTime = isMicro || isFlash || isDfy || isLedger29;
-  const email = String(body.customer_email || 'founder@creatorstudio.io').trim();
+  const planTier = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isCreator19 ? 'creator_pass' : (isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency149 ? 'agency_desk' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'))))));
+  const amountUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isCreator19 ? 19 : (isDfy ? 499 : (isLedger29 ? 29 : (isAgency149 ? 149 : (isAgency ? 199 : 49))))));
+  const isOneTime = isMicro || isFlash || isCreator19 || isDfy || isLedger29 || isAgency149;
+  const email = String(body.customer_email || body.email || body.customerEmail || 'founder@creatorstudio.io').trim();
   const validStripeEmail = (email && /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email) && !/^(founder@creatorstudio\.io|creator@sponsorradar\.io|agency@sponsorradar\.io|growth@agency\.io)$/i.test(email)) ? email : '';
-  const buyerWedge = String(body.buyer_wedge || (planTier === 'creator_pro_49' ? 'creator' : 'buyer')).toLowerCase() === 'creator' ? 'creator' : 'buyer';
+  const buyerWedge = String(body.buyer_wedge || (planTier === 'creator_pro_49' || planTier === 'creator_pass' ? 'creator' : 'buyer')).toLowerCase() === 'creator' ? 'creator' : 'buyer';
   const isAutomatedTest = Boolean(
     req.headers['x-playwright-test'] ||
     /headless|playwright|puppeteer|curl|python/i.test(String(req.headers['user-agent'] || ''))
@@ -310,9 +337,10 @@ app.post('/api/checkout', async (req, res) => {
 
   if ((!isAutomatedTest || req.query?.live_stripe === '1') && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
     try {
-      const priceId = (isMicro || isFlash || isDfy) ? '' : (isLedger29 ? process.env.STRIPE_PRICE_PLAYBOOK_29 : (isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49));
+      const priceId = (isMicro || isFlash || isCreator19 || isDfy || isAgency149) ? '' : (isLedger29 ? process.env.STRIPE_PRICE_PLAYBOOK_29 : (isAgency ? process.env.STRIPE_PRICE_AGENCY_199 : process.env.STRIPE_PRICE_CREATOR_49));
       const params = new URLSearchParams({
         mode: isOneTime ? 'payment' : 'subscription',
+        allow_promotion_codes: 'false',
         success_url: `${PUBLIC_URL}/?checkout=success&tier=${planTier}&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${PUBLIC_URL}/?checkout=cancel&tier=${planTier}`,
         'line_items[0][quantity]': '1'
@@ -323,7 +351,7 @@ app.post('/api/checkout', async (req, res) => {
       } else {
         params.set('line_items[0][price_data][currency]', 'usd');
         params.set('line_items[0][price_data][unit_amount]', String(Math.round(amountUsd * 100)));
-        params.set('line_items[0][price_data][product_data][name]', isMicro ? 'SponsorRadar Single-Row Contact & Floor Pass (99¢)' : (isFlash ? 'SponsorRadar Target 3-File Sponsor & Rate Floor Pack ($1.99)' : (isDfy ? 'SponsorRadar Done-For-You 10-Show Q4 Media Plan & Negotiation ($499)' : (isLedger29 ? 'SponsorRadar Complete 96-Buyer Q4 Vault & Redlined IO Pack ($29)' : (isAgency ? 'SponsorRadar Media Buyer & Agency Feed ($199/mo)' : 'SponsorRadar Creator Pro Outbound Engine ($49/mo)')))));
+        params.set('line_items[0][price_data][product_data][name]', isMicro ? 'SponsorRadar Single-Row Named Buyer + Agency Pass (99¢)' : (isFlash ? 'SponsorRadar Workflow Pack: Named-Buyer CSV + IO Rider + Outreach ($1.99)' : (isCreator19 ? 'SponsorRadar Creator Pass: 109-Row Named-Buyer CSV + IO Rider + Cold Sequences ($19)' : (isDfy ? 'SponsorRadar Done-For-You 10-Show Q4 Media Plan & Negotiation ($499)' : (isLedger29 ? 'SponsorRadar Full 109-Row Named-Buyer & Agency CSV + Redlined IO Rider ($29)' : (isAgency149 ? 'SponsorRadar B2B Agency & Talent Management Desk: 5 Seats + HubSpot/Clay CRM + White-Label Rate Card ($149)' : (isAgency ? 'SponsorRadar B2B Agency & Talent Desk Feed: Multi-Seat + CRM Webhook ($199/mo)' : 'SponsorRadar Full 109-Row Named-Buyer CSV + IO Rider + 90-Day Renewal Alerts ($49)')))))));
         if (!isOneTime) params.set('line_items[0][price_data][recurring][interval]', 'month');
       }
       const sRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -358,6 +386,7 @@ app.post('/api/checkout', async (req, res) => {
     plan_tier: planTier,
     amount_usd: amountUsd,
     customer_email: email,
+    allow_promotion_codes: false,
     buyer_wedge: buyerWedge,
     checkout_url: checkoutUrl
   });

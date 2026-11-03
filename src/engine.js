@@ -5,10 +5,10 @@ const NAMED_LAST = ['kaufman', 'chen', 'vance', 'mercer', 'hollis', 'lin', 'pate
 const AGENCY_DOMAINS = ['oxfordroad.com', 'rightsideup.co', 'veritoneone.com', 'tatari.tv'];
 
 function getUnmaskedNamedBuyerEmail(email) {
-  const raw = String(email || 'partnerships@brand.io').trim();
+  const raw = String(email || 'partnerships@brand.io').split('(')[0].trim();
   const [user, domain] = raw.split('@');
   if (!domain) return 'sarah.kaufman@brand.io';
-  if (user && user.includes('.') && !/^(partnerships|sponsorships|creators|media|audio|marketing|sponsors|devrel|community|podcasts|publications)$/i.test(user)) {
+  if (user && user.includes('.') && !user.includes('*') && !/^(partnerships|sponsorships|creators|media|audio|marketing|sponsors|devrel|community|podcasts|publications)$/i.test(user)) {
     return raw.toLowerCase();
   }
   const h = hashSeed(domain.toLowerCase());
@@ -364,7 +364,7 @@ function analyzeSponsorLookup(db, payload = {}) {
         JOIN shows s ON s.slug = p.show_slug
         WHERE p.show_slug = ?
         ORDER BY p.flights DESC, p.est_spend_usd DESC
-      `).all(show.slug).map(r => ({ ...r, sponsor_email: maskSponsorEmail(r.sponsor_email) }))
+      `).all(show.slug).map(r => ({ ...r, raw_sponsor_email: r.sponsor_email, sponsor_email: maskSponsorEmail(r.sponsor_email) }))
     : []);
 
   const rawActivePlacements = (matchedType === 'show' && showPlacements.length > 0) ? showPlacements : brandPlacements;
@@ -381,10 +381,10 @@ function analyzeSponsorLookup(db, payload = {}) {
   `).all(brand.category || '', show ? show.niche : (brand.category || ''))
     .filter(r => !seenKeys.has(`${r.brand_slug}:${r.show_slug}`))
     .slice(0, Math.max(0, 9 - rawActivePlacements.length))
-    .map(r => ({ ...r, is_lookalike: true, sponsor_email: maskSponsorEmail(r.sponsor_email) }));
+    .map(r => ({ ...r, is_lookalike: true, raw_sponsor_email: r.sponsor_email, sponsor_email: maskSponsorEmail(r.sponsor_email) }));
   const activePlacements = [...rawActivePlacements, ...peerPlacements].map((r, idx) => {
     const fresh = getFreshBudgetStatus(`${r.brand_slug}:${r.show_slug}:${idx}`, r.flights);
-    const rawEmail = r.sponsor_email || brand.sponsor_email;
+    const rawEmail = r.raw_sponsor_email || r.sponsor_email || brand.sponsor_email;
     const masked = maskSponsorEmail(rawEmail, r.brand_category || brand.category);
     const unmaskedBuyer = getUnmaskedNamedBuyerEmail(rawEmail);
     const unmaskedAgency = getAgencyBuyerEmail(r.brand_domain || brand.domain, r.brand_category || brand.category);
@@ -406,10 +406,11 @@ function analyzeSponsorLookup(db, payload = {}) {
       live_outreach_angle: peerSignal.live_outreach_angle,
       live_buyer_angle: peerSignal.live_buyer_angle,
       iab_makegood_rider_preview: peerSignal.iab_makegood_rider_preview,
-      unmasked_buyer_email: idx === 0 ? unmaskedBuyer : null,
-      unmasked_agency_email: idx === 0 ? unmaskedAgency : null,
-      unmasked_booking_email: idx === 0 ? unmaskedBooking : null,
-      unmasked_proof_email: idx === 0 ? `${unmaskedBuyer} (+ ${unmaskedAgency})` : null,
+      unmasked_buyer_email: idx < 4 ? unmaskedBuyer : null,
+      unmasked_agency_email: idx < 4 ? unmaskedAgency : null,
+      unmasked_booking_email: idx < 4 ? unmaskedBooking : null,
+      unmasked_proof_email: idx < 4 ? `${unmaskedBuyer} (+ ${unmaskedAgency})` : null,
+      linkedin_verify_url: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(unmaskedBuyer.split('@')[0].replace(/[._]/g, ' ') + ' ' + (r.brand_name || brand.name))}`,
       decision_maker_role: r.decision_maker_role || brand.decision_maker_role || 'VP Growth & Creator Partnerships',
       agency_desk: getAgencyDesk(r.brand_slug || brand.slug, r.brand_category || brand.category),
       sponsor_email: idx === 0 ? `${unmaskedBuyer} (+ ${unmaskedAgency})` : masked

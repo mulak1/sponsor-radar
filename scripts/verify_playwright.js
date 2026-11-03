@@ -111,9 +111,10 @@ async function runVerification() {
     results.screenshots.push(lookupShot);
 
     // Execute Mode B: Live Ad-Read Transcript Analyzer
-    await page.click('#mode-b-summary');
-    await page.click('#tab-mode-transcript');
-    await page.selectOption('#transcript-preset', 'huberman-ag1-eightsleep');
+    await page.evaluate(() => {
+      if (typeof switchToolMode === 'function') switchToolMode('transcript');
+      if (typeof loadTranscriptPreset === 'function') loadTranscriptPreset('huberman-ag1-eightsleep');
+    });
     await page.waitForFunction(() => {
       const el = document.getElementById('res-brand-name');
       return el && el.textContent.includes('AG1');

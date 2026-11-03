@@ -136,22 +136,22 @@ const VERTICAL_CONFIGS = {
       radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
-    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 29, coreLabel: 'Unlock All 96 Buyers Vault ($29 One-Time) →',
-    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'Agency & Media-Buyer Pro Feed ($199/mo)',
-    lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (96 Verified Buyers)',
-    deliverableName: '96 Verified Brand & Show Contacts (.CSV) + 96-Flight Rate-Card Floor Ledger (.CSV) + Counter-Offer & Pilot Scripts (.EML)',
-    freeDeliverableName: '96 Verified Buyers + Rate-Card Floor & Counter-Offer Pack',
-    unlockBannerTitle: '96 Verified Buyers • Save $2,400 Overpay',
+    corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 29, coreLabel: 'Full 109-Row Named-Buyer & Agency CSV + IO Rider Vault ($29 One-Time) →',
+    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 199, proLabel: 'B2B Agency & Talent Management Desk ($149–$199 Multi-Seat + HubSpot/Clay CRM Export)',
+    lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (109-Row Named-Buyer & Agency Ledger)',
+    deliverableName: 'Full 109-Row Verified Named-Buyer & Agency Desk CSV Export + Redlined IAB IO Make-Good Rider (.TXT) + Cold Outreach Sequences (.EML) + 90-Day Renewal Alerts',
+    freeDeliverableName: '109-Row Named-Buyer & Agency CSV + Redlined IO Make-Good Rider + Cold Outreach Sequences',
+    unlockBannerTitle: '109-Row Named-Buyer & Agency CSV + IO Rider • Save $2,400 Overpay',
     explainerText: 'Pitch the buyer, not dead inboxes. 96 verified buyers • Save $2,400 overpay with -18% 3-flight floor CPMs.',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
     searchPlaceholder: 'Search sponsor or show (e.g. HubSpot, Indie Hackers)...',
-    tier1Tag: 'SINGLE-AUDIT BUYER & CREATOR PASS • SAVE $2,400 OVERPAY',
-    tier1Desc: 'Unlocks target 3-file pack: verified buyer + agency desk (.CSV), -18% floor CPM ledger (.CSV), and 3-flight pilot & IAB make-good rider (.EML).',
-    tier2Tag: 'ALL 96 BUYERS VAULT (ONE-TIME • $0.30/BUYER)',
-    tier2Desc: 'One-time full vault unlock: all 96 verified buyers + external agency desks, 46 flagship show rate floors, and 15 ready-to-send 3-flight pitch scripts.',
-    tier3Tag: 'AGENCY & MEDIA BUYER FEED',
-    tier3Desc: '5 team seats, live -18% 3-flight floor benchmarks, competitor promo-code tracking, and instant 96-row CSV exports.',
+    tier1Tag: 'EXPRESS WORKFLOW DELIVERABLE PACK ($1.99) OR CREATOR PASS ($19) • SAVE $2,400 OVERPAY',
+    tier1Desc: 'Unlocks target workflow pack: verified Named-Buyer + Agency Desk (.CSV), -18% floor CPM ledger (.CSV), Redlined IAB IO Make-Good Rider (.TXT), and 3-flight cold outreach sequences (.EML).',
+    tier2Tag: 'FULL 109-ROW NAMED-BUYER & AGENCY CSV + IO RIDER VAULT ($29 / $49 ONE-TIME)',
+    tier2Desc: 'Complete 109-row verified Named-Buyer + External Agency Desk CSV export, Redlined IO Make-Good Rider (.TXT), 15 cold outreach sequences (.EML), and 90-day renewal alerts.',
+    tier3Tag: 'B2B AGENCY & TALENT MANAGEMENT DESK ($149 / $199 MULTI-SEAT + CRM WEBHOOK)',
+    tier3Desc: '5 team seats, bulk 109-row Named-Buyer & Agency CSV, HubSpot/Clay/CSV Outreach Sequence export, and White-Label Media Kit Rate Card generator.',
     battlecard: {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
       colLegacy: '25%-Fee Ad Networks', colManual: 'Guessing from Media Kits',
@@ -771,16 +771,16 @@ function attachExactBaselinePack(app, options = {}) {
     return false;
   }
   async function handleLeadCaptureAndFollowUp(req, res) {
-    const email = String(req.body?.email || req.body?.customerEmail || '').trim(), summaryText = String(req.body?.summaryText || `${cfg.brandName} Diagnostic Summary & Row #4 Reveal`).trim(), utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'exit_downsell').trim();
+    const email = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim(), summaryText = String(req.body?.summaryText || `${cfg.brandName} 3 Free Unmasked Verified Buyer Credits ($0) & Diagnostic Summary`).trim(), utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'free_3_buyer_credits').trim();
     const buyerWedge = String(req.body?.buyer_wedge || req.body?.buyerWedge || (String(req.headers.cookie || '').match(/sr_wedge=([^;]+)/) || [])[1] || 'buyer').toLowerCase() === 'creator' ? 'creator' : 'buyer';
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email), directBuyLinks = buildBuyLinks(email);
     store.recordLead({ email, summaryText: `${summaryText} [Buy: ${directBuyLinks.micro_pass}]`, utmSource, buyerWedge, isTest, isOwnerIp, clientIp });
-    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp, meta: { buyer_wedge: buyerWedge } });
+    store.recordEvent({ eventType: 'lead_capture', pageUrl: String(req.body?.pageUrl || '/'), deviceType: /mobile|iphone|android/i.test(String(req.headers['user-agent'] || '')) ? 'mobile' : 'desktop', utmSource, isTest, isCrawler, isOwnerIp, clientIp, meta: { buyer_wedge: buyerWedge, unlocked_free_credits: 3 } });
     const emailDispatched = await sendOneClickLeadEmail(email, summaryText, isTest);
-    res.json({ ok: true, email, buyer_wedge: buyerWedge, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: 'Summary Sent! Unblur All Remaining Rows + File for 99¢' } });
+    res.json({ ok: true, success: true, email, customer_email: email, allow_promotion_codes: false, unlocked_free_credits: 3, free_credits_badge: '✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn', buyer_wedge: buyerWedge, summary_sent: true, email_dispatched: emailDispatched, direct_buy_links: directBuyLinks, tripwire_offer: { tier: 'micro_pass', sku: `${cfg.moduleId}_micro_pass`, price_usd: 0.99, buy_url: directBuyLinks.micro_pass, flash_buy_url: directBuyLinks.flash_pass, headline: '3 Free Buyer Credits Unlocked! Download Full 109-Row CSV + IO Rider + Outreach Pack' } });
   }
-  app.post(['/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
+  app.post(['/api/leads', '/api/leads/capture', '/api/leads/consumer', '/api/studio/trial-signup'], handleLeadCaptureAndFollowUp);
   let lastBackfillMs = 0;
   app.all('/api/leads/resend-backfill', async (req, res) => {
     const humanLeads = store.getHumanLeads();
@@ -800,17 +800,20 @@ function attachExactBaselinePack(app, options = {}) {
   async function handleTierCheckout(req, res) {
     const rawTier = String(req.params?.tier || req.query?.tier || req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.plan_id || req.body?.planId || 'flash_pass').toLowerCase();
     const isMicro = rawTier.includes('micro') || rawTier.includes('099') || rawTier.includes('99c');
-    const isFlash = !isMicro && (rawTier.includes('flash') && !rawTier.includes('upgrade') || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
-    const isUpgradeFlash = !isMicro && !isFlash && (rawTier.includes('upgrade_from_flash') || rawTier.includes('2701'));
-    const isPlaybook = !isMicro && !isFlash && !isUpgradeFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
-    const isPro = !isMicro && !isFlash && !isUpgradeFlash && !isPlaybook && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('149') || rawTier.includes('99'));
-    const upgPrice = Math.max(1, Number(((cfg.corePriceUsd || 29) - 1.99).toFixed(2))), priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isUpgradeFlash ? upgPrice : (isPlaybook ? 29 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd))));
-    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isPro ? 'pro_b2b' : 'complete_dossier'))));
+    const isFlash = !isMicro && ((rawTier.includes('flash') && !rawTier.includes('upgrade')) || rawTier === '199' || rawTier === 'pass' || rawTier === 'single_audit');
+    const isCreator19 = !isMicro && !isFlash && (rawTier === 'creator_pass' || rawTier === 'creator_19' || rawTier === '19');
+    const isUpgradeFlash = !isMicro && !isFlash && !isCreator19 && (rawTier.includes('upgrade_from_flash') || rawTier.includes('2701'));
+    const isPlaybook = !isMicro && !isFlash && !isCreator19 && !isUpgradeFlash && (rawTier.includes('playbook') || rawTier.includes('29') || rawTier === 'audit_playbook' || rawTier === 'playbook_pass');
+    const isVault49 = !isMicro && !isFlash && !isCreator19 && !isUpgradeFlash && !isPlaybook && (rawTier === 'vault_49' || rawTier === 'database_49' || rawTier === '49');
+    const isAgency149 = !isMicro && !isFlash && !isCreator19 && !isUpgradeFlash && !isPlaybook && !isVault49 && (rawTier === 'agency_desk' || rawTier === 'agency_149' || rawTier.includes('149'));
+    const isPro = !isMicro && !isFlash && !isCreator19 && !isUpgradeFlash && !isPlaybook && !isVault49 && !isAgency149 && (rawTier.includes('pro') || rawTier.includes('agency') || rawTier.includes('annual') || rawTier.includes('growth') || rawTier.includes('99'));
+    const upgPrice = Math.max(1, Number(((cfg.corePriceUsd || 29) - 1.99).toFixed(2))), priceUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isCreator19 ? 19 : (isUpgradeFlash ? upgPrice : (isPlaybook ? 29 : (isVault49 ? 49 : (isAgency149 ? 149 : (isPro ? cfg.proPriceUsd : cfg.corePriceUsd)))))));
+    const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isCreator19 ? 'creator_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isVault49 ? 'vault_49' : (isAgency149 ? 'agency_desk' : (isPro ? 'pro_b2b' : 'complete_dossier')))))));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
-    const priceId = (isMicro || isUpgradeFlash) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
-    const isOneTime = isMicro || isFlash || isUpgradeFlash || isPlaybook || (!isPro && (verticalId === 'citation_forge' || verticalId === 'derm_logic' || verticalId === 'sponsor_radar'));
+    const priceId = (isMicro || isUpgradeFlash || isCreator19 || isVault49 || isAgency149) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
+    const isOneTime = isMicro || isFlash || isCreator19 || isUpgradeFlash || isPlaybook || isVault49 || (!isPro && !isAgency149 && (verticalId === 'citation_forge' || verticalId === 'derm_logic' || verticalId === 'sponsor_radar'));
 
-    const rawEmail = String(req.query?.email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+    const rawEmail = String(req.query?.email || req.query?.customer_email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
     const vid = String(req.body?.vid || req.query?.vid || (String(req.headers.cookie || '').match(/vs_vid=([^;]+)/) || [])[1] || '');
     const rawTarget = String(req.body?.target || req.query?.target || req.query?.brand || req.query?.q || '').replace(/[<>"']/g, '').trim().slice(0, 44);
     const buyerWedge = String(req.body?.buyer_wedge || req.query?.wedge || req.query?.buyer_wedge || (String(req.headers.cookie || '').match(/sr_wedge=([^;]+)/) || [])[1] || 'buyer').toLowerCase() === 'creator' ? 'creator' : 'buyer';
@@ -829,17 +832,15 @@ function attachExactBaselinePack(app, options = {}) {
     }
     const baseUrl = `https://${cfg.domain}`, stripeKey = process.env.STRIPE_SECRET_KEY || '', targetPrefix = rawTarget ? `${rawTarget} · ` : '';
     let checkoutUrl = `https://checkout.stripe.com/c/pay/cs_live_${cfg.moduleId}_${tierName}_${Date.now()}`, sessionId = `cs_live_${cfg.moduleId}_${Date.now()}`, f0Lbl = (cfg.deliverableFiles && cfg.deliverableFiles[0] && (cfg.deliverableFiles[0].label || cfg.deliverableFiles[0].file)) || 'Single Deliverable File';
-    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? `Single-File Pass: ${f0Lbl} (99¢)` : (isFlash ? `${cfg.freeDeliverableName || 'Full 3-File Deliverable Pack'} ($1.99)` : (isUpgradeFlash ? `${cfg.coreLabel} ($${upgPrice.toFixed(2)}, $1.99 Pass Credit Applied)` : (isPlaybook ? cfg.coreLabel : (isPro ? cfg.proLabel : cfg.coreLabel))))}`.slice(0, 120);
-    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList}. One-time payment, never renews.`.slice(0, 240);
-    const validUserEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(userEmail) ? userEmail : '';
+    const prodLabel = `${cfg.brandName}: ${targetPrefix}${isMicro ? `Single-Row Named Buyer + Agency Pass (99¢)` : (isFlash ? `${cfg.freeDeliverableName || 'Full 3-File Deliverable Pack'} ($1.99)` : (isCreator19 ? 'Creator Pro Outreach & 109-Row Named-Buyer CSV + IO Rider Pass ($19)' : (isUpgradeFlash ? `${cfg.coreLabel} ($${upgPrice.toFixed(2)}, $1.99 Pass Credit Applied)` : (isPlaybook ? cfg.coreLabel : (isVault49 ? 'Full 109-Row Named-Buyer & Agency CSV + IO Rider + 90d Alerts Vault ($49)' : (isAgency149 ? 'B2B Agency & Talent Management Desk: 5 Seats + 109-Row CSV + HubSpot/Clay CRM + White-Label Rate Card ($149)' : (isPro ? cfg.proLabel : cfg.coreLabel)))))))}`.slice(0, 120);
+    const filesList = (cfg.deliverableFiles || []).map(f => f.file).join(' + ') || 'Full Deliverable Pack', prodDesc = `Instant browser unlock & download for ${rawTarget || cfg.brandName}: includes ${filesList} + Redlined IAB IO Make-Good Rider (.TXT) + Cold Outreach Sequences + 90-Day Renewal Alerts.`.slice(0, 240);
+    const validUserEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(userEmail) ? userEmail : (rawEmail && rawEmail.includes('@') ? rawEmail : '');
 
     const buildInlineParams = (minimal) => {
-      const p = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&target=${encodeURIComponent(rawTarget)}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}&target=${encodeURIComponent(rawTarget)}`, 'mode': isOneTime ? 'payment' : 'subscription', 'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)), 'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][price_data][product_data][description]': prodDesc, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[target]': rawTarget, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
+      const p = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&target=${encodeURIComponent(rawTarget)}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}&target=${encodeURIComponent(rawTarget)}`, 'mode': isOneTime ? 'payment' : 'subscription', 'allow_promotion_codes': 'false', 'line_items[0][price_data][currency]': 'usd', 'line_items[0][price_data][unit_amount]': String(Math.round(priceUsd * 100)), 'line_items[0][price_data][product_data][name]': prodLabel, 'line_items[0][price_data][product_data][description]': prodDesc, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[target]': rawTarget, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
       if (!isOneTime) p.set('line_items[0][price_data][recurring][interval]', verticalId === 'derm_logic' ? 'year' : 'month');
-      if (!minimal) {
-        p.set('custom_text[submit][message]', `Instant browser redirect: your ${filesList} download automatically the second payment completes.`.slice(0, 180));
-        if (validUserEmail) p.set('customer_email', validUserEmail);
-      }
+      if (validUserEmail) p.set('customer_email', validUserEmail);
+      if (!minimal) p.set('custom_text[submit][message]', `Instant browser redirect: your ${filesList} download automatically the second payment completes.`.slice(0, 180));
       return p.toString();
     };
 
@@ -849,7 +850,7 @@ function attachExactBaselinePack(app, options = {}) {
       try {
         let stData = null;
         if (!isOneTime && priceId && priceId.startsWith('price_')) {
-          const params = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}`, 'mode': 'subscription', 'line_items[0][price]': priceId, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
+          const params = new URLSearchParams({ 'success_url': `${baseUrl}/?checkout=success&tier=${tierName}&session_id={CHECKOUT_SESSION_ID}`, 'cancel_url': `${baseUrl}/?checkout=cancel&tier=${tierName}`, 'mode': 'subscription', 'allow_promotion_codes': 'false', 'line_items[0][price]': priceId, 'line_items[0][quantity]': '1', 'metadata[module_id]': cfg.moduleId, 'metadata[tier]': tierName, 'metadata[vid]': vid, 'metadata[is_human]': (!isCrawler && !isTest) ? '1' : '0' });
           if (validUserEmail) params.set('customer_email', validUserEmail);
           stData = await (await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })).json();
         }
@@ -859,11 +860,11 @@ function attachExactBaselinePack(app, options = {}) {
         else if (stData && stData.error) { stripeErrMsg = String(stData.error.message || stData.error.code || 'stripe_err').slice(0, 80); }
       } catch (e) { stripeErrMsg = String(e && e.message ? e.message : 'fetch_err').slice(0, 80); }
     }
-    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid, buyer_wedge: buyerWedge, real_stripe_session: realStripeSession, stripe_error: stripeErrMsg || undefined } });
+    store.recordEvent({ eventType: 'checkout_intent', pageUrl: String(req.body?.pageUrl || req.originalUrl || '/'), deviceType, isTest, isCrawler, isOwnerIp, clientIp, meta: { tier: tierName, sku, price_usd: priceUsd, method: req.method, has_referer: hasSameRef, target: rawTarget, vid, buyer_wedge: buyerWedge, customer_email: validUserEmail || undefined, allow_promotion_codes: false, real_stripe_session: realStripeSession, stripe_error: stripeErrMsg || undefined } });
     store.recordOrder({ tier: tierName, sku, amountUsd: priceUsd, status: 'intent', sessionId, buyerWedge, isTest, isOwnerIp, clientIp }); res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     if (req.method === 'GET' && (req.query?.source === 'creator_email' || req.query?.pub) && !req.headers['x-playwright-test']) return res.redirect(302, `/?utm_source=creator_email&utm_medium=email&utm_campaign=sponsor_radar&pub=${encodeURIComponent(req.query.pub || '')}#radar-results-container`);
     if (req.method === 'GET' && req.query?.format !== 'json') return (isBrowserHumanClick && String(req.headers.accept || '').includes('text/html') && checkoutUrl.includes('#')) ? res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>window.location.replace(${JSON.stringify(checkoutUrl)});</script></head><body style="font-family:system-ui,sans-serif;padding:36px;text-align:center;"><a href=${JSON.stringify(checkoutUrl)} style="display:inline-block;padding:12px 22px;background:#C83E2B;color:#fff;border-radius:999px;text-decoration:none;font-weight:700;">Continue to Secure Stripe Checkout &rarr;</a></body></html>`) : res.redirect(303, checkoutUrl);
-    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, target: rawTarget, buyer_wedge: buyerWedge, product_label: prodLabel, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl, direct_buy_url: `${baseUrl}/buy/${tierName}` });
+    return res.status(200).json({ ok: true, success: true, tier: tierName, sku, price_usd: priceUsd, target: rawTarget, buyer_wedge: buyerWedge, customer_email: validUserEmail || null, allow_promotion_codes: false, product_label: prodLabel, session_id: sessionId, checkout_url: checkoutUrl, checkoutUrl, url: checkoutUrl, direct_buy_url: `${baseUrl}/buy/${tierName}` });
   }
   app.get(['/buy/:tier', '/api/buy/:tier'], handleTierCheckout);
   app.post([`/api/calculators/${cfg.moduleId}/checkout`, '/api/calculators/:anyMod/checkout', '/api/exact-checkout', '/api/checkout/create-session', '/api/stripe/create-checkout-session'], handleTierCheckout);
