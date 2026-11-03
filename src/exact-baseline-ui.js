@@ -483,15 +483,15 @@ function buildClientRuntimeScript(cfg) {
     if (tbody && !window.__ebIsUnlocked && !document.getElementById('eb-inline-row4-unlock')) {
       var trs = tbody.querySelectorAll('tr');
       for (var r0 = 0; r0 < trs.length; r0++) {
-        if (!trs[r0].hasAttribute('data-eb-live-row') && trs[r0].id !== 'eb-table-row4-gate-tr') {
+        if (!trs[r0].hasAttribute('data-eb-live-row') && trs[r0].id !== 'eb-table-row4-gate-tr' && trs[r0].id !== 'sr-locked-95-summary-row') {
           trs[r0].setAttribute('data-eb-live-row', String(r0 + 1)); trs[r0].title = 'Click to inspect & load into workbench';
           var tdFirst = trs[r0].querySelector('td, th');
           if (tdFirst && !tdFirst.querySelector('.eb-row-sim-pill')) tdFirst.insertAdjacentHTML('beforeend', '<div><button type="button" class="eb-row-sim-pill">Inspect ↗</button></div>');
           trs[r0].addEventListener('click', function(ev) { var isPill = ev.target && ev.target.closest && ev.target.closest('.eb-row-sim-pill'); if (!isPill && ev.target && ev.target.closest && ev.target.closest('a, button, input')) return; this.style.background = CFG.theme.brandSoftBg; var td0 = this.querySelector('td, th'), hEl = td0 ? td0.querySelector('a, strong, div[style*="font-weight:700"]') : null, raw = hEl ? hEl.textContent : (td0 ? td0.textContent : ''), ent = raw.replace(/Category Peer|Inspect\\s*↗|✓\\s*Inspecting.*|Sim/gi, '').replace(/^P\\d+\\s*|^#\\d+\\s*/i, '').split('→').pop().trim().slice(0, 42); if (!ent && CFG.moduleId === 'citation_forge') { var domIn = document.getElementById('domain-input'); ent = (domIn && domIn.value) ? domIn.value.trim() : (window.__ebActiveEntity || 'shopify.com'); } var pEl = this.querySelector('.eb-row-sim-pill'); if (pEl && ent) pEl.textContent = '✓ Inspecting ' + ent.slice(0, 16) + ' ↓'; if (ent) { window.__ebCompileCustomCurtain(ent); var c = document.getElementById('eb-deliverable-curtain') || document.getElementById('compiler'); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
         }
       }
-      for (var r = 3; r < trs.length; r++) trs[r].classList.add('eb-blurred-deliverable');
-      if ((trs.length > 3 || (isPseoOrDir && trs.length >= 2)) && !document.getElementById('eb-table-row4-gate-tr')) {
+      for (var r = 3; r < trs.length; r++) { if (trs[r].id !== 'sr-locked-95-summary-row') trs[r].classList.add('eb-blurred-deliverable'); }
+      if ((trs.length > 3 || (isPseoOrDir && trs.length >= 2)) && CFG.moduleId !== 'sponsor_radar' && !document.getElementById('eb-table-row4-gate-tr')) {
         var gateTr = document.createElement('tr'); gateTr.id = 'eb-table-row4-gate-tr'; gateTr.style.cssText = 'cursor:pointer;background:' + CFG.theme.subtleBg + ';';
         gateTr.onclick = function() { window.__ebCheckout('flash_pass'); };
         var rowGateCopy = CFG.moduleId === 'sponsor_radar' ? 'Export All Brand Placements, CPMs & Verified Contacts' : 'Export Full Production Config & Templates';
@@ -548,7 +548,7 @@ function buildClientRuntimeScript(cfg) {
         if (h1Node && h1Node.parentNode) { h1Node.parentNode.style.cssText += ';display:flex;flex-direction:column;justify-content:flex-start;gap:12px;height:100%;'; if (!window.__ebIsUnlocked && CFG.moduleId !== 'sponsor_radar' && !document.getElementById('eb-pseo-quick-bar')) h1Node.parentNode.appendChild(buildQBar('eb-pseo-quick-bar')); }
         var teHeaderPseo = existingHeroSplit.querySelector('.telemetry-card .card-header-bar');
         if (teHeaderPseo && teHeaderPseo.parentNode && !document.getElementById('eb-doppelrand-hero-card')) teHeaderPseo.parentNode.insertBefore(buildHeroCardEl(128, 'margin:0 0 12px 0;'), teHeaderPseo.nextSibling);
-      } else if (h1Node && h1Node.parentNode && !document.getElementById('eb-pseo-hero-split')) {
+      } else if (h1Node && h1Node.parentNode && CFG.moduleId !== 'sponsor_radar' && !document.getElementById('eb-pseo-hero-split')) {
         var splitWrap = document.createElement('div'); splitWrap.id = 'eb-pseo-hero-split';
         var leftCol = document.createElement('div'); leftCol.id = 'eb-pseo-hero-left'; leftCol.style.cssText = 'display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-width:0;height:100%;';
         var leadP = document.querySelector('.pseo-lead, .subhead') || (h1Node.parentNode && h1Node.parentNode.querySelector('p')) || (h1Node.nextElementSibling && h1Node.nextElementSibling.tagName === 'P' ? h1Node.nextElementSibling : null);

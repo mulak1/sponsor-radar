@@ -437,124 +437,70 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const bodyHtml = `
   <article style="padding:32px 0;">
     <div class="container">
-      <!-- Breadcrumbs & Top Pill Bar (Above H1 so Hero Split stays 100% cohesive) -->
+      <!-- Breadcrumbs & 1-Tap Persona Wedge Selector on One Clean Top Row -->
       <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-        <nav aria-label="Breadcrumb" class="mono" style="font-size:13.5px; color:var(--text-muted);">
+        <nav aria-label="Breadcrumb" class="mono" style="font-size:13px; color:var(--text-muted);">
           <a href="/" style="color:var(--vermilion); font-weight:600;">SponsorRadar Home</a> /
-          <a href="/directory" style="color:var(--vermilion); font-weight:600;">104 Verified Reports</a> /
+          <a href="/directory" style="color:var(--vermilion); font-weight:600;">108 Verified Reports</a> /
           <span>${escapeHtml(workbenchQuery)}</span>
         </nav>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-          <span class="pill-emerald" style="font-weight:800;">96 verified buyers • Save $2,400 overpay</span>
-          <span class="pill-vermilion">${escapeHtml(pageTypeBadge)}</span>
-          <a href="#sr-seo-quote-auditor" onclick="var q=document.getElementById('sr-seo-quote-auditor');if(q){q.scrollIntoView({behavior:'smooth'});return false;}" class="pill-slate" style="text-decoration:none; padding:5px 11px; font-size:12.5px; font-weight:700; cursor:pointer;">Interactive Quote Auditor ↓</a>
+        <div id="sr-buyer-wedge-toggle" role="group" aria-label="1-Tap Buyer Wedge Selector" style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:3px 6px; border-radius:999px; border:1px solid var(--border-strong);">
+          <button type="button" id="hero-role-creator" data-wedge="creator" aria-pressed="true" onclick="window.__srSwitchPersona('creator','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid var(--emerald-roi); background:var(--emerald-soft); color:var(--emerald-roi);">🎙️ I want sponsors for my show</button>
+          <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-pressed="false" onclick="window.__srSwitchPersona('buyer','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);">📊 I'm buying ads &amp; checking CPMs</button>
         </div>
       </div>
 
-      <div id="sr-buyer-wedge-toggle" role="group" aria-label="1-Tap Buyer Wedge Selector" style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:4px; border-radius:999px; border:1px solid var(--border-strong); margin-bottom:10px;">
-        <button type="button" id="hero-role-creator" data-wedge="creator" aria-pressed="true" onclick="window.__srSwitchPersona('creator','seo_hero_toggle')" style="padding:6px 14px; border-radius:999px; font-size:13px; font-weight:800; cursor:pointer; border:1.5px solid var(--emerald-roi); background:var(--emerald-soft); color:var(--emerald-roi);">🎙️ I want sponsors for my show</button>
-        <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-pressed="false" onclick="window.__srSwitchPersona('buyer','seo_hero_toggle')" style="padding:6px 14px; border-radius:999px; font-size:13px; font-weight:800; cursor:pointer; border:1.5px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);">📊 I'm buying ads &amp; checking CPMs</button>
-      </div>
-      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(workbenchQuery)}" style="font-size:clamp(1.65rem, 2.6vw, 2.35rem);line-height:1.15;max-width:42ch;margin-top:0;">Pitch the buyer, not dead inboxes: ${escapeHtml(workbenchQuery)}</h1>
-      <p class="subhead" style="max-width:85ch; margin-bottom:14px;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor CPMs ($${floorCpm} eCPM) and Row #1 unmasked buyer proof.</p>
+      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(workbenchQuery)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">Pitch the buyer, not dead inboxes: ${escapeHtml(workbenchQuery)}</h1>
+      <p class="subhead" style="display:none;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor CPMs ($${floorCpm} eCPM) and Row #1 unmasked buyer proof.</p>
 
       <!-- Above-the-Fold Editorial & Visual CPM Curve (Zero Pushy Buy Buttons Above the Fold) -->
-      <div id="sr-seo-buyer-verdict" style="padding:16px 20px; border-radius:14px; background:var(--bg-parchment); color:var(--text-primary); border:1.5px solid var(--border-strong); margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:18px; align-items:center;">
+      <div id="sr-seo-buyer-verdict" style="padding:14px 18px; border-radius:14px; background:var(--bg-parchment); color:var(--text-primary); border:1.5px solid var(--border-strong); margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; align-items:center;">
         <div id="sr-live-deal-card-row1" data-active-wedge="creator">
           <div class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-transform:uppercase;">
-            <span id="sr-row1-peer-30d-badge" class="pill-emerald" style="font-size:11px;padding:2px 7px;font-weight:800;margin-right:6px;">Row #1 Free Proof</span>${isShowPage ? `-18% 3-Flight Floor` : `${proven3xCount}/${placements.length} Renewed 3x+`}
+            <span id="sr-row1-peer-30d-badge" class="pill-emerald" style="font-size:11px;padding:2px 7px;font-weight:800;margin-right:6px;">Row #1 Free Proof</span>${isShowPage ? `-18% 3-Flight Floor` : `${proven3xCount}/${placements.length} Renewed 3x+`} • <span style="color:var(--emerald-roi);">96 Verified Buyers</span>
           </div>
-          <div style="font-size:13.5px; color:var(--text-primary); font-weight:500; margin-top:6px; line-height:1.45;">
+          <div style="font-size:13.5px; color:var(--text-primary); font-weight:500; margin-top:5px; line-height:1.45;">
             <span id="sr-row1-outreach-angle"><strong>${escapeHtml(workbenchQuery)}:</strong> $${floorCpm} Floor CPM (-18% floor, save $2,400 overpay)</span> • <code id="sr-row1-iab-rider-preview" style="color:var(--emerald-roi);font-weight:800;">IAB §4.2 + §7.1</code> (<a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Rider ↗</a>).
           </div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;">
-            <a href="#sr-seo-quote-auditor" onclick="var q=document.getElementById('sr-seo-quote-auditor');if(q){q.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">1. Audit Quote ↓</a>
-            <a href="#res-placements-tbody" onclick="var t=document.getElementById('res-placements-tbody');if(t){t.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--vermilion); text-decoration:underline;">2. View ${placements.length} Rows ↓</a>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
+            <a href="#res-placements-tbody" onclick="var t=document.getElementById('res-placements-tbody');if(t){t.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">1. View ${placements.length} Verified Rows ↓</a>
+            <a href="#sr-seo-quote-auditor" onclick="var q=document.getElementById('sr-seo-quote-auditor');if(q){q.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--vermilion); text-decoration:underline;">2. Audit Quote vs. Floor ↓</a>
           </div>
         </div>
-        <div id="sr-visual-cpm-curve" style="background:var(--bg-surface); padding:12px 16px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:6px; font-size:12px;">
+        <div id="sr-visual-cpm-curve" style="background:var(--bg-surface); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:5px; font-size:12px;">
           <div style="display:flex; justify-content:space-between;" class="mono"><span style="font-weight:800; color:var(--text-secondary);">RATE-CARD &amp; PEER ARBITRAGE METER</span><span style="color:var(--emerald-roi); font-weight:800;">Save $${(showRackUsd - showFloorUsd).toLocaleString()}/Read</span></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>1-Off Published Rack (High Churn)</span><strong style="color:var(--vermilion);">$${page.avg_cpm} CPM ($${showRackUsd.toLocaleString()}/slot)</strong></div><div style="height:7px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:100%; background:var(--vermilion); border-radius:99px;"></div></div></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>3-Flight Agency Floor (-18% • 2.4x Lift)</span><strong style="color:var(--emerald-roi);">$${floorCpm} CPM ($${showFloorUsd.toLocaleString()}/slot)</strong></div><div style="height:7px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:82%; background:var(--emerald-roi); border-radius:99px;"></div></div></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--cyan-info);">~$${Math.max(18, Math.round(floorCpm * 0.78))} eCPM (3.1x Clicks)</strong></div><div style="height:7px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--cyan-info); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>1-Off Published Rack (High Churn)</span><strong style="color:var(--vermilion);">$${page.avg_cpm} CPM ($${showRackUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:100%; background:var(--vermilion); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>3-Flight Agency Floor (-18% • 2.4x Lift)</span><strong style="color:var(--emerald-roi);">$${floorCpm} CPM ($${showFloorUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:82%; background:var(--emerald-roi); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--cyan-info);">~$${Math.max(18, Math.round(floorCpm * 0.78))} eCPM (3.1x Clicks)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--cyan-info); border-radius:99px;"></div></div></div>
         </div>
       </div>
 
       <!-- KPI Cards -->
-      <div id="sr-seo-kpi-strip" class="kpi-grid" style="margin-bottom:22px;">
-        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline);">
+      <div id="sr-seo-kpi-strip" class="kpi-grid" style="margin-bottom:16px;">
+        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">${isShowPage ? 'RACK RATE VS. 3-FLIGHT FLOOR' : 'ESTIMATED MONTHLY SPEND'}</div>
-          <div class="kpi-val" style="color:var(--amber-gold);">${isShowPage ? '$' + showRackUsd.toLocaleString() + '/read' : '$' + page.est_monthly_spend.toLocaleString()}</div>
-          <div class="mono" style="font-size:13px; color:var(--emerald-roi); margin-top:2px;">${isShowPage ? `3-Flight Floor: ~$${showFloorUsd.toLocaleString()} (-18%) | Newsletter: ~$2,150` : 'Verified Multi-Quarter Budget'}</div>
+          <div class="kpi-val" style="color:var(--amber-gold); font-size:20px;">${isShowPage ? '$' + showRackUsd.toLocaleString() + '/read' : '$' + page.est_monthly_spend.toLocaleString()}</div>
+          <div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:2px;">${isShowPage ? `3-Flight Floor: ~$${showFloorUsd.toLocaleString()} (-18%)` : 'Verified Multi-Quarter Budget'}</div>
         </div>
-        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline);">
+        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">RACK VS. 3-FLIGHT FLOOR CPM</div>
-          <div class="kpi-val" style="color:var(--emerald-roi);">$${page.avg_cpm} Rack / $${floorCpm} Floor</div>
-          <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">-18% 3-Flight Agency Floor (~$${(floorCpm / 18).toFixed(2)} Implied CPC)</div>
+          <div class="kpi-val" style="color:var(--emerald-roi); font-size:20px;">$${page.avg_cpm} Rack / $${floorCpm} Floor</div>
+          <div class="mono" style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">-18% Agency Floor (~$${(floorCpm / 18).toFixed(2)} CPC)</div>
         </div>
-        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline);">
+        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">VERIFIED REPEAT PLACEMENTS</div>
-          <div class="kpi-val">${placements.length} Verified Rows</div>
-          <div class="mono" style="font-size:13px; color:var(--emerald-roi); margin-top:2px;">${proven3xCount} Renewed 3x+ • Row #1 Unmasked Below</div>
+          <div class="kpi-val" style="font-size:20px;">${placements.length} Verified Rows</div>
+          <div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:2px;">${proven3xCount} Renewed 3x+ • Row #1 Unmasked Below</div>
         </div>
-        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline);">
+        <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">${isShowPage ? 'SHOW BOOKING DESK & CONTACTS' : 'PARTNERSHIP & AGENCY DESK'}</div>
           <div class="kpi-val mono" style="font-size:13.5px; color:var(--emerald-roi);">${escapeHtml(brand ? getAgencyDesk(brand.slug, page.category) : 'Verified Agency & Direct Desk')}</div>
-          <div class="mono" style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">${isShowPage ? `Booking Rep: ${escapeHtml(showBookingEmail)} (99¢ / $1.99)` : `Lead: ${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth')} (${escapeHtml(brand ? maskSponsorEmail(brand.sponsor_email) : '99¢ CSV')})`}</div>
+          <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:2px;">${isShowPage ? `Rep: ${escapeHtml(showBookingEmail)} ($1.99)` : `Lead: ${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth')} ($1.99)`}</div>
         </div>
       </div>
 
-      <!-- In-Page Interactive Show Quote Auditor & ROI/CAC Simulator -->
-      <div id="sr-seo-quote-auditor" class="panel" style="margin-bottom:26px; background:var(--bg-surface); border:1px solid var(--border-strong);">
-        <div class="panel-header" style="background:var(--bg-parchment);">
-          <div>
-            <span class="pill-vermilion">INTERACTIVE RATE-CARD AUDITOR</span>
-            <strong style="margin-left:8px; font-size:15px;">Audit Any Quoted Price vs. Verified 3-Flight Floor &amp; Project Customer CAC / ROAS</strong>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-            <span class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Presets:</span>
-            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(2150, 56500, 'Newsletter Primary Block')">Newsletter Primary ($2,150 / 56.5K opens)</button>
-            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showRackUsd}, ${showReach}, '60s Mid-Roll Rack Quote')">Podcast Mid-Roll Rack ($${showRackUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
-            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showFloorUsd}, ${showReach}, '3-Flight Negotiated Floor')">3-Flight Floor ($${showFloorUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-bottom:14px;">
-            <div>
-              <label for="sr-qa-price" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Quoted Slot Price ($ USD)</label>
-              <input id="sr-qa-price" type="number" class="input-field mono" value="${showRackUsd}" min="250" step="100" oninput="window.__srRunSeoQuoteAudit()" />
-            </div>
-            <div>
-              <label for="sr-qa-reach" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Claimed Reach / Opens</label>
-              <input id="sr-qa-reach" type="number" class="input-field mono" value="${showReach}" min="1000" step="1000" oninput="window.__srRunSeoQuoteAudit()" />
-            </div>
-            <div>
-              <label for="sr-qa-acv" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Your Product ACV / LTV ($)</label>
-              <input id="sr-qa-acv" type="number" class="input-field mono" value="1200" min="50" step="50" oninput="window.__srRunSeoQuoteAudit()" />
-            </div>
-          </div>
-          <div id="sr-unit-econ-strip" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:12px;">
-            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
-              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">QUOTED eCPM VS. VERIFIED FLOOR</div>
-              <div id="sr-qa-cpm-out" class="mono" style="font-size:16px; font-weight:800; color:var(--amber-gold); margin-top:4px;">$${page.avg_cpm}.00 Quoted vs. $${floorCpm}.00 Floor</div>
-              <div id="sr-qa-verdict-out" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-top:4px;">Counter at $${showFloorUsd.toLocaleString()}/slot (-18% 3-Flight Floor) to save $${(showRackUsd - showFloorUsd).toLocaleString()}/read</div>
-            </div>
-            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
-              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">EST. CLICKS &amp; IMPLIED CPC (1.8% CTR)</div>
-              <div id="sr-qa-clicks-out" class="mono" style="font-size:16px; font-weight:800; color:var(--text-primary); margin-top:4px;">${Math.round(showReach * 0.018).toLocaleString()} Clicks (~$${(showFloorUsd / Math.max(1, showReach * 0.018)).toFixed(2)} Floor CPC)</div>
-              <div id="sr-qa-leads-out" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">~${Math.max(1, Math.round(showReach * 0.018 * 0.035))} Trial Signups @ 3.5% Landing Page Conv.</div>
-            </div>
-            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
-              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">PROJECTED CUSTOMERS &amp; LTV:CAC</div>
-              <div id="sr-qa-cac-out" class="mono" style="font-size:16px; font-weight:800; color:var(--emerald-roi); margin-top:4px;">~${Math.max(1, Math.round(showReach * 0.018 * 0.0085))} New Customers • $${Math.round(showFloorUsd / Math.max(1, showReach * 0.018 * 0.0085)).toLocaleString()} Est. CAC</div>
-              <div id="sr-qa-roas-out" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Projected Revenue: $${(Math.max(1, Math.round(showReach * 0.018 * 0.0085)) * 1200).toLocaleString()} (${((Math.max(1, Math.round(showReach * 0.018 * 0.0085)) * 1200) / Math.max(1, showFloorUsd)).toFixed(1)}x Return on Floor)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Verified Placements Table -->
-      <div class="panel" style="margin-bottom:28px;">
+      <!-- 1. Verified Placements Table Immediately Visible in Fold 1 (WhoSponsorsStuff / Paved Pattern) -->
+      <div class="panel" style="margin-bottom:22px;">
         <div class="panel-header">
           <span style="font-weight:800;">Verified Ad-Read Timestamps, Promo Codes &amp; 3x-Renewal Velocity (${placements.length} Placements)</span>
           <a href="/?q=${encodeURIComponent(workbenchQuery)}#radar-tool" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:13px;">
@@ -619,6 +565,55 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
               <tr style="background:#FFFBEB;"><td colspan="7" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">🔒 +87 More Verified Buyer &amp; Agency Desk Rows Locked (95 Locked Verified Rows • 96 Total in CSV) — <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);text-decoration:underline;">Unlock Target Pack ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier',true);return false;}" style="color:var(--emerald-roi);text-decoration:underline;">Unlock All 96 Buyers Vault ($29) →</a></td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- 2. In-Page Interactive Show Quote Auditor & ROI/CAC Simulator (Below Verified Placements Table) -->
+      <div id="sr-seo-quote-auditor" class="panel" style="margin-bottom:26px; background:var(--bg-surface); border:1px solid var(--border-strong);">
+        <div class="panel-header" style="background:var(--bg-parchment);">
+          <div>
+            <span class="pill-vermilion">INTERACTIVE RATE-CARD AUDITOR</span>
+            <strong style="margin-left:8px; font-size:15px;">Audit Any Quoted Price vs. Verified 3-Flight Floor &amp; Project Customer CAC / ROAS</strong>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+            <span class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Presets:</span>
+            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(2150, 56500, 'Newsletter Primary Block')">Newsletter Primary ($2,150 / 56.5K opens)</button>
+            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showRackUsd}, ${showReach}, '60s Mid-Roll Rack Quote')">Podcast Mid-Roll Rack ($${showRackUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
+            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showFloorUsd}, ${showReach}, '3-Flight Negotiated Floor')">3-Flight Floor ($${showFloorUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-bottom:14px;">
+            <div>
+              <label for="sr-qa-price" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Quoted Slot Price ($ USD)</label>
+              <input id="sr-qa-price" type="number" class="input-field mono" value="${showRackUsd}" min="250" step="100" oninput="window.__srRunSeoQuoteAudit()" />
+            </div>
+            <div>
+              <label for="sr-qa-reach" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Claimed Reach / Opens</label>
+              <input id="sr-qa-reach" type="number" class="input-field mono" value="${showReach}" min="1000" step="1000" oninput="window.__srRunSeoQuoteAudit()" />
+            </div>
+            <div>
+              <label for="sr-qa-acv" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Your Product ACV / LTV ($)</label>
+              <input id="sr-qa-acv" type="number" class="input-field mono" value="1200" min="50" step="50" oninput="window.__srRunSeoQuoteAudit()" />
+            </div>
+          </div>
+          <div id="sr-unit-econ-strip" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:12px;">
+            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
+              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">QUOTED eCPM VS. VERIFIED FLOOR</div>
+              <div id="sr-qa-cpm-out" class="mono" style="font-size:16px; font-weight:800; color:var(--amber-gold); margin-top:4px;">$${page.avg_cpm}.00 Quoted vs. $${floorCpm}.00 Floor</div>
+              <div id="sr-qa-verdict-out" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-top:4px;">Counter at $${showFloorUsd.toLocaleString()}/slot (-18% 3-Flight Floor) to save $${(showRackUsd - showFloorUsd).toLocaleString()}/read</div>
+            </div>
+            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
+              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">EST. CLICKS &amp; IMPLIED CPC (1.8% CTR)</div>
+              <div id="sr-qa-clicks-out" class="mono" style="font-size:16px; font-weight:800; color:var(--text-primary); margin-top:4px;">${Math.round(showReach * 0.018).toLocaleString()} Clicks (~$${(showFloorUsd / Math.max(1, showReach * 0.018)).toFixed(2)} Floor CPC)</div>
+              <div id="sr-qa-leads-out" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">~${Math.max(1, Math.round(showReach * 0.018 * 0.035))} Trial Signups @ 3.5% Landing Page Conv.</div>
+            </div>
+            <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
+              <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">PROJECTED CUSTOMERS &amp; LTV:CAC</div>
+              <div id="sr-qa-cac-out" class="mono" style="font-size:16px; font-weight:800; color:var(--emerald-roi); margin-top:4px;">~${Math.max(1, Math.round(showReach * 0.018 * 0.0085))} New Customers • $${Math.round(showFloorUsd / Math.max(1, showReach * 0.018 * 0.0085)).toLocaleString()} Est. CAC</div>
+              <div id="sr-qa-roas-out" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Projected Revenue: $${(Math.max(1, Math.round(showReach * 0.018 * 0.0085)) * 1200).toLocaleString()} (${((Math.max(1, Math.round(showReach * 0.018 * 0.0085)) * 1200) / Math.max(1, showFloorUsd)).toFixed(1)}x Return on Floor)</div>
+            </div>
+          </div>
         </div>
       </div>
 
