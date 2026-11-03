@@ -562,10 +562,19 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 </tr>
               `;
               }).join('')}
-              <tr style="background:#FFFBEB;"><td colspan="7" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">🔒 +87 More Verified Buyer &amp; Agency Desk Rows Locked (95 Locked Verified Rows • 96 Total in CSV) — <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);text-decoration:underline;">Unlock Target Pack ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier',true);return false;}" style="color:var(--emerald-roi);text-decoration:underline;">Unlock All 96 Buyers Vault ($29) →</a></td></tr>
+              <tr id="sr-locked-95-summary-row" style="background:#FFFBEB;"><td colspan="7" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">🔒 +87 More Verified Buyer &amp; Agency Desk Rows Locked (95 Locked Verified Rows • 96 Total in CSV) — <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);text-decoration:underline;">Unlock Target Pack ($1.99) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier',true);return false;}" style="color:var(--emerald-roi);text-decoration:underline;">Unlock All 96 Buyers Vault ($29) →</a></td></tr>
             </tbody>
           </table>
         </div>
+        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'seo_sweetspot_submit');this.querySelector('#btn-sweetspot-reveal-row4').textContent='✓ Row #4 Unmasked Above!';}return false;" style="padding:10px 14px; border-top:1px solid var(--emerald-border); background:var(--emerald-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700; white-space:nowrap;">✦ Unmask Row #4 Free (Enter Email) or Unlock All 95 Locked Rows:</span>
+          <div style="display:flex; gap:6px; flex-wrap:nowrap; flex:1; min-width:480px; justify-content:flex-end; align-items:center;">
+            <input id="sr-bridge-email" type="email" placeholder="you@work-email.com (unmasks Row #4)" aria-label="Work email to unmask Row 4 free and pre-fill Stripe receipt" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'seo_sweetspot_blur')" style="flex:1; min-width:165px; max-width:230px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13px;" />
+            <button id="btn-sweetspot-reveal-row4" type="submit" class="btn btn-ghost" style="padding:6px 10px; min-height:34px; font-size:12px; font-weight:800; border:1px solid var(--emerald-roi); color:var(--emerald-roi); background:#FFFFFF; white-space:nowrap;">Unmask Row #4 Free</button>
+            <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'seo_sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:6px 10px; min-height:34px; font-size:12px; white-space:nowrap;">Target 3-File Pack ($1.99) ↗</button>
+            <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'seo_sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 10px; min-height:34px; font-size:12px; white-space:nowrap;">All 96 Vault ($29) ↗</button>
+          </div>
+        </form>
       </div>
 
       <!-- 2. In-Page Interactive Show Quote Auditor & ROI/CAC Simulator (Below Verified Placements Table) -->
@@ -748,14 +757,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           </div>
         </div>
 
-        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'seo_sweetspot_submit');if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);return false;" style="margin-top:10px; padding:12px 16px; border-radius:12px; background:var(--emerald-soft); border:1px solid var(--emerald-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">✦ 96 verified buyers • Save $2,400 overpay — Unmask all 95 locked rows &amp; download 3 files instantly:</span>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; flex:1; max-width:640px; justify-content:flex-end;">
-            <input id="sr-bridge-email" type="email" placeholder="you@work-email.com (optional receipt pre-fill)" aria-label="Work email for Stripe receipt" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'seo_sweetspot_blur')" style="flex:1; min-width:175px; padding:7px 12px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13.5px;" />
-            <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'seo_sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:7px 13px; min-height:36px; font-size:13px;">Target 3-File Pack ($1.99) ↗</button>
-            <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'seo_sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:7px 13px; min-height:36px; font-size:13px;">All 96 Buyers Vault ($29) ↗</button>
-          </div>
-        </form>
         <div id="sr-click-trigger-assurance" class="mono" style="margin-top:6px; font-size:11.5px; color:var(--text-secondary); display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; padding:0 4px;">
           <span>🔒 <strong>1-Click Checkout:</strong> Opens official Stripe Checkout (Apple Pay / Card) → Instant in-browser unmask + .CSV/.EML download in 4s</span>
           <span style="color:var(--emerald-roi); font-weight:700;">✓ Zero Account/Password Required • One-Time Charge • 30-Day Zero-Bounce Refund</span>

@@ -339,7 +339,11 @@ function buildSeoPages() {
     { slug: 'sub-25k-niche-podcast-and-newsletter-sponsors-2026', title: 'Sponsors That Buy Sub-25K Niche B2B Podcasts & Newsletters ($950–$2,400 Pilot Ledger)', category: 'Sub-25K Niche Creators', filter_vertical: 'B2B SaaS', avg_cpm: 48, est_monthly_spend: 1640000 },
     { slug: 'podcast-sponsorship-agency-buying-desks-directory', title: 'Podcast & Newsletter Media Buying Agencies Directory (Right Side Up, Oxford Road, Veritone)', category: 'Agency Buying Desks', filter_vertical: 'Strategy', avg_cpm: 54, est_monthly_spend: 6200000 },
     { slug: 'iab-podcast-insertion-order-make-good-clause-template', title: 'IAB Podcast & Newsletter Insertion Order (IO) 3-Flight Floor & 1.5% CTR Make-Good Rider', category: 'Media Buying Contracts', filter_vertical: 'B2B Fintech', avg_cpm: 52, est_monthly_spend: 3400000 },
-    { slug: 'b2b-newsletter-sponsorship-rate-card-and-cpm-calculator', title: '2026 B2B Newsletter Sponsorship Rate Card, Primary Block Pricing & Effective CPC Benchmarks', category: 'Newsletter Rate Cards', filter_vertical: 'Newsletter', avg_cpm: 58, est_monthly_spend: 4100000 }
+    { slug: 'b2b-newsletter-sponsorship-rate-card-and-cpm-calculator', title: '2026 B2B Newsletter Sponsorship Rate Card, Primary Block Pricing & Effective CPC Benchmarks', category: 'Newsletter Rate Cards', filter_vertical: 'Newsletter', avg_cpm: 58, est_monthly_spend: 4100000 },
+    { slug: 'fireship-youtube-sponsors-and-cpm-rates', title: 'Fireship YouTube Sponsorship Rates, 60-Second Integration CPM & 3x Renewed DevTools Sponsors', category: 'DevTools YouTube', filter_vertical: 'YouTube', avg_cpm: 64, est_monthly_spend: 3150000 },
+    { slug: 'tldr-ai-newsletter-sponsors-and-cpm-rates', title: 'TLDR AI & Tech Newsletter Sponsorship Rates, Primary Ad Block CPM & Repeat B2B Sponsors', category: 'AI Newsletters', filter_vertical: 'Newsletter', avg_cpm: 62, est_monthly_spend: 4850000 },
+    { slug: 'bens-bites-ai-newsletter-sponsors-and-cpm-rates', title: "Ben's Bites AI Newsletter Sponsorship Cost, Effective CPC & 3x+ Renewed AI Tool Sponsors", category: 'AI Newsletters', filter_vertical: 'AI', avg_cpm: 59, est_monthly_spend: 2620000 },
+    { slug: 'syntax-fm-podcast-sponsors-and-cpm-rates', title: 'Syntax.fm Web Development Podcast Sponsors, Host-Read Mid-Roll Rates & 3-Flight Floor CPM', category: 'Developer Podcasts', filter_vertical: 'Engineering', avg_cpm: 56, est_monthly_spend: 2290000 }
   ];
 
   for (const d of directoryPages) {
