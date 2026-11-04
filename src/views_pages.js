@@ -124,7 +124,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">1. High-Intent Niche &amp; Category CPM Benchmark Directories (${nichePages.length} Reports)</span>
           <span class="pill-emerald">3x+ RENEWED CATEGORY RANKINGS</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${nichePages.map(p => {
             const floorCpm = Math.round(p.avg_cpm * 0.82);
             const isB2b = /B2B|SaaS|DevTools|AI|Fintech|Security|Tech/i.test(p.category + ' ' + p.title);
@@ -156,7 +156,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">2. Brand Sponsorship Spend, Buyer Contacts &amp; 3x-Renewal Ledgers (${brandPages.length} Reports)</span>
           <span class="pill-amber">FOR COMPETITOR BUYERS &amp; CREATORS</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${brandPages.map(p => {
             const b = brandBySlug.get(p.target_slug) || {};
             const vertical = b.vertical || (/B2B|SaaS|DevTools|Fintech|Security/i.test(p.category) ? 'B2B SaaS' : 'DTC Consumer');
@@ -191,7 +191,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">3. Creator Show Media-Kits, Rack vs. Floor Rates &amp; CPM Benchmarks (${showPages.length} Reports)</span>
           <span class="pill-slate">FOR AD BUYERS &amp; RATE AUDITING</span>
         </div>
-        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px;">
+        <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${showPages.map(p => {
             const s = showBySlug.get(p.target_slug) || {};
             const rackUsd = s.midroll_rate_usd || 8500;

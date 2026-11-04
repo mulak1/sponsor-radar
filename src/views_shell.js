@@ -602,18 +602,26 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       #master-ledger-table th:nth-child(5), #master-ledger-table td:nth-child(5) { display: none; }
     }
     @media (max-width: 768px) {
+      .container { padding: 0 16px; }
+      .panel, .pitch-box { padding: 16px !important; }
       .hero-steps-grid { grid-template-columns: 1fr; }
-      .nav-inner { gap: 10px; padding: 10px 24px; flex-wrap: wrap; }
+      .nav-inner { gap: 10px; padding: 10px 16px; flex-wrap: wrap; }
       .nav-links {
         width: 100%;
         order: 3;
         justify-content: flex-start;
-        gap: 14px;
+        gap: 12px;
         font-size: 14px;
         padding: 6px 0 0 0;
-        overflow-x: auto;
+        flex-wrap: wrap;
+        overflow-x: hidden;
       }
       .nav-cta-secondary { display: none; }
+      .btn, .btn span, a.btn { white-space: normal !important; max-width: 100% !important; min-width: 0 !important; flex-wrap: wrap; text-align: center; height: auto; }
+      table.ledger-table, .table-wrap table, #competitor-battlecard table, table.ledger-table tbody, .table-wrap tbody, #competitor-battlecard tbody, table.ledger-table tr, .table-wrap tr, #competitor-battlecard tr, table.ledger-table td, .table-wrap td, #competitor-battlecard td { display: block !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; white-space: normal !important; word-break: break-word !important; box-sizing: border-box !important; }
+      table.ledger-table thead, .table-wrap thead, #competitor-battlecard thead { display: none !important; }
+      table.ledger-table tr, .table-wrap tr, #competitor-battlecard tr { padding: 8px 0 !important; border-bottom: 1px solid rgba(128,128,128,0.2) !important; }
+      table.ledger-table td, .table-wrap td, #competitor-battlecard td { padding: 4px 8px !important; border: none !important; }
     }
   </style>
 </head>
@@ -663,7 +671,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       <div style="font-size:16px; color:var(--text-secondary);">
         <strong style="color:var(--text-primary);">Editorial Privacy &amp; Attribution Control:</strong> We use first-party UTM &amp; Meta CAPI deduplication cookies only after consent. Read our <a href="/privacy" style="text-decoration:underline; color:var(--vermilion);">Privacy Policy</a>.
       </div>
-      <div style="display:flex; gap:8px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button type="button" class="btn btn-ghost" style="padding:7px 14px; min-height:38px; font-size:14px;" onclick="setCookieConsent('rejected')">Reject Non-Essential</button>
         <button type="button" class="btn btn-vermilion" style="padding:7px 14px; min-height:38px; font-size:14px;" onclick="setCookieConsent('accepted')">Accept Attribution</button>
       </div>
