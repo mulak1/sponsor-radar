@@ -189,6 +189,7 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
     </details>
   </div>
   <div id="eb-sovrn-affiliate-strip" class="eb-panel-card"><h3 style="margin:0 0 10px 0;font-size:18px;font-family:${t.fontDisplay};font-weight:600;color:${t.textPrimary};">Recommended Companion Tools &amp; Products</h3><div class="eb-gbb-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">${affiliatesHtml}</div></div>
+  <div id="eb-ecosystem-handoff-banner" class="eb-panel-card" style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:14px;color:${t.textSecondary};"><span><strong>Scaling B2B &amp; SaaS growth?</strong> Audit your Stripe &amp; Shopify checkout recovery and failed-card dunning free:</span><a id="eb-ecosystem-handoff-link" href="https://abandonalpha.io/?utm_source=sponsorradar&amp;utm_medium=ecosystem_handoff" target="_blank" rel="noopener" style="color:${t.brandPrimary};font-weight:700;text-decoration:underline;">Open AbandonAlpha Checkout Recovery Grader &rarr;</a></div>
   ${buildMobileSeoCrawlMeshHtml(cfg, reqPath)}
 </section>
 
