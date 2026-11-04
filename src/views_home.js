@@ -884,14 +884,22 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     window.addEventListener('DOMContentLoaded', function() {
       try {
         var ws = window.__srGetWorkspace ? window.__srGetWorkspace() : {}, sp = new URLSearchParams(window.location.search || '');
-        var hasUrlQuery = Boolean(sp.get('q') || sp.get('brand') || sp.get('show'));
+        var urlQuery = (sp.get('q') || sp.get('brand') || sp.get('show') || '').trim();
+        var hasUrlQuery = Boolean(urlQuery);
         var qEl = document.getElementById('lookup-query'), rEl = document.getElementById('sender-reach');
         var qaP = document.getElementById('sr-home-qa-price'), qaR = document.getElementById('sr-home-qa-reach'), mbS = document.getElementById('sr-moneyball-slider');
         if (ws.qaPrice && qaP) qaP.value = ws.qaPrice; if (ws.qaReach && qaR) qaR.value = ws.qaReach;
         if (ws.budget && mbS) { mbS.value = ws.budget; if (window.__srUpdateMoneyball) window.__srUpdateMoneyball(ws.budget, null, true); }
         var initWedge = sp.get('wedge') || ws.buyer_wedge || ws.persona;
         if (initWedge === 'buyer' || initWedge === 'creator') window.__srSwitchPersona(initWedge, 'init');
-        if (!hasUrlQuery && ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona, false); }
+        if (hasUrlQuery) {
+          if (qEl) qEl.value = urlQuery;
+          if (window.__srSaveWorkspace) window.__srSaveWorkspace({ query: urlQuery });
+          var s2 = document.getElementById('sr-step2-panel'), pill2 = document.getElementById('res-live-readout-pill');
+          if (pill2) { pill2.textContent = '✓ LOADED: ' + urlQuery.toUpperCase().slice(0, 26) + ' • UNMASK FREE SAMPLE ($0) ↓'; pill2.style.background = 'var(--emerald-roi)'; pill2.style.color = '#FFF'; }
+          if (s2) s2.style.boxShadow = '0 0 0 3px var(--emerald-roi), 0 14px 32px rgba(13,107,75,0.18)';
+          if (window.scrollY < 100 && !window.location.hash) { setTimeout(function() { var rt = document.getElementById('radar-tool'); if (rt && rt.scrollIntoView) rt.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 180); }
+        } else if (ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona, false); }
         else if (ws.reach && rEl && String(ws.reach) !== String(rEl.value)) { rEl.value = ws.reach; }
         if (window.__srRenderComparisonMatrix) window.__srRenderComparisonMatrix();
       } catch (err) { console.warn('[sr:init]', err); }
