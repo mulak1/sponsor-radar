@@ -308,9 +308,19 @@ function buildClientRuntimeScript(cfg) {
   window.__ebLogEvent = function(eventType, meta) {
     try {
       var m = Object.assign({ vid: window.__ebVid, sid: window.__ebSid, js_hydrated: 1, buyer_wedge: window.__ebGetBuyerWedge() }, meta || {});
-      fetch('/api/telemetry/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: m }) }).catch(function(){});
+      var payload = JSON.stringify({ event_type: eventType, page_url: window.location.pathname, meta: m });
+      if (eventType === 'visit_hydrated' && navigator.sendBeacon) {
+        try { navigator.sendBeacon('/api/telemetry/event', new Blob([payload], { type: 'application/json' })); return; } catch (_) {}
+      }
+      fetch('/api/telemetry/event', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: payload }).catch(function(){});
     } catch (_) {}
   };
+  try {
+    if (!window.__ebHydrationLogged) {
+      window.__ebHydrationLogged = true;
+      window.__ebLogEvent('visit_hydrated', { ua_platform: navigator.platform || '', vw: window.innerWidth || 0 });
+    }
+  } catch (_) {}
 
   window.__ebSaveBundleFile = function() {
     try {

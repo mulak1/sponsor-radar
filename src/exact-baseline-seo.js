@@ -847,25 +847,27 @@ function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   if (isDerm) {
     try { const sh = require(path.join(__dirname, 'seo-hubs.js')); if (typeof sh.getAllSemanticHubUrls === 'function') semanticItems = sh.getAllSemanticHubUrls('').map((u) => ({ href: u.loc, title: u.title, cat: 'semantic-hub' })); } catch (_) {}
   }
+  const isFullDirectory = reqPath === '/directory' || reqPath === '/seo';
   const growthItems = [
     ...gCfg.tools.map((x) => ({ href: `/tools/${x.slug}`, title: x.title, cat: 'interactive-tool' })),
     ...gCfg.comparisons.map((x) => ({ href: `/compare/${x.slug}`, title: x.title, cat: 'comparison' })),
     ...scanItems,
-    ...semanticItems,
-    ...entries.map((item) => ({ href: `/seo/${item.slug}`, title: item.title, cat: item.category || 'guide' }))
+    ...(isFullDirectory ? semanticItems : semanticItems.slice(0, 24)),
+    ...(isFullDirectory ? entries : entries.slice(0, 36)).map((item) => ({ href: `/seo/${item.slug}`, title: item.title, cat: item.category || 'guide' }))
   ];
   const pillsHtml = growthItems.map((item) => {
     const active = reqPath === item.href;
-    return `<a href="${escHtml(item.href)}" class="eb-mesh-link" data-mesh-text="${escHtml((item.title + ' ' + item.cat).toLowerCase())}" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:${t.radiusPill};background:${active ? t.brandSoftBg : '#FFFFFF'};color:${active ? t.brandPrimary : t.textPrimary};font-size:16px;font-weight:${active ? '700' : '500'};text-decoration:none;line-height:1.45;"><span>${escHtml(item.title)}</span></a>`;
+    return `<a href="${escHtml(item.href)}" class="eb-mesh-link${active ? ' eb-mesh-active' : ''}" data-mesh-text="${escHtml((item.title + ' ' + item.cat).toLowerCase())}">${escHtml(item.title)}</a>`;
   }).join('');
 
-  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete ${growthItems.length}-Page Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};">
+  return `<nav id="eb-seo-crawl-mesh" aria-label="${escHtml(cfg.brandName)} Complete Programmatic Benchmark &amp; AI Indexing Mesh" style="margin-top:16px;padding:18px;border-radius:${t.radiusCard};background:${t.subtleBg};">
+    <style>#eb-seo-crawl-mesh .eb-mesh-link{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};font-size:15px;font-weight:500;text-decoration:none;line-height:1.45;}#eb-seo-crawl-mesh .eb-mesh-active{background:${t.brandSoftBg};color:${t.brandPrimary};font-weight:700;}</style>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
       <div>
-        <div style="font-size:16px;font-weight:700;color:${t.brandPrimary};">${isDerm ? `Complete Skincare Layering &amp; Routine Guide Directory (${growthItems.length} Guides)` : `Complete ${growthItems.length}-Benchmark Knowledge Graph &amp; AI Crawl Mesh`}</div>
-        <div style="font-size:16px;color:${t.textSecondary};">1-click access to all ${growthItems.length} verified guides, interactive tools, comparisons, <a href="/leaderboard" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">${isDerm ? 'Routine Leaderboard' : 'Public Leaderboard'}</a>, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
+        <div style="font-size:16px;font-weight:700;color:${t.brandPrimary};">${isDerm ? `Complete Skincare Layering &amp; Routine Guide Directory` : `Complete Benchmark Knowledge Graph &amp; AI Crawl Mesh`}</div>
+        <div style="font-size:16px;color:${t.textSecondary};">1-click access to verified guides (<a href="/directory" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">Browse All ${entries.length + semanticItems.length}+ Guides</a>), interactive tools, comparisons, <a href="/leaderboard" style="color:${t.brandPrimary};text-decoration:underline;font-weight:700;">${isDerm ? 'Routine Leaderboard' : 'Public Leaderboard'}</a>, <a href="/llms.txt" style="color:${t.brandPrimary};text-decoration:underline;">AI Summary Index</a>, <a href="/llms-full.txt" style="color:${t.brandPrimary};text-decoration:underline;">Full Knowledge Corpus</a>, and <a href="/sitemap-index.xml" style="color:${t.brandPrimary};text-decoration:underline;">XML Sitemap Index</a>.</div>
       </div>
-      <input type="search" id="eb-mesh-filter-input" aria-label="Filter ${growthItems.length} benchmark guides" placeholder="${isDerm ? 'Search routine guides...' : `Filter ${growthItems.length} guides...`}" oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:7px 14px;border-radius:${t.radiusCard};background:#FFFFFF;color:${t.textPrimary};font-size:15px;min-width:250px;border:none;" />
+      <input type="search" id="eb-mesh-filter-input" aria-label="Filter benchmark guides" placeholder="${isDerm ? 'Search routine guides...' : `Filter guides...`}" oninput="(function(v){var q=v.toLowerCase();var a=document.querySelectorAll('#eb-seo-crawl-mesh .eb-mesh-link');for(var i=0;i<a.length;i++){a[i].style.display=(!q||a[i].getAttribute('data-mesh-text').indexOf(q)!==-1)?'inline-flex':'none';}})(this.value)" style="padding:7px 14px;border-radius:${t.radiusCard};background:#FFFFFF;color:${t.textPrimary};font-size:15px;min-width:250px;border:none;" />
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:220px;overflow-y:auto;padding:2px;">${pillsHtml}</div>
   </nav>`;
