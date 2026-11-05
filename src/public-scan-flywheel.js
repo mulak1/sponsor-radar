@@ -307,6 +307,14 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
   <meta property="og:image" content="https://${esc(cfg.domain)}/api/og/scorecard?target=${esc(encodeURIComponent(scan.target))}" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    pre, code { white-space: pre-wrap !important; word-break: break-word !important; overflow-wrap: anywhere !important; max-width: 100% !important; box-sizing: border-box !important; }
+    @media (max-width: 768px) {
+      #main-content { padding: 12px 14px 28px !important; }
+      #main-content button, #main-content a, .sr-locked-spec-badge { white-space: normal !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; height: auto !important; }
+      #eb-scan-step1-email, #eb-scan-row4-email, #eb-cnn-wb-input { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+    }
+  </style>
 </head>
 <body style="margin:0;background:${esc(t.canvasBg)};color:${esc(t.textPrimary)};font-family:${esc(t.fontSans || 'Plus Jakarta Sans,-apple-system,BlinkMacSystemFont,sans-serif')};font-size:16px;line-height:1.6;">
   ${renderFlywheelHeaderHtml(cfg, `VERIFIED REPORT • GRADE ${scan.grade}`, '/scan')}
@@ -403,18 +411,22 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       </div>
       <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="padding:10px 14px;border-radius:10px;background:#ECFDF5;border:1px solid #A7F3D0;font-size:12.5px;color:#0F172A;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
-          <strong style="color:#047857;">✦ ROW #1 SPECIMEN PLACEMENT PROOF (1 OF 109 — 108 LOCKED BELOW)</strong>
+          <strong style="color:#047857;">✦ ROW #1 SPECIMEN PLACEMENT PROOF (UNMASKED FREE — 1 OF 109)</strong>
           <span style="padding:2px 8px;border-radius:999px;background:#047857;color:#FFFFFF;font-size:11px;font-weight:800;">Renewed on Peer Shows (Last 30 Days)</span>
         </div>
-        <div>Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny's Podcast</strong> • Named Buyer: <strong style="color:#047857;" data-free-credit-unmasked="sarah.kaufman@shopify.com">s***.k***@shopify.com</strong> • Agency Desk: <strong style="color:#B45309;" data-free-credit-unmasked="m.vance@rightsideup.co">m.v***@rightsideup.co</strong> (Right Side Up Podcast Desk) • <code>IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)</code></div>
+        <div style="margin-bottom:6px;word-break:break-word;">Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny's Podcast</strong> • Named Buyer (Specimen #1 Unmasked): <strong style="color:#047857;">sarah.kaufman@shopify.com</strong> • Agency Desk: <strong style="color:#B45309;">m.vance@rightsideup.co</strong> (Right Side Up Podcast Desk) • <code style="white-space:normal;word-break:break-word;">IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)</code></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+          <button type="button" class="sr-locked-spec-badge" data-free-credit-unmasked="✓ Free Credit #1 Unmasked: d.koren@deel.com (+ r.chen@rightsideup.co)" onclick="var e=document.getElementById('eb-scan-row4-email')||document.getElementById('eb-scan-step1-email');if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.focus();}" style="cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid #047857;background:#FFFFFF;color:#047857;font-size:12px;font-weight:700;filter:none;max-width:100%;white-space:normal;text-align:left;">🔒 Verified Buyer Email Hidden (1 of 3 Free Credits) — Tap to Reveal ($0) ↑</button>
+          <a href="/buy/creator_pass?target=${esc(encodeURIComponent(scan.target))}" class="sr-locked-spec-badge" rel="nofollow" style="padding:4px 10px;border-radius:999px;border:1px solid #F59E0B;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;max-width:100%;white-space:normal;text-align:left;">🔒 Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a>
+        </div>
       </div>
-      <div id="sr-raw-csv-proof-box" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;font-size:12px;">
+      <div id="sr-raw-csv-proof-box" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;font-size:12px;max-width:100%;box-sizing:border-box;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
           <strong style="color:#047857;">🔍 PEEK INSIDE THE ACTUAL DOWNLOAD (109 VERIFIED BUYER &amp; AGENCY DESK ROWS .CSV — NOT GENERIC INFO@)</strong>
           <span style="color:#475569;">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">Preview IAB IO Redline Rider (.TXT) ↗</a></span>
         </div>
-        <div style="font-family:monospace;padding:6px 10px;border-radius:6px;background:#FFFFFF;border:1px solid #E2E8F0;color:#0F172A;overflow-x:auto;white-space:nowrap;font-size:11.5px;">
-          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong style="color:#047857;" data-free-credit-unmasked="sarah.kaufman@shopify.com">s***.k***@shopify.com</strong>,<strong style="color:#B45309;" data-free-credit-unmasked="m.vance@rightsideup.co">m.v***@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"IO §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)"
+        <div style="font-family:monospace;padding:6px 10px;border-radius:6px;background:#FFFFFF;border:1px solid #E2E8F0;color:#0F172A;overflow-x:hidden;white-space:normal;word-break:break-all;font-size:11.5px;max-width:100%;box-sizing:border-box;">
+          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong style="color:#047857;">sarah.kaufman@shopify.com</strong>,<strong style="color:#B45309;">m.vance@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"IO §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)"
         </div>
       </div>
       <div id="sr-click-trigger-assurance" style="font-size:11.5px;color:#475569;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
