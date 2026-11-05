@@ -41,22 +41,22 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       </div>` : '';
 
   const bodyHtml = `
-  <section class="hero-section" id="radar-tool" style="padding:14px 0 32px;">
+  <section class="hero-section" id="radar-tool" style="padding:8px 0 24px;">
     <div class="container">
       ${pubBannerHtml}
-      <div id="home-executive-brief" style="width:100%; margin-bottom:10px;">
+      <div id="home-executive-brief" style="width:100%; margin-bottom:6px;">
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-            <div id="sr-buyer-wedge-toggle" role="tablist" aria-label="1-Tap Buyer Wedge Toggle" style="display:inline-flex; gap:4px; flex-wrap:wrap; align-items:center; padding:3px 6px; border-radius:999px; background:var(--bg-parchment); border:1px solid var(--border-strong);">
-              <button type="button" id="hero-role-creator" data-wedge="creator" aria-selected="true" onclick="window.__srSwitchPersona('creator', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:999px; border:none; background:var(--emerald-soft); color:var(--emerald-roi); font-size:12.5px; font-weight:800; cursor:pointer; white-space:nowrap;"><span>🎙️ I want sponsors</span></button>
-              <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-selected="false" onclick="window.__srSwitchPersona('buyer', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:999px; border:none; background:var(--bg-surface); color:var(--text-secondary); font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;"><span>📊 I&apos;m buying ads &amp; auditing CPMs</span></button>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
+            <div id="sr-buyer-wedge-toggle" role="tablist" aria-label="1-Tap Buyer Wedge Toggle" style="display:inline-flex; gap:4px; flex-wrap:wrap; align-items:center; padding:2px 5px; border-radius:999px; background:var(--bg-parchment); border:1px solid var(--border-strong);">
+              <button type="button" id="hero-role-creator" data-wedge="creator" aria-selected="true" onclick="window.__srSwitchPersona('creator', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; border:none; background:var(--emerald-soft); color:var(--emerald-roi); font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;"><span>🎙️ I want sponsors</span></button>
+              <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-selected="false" onclick="window.__srSwitchPersona('buyer', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; border:none; background:var(--bg-surface); color:var(--text-secondary); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;"><span>📊 I&apos;m buying ads &amp; auditing CPMs</span></button>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-              <span id="sr-logical-need-chip" class="pill-emerald" style="font-size:12.5px; font-weight:800;">✓ 109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</span>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+              <span id="sr-logical-need-chip" class="pill-emerald" style="font-size:11.5px; font-weight:800; padding:3px 8px;">✓ 109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</span>
               <span id="sr-vc-data-moat-chip" style="display:none;">181 Deals Audited</span>
             </div>
           </div>
-          <h1 class="headline-xl" id="sr-emotional-want-hook" style="font-size:clamp(24px, 3vw, 38px); line-height:1.12; margin:0 0 8px 0;">Pitch the buyer, <span style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
+          <h1 class="headline-xl" id="sr-emotional-want-hook" style="font-size:clamp(21px, 2.6vw, 32px); line-height:1.12; margin:0 0 4px 0;">Pitch the buyer, <span style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
         </div>
         <div id="sr-live-deal-card-row1" class="hero-steps-grid" data-active-wedge="creator" style="display:none !important;">
           <div id="sr-row1-col1"><span id="sr-row1-peer-30d-badge">Row #1 Proof</span><strong id="sr-row1-proof-entity">${escapeHtml(displayEntity.name)}</strong><span id="sr-row1-proof-buyer">${escapeHtml(row1BuyerMasked)}</span><span id="sr-row1-proof-agency"></span><span id="sr-row1-proof-booking"></span><span id="sr-row1-col1-lbl"></span></div>
@@ -66,54 +66,75 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         <div id="eb-hero-visual-mount" style="display:none;"></div>
       </div>
 
-      <div class="hero-grid" style="align-items:stretch; gap:20px;">
-        <!-- LEFT CARD: STEP 1 OF 3 (SEARCH ANY BRAND OR SHOW) -->
-        <div class="double-bezel" style="display:flex; flex-direction:column; height:100%;">
+      <div class="hero-grid" style="align-items:stretch; gap:14px;">
+        <!-- LEFT CARD: STEP 1 OF 3 (SEARCH ANY BRAND OR SHOW + 1-ROW UNBLURRED SPONSOR PROOF + INLINE $0 EMAIL GATE) -->
+        <div class="double-bezel" style="display:flex; flex-direction:column; height:100%; padding:4px;">
           <div class="panel" id="sr-step1-panel" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; height:100%;">
-            <div class="panel-header" style="padding-bottom:10px; margin-bottom:10px;">
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span class="mono" style="padding:3px 9px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap;">STEP 1</span>
-                <span id="sr-step1-title" style="font-weight:800; font-size:15.5px; color:var(--text-primary);">Search Any Brand, Podcast, or Newsletter</span>
+            <div class="panel-header" style="padding:8px 14px; margin-bottom:0;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="mono" style="padding:2px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:11.5px; font-weight:800; white-space:nowrap;">STEP 1</span>
+                <span id="sr-step1-title" style="font-weight:800; font-size:14.5px; color:var(--text-primary);">Search Any Brand, Podcast, or Newsletter</span>
               </div>
-              <span class="pill-emerald" id="res-match-pill">${defaultAnalysis.matched_type === 'show' ? 'Show Rate Card' : 'Verified 3x+ Ledger'}</span>
+              <span class="pill-emerald" id="res-match-pill" style="font-size:11.5px; padding:2px 8px;">${defaultAnalysis.matched_type === 'show' ? 'Show Rate Card' : 'Verified 3x+ Ledger'}</span>
             </div>
-            <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:12px;">
-              <div id="mode-lookup-pane" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:12px;">
-                <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
-                  <div style="flex:1; min-width:200px;">
-                    <label id="sr-lookup-label" for="lookup-query" class="mono" style="font-size:13.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Brand or Show Name</label>
-                    <input id="lookup-query" type="text" class="input-field" value="${escapeHtml(initialQuery)}" required placeholder="e.g. Shopify, AG1, Huberman Lab, Lenny's Podcast..." onkeydown="if(event.key==='Enter'){event.preventDefault();runBrandLookup(null, true);}" />
+            <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:8px; padding:10px 14px;">
+              <div id="mode-lookup-pane" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:8px;">
+                <div style="display:flex; gap:8px; align-items:flex-end; flex-wrap:nowrap;">
+                  <div style="flex:1; min-width:0;">
+                    <label id="sr-lookup-label" for="lookup-query" class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:2px;">Brand or Show Name</label>
+                    <input id="lookup-query" type="text" class="input-field" value="${escapeHtml(initialQuery)}" required placeholder="e.g. Shopify, AG1, Huberman Lab..." style="min-height:38px; padding:6px 10px; font-size:14.5px;" onkeydown="if(event.key==='Enter'){event.preventDefault();runBrandLookup(null, true);}" />
                   </div>
-                  <button type="button" id="btn-run-lookup" class="btn btn-vermilion" onclick="runBrandLookup(null, true)"><span>Audit Rates</span><span class="btn-icon-circle" aria-hidden="true">↗</span></button>
+                  <button type="button" id="btn-run-lookup" class="btn btn-vermilion" style="min-height:38px; padding:6px 12px; font-size:13.5px; flex-shrink:0;" onclick="runBrandLookup(null, true)"><span>Audit Rates</span><span class="btn-icon-circle" aria-hidden="true">↗</span></button>
                 </div>
-                <div id="lookup-error-msg" class="mono" style="display:none; color:#B9311C; font-size:14px; margin-top:4px;"></div>
-                <div id="sr-step1-next-cue" onclick="var s2=document.getElementById('sr-step2-panel');if(s2&&s2.scrollIntoView)s2.scrollIntoView({behavior:'smooth',block:'nearest'});" style="display:none; cursor:pointer; padding:8px 12px; border-radius:8px; background:var(--emerald-soft); border:1px solid var(--emerald-roi); font-size:13.5px; font-weight:700; color:var(--emerald-roi); align-items:center; justify-content:space-between; gap:8px;">
+                <div id="lookup-error-msg" class="mono" style="display:none; color:#B9311C; font-size:13px; margin-top:2px;"></div>
+                <div id="sr-step1-next-cue" onclick="var s2=document.getElementById('sr-step2-panel');if(s2&&s2.scrollIntoView)s2.scrollIntoView({behavior:'smooth',block:'nearest'});" style="display:none; cursor:pointer; padding:6px 10px; border-radius:8px; background:var(--emerald-soft); border:1px solid var(--emerald-roi); font-size:12.5px; font-weight:700; color:var(--emerald-roi); align-items:center; justify-content:space-between; gap:6px;">
                   <span id="sr-step1-next-cue-text">✓ Audit Ready → See Spend &amp; -18% Floor in Step 2</span>
-                  <span class="mono" style="font-size:12.5px; text-decoration:underline; white-space:nowrap;">Step 2 &rarr;</span>
+                  <span class="mono" style="font-size:12px; text-decoration:underline; white-space:nowrap;">Step 2 &rarr;</span>
                 </div>
 
-                <div class="preset-row" aria-label="1-Click Brand & Show Presets" style="margin-top:0;">
-                  <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-muted); align-self:center;">Quick Try:</span>
-                  <button type="button" class="preset-chip brand-preset-chip" data-q="Shopify" onclick="selectBrandPreset('Shopify', null, this)">Shopify</button>
-                  <button type="button" class="preset-chip brand-preset-chip" data-q="AG1" onclick="selectBrandPreset('AG1', null, this)">AG1</button>
-                  <button type="button" class="preset-chip brand-preset-chip" data-q="Huberman Lab" onclick="selectBrandPreset('Huberman Lab', 'buyer', this)">Huberman Lab</button>
-                  <button type="button" class="preset-chip brand-preset-chip" data-q="Morning Brew Daily" onclick="selectBrandPreset('Morning Brew Daily', 'buyer', this)">Morning Brew</button>
-                </div>
-                <div style="padding:10px 12px; border-radius:10px; background:var(--bg-parchment); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"><label for="sender-reach" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);">Audience Reach:</label><button type="button" class="preset-chip reach-chip" data-r="10000" onclick="setAudienceReach(10000, this)">10K</button><button type="button" class="preset-chip reach-chip" data-r="25000" onclick="setAudienceReach(25000, this)">25K</button><button type="button" class="preset-chip reach-chip" data-r="75000" onclick="setAudienceReach(75000, this)">75K</button><button type="button" class="preset-chip reach-chip" data-r="150000" onclick="setAudienceReach(150000, this)">150K</button><button type="button" class="preset-chip reach-chip" data-r="250000" onclick="setAudienceReach(250000, this)">250K</button></div>
-                  <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;"><input id="sender-reach" type="number" class="input-field mono" value="${initialReach}" min="500" step="1000" style="width:104px; min-height:36px; padding:5px 8px; font-size:14.5px;" onchange="runBrandLookup(null, true)" /><input id="sender-show" type="hidden" value="Creator Media Network" /></div>
-                </div>
-                <div id="sr-step1-live-preview" style="padding:12px 14px; border-radius:10px; background:var(--emerald-soft); border:1px solid var(--emerald-border); display:flex; flex-direction:column; gap:6px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi); text-transform:uppercase;">✓ Free Spend, -18% Floor &amp; Show Placement Proof</span>
-                    <a href="#sr-sweetspot-bridge-form" onclick="var t=document.getElementById('sr-bridge-email');if(t){t.focus();t.scrollIntoView({behavior:'smooth',block:'center'});return false;}" class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-decoration:underline;">Unmask 3 Free Buyer Emails ($0) ↓</a>
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                  <div class="preset-row" aria-label="1-Click Brand & Show Presets" style="margin-top:0; gap:4px;">
+                    <span class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-muted); align-self:center;">Try:</span>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12px;" data-q="Shopify" onclick="selectBrandPreset('Shopify', null, this)">Shopify</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12px;" data-q="AG1" onclick="selectBrandPreset('AG1', null, this)">AG1</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12px;" data-q="Huberman Lab" onclick="selectBrandPreset('Huberman Lab', 'buyer', this)">Huberman Lab</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12px;" data-q="Morning Brew Daily" onclick="selectBrandPreset('Morning Brew Daily', 'buyer', this)">Morning Brew</button>
                   </div>
-                  <div class="mono" id="sr-step1-preview-buyer" style="font-size:13px; font-weight:700; color:var(--text-primary);">Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny&apos;s Podcast</strong> <span style="color:var(--amber-gold); font-weight:700;">(Direct Buyer &amp; Agency Emails Gated Below)</span></div>
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; font-size:12.5px; color:var(--text-secondary); padding-top:6px; border-top:1px solid rgba(13,107,75,0.16);">
-                    <span id="sr-step1-preview-pilot">3-Flight Pilot (${Math.round(initialReach / 1000)}K Reach): <strong style="color:var(--emerald-roi);">$${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} ($${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor CPM vs $${defaultAnalysis.metrics.avg_cpm_usd} Rack)</strong></span>
-                    <button type="button" onclick="switchToolMode('transcript')" class="mono" style="background:none; border:none; padding:0; font-size:12px; font-weight:700; color:var(--text-secondary); text-decoration:underline; cursor:pointer;">Paste Ad Transcript →</button>
+                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:nowrap;">
+                    <label for="sender-reach" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); white-space:nowrap;">Reach:</label>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:11.5px;" data-r="25000" onclick="setAudienceReach(25000, this)">25K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:11.5px;" data-r="75000" onclick="setAudienceReach(75000, this)">75K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:11.5px;" data-r="150000" onclick="setAudienceReach(150000, this)">150K</button>
+                    <input id="sender-reach" type="number" class="input-field mono" value="${initialReach}" min="500" step="1000" style="width:78px; min-height:28px; height:28px; padding:2px 6px; font-size:12.5px;" onchange="runBrandLookup(null, true)" /><input id="sender-show" type="hidden" value="Creator Media Network" />
                   </div>
                 </div>
+
+                <div id="sr-step1-live-preview" style="padding:8px 10px; border-radius:9px; background:var(--emerald-soft); border:1px solid var(--emerald-border); display:flex; flex-direction:column; gap:3px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span class="mono" style="font-size:11.5px; font-weight:800; color:var(--emerald-roi);">✓ ${escapeHtml(displayEntity.name)}: $${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}/mo • <span id="sr-step1-preview-pilot">3x Pilot: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} ($${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor vs $${defaultAnalysis.metrics.avg_cpm_usd} Rack)</span></span>
+                  </div>
+                  <div class="mono" id="sr-step1-preview-buyer" style="font-size:12px; font-weight:700; color:var(--text-primary); line-height:1.3;">Shows: <strong>My First Million • The Diary Of A CEO • Lenny&apos;s Podcast</strong> • 🔒 Buyer: <span style="color:var(--amber-gold);">${escapeHtml(row1BuyerMasked)}</span></div>
+                </div>
+
+                <!-- ABOVE-THE-FOLD 1-FIELD WORK EMAIL CREDIT BAR (bottom <= 820px on both Desktop 1440x900 & Mobile 390x844) -->
+                <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_submit');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});return false;}if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);return false;" style="margin:0; padding:8px 10px; border-radius:10px; background:var(--bg-parchment); border:1.5px solid var(--emerald-roi); display:flex; flex-direction:column; gap:6px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span id="sr-sweetspot-bridge-copy" style="font-size:12px; color:var(--text-primary); font-weight:800; line-height:1.25;">✦ Unmask 3 Free Verified Buyer Emails ($0) + Pitch Copy — or Unlock All 109 Rows:</span>
+                    <button type="button" onclick="switchToolMode('transcript')" class="mono" style="background:none; border:none; padding:0; font-size:11px; font-weight:700; color:var(--text-secondary); text-decoration:underline; cursor:pointer;">Paste Transcript →</button>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap; width:100%; align-items:center;">
+                    <input id="sr-bridge-email" type="email" placeholder="you@company.com (unmasks 3 free buyer emails $0)" aria-label="Work email to unmask 3 free verified buyer emails ($0) and pre-fill Stripe" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'sweetspot_bridge_blur')" class="input-field" style="flex:1 1 170px; min-width:0; max-width:100%; height:38px; min-height:38px; padding:5px 10px; font-size:13px; background:var(--bg-surface);" />
+                    <button id="btn-unlock-free-credits" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});this.textContent='✓ 3 Free Credits Unlocked';}else if(e){e.focus();}" class="btn btn-emerald" style="padding:6px 11px; height:38px; min-height:38px; font-size:12.5px; font-weight:800; white-space:nowrap;">Unmask 3 Free Buyer Emails ($0)</button>
+                  </div>
+                  <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+                    <button id="btn-sweetspot-reveal-row4" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');}" style="display:none;">Unmask Row #4 Free</button>
+                    <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" style="display:none;">Creator Pass ($19) ↗</button>
+                    <button id="btn-sweetspot-creator-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_creator_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:4px 9px; min-height:30px; font-size:11.5px; white-space:nowrap;">Creator Pass ($19) ↗</button>
+                    <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-ghost" style="padding:4px 9px; min-height:30px; font-size:11.5px; border:1px solid var(--emerald-roi); color:var(--emerald-roi); font-weight:800; white-space:nowrap;">109-Row CSV Vault ($29) ↗</button>
+                    <button id="btn-sweetspot-agency-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_agency_btn');if(window.__ebCheckout)window.__ebCheckout('agency_desk',true);" class="btn btn-ghost" style="padding:4px 9px; min-height:30px; font-size:11.5px; background:#0F172A; color:#FFFFFF; font-weight:700; white-space:nowrap;">Agency Desk ($149) ↗</button>
+                  </div>
+                </form>
+
                 <details id="mode-b-details" style="display:none;"><summary id="mode-b-summary">Transcript Extractor</summary><div class="mode-tabs" role="tablist"><button type="button" id="tab-mode-lookup" class="mode-tab active" onclick="switchToolMode('lookup')">Brand / Show Search</button><button type="button" id="tab-mode-transcript" class="mode-tab" onclick="switchToolMode('transcript')">Transcript Extractor</button></div></details>
               </div>
               <div id="sr-hero-deliverable-strip" style="display:none;"></div>
@@ -176,19 +197,15 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <span class="pill-emerald" id="res-engine-badge">109 Verified Buyer &amp; Agency Desk Rows</span>
             </div>
           </div>
-          <!-- TRY-BEFORE-YOU-BUY 3 FREE VERIFIED BUYER CREDITS ($0) & CLEAN B2B TIER LADDER ($0 -> $19 -> $29 -> $149) -->
-          <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_submit');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});return false;}if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);return false;" style="margin-bottom:14px; padding:12px 16px; border-radius:12px; background:var(--emerald-soft); border:1.5px solid rgba(13,107,75,0.28); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-            <span id="sr-sweetspot-bridge-copy" style="font-size:13.5px; color:var(--text-primary); font-weight:700;">✦ 1-Field Work Email Credit Bar: Unmask 3 Free Verified Buyer Emails ($0) + Pitch Copy — or Unlock All 109 Verified Buyer &amp; Agency Desk Rows:</span>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1; min-width:0; max-width:100%; justify-content:flex-end; align-items:center;">
-              <input id="sr-bridge-email" type="email" placeholder="you@company.com (unmasks 3 free buyer emails $0)" aria-label="Work email to unmask 3 free verified buyer emails ($0) and pre-fill Stripe" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'sweetspot_bridge_blur')" class="input-field" style="flex:1 1 180px; min-width:0; max-width:100%; min-height:38px; padding:6px 12px; font-size:13.5px; background:var(--bg-surface);" />
-              <button id="btn-unlock-free-credits" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});this.textContent='✓ 3 of 3 Free Buyer Credits Unlocked';}else if(e){e.focus();}" class="btn btn-ghost" style="padding:7px 13px; min-height:38px; font-size:13px; background:var(--bg-surface); font-weight:800; color:var(--emerald-roi); border:1.5px solid var(--emerald-roi); white-space:normal;">Unmask 3 Free Verified Buyer Emails ($0)</button>
-              <button id="btn-sweetspot-reveal-row4" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');}" style="display:none;">Unmask Row #4 Free</button>
-              <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" style="display:none;">Creator Pass ($19) ↗</button>
-              <button id="btn-sweetspot-creator-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_creator_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:7px 13px; min-height:38px; font-size:13px; white-space:normal;">Creator Pass ($19) ↗</button>
-              <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:7px 13px; min-height:38px; font-size:13px; white-space:normal;">Full 109-Row CSV Vault ($29) ↗</button>
-              <button id="btn-sweetspot-agency-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_agency_btn');if(window.__ebCheckout)window.__ebCheckout('agency_desk',true);" class="btn btn-ghost" style="padding:7px 13px; min-height:38px; font-size:13px; background:#0F172A; color:#FFFFFF; font-weight:700; white-space:normal;">B2B Agency Desk ($149) ↗</button>
+          <!-- SECONDARY TABLE BAR (syncs with #sr-bridge-email above the fold) -->
+          <div style="margin-bottom:12px; padding:10px 14px; border-radius:10px; background:var(--emerald-soft); border:1px solid rgba(13,107,75,0.24); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <span style="font-size:13px; color:var(--text-primary); font-weight:700;">✦ Specimen Row #1 Shows &amp; -18% Floor Unmasked • Direct Buyer &amp; Agency Emails Gated Above ($0 for 3 Credits):</span>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+              <a href="#sr-sweetspot-bridge-form" onclick="var e=document.getElementById('sr-bridge-email');if(e){e.focus();e.scrollIntoView({behavior:'smooth',block:'center'});}return false;" class="btn btn-ghost" style="padding:6px 12px; min-height:34px; font-size:12.5px; background:var(--bg-surface); font-weight:800; color:var(--emerald-roi); border:1.5px solid var(--emerald-roi);">Unmask 3 Free Verified Buyer Emails ($0) ↑</a>
+              <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:6px 12px; min-height:34px; font-size:12.5px;">Creator Pass ($19) ↗</button>
+              <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 12px; min-height:34px; font-size:12.5px;">Full 109-Row CSV Vault ($29) ↗</button>
             </div>
-          </form>
+          </div>
 
           <div class="table-wrap" style="margin-top:0;">
             <table class="ledger-table">
