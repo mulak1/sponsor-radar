@@ -621,11 +621,13 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       #home-executive-brief { margin-bottom: 6px !important; }
       #sr-logical-need-chip, #res-match-pill { display: none !important; }
       #sr-buyer-wedge-toggle { width: 100%; justify-content: space-between; }
-      #sr-buyer-wedge-toggle button { padding: 4px 8px !important; font-size: 11.5px !important; flex: 1; justify-content: center; }
-      #sr-emotional-want-hook { font-size: 1.45rem !important; line-height: 1.15 !important; margin: 4px 0 6px 0 !important; }
-      #sr-step1-panel { padding: 8px !important; }
-      #sr-step1-panel .panel-header { padding: 8px 10px !important; margin-bottom: 6px !important; }
-      #sr-step1-panel .panel-body { padding: 6px 6px !important; }
+      #sr-buyer-wedge-toggle button { padding: 4px 8px !important; font-size: 13px !important; flex: 1; justify-content: center; }
+      #sr-emotional-want-hook { font-size: 1.38rem !important; line-height: 1.15 !important; margin: 2px 0 4px 0 !important; }
+      #sr-step1-panel { padding: 14px !important; }
+      #sr-step1-panel .panel-header { padding: 0 0 6px 0 !important; margin-bottom: 4px !important; }
+      #sr-step1-panel .panel-body { padding: 0 !important; gap: 6px !important; }
+      #sr-sweetspot-bridge-form { padding: 12px 14px !important; gap: 5px !important; }
+      #sr-rival-anchor-badge, #sr-instant-pitch-hook { display: block !important; width: 100% !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; font-size: 13px !important; }
       .btn, .btn span, a.btn { white-space: normal !important; max-width: 100% !important; min-width: 0 !important; flex-wrap: wrap; text-align: center; height: auto; }
       table.ledger-table, .table-wrap table, #competitor-battlecard table, table.ledger-table tbody, .table-wrap tbody, #competitor-battlecard tbody, table.ledger-table tr, .table-wrap tr, #competitor-battlecard tr, table.ledger-table td, .table-wrap td, #competitor-battlecard td { display: block !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; white-space: normal !important; word-break: break-word !important; box-sizing: border-box !important; }
       table.ledger-table thead, .table-wrap thead, #competitor-battlecard thead { display: none !important; }
