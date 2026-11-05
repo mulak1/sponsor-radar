@@ -142,11 +142,11 @@ const VERTICAL_CONFIGS = {
     deliverableName: 'Full 109-Row Verified Named-Buyer & Agency Desk CSV Export + Redlined IAB IO Make-Good Rider (.TXT) + Cold Outreach Sequences (.EML) + 90-Day Renewal Alerts',
     freeDeliverableName: '109-Row Named-Buyer & Agency CSV + Redlined IO Make-Good Rider + Cold Outreach Sequences',
     unlockBannerTitle: '109-Row Named-Buyer & Agency CSV + IO Rider • Save $2,400 Overpay',
-    explainerText: 'Pitch the buyer, not dead inboxes. 96 verified buyers • Save $2,400 overpay with -18% 3-flight floor CPMs.',
+    explainerText: 'Pitch the buyer, not dead inboxes. 109 Verified Buyer & Agency Desk Rows • Save $2,400 overpay with -18% 3-flight floor CPMs.',
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
     searchPlaceholder: 'Search sponsor or show (e.g. HubSpot, Indie Hackers)...',
-    tier1Tag: 'EXPRESS WORKFLOW DELIVERABLE PACK ($1.99) OR CREATOR PASS ($19) • SAVE $2,400 OVERPAY',
+    tier1Tag: '$0 3-CREDIT WORK EMAIL SAMPLE OR CREATOR PASS ($19) • SAVE $2,400 OVERPAY',
     tier1Desc: 'Unlocks target workflow pack: verified Named-Buyer + Agency Desk (.CSV), -18% floor CPM ledger (.CSV), Redlined IAB IO Make-Good Rider (.TXT), and 3-flight cold outreach sequences (.EML).',
     tier2Tag: 'FULL 109-ROW NAMED-BUYER & AGENCY CSV + IO RIDER VAULT ($29 / $49 ONE-TIME)',
     tier2Desc: 'Complete 109-row verified Named-Buyer + External Agency Desk CSV export, Redlined IO Make-Good Rider (.TXT), 15 cold outreach sequences (.EML), and 90-day renewal alerts.',
@@ -156,14 +156,14 @@ const VERTICAL_CONFIGS = {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
       colLegacy: '25%-Fee Ad Networks', colManual: 'Guessing from Media Kits',
       rows: [
-        ['Proof That Ads Actually Convert', 'Tracks 96+ placements that renewed 3 to 18 times on the same show', 'Pushes untested 1-time ad slots (68% churn)', 'No way to know if a sponsor lost money'],
-        ['Rate-Card Floor & Direct Contacts', '96 verified buyer/show emails + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
-        ['Simple Pricing & Expense Receipt', '$1.99 Single-Target Pass or $29 One-Time All 96 Buyers Vault ($0.30/buyer)', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
+        ['Proof That Ads Actually Convert', 'Tracks 109+ placements that renewed 3 to 18 times on the same show', 'Pushes untested 1-time ad slots (68% churn)', 'No way to know if a sponsor lost money'],
+        ['Rate-Card Floor & Direct Contacts', '109 Verified Buyer & Agency Desk Rows + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
+        ['Simple Pricing & Expense Receipt', '$0 3-Credit Sample, $19 Creator Pass, or $29 Full 109-Row CSV Vault', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
       ]
     },
     exportActions: [
       { id: 'btn-copy-shopping-list', label: 'Copy Rate & Pitch Summary', type: 'copy' },
-      { id: 'btn-export-csv', label: 'Export 96-Flight Rates (.CSV)', href: '/api/github-upgrade/export.csv' },
+      { id: 'btn-export-csv', label: 'Export 109-Row Rates (.CSV)', href: '/api/github-upgrade/export.csv' },
       { id: 'btn-export-llms', label: 'Download Counter-Offer / Pitch (.EML)', href: '/api/github-upgrade/pitch.eml' },
       { id: 'btn-export-ics', label: 'Protocol & Rate Dossier (.TXT)', href: '/api/github-upgrade/llms-bundle.txt' },
       { id: 'btn-print-summary', label: 'Print Rate Card PDF', type: 'print' },
@@ -206,14 +206,14 @@ const VERTICAL_CONFIGS = {
       summary: 'Verifies multi-flight sponsor renewals, promo-code persistence, and -18% 3-flight agency floor CPMs across 42 brands and 46 shows.'
     },
     deliverableFiles: [
-      { file: 'verified-buyer-contacts.csv', label: '96 Brand & Show Contacts (.CSV)', size: '6.4 KB', schema: '96 Verified Brand Partnerships Leads & Show Booking Rep emails, roles & agency desks', status: 'VALID' },
-      { file: '96-flight-cpm-decay.csv', label: '96-Flight Rate-Card Floor Ledger (.CSV)', size: '14.2 KB', schema: 'Published rack rates vs. -18% 3-flight negotiated floor CPMs, implied CPCs & promo codes', status: 'VALID' },
+      { file: 'verified-buyer-contacts.csv', label: '109 Verified Buyer & Agency Desk Rows (.CSV)', size: '7.4 KB', schema: '109 Verified Brand Partnerships Leads & Show Booking Rep emails, roles & agency desks', status: 'VALID' },
+      { file: '109-flight-cpm-decay.csv', label: '109-Row Rate-Card Floor Ledger (.CSV)', size: '14.2 KB', schema: 'Published rack rates vs. -18% 3-flight negotiated floor CPMs, implied CPCs & promo codes', status: 'VALID' },
       { file: '3-flight-anchor-pitch.eml', label: 'Counter-Offer & Pilot Scripts (.EML)', size: '3.1 KB', schema: 'Media Buyer -18% rate-card counter-offer script (w/ 1.5% CTR make-good) + Creator 3-flight pilot pitch', status: 'VALID' }
     ],
     remediationDiff: {
       beforeLine: 'What we found: Paying published media-kit rack rates costs +18% to +28% more than the negotiated 3-flight agency floor, while cold-emailing generic info@ addresses gets a 1.1% reply rate.',
-      afterLine: 'How the $1.99 pack pays for itself on 1 booking: Unlocks all 96 verified brand buyer & show booking rep emails (.CSV), the 96-flight negotiated CPM floor ledger (.CSV), and ready-to-send counter-offer & pilot scripts (.EML).',
-      roiBadge: '96 Verified Buyers + -18% Floor Ledger Verified'
+      afterLine: 'How SponsorRadar pays for itself on 1 booking: Unlocks all 109 Verified Buyer & Agency Desk Rows (.CSV), the negotiated CPM floor ledger (.CSV), and ready-to-send counter-offer & pilot scripts (.EML).',
+      roiBadge: '109 Verified Buyer & Agency Desk Rows + -18% Floor Ledger'
     }
   },
   derm_logic: {

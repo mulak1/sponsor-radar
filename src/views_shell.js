@@ -530,11 +530,14 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       margin-bottom: 4px;
     }
     .kpi-val {
-      font-size: 20px;
+      font-size: clamp(1rem, 4.2vw, 1.35rem);
       font-weight: 800;
       font-family: var(--font-mono);
       color: var(--text-primary);
-      word-break: break-word;
+      white-space: nowrap;
+      word-break: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* Outbound Pitch Box */
@@ -602,21 +605,18 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       #master-ledger-table th:nth-child(5), #master-ledger-table td:nth-child(5) { display: none; }
     }
     @media (max-width: 768px) {
-      .container { padding: 0 16px; }
-      .panel, .pitch-box { padding: 16px !important; }
+      .container { padding: 0 14px; }
+      .panel, .pitch-box { padding: 14px !important; }
       .hero-steps-grid { grid-template-columns: 1fr; }
-      .nav-inner { gap: 10px; padding: 10px 16px; flex-wrap: wrap; }
-      .nav-links {
-        width: 100%;
-        order: 3;
-        justify-content: flex-start;
-        gap: 12px;
-        font-size: 14px;
-        padding: 6px 0 0 0;
-        flex-wrap: wrap;
-        overflow-x: hidden;
-      }
+      .ticker-bar { display: none !important; }
+      .top-nav { min-height: 54px !important; height: 54px !important; }
+      .nav-inner { gap: 8px !important; padding: 0 12px !important; min-height: 54px !important; height: 54px !important; flex-wrap: nowrap !important; }
+      .brand-subtag { display: none !important; }
+      .brand-logo svg { width: 28px !important; height: 28px !important; }
+      .brand-wordmark { font-size: 17px !important; }
+      .nav-links { display: none !important; }
       .nav-cta-secondary { display: none; }
+      .top-nav .btn-vermilion, .top-nav .btn-vermilion span { padding: 6px 10px !important; min-height: 34px !important; font-size: 12px !important; white-space: nowrap !important; }
       .btn, .btn span, a.btn { white-space: normal !important; max-width: 100% !important; min-width: 0 !important; flex-wrap: wrap; text-align: center; height: auto; }
       table.ledger-table, .table-wrap table, #competitor-battlecard table, table.ledger-table tbody, .table-wrap tbody, #competitor-battlecard tbody, table.ledger-table tr, .table-wrap tr, #competitor-battlecard tr, table.ledger-table td, .table-wrap td, #competitor-battlecard td { display: block !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; white-space: normal !important; word-break: break-word !important; box-sizing: border-box !important; }
       table.ledger-table thead, .table-wrap thead, #competitor-battlecard thead { display: none !important; }
@@ -630,7 +630,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
   <div class="ticker-bar">
     <div class="ticker-items">
-      <span><span class="ticker-dot"></span>EDITORIAL AD-SPEND LEDGER: <strong>42 BRANDS</strong> • <strong>46 CREATOR SHOWS</strong> • <strong>96 VERIFIED FLIGHTS</strong></span>
+      <span><span class="ticker-dot"></span>EDITORIAL AD-SPEND LEDGER: <strong>42 BRANDS</strong> • <strong>46 CREATOR SHOWS</strong> • <strong>109 VERIFIED BUYER &amp; AGENCY DESK ROWS</strong></span>
       <span>AG1 → Huberman Lab <span style="color:var(--emerald-roi); font-weight:700;">18x RENEWED</span> ($67.5K/flight)</span>
       <span>Deel → Lenny's Podcast <span style="color:var(--emerald-roi); font-weight:700;">12x RENEWED</span> ($31.6K/flight)</span>
       <span>Ramp → Acquired <span style="color:var(--emerald-roi); font-weight:700;">10x RENEWED</span> ($48.5K/flight)</span>
@@ -654,8 +654,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:10px; align-items:center;">
-        <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass');return false;}" class="btn btn-vermilion" style="padding:9px 16px; min-height:40px; font-size:14px; text-decoration:none;">
-          <span>Unlock Rate &amp; Sponsor Pack ($1.99) →</span>
+        <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass');return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
+          <span>109-Row Buyer Vault ($29) →</span>
         </a>
       </div>
     </div>
