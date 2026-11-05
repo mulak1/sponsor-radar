@@ -192,7 +192,7 @@ function getVerticalScanCopy(cfg, scan) {
   if (cfg.moduleId === 'sponsor_radar') {
     return {
       goalText: `Audit ${tgt} spend (${kpi1}) and renewals (${kpi2}) to benchmark -18% rate floors or pitch verified buyers.`,
-      sourceProvenance: 'Tracked directly from podcast RSS feeds, YouTube ad-read transcripts, newsletter archives & active /promo links (IAB v2.1 calibrated).',
+      sourceProvenance: 'Tracked directly from podcast RSS feeds, YouTube ad-read transcripts, newsletter archives & active /promo links (30-Day Audience Verified).',
       dataFreshness: 'Updated today (Q4 2026 rolling 90-day ledger • <24h–7d air-date lag).',
       updateCadence: 'Scanned every 24 hours • All 109 Verified Buyer & Agency Desk Rows verified weekly (<1.4% bounce).',
       card2Title: 'Verified Spend & Renewal Streak',

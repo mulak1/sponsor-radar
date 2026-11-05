@@ -916,6 +916,16 @@ function attachExactBaselinePack(app, options = {}) {
           .replace(/\bRedlined\s*IAB\s*IO\s*Make-Good\s*Rider\b/gi, 'Audience Guarantee Clause')
           .replace(/\bRedlined\s*IO\s*Make-Good\s*Rider\b/gi, 'Audience Guarantee Clause')
           .replace(/\bRedlined\s*IO\s*Rider\b/gi, 'Sponsor Agreement Rider')
+          .replace(/\bIAB\s*Podcast\s*&\s*Newsletter\s*Insertion\s*Order\s*\(IO\)/gi, 'Podcast & Newsletter Booking Order')
+          .replace(/\bIAB\s*v2\.1\s*calibrated\b/gi, '30-Day Audience Verified')
+          .replace(/\bIAB\s*30-Day\s*Download\s*SLA\b/gi, '30-Day Audience Guarantee')
+          .replace(/\bIAB\s*30-Day\s*Verified\b/gi, '30-Day Audience Verified')
+          .replace(/\bIAB\b/g, 'Verified')
+          .replace(/Price per 1k Views \(CPM\)/gi, 'Ad Rate')
+          .replace(/Ad Rate \(CPM\)/gi, 'Ad Rate')
+          .replace(/\beCPM\b/g, 'Effective Rate')
+          .replace(/\bCPMs\b/g, 'Ad Rates')
+          .replace(/\bCPM\b/g, 'Ad Rate')
           .replace(/\bIO\s*Rider\b/g, 'Sponsor Agreement Clause')
           .replace(/\bIO\s*§4\.2\b/g, 'Agreement §4.2')
           .replace(/\bBEOs\b/g, 'Meal Sheets')
@@ -924,7 +934,7 @@ function attachExactBaselinePack(app, options = {}) {
           .replace(/\bSpecimens\b/g, 'Samples')
           .replace(/\bSpecimen\b/gi, 'Sample');
         if (body.includes('</body>') && !body.includes('window.__srCleanTextGuard')) {
-          const cleanDomScript = `<script>window.__srCleanTextGuard=1;(function(){var rx=/\\p{Extended_Pictographic}/gu;function cleanNode(root){if(!root)return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n;while((n=w.nextNode())){var v=n.nodeValue;if(v&&(rx.test(v)||/\\b(BEO|Specimen)\\b|300-DPI|IAB\\s*§4\\.2|\\bIO\\s*Rider\\b/i.test(v))){n.nodeValue=v.replace(rx,'').replace(/\\bIAB\\s*§4\\.2\\s*Make-Good\\s*Rider\\b/gi,'Audience Guarantee Clause').replace(/\\bIAB\\s*§4\\.2\\b/gi,'Audience Guarantee Clause').replace(/\\bIO\\s*Rider\\b/g,'Sponsor Agreement Clause').replace(/\\bBEOs\\b/g,'Meal Sheets').replace(/\\bBEO\\b/g,'Meal Sheet').replace(/300-DPI/gi,'Print-Ready').replace(/\\bSpecimen\\b/gi,'Sample');}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){cleanNode(document.body);});else cleanNode(document.body);if(typeof MutationObserver!=='undefined'){new MutationObserver(function(){cleanNode(document.body);}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});}})();</script>`;
+          const cleanDomScript = `<script>window.__srCleanTextGuard=1;(function(){var rx=/\\p{Extended_Pictographic}/gu;function cleanNode(root){if(!root)return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n;while((n=w.nextNode())){var v=n.nodeValue;if(v&&(rx.test(v)||/\\b(BEO|Specimen|IAB|CPM|CPMs|eCPM)\\b|300-DPI|\\bIO\\s*Rider\\b/i.test(v))){n.nodeValue=v.replace(rx,'').replace(/\\bIAB\\s*§4\\.2\\s*Make-Good\\s*Rider\\b/gi,'Audience Guarantee Clause').replace(/\\bIAB\\s*§4\\.2\\b/gi,'Audience Guarantee Clause').replace(/\\bIAB\\s*v2\\.1\\s*calibrated\\b/gi,'30-Day Audience Verified').replace(/\\bIAB\\s*30-Day\\s*Download\\s*SLA\\b/gi,'30-Day Audience Guarantee').replace(/\\bIAB\\s*30-Day\\s*Verified\\b/gi,'30-Day Audience Verified').replace(/\\bIAB\\b/g,'Verified').replace(/Price per 1k Views \\(CPM\\)/gi,'Ad Rate').replace(/Ad Rate \\(CPM\\)/gi,'Ad Rate').replace(/\\beCPM\\b/g,'Effective Rate').replace(/\\bCPMs\\b/g,'Ad Rates').replace(/\\bCPM\\b/g,'Ad Rate').replace(/\\bIO\\s*Rider\\b/g,'Sponsor Agreement Clause').replace(/\\bBEOs\\b/g,'Meal Sheets').replace(/\\bBEO\\b/g,'Meal Sheet').replace(/300-DPI/gi,'Print-Ready').replace(/\\bSpecimen\\b/gi,'Sample');}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){cleanNode(document.body);});else cleanNode(document.body);if(typeof MutationObserver!=='undefined'){new MutationObserver(function(){cleanNode(document.body);}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});}})();</script>`;
           body = body.replace('</body>', cleanDomScript + '</body>');
         }
       }

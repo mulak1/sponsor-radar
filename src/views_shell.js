@@ -647,7 +647,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       <span>Deel → Lenny's Podcast <span style="color:var(--emerald-roi); font-weight:700;">12x RENEWED</span> ($31.6K/flight)</span>
       <span>Ramp → Acquired <span style="color:var(--emerald-roi); font-weight:700;">10x RENEWED</span> ($48.5K/flight)</span>
     </div>
-    <div class="mono" style="color:var(--amber-gold); font-weight:600;">IAB 30-DAY VERIFIED • LIVE Q4 LEDGER</div>
+    <div class="mono" style="color:var(--amber-gold); font-weight:600;">30-DAY AUDIENCE VERIFIED • LIVE Q4 LEDGER</div>
   </div>
 
   <header class="top-nav">
