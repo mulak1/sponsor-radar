@@ -722,9 +722,10 @@ function attachExactBaselinePack(app, options = {}) {
 
   app.post('/api/telemetry/event', (req, res) => {
     const body = req.body || {}, ua = String(req.headers['user-agent'] || ''), deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
-    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, body.email);
+    const rawEmail = String(body.email || '').trim().slice(0, 254);
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, rawEmail);
     if (isOwnerIp) res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax');
-    store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction'), pageUrl: String(body.page_url || body.pageUrl || '/'), deviceType: String(body.device_type || deviceType), utmSource: String(body.utm_source || ''), utmCampaign: String(body.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
+    store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction').slice(0, 64), pageUrl: String(body.page_url || body.pageUrl || '/').slice(0, 256), deviceType: String(body.device_type || deviceType).slice(0, 32), utmSource: String(body.utm_source || '').slice(0, 128), utmCampaign: String(body.utm_campaign || '').slice(0, 128), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
     res.json({ ok: true, is_test: isTest, is_owner_ip: isOwnerIp, is_crawler: isCrawler });
   });
 
@@ -771,7 +772,9 @@ function attachExactBaselinePack(app, options = {}) {
     return false;
   }
   async function handleLeadCaptureAndFollowUp(req, res) {
-    const email = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim(), summaryText = String(req.body?.summaryText || `${cfg.brandName} 3 Free Unmasked Verified Buyer Credits ($0) & Diagnostic Summary`).trim(), utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'free_3_buyer_credits').trim();
+    const rawEmailIn = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
+    if (rawEmailIn.length > 254) return res.status(400).json({ ok: false, error: 'Email address must be 254 characters or fewer.' });
+    const email = rawEmailIn.slice(0, 254), summaryText = String(req.body?.summaryText || `${cfg.brandName} 3 Free Unmasked Verified Buyer Credits ($0) & Diagnostic Summary`).trim().slice(0, 1000), utmSource = String(req.body?.utmSource || req.path.replace('/api/', '') || 'free_3_buyer_credits').trim().slice(0, 128);
     const buyerWedge = String(req.body?.buyer_wedge || req.body?.buyerWedge || (String(req.headers.cookie || '').match(/sr_wedge=([^;]+)/) || [])[1] || 'buyer').toLowerCase() === 'creator' ? 'creator' : 'buyer';
     if (!email || !email.includes('@')) return res.status(400).json({ ok: false, error: 'Please enter a valid email address.' });
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, email), directBuyLinks = buildBuyLinks(email);
@@ -901,6 +904,29 @@ function attachExactBaselinePack(app, options = {}) {
         try { res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'); res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/openapi.json>; rel="service-desc", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`); } catch (_) {}
         store.recordEvent({ eventType: 'visit', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || ''), utmCampaign: String(req.query?.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp });
         body = renderExactBaselineEnhancements(body, cfg, req.path);
+      }
+      if (isHtml) {
+        body = body.replace(/\p{Extended_Pictographic}/gu, '')
+          .replace(/&#128274;|&#128275;|&#128203;|&#10024;|&#9889;|&#9888;|&#128339;|&#128506;/g, '')
+          .replace(/&copy;/gi, 'Copyright')
+          .replace(/\bIAB\s*§4\.2\s*Make-Good\s*Rider\b/gi, 'Audience Guarantee Clause')
+          .replace(/\bIAB\s*§4\.2\b/gi, 'Audience Guarantee Clause')
+          .replace(/\bIAB\s*MAKE-GOOD\s*RIDER\b/gi, 'AUDIENCE GUARANTEE CLAUSE')
+          .replace(/\bIAB\s*IO\s*Redline\s*Rider\b/gi, 'Sponsor Agreement Rider')
+          .replace(/\bRedlined\s*IAB\s*IO\s*Make-Good\s*Rider\b/gi, 'Audience Guarantee Clause')
+          .replace(/\bRedlined\s*IO\s*Make-Good\s*Rider\b/gi, 'Audience Guarantee Clause')
+          .replace(/\bRedlined\s*IO\s*Rider\b/gi, 'Sponsor Agreement Rider')
+          .replace(/\bIO\s*Rider\b/g, 'Sponsor Agreement Clause')
+          .replace(/\bIO\s*§4\.2\b/g, 'Agreement §4.2')
+          .replace(/\bBEOs\b/g, 'Meal Sheets')
+          .replace(/\bBEO\b/g, 'Meal Sheet')
+          .replace(/300-DPI/gi, 'Print-Ready')
+          .replace(/\bSpecimens\b/g, 'Samples')
+          .replace(/\bSpecimen\b/gi, 'Sample');
+        if (body.includes('</body>') && !body.includes('window.__srCleanTextGuard')) {
+          const cleanDomScript = `<script>window.__srCleanTextGuard=1;(function(){var rx=/\\p{Extended_Pictographic}/gu;function cleanNode(root){if(!root)return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n;while((n=w.nextNode())){var v=n.nodeValue;if(v&&(rx.test(v)||/\\b(BEO|Specimen)\\b|300-DPI|IAB\\s*§4\\.2|\\bIO\\s*Rider\\b/i.test(v))){n.nodeValue=v.replace(rx,'').replace(/\\bIAB\\s*§4\\.2\\s*Make-Good\\s*Rider\\b/gi,'Audience Guarantee Clause').replace(/\\bIAB\\s*§4\\.2\\b/gi,'Audience Guarantee Clause').replace(/\\bIO\\s*Rider\\b/g,'Sponsor Agreement Clause').replace(/\\bBEOs\\b/g,'Meal Sheets').replace(/\\bBEO\\b/g,'Meal Sheet').replace(/300-DPI/gi,'Print-Ready').replace(/\\bSpecimen\\b/gi,'Sample');}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){cleanNode(document.body);});else cleanNode(document.body);if(typeof MutationObserver!=='undefined'){new MutationObserver(function(){cleanNode(document.body);}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});}})();</script>`;
+          body = body.replace('</body>', cleanDomScript + '</body>');
+        }
       }
       return origSend(body);
     };

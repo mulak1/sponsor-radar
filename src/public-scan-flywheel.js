@@ -2,6 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
+const IC = {
+  lock: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  search: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`
+};
 let AA_VIEWS = null;
 let CF_TEMPLATES = null;
 let SR_SHELL = null;
@@ -356,7 +360,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       </div>
       ${renderScanSummaryCardsHtml(cfg, scan, primaryBtnBg)}
       <div id="eb-scan-step1-inline-bar" style="margin-top:12px;padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:12.5px;font-weight:700;color:${esc(t.textPrimary)};">&#128274; Unmask 3 Free Verified Buyer Emails ($0) or Unlock 109-Row Buyer Vault ($29):</div>
+        <div style="font-size:12.5px;font-weight:700;color:${esc(t.textPrimary)};">${IC.lock}Unmask 3 Free Verified Buyer Emails ($0) or Unlock 109-Row Buyer Vault ($29):</div>
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
           <input id="eb-scan-step1-email" type="email" placeholder="you@company.com (3 free buyer credits)..." aria-label="Work email to unmask 3 free buyer emails" style="padding:6px 10px;border-radius:8px;border:1px solid #CBD5E1;font-size:12.5px;min-width:195px;background:#FFFFFF;" />
           <button type="button" onclick="var e=document.getElementById('eb-scan-step1-email');if(e&&e.value&&e.value.indexOf('@')>0){if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'scan_step1_btn');else fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e.value,utmSource:'scan_step1_btn'})}).catch(function(){});var r4=document.getElementById('eb-scan-row4-email');if(r4)r4.value=e.value;document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(n){n.textContent=n.getAttribute('data-free-credit-unmasked');});this.textContent='✓ 3 Free Buyer Emails Unmasked!';this.style.background='#047857';this.style.color='#FFFFFF';}" style="padding:6px 11px;border-radius:8px;border:1px solid #047857;background:#ECFDF5;color:#047857;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap;">Unmask 3 Free Verified Buyer Emails ($0) &rarr;</button>
@@ -411,26 +415,26 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       </div>
       <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="padding:10px 14px;border-radius:10px;background:#ECFDF5;border:1px solid #A7F3D0;font-size:12.5px;color:#0F172A;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
-          <strong style="color:#047857;">✦ ROW #1 SPECIMEN PLACEMENT PROOF (UNMASKED FREE — 1 OF 109)</strong>
+          <strong style="color:#047857;">✦ ROW #1 SAMPLE PLACEMENT PROOF (UNMASKED FREE — 1 OF 109)</strong>
           <span style="padding:2px 8px;border-radius:999px;background:#047857;color:#FFFFFF;font-size:11px;font-weight:800;">Renewed on Peer Shows (Last 30 Days)</span>
         </div>
-        <div style="margin-bottom:6px;word-break:break-word;">Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny's Podcast</strong> • Named Buyer (Specimen #1 Unmasked): <strong style="color:#047857;">sarah.kaufman@shopify.com</strong> • Agency Desk: <strong style="color:#B45309;">m.vance@rightsideup.co</strong> (Right Side Up Podcast Desk) • <code style="white-space:normal;word-break:break-word;">IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)</code></div>
+        <div style="margin-bottom:6px;word-break:break-word;">Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny's Podcast</strong> • Named Buyer (Sample #1 Unmasked): <strong style="color:#047857;">sarah.kaufman@shopify.com</strong> • Agency Desk: <strong style="color:#B45309;">m.vance@rightsideup.co</strong> (Right Side Up Podcast Desk) • <code style="white-space:normal;word-break:break-word;">Audience Guarantee Clause (-18% Floor + 1.5% CTR Guarantee)</code></div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-          <button type="button" class="sr-locked-spec-badge" data-free-credit-unmasked="✓ Free Credit #1 Unmasked: d.koren@deel.com (+ r.chen@rightsideup.co)" onclick="var e=document.getElementById('eb-scan-row4-email')||document.getElementById('eb-scan-step1-email');if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.focus();}" style="cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid #047857;background:#FFFFFF;color:#047857;font-size:12px;font-weight:700;filter:none;max-width:100%;white-space:normal;text-align:left;">🔒 Verified Buyer Email Hidden (1 of 3 Free Credits) — Tap to Reveal ($0) ↑</button>
-          <a href="/buy/creator_pass?target=${esc(encodeURIComponent(scan.target))}" class="sr-locked-spec-badge" rel="nofollow" style="padding:4px 10px;border-radius:999px;border:1px solid #F59E0B;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;max-width:100%;white-space:normal;text-align:left;">🔒 Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a>
+          <button type="button" class="sr-locked-spec-badge" data-free-credit-unmasked="✓ Free Credit #1 Unmasked: d.koren@deel.com (+ r.chen@rightsideup.co)" onclick="var e=document.getElementById('eb-scan-row4-email')||document.getElementById('eb-scan-step1-email');if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.focus();}" style="cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid #047857;background:#FFFFFF;color:#047857;font-size:12px;font-weight:700;filter:none;max-width:100%;white-space:normal;text-align:left;">${IC.lock}Verified Buyer Email Hidden (1 of 3 Free Credits) — Tap to Reveal ($0) ↑</button>
+          <a href="/buy/creator_pass?target=${esc(encodeURIComponent(scan.target))}" class="sr-locked-spec-badge" rel="nofollow" style="padding:4px 10px;border-radius:999px;border:1px solid #F59E0B;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;max-width:100%;white-space:normal;text-align:left;">${IC.lock}Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a>
         </div>
       </div>
       <div id="sr-raw-csv-proof-box" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;font-size:12px;max-width:100%;box-sizing:border-box;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
-          <strong style="color:#047857;">🔍 PEEK INSIDE THE ACTUAL DOWNLOAD (109 VERIFIED BUYER &amp; AGENCY DESK ROWS .CSV — NOT GENERIC INFO@)</strong>
-          <span style="color:#475569;">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">Preview IAB IO Redline Rider (.TXT) ↗</a></span>
+          <strong style="color:#047857;">${IC.search}PEEK INSIDE THE ACTUAL DOWNLOAD (109 VERIFIED BUYER &amp; AGENCY DESK ROWS .CSV — NOT GENERIC INFO@)</strong>
+          <span style="color:#475569;">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">Preview Sponsor Agreement Rider (.TXT) →</a></span>
         </div>
         <div style="font-family:monospace;padding:6px 10px;border-radius:6px;background:#FFFFFF;border:1px solid #E2E8F0;color:#0F172A;overflow-x:hidden;white-space:normal;word-break:break-all;font-size:11.5px;max-width:100%;box-sizing:border-box;">
-          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong style="color:#047857;">sarah.kaufman@shopify.com</strong>,<strong style="color:#B45309;">m.vance@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"IO §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)"
+          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong style="color:#047857;">sarah.kaufman@shopify.com</strong>,<strong style="color:#B45309;">m.vance@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"Audience Guarantee Clause (-18% Floor + 1.5% CTR Guarantee)"
         </div>
       </div>
       <div id="sr-click-trigger-assurance" style="font-size:11.5px;color:#475569;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-        <span>🔒 <strong>What happens on click:</strong> Opens official Stripe Checkout (Apple Pay / Card) → Instant in-browser unmask + .CSV/.EML download in 4s</span>
+        <span>${IC.lock}<strong>What happens on click:</strong> Opens official Stripe Checkout (Apple Pay / Card) → Instant in-browser unmask + .CSV/.EML download in 4s</span>
         <span style="color:#047857;font-weight:700;">✓ Zero Account/Password Required • One-Time Charge • 30-Day Zero-Bounce Refund</span>
       </div>
       <div id="sr-biz-model-proof-bar" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;font-size:12px;line-height:1.45;">

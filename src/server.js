@@ -15,6 +15,55 @@ const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://w
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Pre-Launch Checklist #4 & #18: Force HTTPS in prod, Security Headers & Rate Limiting
+const rateBuckets = new Map();
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] === 'http') {
+    return res.redirect(301, `${PUBLIC_URL}${req.originalUrl}`);
+  }
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Content-Security-Policy', "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; frame-ancestors 'self';");
+
+  if (req.method === 'POST') {
+    const ip = req.ip || '127.0.0.1';
+    const now = Date.now();
+    if (rateBuckets.size > 5000) rateBuckets.clear();
+    const bucket = rateBuckets.get(ip) || { count: 0, resetAt: now + 60000 };
+    if (now > bucket.resetAt) {
+      bucket.count = 0;
+      bucket.resetAt = now + 60000;
+    }
+    bucket.count += 1;
+    rateBuckets.set(ip, bucket);
+    if (bucket.count > 45 && !req.headers['x-playwright-test'] && req.ip !== '127.0.0.1' && req.ip !== '::1' && req.ip !== '::ffff:127.0.0.1') {
+      return res.status(429).json({ error: 'Rate limit exceeded. Please try again in a minute.' });
+    }
+  }
+  next();
+});
+
+// Stripe Webhook Endpoint with HMAC-SHA256 Signature Verification
+app.post('/api/stripe/webhook', (req, res) => {
+  const sig = String(req.headers['stripe-signature'] || '');
+  const secret = process.env.STRIPE_WEBHOOK_SECRET || '';
+  if (!sig) return res.status(400).json({ ok: false, error: 'Missing stripe-signature header' });
+  if (secret) {
+    const parts = Object.fromEntries(sig.split(',').map((kv) => kv.split('=')));
+    const ts = parts.t || '';
+    const v1 = parts.v1 || '';
+    const rawPayload = JSON.stringify(req.body || {});
+    const expected = crypto.createHmac('sha256', secret).update(`${ts}.${rawPayload}`).digest('hex');
+    if (!v1 || v1 !== expected) {
+      return res.status(400).json({ ok: false, error: 'Invalid stripe-signature' });
+    }
+  }
+  return res.status(200).json({ ok: true, received: true });
+});
+
 app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req, res) => {
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const allRows = db.prepare(`
@@ -83,37 +132,6 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
 });
 
 attachExactBaselinePack(app, { verticalId: 'sponsor_radar' });
-
-// Pre-Launch Checklist #4 & #18: Force HTTPS in prod, Security Headers & Rate Limiting
-const rateBuckets = new Map();
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] === 'http') {
-    return res.redirect(301, `${PUBLIC_URL}${req.originalUrl}`);
-  }
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  res.setHeader('Content-Security-Policy', "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; frame-ancestors 'self';");
-
-  if (req.method === 'POST') {
-    const ip = req.ip || '127.0.0.1';
-    const now = Date.now();
-    if (rateBuckets.size > 5000) rateBuckets.clear();
-    const bucket = rateBuckets.get(ip) || { count: 0, resetAt: now + 60000 };
-    if (now > bucket.resetAt) {
-      bucket.count = 0;
-      bucket.resetAt = now + 60000;
-    }
-    bucket.count += 1;
-    rateBuckets.set(ip, bucket);
-    if (bucket.count > 45 && !req.headers['x-playwright-test'] && req.ip !== '127.0.0.1' && req.ip !== '::1' && req.ip !== '::ffff:127.0.0.1') {
-      return res.status(429).json({ error: 'Rate limit exceeded. Please try again in a minute.' });
-    }
-  }
-  next();
-});
 
 // High-Craft Acoustic Broadcast Radar Emblem at /favicon.svg (Pre-Launch Checklist #8)
 app.get('/favicon.svg', (req, res) => {
@@ -325,7 +343,7 @@ app.post('/api/checkout', async (req, res) => {
   const planTier = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isCreator19 ? 'creator_pass' : (isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency149 ? 'agency_desk' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'))))));
   const amountUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isCreator19 ? 19 : (isDfy ? 499 : (isLedger29 ? 29 : (isAgency149 ? 149 : (isAgency ? 199 : 49))))));
   const isOneTime = isMicro || isFlash || isCreator19 || isDfy || isLedger29 || isAgency149;
-  const email = String(body.customer_email || body.email || body.customerEmail || 'founder@creatorstudio.io').trim();
+  const email = String(body.customer_email || body.email || body.customerEmail || 'founder@creatorstudio.io').trim().slice(0, 254);
   const validStripeEmail = (email && /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email) && !/^(founder@creatorstudio\.io|creator@sponsorradar\.io|agency@sponsorradar\.io|growth@agency\.io)$/i.test(email)) ? email : '';
   const buyerWedge = String(body.buyer_wedge || (planTier === 'creator_pro_49' || planTier === 'creator_pass' ? 'creator' : 'buyer')).toLowerCase() === 'creator' ? 'creator' : 'buyer';
   const isAutomatedTest = Boolean(
