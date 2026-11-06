@@ -729,7 +729,7 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
       cnn_architecture: cat.cnnModel,
       sensor_label: cat.cnnSensorLabel,
       scan,
-      masked_buyer_preview: { buyer_masked: sb.masked, agency_masked: sb.agMasked, rack_cpm_usd: Number(sb.qCpm), floor_3flight_cpm_usd: sb.flCpm, save_3flight_usd: sb.save3 },
+      masked_buyer_preview: { buyer_masked: sb.masked, agency_masked: sb.agMasked, quoted_usd: sb.price, reach: sb.reach, rack_cpm_usd: Number(sb.qCpm), floor_3flight_cpm_usd: sb.flCpm, save_3flight_usd: sb.save3 },
       sample_dossier_url: `https://${cfg.domain}/dossier/sample?target=${encT}`,
       counterparty_previews: { iab_rider_txt: `https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}`, pitch_eml: `https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}`, sample_csv: `https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}` },
       permalink_url: `https://${cfg.domain}/scan/${encT}`,
