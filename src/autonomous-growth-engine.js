@@ -369,8 +369,8 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <div style="margin-top:12px;padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12.5px;">
         <div><strong style="color:#047857;">Counterparty-Ready Execution Files (${escXml(item.target)}):</strong> Preview the 3-Row Sample CSV, IAB §4.2/§7.1 Make-Good Rider (.TXT), and Dual-Track Pitch (.EML):</div>
         <div style="display:inline-flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <a id="eb-growth-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">IAB Make-Good Rider (.TXT) ↗</a>
-          <a id="eb-growth-eml-link" href="/api/github-upgrade/pitch.eml?brand=${escXml(encodeURIComponent(item.target))}" style="color:#047857;font-weight:800;text-decoration:underline;">3-Flight Pitch &amp; Counter (.EML) ↓</a>
+          <a id="eb-growth-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=${Math.round(initFlCpm)}&reach=${initReach}&quoted_usd=${initPrice}" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">IAB Make-Good Rider (.TXT) ↗</a>
+          <a id="eb-growth-eml-link" href="/api/github-upgrade/pitch.eml?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=${Math.round(initFlCpm)}&reach=${initReach}&quoted_usd=${initPrice}" style="color:#047857;font-weight:800;text-decoration:underline;">3-Flight Pitch &amp; Counter (.EML) ↓</a>
           <a id="eb-growth-csv-link" href="/api/github-upgrade/export.csv?target=${escXml(encodeURIComponent(item.target))}" style="color:#0F172A;font-weight:700;text-decoration:underline;">3-Row Preview (.CSV) ↓</a>
         </div>
       </div>

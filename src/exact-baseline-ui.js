@@ -880,7 +880,7 @@ function buildClientRuntimeScript(cfg) {
   };
   window.__ebCaptureEmailLead = function(rawEm, src) {
     var em = String(rawEm || '').trim(); if (!em || em.indexOf('@') < 1 || em.indexOf('.') < 3) return '';
-    window.__ebSavedEmail = em; try { localStorage.setItem('eb_lead_email', em); localStorage.setItem('sr_free_credits_unlocked', '3'); } catch (_) {}
+    window.__ebSavedEmail = em; try { localStorage.setItem('eb_lead_email', em); localStorage.setItem('sr_free_credits_unlocked', '3'); document.cookie = 'eb_lead_email=' + encodeURIComponent(em) + '; Path=/; Max-Age=2592000; SameSite=Lax'; } catch (_) {}
     Array.prototype.slice.call(document.querySelectorAll('tr[data-free-credit-row="1"], tr.eb-blurred-deliverable')).slice(0, 3).forEach(function(tr) { tr.classList.remove('eb-blurred-deliverable'); tr.setAttribute('data-row4-unlocked', '1'); tr.style.filter = 'none'; tr.style.background = CFG.theme.safeSoftBg; });
     Array.prototype.slice.call(document.querySelectorAll('[data-free-credit-unmasked], [data-row4-unmasked]')).forEach(function(el) { el.innerHTML = el.getAttribute('data-free-credit-unmasked') || el.getAttribute('data-row4-unmasked'); });
     window.__ebSyncEmailPreviewLinks(em);
@@ -890,7 +890,7 @@ function buildClientRuntimeScript(cfg) {
     if (window.__ebLastCapturedEmail !== em) { window.__ebLastCapturedEmail = em; origFetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, customer_email: em, target: actT, pageUrl: window.location.pathname, utmSource: src || 'free_3_buyer_credits', buyer_wedge: window.__ebGetBuyerWedge() }) }).catch(function(){}); }
     return em;
   };
-  ['blur', 'change'].forEach(function(evName) { document.addEventListener(evName, function(e) { var t = e.target; if (t && t.type === 'email' && t.value) window.__ebCaptureEmailLead(t.value, t.id || 'email_input_' + evName); }, true); });
+  ['blur', 'change'].forEach(function(evName) { document.addEventListener(evName, function(e) { var t = e.target; if (t && t.type === 'email' && t.value) window.__ebCaptureEmailLead(t.value, t.id || 'email_input_' + evName); }, true); }); document.addEventListener('click', function(e) { var a = e.target && e.target.closest ? e.target.closest('a[href*="/api/github-upgrade/"]') : null; if (!a) return; var emIn = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).find(function(el) { return el && el.value && el.value.indexOf('@') > 0; }); if (emIn && !window.__ebSavedEmail) window.__ebCaptureEmailLead(emIn.value, 'counterparty_link_click'); if (window.__ebSavedEmail) window.__ebSyncEmailPreviewLinks(window.__ebSavedEmail); var pb = document.getElementById('sr-post-email-upgrade-bridge') || document.getElementById('sr-copy-zeigarnik-nudge'); if (pb) pb.style.display = 'flex'; }, true);
   window.__ebCheckout = function(tier, confirmed) {
     var cleanTier = typeof tier === 'string' ? tier : 'flash_pass', actTarget = (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
     var emInputs = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).filter(function(el) { return el && el.value && el.value.indexOf('@') > 0 && !/^(creator|agency)@sponsorradar\.io$/i.test(el.value.trim()); });
