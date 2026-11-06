@@ -435,7 +435,10 @@ function createTelemetryStore(dataDir, moduleId) {
   if (Array.isArray(state.owner_ips)) { for (const ip of state.owner_ips) { if (ip && !OWNER_EXCLUDED_IPS.includes(ip)) OWNER_EXCLUDED_IPS.push(ip); } }
   let savePending = false;
   function save() { if (savePending) return; savePending = true; setImmediate(() => { savePending = false; fs.promises.writeFile(ledgerPath, JSON.stringify(state)).catch(() => {}); }); }
-  let sanitized = false;
+  const ipKeys = new Set(state.events.filter((x) => x.client_ip).map((x) => `${x.created_at}|${x.event_type}|${x.page_url || ''}`));
+  const beforeLen = state.events.length;
+  state.events = state.events.filter((x) => x.client_ip || !ipKeys.has(`${x.created_at}|${x.event_type}|${x.page_url || ''}`));
+  let sanitized = state.events.length !== beforeLen;
   for (let i = 0; i < state.events.length; i++) {
     const e = state.events[i];
     if (Number(e.is_test) === 0 && (isExcludedOwnerIp(e.client_ip) || e.is_owner || !e.client_ip)) {
@@ -604,9 +607,9 @@ function createTelemetryStore(dataDir, moduleId) {
         .then((peer) => {
           if (!peer) return;
           const evList = Array.isArray(peer.events) ? peer.events : [...(peer.recent_all_events || []), ...(peer.recent_pst_events || [])];
-          const seenEv = new Set(state.events.map((e) => `${e.created_at}|${e.event_type}|${e.client_ip || ''}`));
+          const seenEv = new Set(state.events.map((e) => `${e.created_at}|${e.event_type}|${e.page_url || ''}`));
           let added = 0;
-          for (const pe of evList) { const k = `${pe.created_at}|${pe.event_type}|${pe.client_ip || ''}`; if (pe.created_at && !seenEv.has(k)) { state.events.push(pe); seenEv.add(k); added++; } }
+          for (const pe of evList) { const k = `${pe.created_at}|${pe.event_type}|${pe.page_url || ''}`; if (pe.created_at && !seenEv.has(k)) { state.events.push(pe); seenEv.add(k); added++; } }
           const seenLd = new Set(state.leads.map((l) => `${l.email}|${l.created_at}`));
           for (const pl of (peer.leads || [])) { const k = `${pl.email}|${pl.created_at}`; if (!seenLd.has(k)) { state.leads.push(pl); seenLd.add(k); added++; } }
           const seenOrd = new Set(state.orders.map((o) => `${o.session_id || ''}|${o.created_at}`));
@@ -901,7 +904,7 @@ function attachExactBaselinePack(app, options = {}) {
   app.get(['/buy/:tier', '/api/buy/:tier'], handleTierCheckout);
   app.post([`/api/calculators/${cfg.moduleId}/checkout`, '/api/calculators/:anyMod/checkout', '/api/exact-checkout', '/api/checkout/create-session', '/api/stripe/create-checkout-session'], handleTierCheckout);
   app.get('/embed', (req, res) => { res.removeHeader('X-Frame-Options'); res.setHeader('X-Robots-Tag', 'noindex, follow'); res.status(200).type('html').send(renderEmbedWidgetHtml(cfg)); });
-  app.get(['/dossier/sample', '/dossier/sample/:mod'], (req, res) => res.status(200).type('html').send(renderSampleDossierHtml(cfg)));
+  app.get(['/dossier/sample', '/dossier/sample/:mod'], (req, res) => res.status(200).type('html').send(renderSampleDossierHtml(cfg, req.query?.target || req.query?.q)));
   app.use((req, res, next) => {
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
     if (isOwnerIp) { try { res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax'); } catch (_) {} }

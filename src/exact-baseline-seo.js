@@ -765,6 +765,8 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const gCfg = getGrowthConfig(cfg.moduleId);
   const slugName = cleanPath.replace(/^\/(seo|tools|compare)\//, '');
   const currentEntry = entries.find((e) => e.slug === slugName) || [...gCfg.tools, ...gCfg.comparisons].find((x) => x.slug === slugName);
+  const targetParam = (currentEntry && (currentEntry.target || currentEntry.target_slug)) || (cleanPath.startsWith('/scan/') ? decodeURIComponent(cleanPath.slice(6)) : '');
+  const tq = targetParam ? `?target=${encodeURIComponent(targetParam)}` : '';
   const pageTitle = currentEntry ? `${currentEntry.title} | ${cfg.brandName}` : `${cfg.brandName}: ${cfg.explainerText.slice(0, 70)}`;
   const pageDesc = currentEntry ? currentEntry.summary : cfg.explainerText;
 
@@ -818,9 +820,9 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
         license: 'https://creativecommons.org/licenses/by/4.0/',
         variableMeasured: cfg.kpis.map((k) => k.label),
         distribution: [
-          { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: `${hostUrl}/api/github-upgrade/export.csv` },
-          { '@type': 'DataDownload', encodingFormat: 'text/plain', contentUrl: `${hostUrl}/api/github-upgrade/iab-io-addendum.txt` },
-          { '@type': 'DataDownload', encodingFormat: 'message/rfc822', contentUrl: `${hostUrl}/api/github-upgrade/pitch.eml` },
+          { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: `${hostUrl}/api/github-upgrade/export.csv${tq}` },
+          { '@type': 'DataDownload', encodingFormat: 'text/plain', contentUrl: `${hostUrl}/api/github-upgrade/iab-io-addendum.txt${tq}` },
+          { '@type': 'DataDownload', encodingFormat: 'message/rfc822', contentUrl: `${hostUrl}/api/github-upgrade/pitch.eml${tq}` },
           { '@type': 'DataDownload', encodingFormat: 'text/markdown', contentUrl: `${hostUrl}${mdTwinPath}` }
         ]
       },
@@ -839,11 +841,11 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
           offerCount: 5,
           availability: 'https://schema.org/InStock',
           offers: [
-            { '@type': 'Offer', name: 'Single-Row Verified Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD', url: `${hostUrl}/buy/micro_pass` },
-            { '@type': 'Offer', name: 'Target 3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD', url: `${hostUrl}/buy/flash_pass` },
-            { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass` },
-            { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/complete_dossier` },
-            { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b` }
+            { '@type': 'Offer', name: 'Single-Row Verified Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD', url: `${hostUrl}/buy/micro_pass${tq}` },
+            { '@type': 'Offer', name: 'Target 3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD', url: `${hostUrl}/buy/flash_pass${tq}` },
+            { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass${tq}` },
+            { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/complete_dossier${tq}` },
+            { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b${tq}` }
           ]
         }
       },
