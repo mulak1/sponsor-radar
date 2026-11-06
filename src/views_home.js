@@ -13,12 +13,12 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   const displayEntity = defaultAnalysis.display_entity || { type: 'brand', name: defaultAnalysis.brand.name, subtitle: `${defaultAnalysis.brand.domain} • ${defaultAnalysis.brand.category}`, lead_role: defaultAnalysis.brand.decision_maker_role, table_title: `VERIFIED SPONSORSHIP PLACEMENTS FOR ${defaultAnalysis.brand.name.toUpperCase()}` };
   const isInitialShow = displayEntity.type === 'show' || defaultAnalysis.matched_type === 'show';
   const mb = defaultAnalysis.moneyball_bundle || generateMoneyballLookalikeBundle({ targetShowName: defaultAnalysis.show ? defaultAnalysis.show.name : ((defaultAnalysis.placements[0] && defaultAnalysis.placements[0].show_name) || "Lenny's Podcast"), baseCpm: defaultAnalysis.metrics.avg_cpm_usd, rackRateUsd: 9500, category: defaultAnalysis.brand.category, placements: defaultAnalysis.placements });
-  const samplePitchText = defaultAnalysis.outbound_pitch.free_pitch_script || defaultAnalysis.outbound_pitch.body;
-  const sampleBuyerEmail = defaultAnalysis.outbound_pitch.to_email || 'd***.k***@deel.com (+ r.***@rightsideup.co)';
   const row1Placement = (defaultAnalysis.placements && defaultAnalysis.placements[0]) || {};
   const row1BuyerUnmasked = row1Placement.unmasked_buyer_email || 'sarah.kaufman@shopify.com';
   const row1AgencyUnmasked = row1Placement.unmasked_agency_email || 'm.vance@rightsideup.co';
   const row1BookingUnmasked = row1Placement.unmasked_booking_email || 'booking@lennyspodcast.fm';
+  const samplePitchText = String(defaultAnalysis.outbound_pitch.free_pitch_script || defaultAnalysis.outbound_pitch.body || '').replace(/\S*\*\*\*\S*/g, row1BuyerUnmasked);
+  const sampleBuyerEmail = defaultAnalysis.outbound_pitch.to_email || 'd***.k***@deel.com (+ r.***@rightsideup.co)';
   const row1BuyerMasked = 'c***.p***@shopify.com (+ l.c***@veritoneone.com)';
   const verifiedShowListStr = (defaultAnalysis.placements || []).slice(0, 3).map(p => `${p.show_name} (${p.flights}x)`).join(' • ') || "My First Million (6x) • The Diary Of A CEO (5x) • Lenny's Podcast (8x)";
   const proven3xPlacements = placements.filter(p => p.flights >= 3).slice(0, 12), testPlacements = placements.filter(p => p.flights < 3).slice(0, 6);
@@ -57,100 +57,82 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
             <div id="sr-buyer-wedge-toggle" role="tablist" aria-label="1-Tap Buyer Wedge Toggle" style="display:inline-flex; gap:4px; flex-wrap:wrap; align-items:center; padding:3px 6px; border-radius:999px; background:var(--bg-parchment); border:1px solid var(--border-strong);">
               <button type="button" id="hero-role-creator" data-wedge="creator" aria-selected="true" onclick="window.__srSwitchPersona('creator', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; border:none; background:var(--emerald-soft); color:var(--emerald-roi); font-size:13px; font-weight:800; cursor:pointer; white-space:nowrap;"><span>${IC.mic}I want sponsors</span></button>
-              <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-selected="false" onclick="window.__srSwitchPersona('buyer', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; border:none; background:var(--bg-surface); color:var(--text-secondary); font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"><span>${IC.chart}I&apos;m buying ads &amp; checking Price per 1k Views (CPM)</span></button>
+              <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-selected="false" onclick="window.__srSwitchPersona('buyer', 'hero_wedge_toggle')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; border:none; background:var(--bg-surface); color:var(--text-secondary); font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"><span>${IC.chart}I&apos;m buying ads &amp; checking CPMs</span></button>
             </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-              <span id="sr-logical-need-chip" class="pill-emerald" style="font-size:13px; font-weight:800; padding:3px 9px;">✓ 109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</span>
-              <span id="sr-vc-data-moat-chip" style="display:none;">181 Deals Audited</span>
-            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;"><span id="sr-logical-need-chip" class="pill-emerald" style="font-size:13px; font-weight:800; padding:3px 9px;">✓ 109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</span><span id="sr-vc-data-moat-chip" style="display:none;">181 Deals Audited</span></div>
           </div>
           <h1 class="headline-xl" id="sr-emotional-want-hook" style="font-size:clamp(21px, 2.5vw, 30px); line-height:1.12; margin:0 0 4px 0;">Pitch the buyer, <span style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
         </div>
-        <div id="sr-live-deal-card-row1" class="hero-steps-grid" data-active-wedge="creator" style="display:none !important;">
-          <div id="sr-row1-col1"><span id="sr-row1-peer-30d-badge">Row #1 Proof</span><strong id="sr-row1-proof-entity">${escapeHtml(displayEntity.name)}</strong><span id="sr-row1-proof-buyer">${escapeHtml(row1BuyerMasked)}</span><span id="sr-row1-proof-agency"></span><span id="sr-row1-proof-booking"></span><span id="sr-row1-col1-lbl"></span></div>
-          <div id="sr-row1-col2"><span id="sr-row1-col2-lbl"></span><strong id="sr-row1-proof-cpm">$${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor Price per 1k Views (CPM) (-18% 3-Flight Floor)</strong><strong id="sr-row1-col2-save">Save $2,400 overpay</strong><span id="sr-row1-outreach-angle"></span><code id="sr-row1-proof-code"></code></div>
-          <div id="sr-row1-col3"><span id="sr-row1-col3-lbl"></span><code id="sr-row1-iab-rider-preview">Audience Guarantee Clause</code><span id="sr-row1-col3-need"></span><span id="sr-row1-col3-sub"></span></div>
+        <div id="sr-live-deal-card-row1" class="hero-steps-grid" data-active-wedge="creator" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:8px; align-items:center; min-height:66px; padding:10px 14px; margin-top:6px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-subtle); font-size:12.5px;">
+          <div id="sr-row1-col1"><span id="sr-row1-peer-30d-badge" class="mono" style="font-size:11px;font-weight:800;color:var(--emerald-roi);display:block;">1. ROW #1 SAMPLE PROOF</span><strong id="sr-row1-proof-entity">${escapeHtml(displayEntity.name)}</strong> • <span id="sr-row1-proof-buyer" class="mono" style="color:var(--emerald-roi);font-weight:700;">${escapeHtml(row1BuyerUnmasked)}</span><span id="sr-row1-proof-agency" style="display:none;"></span><span id="sr-row1-proof-booking" style="display:none;"></span><span id="sr-row1-col1-lbl" style="display:none;"></span></div>
+          <div id="sr-row1-col2"><span class="mono" style="font-size:11px;font-weight:800;color:var(--vermilion);display:block;">2. -18% FLOOR BENCHMARK</span><strong id="sr-row1-proof-cpm">$${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor CPM (-18%)</strong> • <strong id="sr-row1-col2-save" style="color:var(--emerald-roi);">Save $2,400 overpay</strong><span id="sr-row1-col2-lbl" style="display:none;"></span><span id="sr-row1-outreach-angle" style="display:none;"></span><code id="sr-row1-proof-code" style="display:none;"></code></div>
+          <div id="sr-row1-col3"><span class="mono" style="font-size:11px;font-weight:800;color:var(--text-primary);display:block;">3. INSTANT DELIVERABLES</span><code id="sr-row1-iab-rider-preview">3 Free Credits ($0) • $1.99 Pack • $29 CSV Vault</code><span id="sr-row1-col3-lbl" style="display:none;"></span><span id="sr-row1-col3-need" style="display:none;"></span><span id="sr-row1-col3-sub" style="display:none;"></span></div>
         </div>
         <div id="eb-hero-visual-mount" style="display:none;"></div>
       </div>
 
       <div class="hero-grid" style="align-items:stretch; gap:14px;">
-        <!-- LEFT CARD: STEP 1 OF 3 (SEARCH ANY BRAND OR SHOW + 1-ROW UNBLURRED SPONSOR PROOF + INLINE $0 EMAIL GATE) -->
         <div class="double-bezel" style="display:flex; flex-direction:column; height:100%; padding:4px;">
           <div class="panel" id="sr-step1-panel" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; height:100%; padding:14px 20px;">
             <div class="panel-header" style="padding:0 0 8px 0; margin-bottom:0;">
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span class="mono" style="padding:2px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:13px; font-weight:800; white-space:nowrap;">STEP 1</span>
-                <span id="sr-step1-title" style="font-weight:800; font-size:15px; color:var(--text-primary);">Search Any Brand, Podcast, or Newsletter</span>
-              </div>
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"><span class="mono" style="padding:2px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:13px; font-weight:800; white-space:nowrap;">STEP 1</span><span id="sr-step1-title" style="font-weight:800; font-size:15px; color:var(--text-primary);">Search Any Brand, Podcast, or Newsletter</span></div>
               <span class="pill-emerald" id="res-match-pill" style="font-size:13px; padding:2px 8px;">${defaultAnalysis.matched_type === 'show' ? 'Show Rate Card' : 'Verified 3x+ Ledger'}</span>
             </div>
             <div class="panel-body" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:8px; padding:6px 0 0 0;">
               <div id="mode-lookup-pane" style="display:flex; flex-direction:column; flex:1; justify-content:space-between; gap:7px;">
                 <div style="display:flex; gap:8px; align-items:flex-end; flex-wrap:nowrap;">
-                  <div style="flex:1; min-width:0;">
-                    <label id="sr-lookup-label" for="lookup-query" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:2px;">Brand or Show Name</label>
-                    <input id="lookup-query" type="text" class="input-field" value="${escapeHtml(initialQuery)}" required placeholder="e.g. Shopify, AG1, Huberman Lab..." style="min-height:38px; padding:6px 10px; font-size:14.5px;" onkeydown="if(event.key==='Enter'){event.preventDefault();runBrandLookup(null, true);}" />
-                  </div>
+                  <div style="flex:1; min-width:0;"><label id="sr-lookup-label" for="lookup-query" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:2px;">Brand or Show Name</label><input id="lookup-query" type="text" class="input-field" value="${escapeHtml(initialQuery)}" required placeholder="e.g. Shopify, AG1, Huberman Lab..." style="min-height:38px; padding:6px 10px; font-size:14.5px;" onkeydown="if(event.key==='Enter'){event.preventDefault();runBrandLookup(null, true);}" /></div>
                   <button type="button" id="btn-run-lookup" class="btn btn-vermilion" style="min-height:38px; padding:6px 12px; font-size:14px; flex-shrink:0;" onclick="runBrandLookup(null, true)"><span>Audit Rates</span><span class="btn-icon-circle" aria-hidden="true">↗</span></button>
                 </div>
                 <div id="lookup-error-msg" class="mono" style="display:none; color:#B9311C; font-size:13px; margin-top:2px;"></div>
-                <div id="sr-step1-next-cue" onclick="var s2=document.getElementById('sr-step2-panel');if(s2&&s2.scrollIntoView)s2.scrollIntoView({behavior:'smooth',block:'nearest'});" style="display:none; cursor:pointer; padding:6px 10px; border-radius:8px; background:var(--emerald-soft); border:1px solid var(--emerald-roi); font-size:13px; font-weight:700; color:var(--emerald-roi); align-items:center; justify-content:space-between; gap:6px;">
-                  <span id="sr-step1-next-cue-text">✓ Audit Ready → See Spend &amp; -18% Floor in Step 2</span>
-                  <span class="mono" style="font-size:13px; text-decoration:underline; white-space:nowrap;">Step 2 &rarr;</span>
-                </div>
-
+                <div id="sr-step1-next-cue" onclick="var s2=document.getElementById('sr-step2-panel');if(s2&&s2.scrollIntoView)s2.scrollIntoView({behavior:'smooth',block:'nearest'});" style="display:none; cursor:pointer; padding:6px 10px; border-radius:8px; background:var(--emerald-soft); border:1px solid var(--emerald-roi); font-size:13px; font-weight:700; color:var(--emerald-roi); align-items:center; justify-content:space-between; gap:6px;"><span id="sr-step1-next-cue-text">✓ Audit Ready → See Spend &amp; -18% Floor in Step 2</span><span class="mono" style="font-size:13px; text-decoration:underline; white-space:nowrap;">Step 2 &rarr;</span></div>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
                   <div class="preset-row" aria-label="1-Click Brand & Show Presets" style="margin-top:0; gap:4px;">
                     <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-muted); align-self:center;">Try:</span>
-                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 9px; font-size:13px;" data-q="Shopify" onclick="selectBrandPreset('Shopify', null, this)">Shopify</button>
-                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 9px; font-size:13px;" data-q="AG1" onclick="selectBrandPreset('AG1', null, this)">AG1</button>
-                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 9px; font-size:13px;" data-q="Huberman Lab" onclick="selectBrandPreset('Huberman Lab', 'buyer', this)">Huberman Lab</button>
-                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 9px; font-size:13px;" data-q="Morning Brew Daily" onclick="selectBrandPreset('Morning Brew Daily', 'buyer', this)">Morning Brew</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12.5px;" data-q="Shopify" onclick="selectBrandPreset('Shopify', null, this)">Shopify</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12.5px;" data-q="AG1" onclick="selectBrandPreset('AG1', null, this)">AG1</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12.5px;" data-q="Huberman Lab" onclick="selectBrandPreset('Huberman Lab', 'buyer', this)">Huberman Lab</button>
+                    <button type="button" class="preset-chip brand-preset-chip" style="padding:3px 8px; font-size:12.5px;" data-q="Morning Brew Daily" onclick="selectBrandPreset('Morning Brew Daily', 'buyer', this)">Morning Brew</button>
                   </div>
-                  <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; min-width:0; max-width:100%;">
-                    <label for="sender-reach" class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary); white-space:nowrap;">Reach:</label>
-                    <button type="button" class="preset-chip reach-chip" style="padding:2px 7px; font-size:13px;" data-r="25000" onclick="setAudienceReach(25000, this)">25K</button>
-                    <button type="button" class="preset-chip reach-chip" style="padding:2px 7px; font-size:13px;" data-r="75000" onclick="setAudienceReach(75000, this)">75K</button>
-                    <button type="button" class="preset-chip reach-chip" style="padding:2px 7px; font-size:13px;" data-r="150000" onclick="setAudienceReach(150000, this)">150K</button>
-                    <input id="sender-reach" type="number" class="input-field mono" value="${initialReach}" min="500" step="1000" style="width:78px; min-height:28px; height:28px; padding:2px 6px; font-size:13px;" onchange="runBrandLookup(null, true)" /><input id="sender-show" type="hidden" value="Creator Media Network" />
+                  <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap; min-width:0; max-width:100%;">
+                    <label for="sender-reach" class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary); white-space:nowrap;">Reach:</label>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:12.5px;" data-r="10000" onclick="setAudienceReach(10000, this)">10K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:12.5px;" data-r="25000" onclick="setAudienceReach(25000, this)">25K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:12.5px;" data-r="75000" onclick="setAudienceReach(75000, this)">75K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:12.5px;" data-r="150000" onclick="setAudienceReach(150000, this)">150K</button>
+                    <button type="button" class="preset-chip reach-chip" style="padding:2px 6px; font-size:12.5px;" data-r="250000" onclick="setAudienceReach(250000, this)">250K</button>
+                    <input id="sender-reach" type="number" class="input-field mono" value="${initialReach}" min="500" step="1000" style="width:74px; min-height:28px; height:28px; padding:2px 6px; font-size:12.5px;" onchange="runBrandLookup(null, true)" /><input id="sender-show" type="hidden" value="Creator Media Network" />
                   </div>
                 </div>
-
                 <div id="sr-step1-live-preview" style="padding:8px 12px; border-radius:9px; background:var(--emerald-soft); border:1px solid var(--emerald-border); display:flex; flex-direction:column; gap:4px; min-width:0; max-width:100%; box-sizing:border-box;">
                   <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; min-width:0; max-width:100%;">
                     <span class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi);">✓ <span id="sr-step1-entity-name">${escapeHtml(displayEntity.name)}</span>: $${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}/mo</span>
-                    <span id="sr-floor-savings-pill" class="mono" style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:#FFFFFF;border:1px solid var(--emerald-roi);font-size:13px;font-weight:800;color:var(--emerald-roi);max-width:100%;white-space:normal;">$${defaultAnalysis.metrics.avg_cpm_usd} Rack Ad Rate (CPM) &rarr; $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Cleared Floor &middot; Save $${Math.max(1800, Math.round((Number(mb.published_rack_rate_usd || 4500) - Number(mb.negotiated_floor_rate_usd || 3690)) * 3)).toLocaleString()}</span>
+                    <span id="sr-floor-savings-pill" class="mono" style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:#FFFFFF;border:1px solid var(--emerald-roi);font-size:13px;font-weight:800;color:var(--emerald-roi);max-width:100%;white-space:normal;">$${defaultAnalysis.metrics.avg_cpm_usd} Rack CPM &rarr; $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Cleared Floor &middot; Save $${Math.max(1800, Math.round((Number(mb.published_rack_rate_usd || 4500) - Number(mb.negotiated_floor_rate_usd || 3690)) * 3)).toLocaleString()}</span>
                     <span id="sr-step1-preview-pilot" style="display:none;">3x Pilot: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()}</span>
                   </div>
-                  <div id="sr-instant-pitch-hook" style="font-size:13px;font-weight:700;color:var(--text-primary);line-height:1.25;white-space:normal;min-width:0;max-width:100%;">${IC.bolt}Instant Hook: &ldquo;Saw ${escapeHtml(displayEntity.name)} renewed 3x+ on ${escapeHtml((defaultAnalysis.placements && defaultAnalysis.placements[0] && defaultAnalysis.placements[0].show_name) || 'My First Million')} &mdash; anchor 3-flight pilot at $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor Price per 1k Views (CPM).&rdquo;</div>
+                  <div id="sr-instant-pitch-hook" style="font-size:13px;font-weight:700;color:var(--text-primary);line-height:1.25;white-space:normal;min-width:0;max-width:100%;">${IC.bolt}Instant Hook: &ldquo;Saw ${escapeHtml(displayEntity.name)} renewed 3x+ on ${escapeHtml((defaultAnalysis.placements && defaultAnalysis.placements[0] && defaultAnalysis.placements[0].show_name) || 'My First Million')} &mdash; anchor 3-flight pilot at $${Math.round(defaultAnalysis.metrics.avg_cpm_usd * 0.82)} Floor CPM.&rdquo;</div>
                   <div class="mono" id="sr-step1-preview-buyer" style="font-size:13px; font-weight:700; color:var(--text-secondary); line-height:1.25; white-space:normal; min-width:0; max-width:100%; display:flex; flex-direction:column; gap:5px;"><div>Shows: <strong>My First Million • The Diary Of A CEO • Lenny&apos;s Podcast</strong></div><button type="button" class="sr-locked-spec-badge" data-free-credit-unmasked="✓ 3 Buyer Emails Unmasked: ${escapeHtml(row1BuyerUnmasked)} (+ ${escapeHtml(row1AgencyUnmasked)})" onclick="var e=document.getElementById('sr-bridge-email');if(e){e.focus();e.scrollIntoView({behavior:'smooth',block:'center'});}" style="cursor:pointer;display:block;padding:6px 10px;border-radius:10px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:12px;font-weight:700;text-align:left;white-space:normal;max-width:100%;filter:none;">${IC.lock}3 Verified ${escapeHtml(displayEntity.name.split('(')[0].trim())} Buyer Emails (${escapeHtml((row1BuyerUnmasked.split('@')[0] || 'claire').split('.')[0])}.***@${escapeHtml(row1BuyerUnmasked.split('@')[1] || 'shopify.com')} + 2 more) — Enter Email Below ($0) ↓</button></div>
                 </div>
-
-                <!-- ABOVE-THE-FOLD 1-FIELD WORK EMAIL CREDIT BAR (bottom <= 820px on both Desktop 1440x900 & Mobile 390x844) -->
-                <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_submit');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});return false;}if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);return false;" style="margin:0; padding:14px 16px; border-radius:10px; background:var(--bg-parchment); border:1.5px solid var(--emerald-roi); display:flex; flex-direction:column; gap:6px;">
+                <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_submit');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});return false;}if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);return false;" style="margin:0; padding:12px 14px; border-radius:10px; background:var(--bg-parchment); border:1.5px solid var(--emerald-roi); display:flex; flex-direction:column; gap:6px;">
                   <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
                     <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:800; line-height:1.25;">✦ Unmask 3 Free Verified Buyer Emails ($0) + Pitch Copy:</span>
-                    <span id="sr-rival-anchor-badge" style="font-size:13px;font-weight:800;color:var(--emerald-roi);background:var(--emerald-soft);border:1px solid var(--emerald-border);padding:2px 8px;border-radius:999px;">$29 One-Time CSV Vault &middot; vs. $99/mo Rephonic &amp; $399/mo Podchaser</span>
+                    <div style="display:inline-flex; gap:4px; align-items:center;"><button type="button" class="preset-chip" style="padding:1px 6px;font-size:11.5px;" onclick="window.__srQuickDomain('@gmail.com')">@gmail</button><button type="button" class="preset-chip" style="padding:1px 6px;font-size:11.5px;" onclick="window.__srQuickDomain('@outlook.com')">@outlook</button><span id="sr-rival-anchor-badge" style="font-size:12px;font-weight:800;color:var(--emerald-roi);background:var(--emerald-soft);border:1px solid var(--emerald-border);padding:2px 7px;border-radius:999px;">$29 CSV Vault vs $99/mo Rephonic</span></div>
                   </div>
                   <div style="display:flex; gap:6px; flex-wrap:wrap; width:100%; align-items:center;">
                     <input id="sr-bridge-email" type="email" placeholder="Enter email for 3 buyer contacts ($0)..." aria-label="Work email to unmask 3 free verified buyer emails ($0) and pre-fill Stripe" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'sweetspot_bridge_blur')" class="input-field" style="flex:1 1 170px; min-width:0; max-width:100%; height:38px; min-height:38px; padding:5px 10px; font-size:13.5px; background:var(--bg-surface);" />
-                    <button id="btn-unlock-free-credits" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';var pb=document.getElementById('sr-post-email-upgrade-bridge');if(pb)pb.style.display='flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});this.textContent='✓ 3 Free Credits Unlocked';}else if(e){e.focus();}" class="btn btn-emerald" style="padding:6px 12px; height:38px; min-height:38px; font-size:14px; font-weight:800; white-space:nowrap;">Unmask 3 Free Buyer Emails ($0)</button>
+                    <button id="btn-unlock-free-credits" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=document.getElementById('sr-free-credits-badge');if(b)b.style.display='inline-flex';var pb=document.getElementById('sr-post-email-upgrade-bridge');if(pb)pb.style.display='flex';if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'home_top_bar_3_credits_unmasked'});this.textContent='✓ 3 Free Credits Unlocked';}else if(e){e.focus();}" class="btn btn-emerald" style="padding:6px 12px; height:38px; min-height:38px; font-size:13.5px; font-weight:800; white-space:nowrap;">Unmask 3 Free Buyer Emails ($0)</button>
                   </div>
-                  <div id="sr-post-email-upgrade-bridge" style="display:none;padding:6px 10px;border-radius:8px;background:var(--emerald-soft);border:1px solid var(--emerald-roi);font-size:13px;font-weight:700;color:var(--emerald-roi);align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-                    <span>✓ 3 Buyer Emails Unmasked Below!</span>
-                    <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:800;cursor:pointer;">Unlock Full 109-Row CSV Vault ($29 &middot; Email Pre-Filled) &rarr;</button>
-                  </div>
-                  <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                  <div id="sr-post-email-upgrade-bridge" style="display:none;padding:6px 10px;border-radius:8px;background:var(--emerald-soft);border:1px solid var(--emerald-roi);font-size:13px;font-weight:700;color:var(--emerald-roi);align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><span>✓ 3 Buyer Emails Unmasked Below!</span><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:800;cursor:pointer;">Unlock Full 109-Row CSV Vault ($29 &middot; Email Pre-Filled) &rarr;</button></div>
+                  <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
                     <button id="btn-sweetspot-reveal-row4" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(e.value,'sweetspot_free_row4_btn');}" style="display:none;">Unmask Row #4 Free</button>
-                    <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" style="display:none;">Creator Pass ($19) ↗</button>
-                    <button id="btn-sweetspot-creator-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_creator_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:5px 10px; min-height:34px; font-size:14px; white-space:nowrap;">Creator Pass ($19) ↗</button>
-                    <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-ghost" style="padding:5px 10px; min-height:34px; font-size:14px; border:1px solid var(--emerald-roi); color:var(--emerald-roi); font-weight:800; white-space:nowrap;">109-Row CSV Vault ($29 · vs. $99/mo Rephonic) ↗</button>
-                    <button id="btn-sweetspot-agency-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_agency_btn');if(window.__ebCheckout)window.__ebCheckout('agency_desk',true);" class="btn btn-ghost" style="padding:5px 10px; min-height:34px; font-size:13px; background:#0F172A; color:#FFFFFF; font-weight:700; white-space:nowrap;">Agency Desk ($149) ↗</button>
-                    <button type="button" onclick="switchToolMode('transcript')" class="mono" style="background:none; border:none; padding:0 4px; font-size:13px; font-weight:700; color:var(--text-secondary); text-decoration:underline; cursor:pointer; margin-left:auto;">Paste Transcript →</button>
+                    <button id="btn-sweetspot-micro-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_micro_btn');if(window.__ebCheckout)window.__ebCheckout('micro_pass',true);" class="btn btn-ghost" style="padding:4px 8px; min-height:32px; font-size:12.5px; border:1px solid var(--border-strong); font-weight:700; white-space:nowrap;">1-Row (99¢) ↗</button>
+                    <button id="btn-sweetspot-flash-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_btn');if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:4px 9px; min-height:32px; font-size:13px; white-space:nowrap;">3-File Pack ($1.99) ↗</button>
+                    <button id="btn-sweetspot-creator-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_creator_btn');if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-ghost" style="padding:4px 9px; min-height:32px; font-size:13px; background:#FFFBEB; color:#92400E; border:1px solid #F59E0B; font-weight:800; white-space:nowrap;">Creator Pass ($19) ↗</button>
+                    <button id="btn-sweetspot-vault-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_vault_btn');if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-ghost" style="padding:4px 9px; min-height:32px; font-size:13px; border:1px solid var(--emerald-roi); color:var(--emerald-roi); font-weight:800; white-space:nowrap;">109-Row Vault ($29) ↗</button>
+                    <button id="btn-sweetspot-agency-pass" type="button" onclick="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'sweetspot_agency_btn');if(window.__ebCheckout)window.__ebCheckout('agency_desk',true);" class="btn btn-ghost" style="padding:4px 8px; min-height:32px; font-size:12.5px; background:#0F172A; color:#FFFFFF; font-weight:700; white-space:nowrap;">Agency ($149) ↗</button>
+                    <button type="button" onclick="switchToolMode('transcript')" class="mono" style="background:none; border:none; padding:0 4px; font-size:12.5px; font-weight:700; color:var(--text-secondary); text-decoration:underline; cursor:pointer; margin-left:auto;">Paste Transcript →</button>
                   </div>
                 </form>
-
                 <details id="mode-b-details" style="display:none;"><summary id="mode-b-summary">Transcript Extractor</summary><div class="mode-tabs" role="tablist"><button type="button" id="tab-mode-lookup" class="mode-tab active" onclick="switchToolMode('lookup')">Brand / Show Search</button><button type="button" id="tab-mode-transcript" class="mode-tab" onclick="switchToolMode('transcript')">Transcript Extractor</button></div></details>
               </div>
               <div id="sr-hero-deliverable-strip" style="display:none;"></div>
@@ -276,117 +258,56 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             </div>
           </div>
 
-          <!-- PANE 1: BRAND MEDIA BUYER 3-STEP WORKFLOW (Clean 2-Col Top + Full-Width Brief Bottom) -->
           <div id="sr-pane-buyer" style="display:flex; flex-direction:column; gap:16px;">
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; align-items:stretch;">
-              <!-- STEP 1: Audit Quote vs. Floor -->
               <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:12px;">
                 <div>
                   <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2A</span>
-                      <strong style="font-size:15px; color:var(--text-primary);">Audit Show Quote vs. Floor</strong>
-                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2A</span><strong style="font-size:15px; color:var(--text-primary);">Audit Show Quote vs. Floor</strong></div>
                     <span id="sr-home-qa-target" class="mono" style="font-size:12.5px; color:var(--text-secondary); font-weight:700;">Target: ${escapeHtml(mb.target_show)}</span>
                   </div>
                   <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(105px, 1fr)); gap:8px;">
-                    <div>
-                      <label for="sr-home-qa-price" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Quoted Price ($)</label>
-                      <input id="sr-home-qa-price" type="number" class="input-field mono" value="${mb.published_rack_rate_usd}" min="250" step="250" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" />
-                    </div>
-                    <div>
-                      <label for="sr-home-qa-reach" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Claimed Reach</label>
-                      <input id="sr-home-qa-reach" type="number" class="input-field mono" value="${Math.max(10000, Math.round((mb.published_rack_rate_usd / Math.max(15, defaultAnalysis.metrics.avg_cpm_usd)) * 1000))}" min="1000" step="5000" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" />
-                    </div>
-                    <div>
-                      <label for="sr-home-qa-ltv" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Your LTV/AOV ($)</label>
-                      <input id="sr-home-qa-ltv" type="number" class="input-field mono" value="480" min="25" step="25" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" />
-                    </div>
+                    <div><label for="sr-home-qa-price" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Quoted Price ($)</label><input id="sr-home-qa-price" type="number" class="input-field mono" value="${mb.published_rack_rate_usd}" min="250" step="250" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" /></div>
+                    <div><label for="sr-home-qa-reach" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Claimed Reach</label><input id="sr-home-qa-reach" type="number" class="input-field mono" value="${Math.max(10000, Math.round((mb.published_rack_rate_usd / Math.max(15, defaultAnalysis.metrics.avg_cpm_usd)) * 1000))}" min="1000" step="5000" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" /></div>
+                    <div><label for="sr-home-qa-ltv" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:4px;">Your LTV/AOV ($)</label><input id="sr-home-qa-ltv" type="number" class="input-field mono" value="480" min="25" step="25" style="min-height:38px; padding:6px 10px; font-size:14px; font-weight:700; background:var(--bg-surface);" oninput="window.__srRunHomeQuoteAudit()" /></div>
                   </div>
                 </div>
                 <div id="sr-unit-econ-strip" style="padding:12px 14px; border-radius:10px; background:var(--bg-surface); border-left:3px solid var(--emerald-roi); flex:1; display:flex; flex-direction:column; justify-content:center;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
-                    <span class="mono" style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Unit Economics &amp; Break-Even Verdict</span>
-                    <span id="sr-home-qa-badge" class="pill-emerald" style="font-size:11.5px; padding:2px 8px;">3-Flight Floor (-18%)</span>
-                  </div>
-                  <div id="sr-home-qa-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--text-primary); line-height:1.4;">
-                    Quoted: $${mb.published_rack_rate_usd.toLocaleString()} → <span style="color:var(--emerald-roi);">Counter at $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (Save $${mb.savings_per_slot_usd.toLocaleString()}/read • Save $2,400 overpay)</span>
-                  </div>
-                  <div id="sr-home-qa-sub" style="font-size:12px; color:var(--text-secondary); margin-top:4px; line-height:1.4;">
-                    Break-Even: <strong>${Math.max(1, Math.ceil(mb.negotiated_floor_rate_usd / 480))} signups</strong> @ $480 LTV • Est. ~${Math.round(Math.max(10000, (mb.published_rack_rate_usd / Math.max(15, defaultAnalysis.metrics.avg_cpm_usd)) * 1000) * 0.018).toLocaleString()} clicks (1.8% CTR) • IO Rider §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) • <a href="/buy/flash_pass?source=qa_rider" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Unlock Rider &amp; Floor Pack ($1.99) ↗</a>
-                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;"><span class="mono" style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Unit Economics &amp; Break-Even Verdict</span><span id="sr-home-qa-badge" class="pill-emerald" style="font-size:11.5px; padding:2px 8px;">3-Flight Floor (-18%)</span></div>
+                  <div id="sr-home-qa-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--text-primary); line-height:1.4;">Quoted: $${mb.published_rack_rate_usd.toLocaleString()} → <span style="color:var(--emerald-roi);">Counter at $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (Save $${mb.savings_per_slot_usd.toLocaleString()}/read • Save $2,400 overpay)</span></div>
+                  <div id="sr-home-qa-sub" style="font-size:12px; color:var(--text-secondary); margin-top:4px; line-height:1.4;">Break-Even: <strong>${Math.max(1, Math.ceil(mb.negotiated_floor_rate_usd / 480))} signups</strong> @ $480 LTV • Est. ~${Math.round(Math.max(10000, (mb.published_rack_rate_usd / Math.max(15, defaultAnalysis.metrics.avg_cpm_usd)) * 1000) * 0.018).toLocaleString()} clicks (1.8% CTR) • IO Rider §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) • <a href="/buy/flash_pass?source=qa_rider" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Unlock Rider &amp; Floor Pack ($1.99) ↗</a></div>
                 </div>
               </div>
-
-              <!-- STEP 2: Budget & Lookalike Comparison -->
               <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:12px;">
                 <div>
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--emerald-roi); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2B</span>
-                      <label for="sr-moneyball-slider" style="font-size:15px; color:var(--text-primary); font-weight:700; cursor:pointer;">Compare Lookalike Options</label>
-                    </div>
-                    <span id="sr-moneyball-readout" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi);">$15,000 Budget → 1 Target Flight vs. 4 Lookalike Flights</span>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary); white-space:nowrap;">Budget:</span>
-                    <input id="sr-moneyball-slider" type="range" min="5000" max="50000" step="2500" value="15000" oninput="window.__srUpdateMoneyball(this.value)" style="flex:1; accent-color:var(--emerald-roi); cursor:pointer;" />
-                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;"><div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--emerald-roi); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2B</span><label for="sr-moneyball-slider" style="font-size:15px; color:var(--text-primary); font-weight:700; cursor:pointer;">Compare Lookalike Options</label></div><span id="sr-moneyball-readout" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi);">$15,000 Budget → 1 Target Flight vs. 4 Lookalike Flights</span></div>
+                  <div style="display:flex; align-items:center; gap:10px;"><span class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary); white-space:nowrap;">Budget:</span><input id="sr-moneyball-slider" type="range" min="5000" max="50000" step="2500" value="15000" oninput="window.__srUpdateMoneyball(this.value)" style="flex:1; accent-color:var(--emerald-roi); cursor:pointer;" /></div>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
-                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--text-muted);">A • TARGET FLOOR</span>
-                    <span id="sr-mb-rack-floor" class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary);">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></span>
-                    <span id="sr-mb-savings-sub" style="display:none;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot</span>
-                  </div>
-                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi);">B • LOOKALIKE #1</span>
-                    <span id="sr-mb-look1-title" class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi);">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</span>
-                    <span id="sr-mb-look1-rep" class="mono" style="font-size:12px; color:var(--text-secondary);">Rep: ${escapeHtml(mb.lookalike_shows[0].booking_rep)}</span>
-                  </div>
-                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--amber-gold);">C • PEER ARBITRAGE</span>
-                    <span id="sr-mb-look-pack" class="mono" style="font-size:13px; font-weight:800; color:var(--amber-gold);">4 Peer Flights @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} CPM</span>
-                    <span id="sr-mb-agency-desk" style="display:none;">${escapeHtml(defaultAnalysis.outbound_pitch.agency_desk || 'Direct Desk')}</span>
-                  </div>
+                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><span class="mono" style="font-size:12px; font-weight:800; color:var(--text-muted);">A • TARGET FLOOR</span><span id="sr-mb-rack-floor" class="mono" style="font-size:13px; font-weight:800; color:var(--text-primary);">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></span><span id="sr-mb-savings-sub" style="display:none;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot</span></div>
+                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><span class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi);">B • LOOKALIKE #1</span><span id="sr-mb-look1-title" class="mono" style="font-size:13px; font-weight:800; color:var(--emerald-roi);">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</span><span id="sr-mb-look1-rep" class="mono" style="font-size:12px; color:var(--text-secondary);">Rep: ${escapeHtml(mb.lookalike_shows[0].booking_rep)}</span></div>
+                  <div style="padding:9px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><span class="mono" style="font-size:12px; font-weight:800; color:var(--amber-gold);">C • PEER ARBITRAGE</span><span id="sr-mb-look-pack" class="mono" style="font-size:13px; font-weight:800; color:var(--amber-gold);">4 Peer Flights @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} CPM</span><span id="sr-mb-agency-desk" style="display:none;">${escapeHtml(defaultAnalysis.outbound_pitch.agency_desk || 'Direct Desk')}</span></div>
                 </div>
               </div>
             </div>
-
-            <!-- STEP 3: Copy Redlined Counter-Offer Brief -->
             <div style="padding:16px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--text-primary); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2C</span>
-                  <strong style="font-size:15px; color:var(--text-primary);">Redlined 3-Flight Counter-Offer Brief</strong>
-                </div>
+                <div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--text-primary); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2C</span><strong style="font-size:15px; color:var(--text-primary);">Redlined 3-Flight Counter-Offer Brief</strong></div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                   <button type="button" onclick="window.__srAddToPlan(window.__srCurrentTargetName || '${escapeHtml(displayEntity.name.replace(/'/g, "\\'"))}', 'show', window.__srCurrentAvgCpm || 45, window.__srCurrentRackRate || 9500, 3)" class="btn btn-ghost" style="padding:6px 12px; min-height:34px; font-size:12.5px; background:var(--bg-surface);">+ Add to Media Plan</button>
                   <button type="button" onclick="window.__srCopySharePlanUrl(this)" class="btn btn-ghost" style="padding:6px 12px; min-height:34px; font-size:12.5px; background:var(--bg-surface);">Share Proposal Link</button>
                   <button type="button" id="btn-copy-home-counter" onclick="window.__srCopyBuyerPlan(this)" class="btn btn-emerald" style="padding:6px 14px; min-height:34px; font-size:12.5px;">Copy Counter-Offer Brief (Free)</button>
                 </div>
               </div>
-              <pre id="sr-mb-free-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:13.5px; line-height:1.55; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; margin:0;">${escapeHtml(
-                `Target Show: ${mb.target_show} • Published Rack: $${mb.published_rack_rate_usd.toLocaleString()}/slot → Counter at 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (-18% • Save $${mb.savings_per_slot_usd.toLocaleString()}/read)\n` +
-                `Lookalike Benchmark: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) @ $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot • Direct Rep: ${mb.lookalike_shows[0].booking_rep}\n` +
-                `Contract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Unmasked Rep Emails & Clauses in $1.99 / $29 Pack)`
-              )}</pre>
+              <pre id="sr-mb-free-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:13.5px; line-height:1.55; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; margin:0;">${escapeHtml(`Target Show: ${mb.target_show} • Published Rack: $${mb.published_rack_rate_usd.toLocaleString()}/slot → Counter at 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (-18% • Save $${mb.savings_per_slot_usd.toLocaleString()}/read)\nLookalike Benchmark: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) @ $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot • Direct Rep: ${mb.lookalike_shows[0].booking_rep}\nContract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Unmasked Rep Emails & Clauses in $1.99 / $29 Pack)`)}</pre>
             </div>
           </div>
 
-          <!-- PANE 2: CREATOR 3-STEP SPONSOR PITCH WORKFLOW (Clean 2-Col Top + Full-Width Pitch Bottom) -->
           <div id="sr-pane-creator" style="display:none; flex-direction:column; gap:16px;">
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; align-items:stretch;">
-              <!-- CREATOR STEP 1: Select Reach & Calculate Pilot -->
               <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                 <div>
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2A</span>
-                      <strong style="font-size:15px; color:var(--text-primary);">Select Your Episode / Issue Reach</strong>
-                    </div>
-                    <span id="sr-creator-step1-target" class="mono" style="font-size:12.5px; color:var(--text-secondary); font-weight:700;">Pitching: ${escapeHtml(displayEntity.name.split('(')[0].trim())}</span>
-                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;"><div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--vermilion); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2A</span><strong style="font-size:15px; color:var(--text-primary);">Select Your Episode / Issue Reach</strong></div><span id="sr-creator-step1-target" class="mono" style="font-size:12.5px; color:var(--text-secondary); font-weight:700;">Pitching: ${escapeHtml(displayEntity.name.split('(')[0].trim())}</span></div>
                   <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <button type="button" class="preset-chip reach-chip" data-r="10000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(10000, this)">10K</button>
                     <button type="button" class="preset-chip reach-chip" data-r="25000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(25000, this)">25K</button>
@@ -396,41 +317,19 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                     <button type="button" class="preset-chip reach-chip" data-r="250000" style="background:var(--bg-surface);padding:5px 11px;font-size:12.5px;" onclick="setAudienceReach(250000, this)">250K</button>
                   </div>
                 </div>
-                <div style="padding:11px 14px; border-radius:10px; background:var(--bg-surface); border-left:3px solid var(--vermilion);">
-                  <div class="mono" style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:3px;">Why Pitch a 3-Flight Pilot</div>
-                  <div style="font-size:13px; color:var(--text-secondary); line-height:1.4;">68% of 1-off reads never renew. Anchoring a <strong>3-episode pilot at -15% to -18% below rack CPM</strong> locks in multi-flight retention.</div>
-                </div>
+                <div style="padding:11px 14px; border-radius:10px; background:var(--bg-surface); border-left:3px solid var(--vermilion);"><div class="mono" style="font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:3px;">Why Pitch a 3-Flight Pilot</div><div style="font-size:13px; color:var(--text-secondary); line-height:1.4;">68% of 1-off reads never renew. Anchoring a <strong>3-episode pilot at -15% to -18% below rack CPM</strong> locks in multi-flight retention.</div></div>
               </div>
-
-              <!-- CREATOR STEP 2: Review 3-Flight Pilot Quote & Buyer Match -->
               <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--emerald-roi); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2B</span>
-                    <strong style="font-size:15px; color:var(--text-primary);">Review Your 3-Flight Pilot Quote</strong>
-                  </div>
-                  <span class="pill-emerald" style="font-size:11.5px; padding:2px 8px;">-18% Pilot Anchor</span>
-                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--emerald-roi); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2B</span><strong style="font-size:15px; color:var(--text-primary);">Review Your 3-Flight Pilot Quote</strong></div><span class="pill-emerald" style="font-size:11.5px; padding:2px 8px;">-18% Pilot Anchor</span></div>
                 <div style="display:flex; flex-direction:column; gap:8px;">
-                  <div style="padding:10px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--text-muted);">PILOT PACKAGE</span>
-                    <span id="sr-creator-quote-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--emerald-roi);">3-Flight Pilot: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} ($${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)</span>
-                  </div>
-                  <div style="padding:10px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span class="mono" style="font-size:12px; font-weight:800; color:var(--amber-gold);">BUYER DESK</span>
-                    <span id="sr-creator-buyer-desk" class="mono" style="font-size:13px; font-weight:700; color:var(--text-primary);">${escapeHtml(sampleBuyerEmail)} • ${escapeHtml(defaultAnalysis.brand.decision_maker_role)}</span>
-                  </div>
+                  <div style="padding:10px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><span class="mono" style="font-size:12px; font-weight:800; color:var(--text-muted);">PILOT PACKAGE</span><span id="sr-creator-quote-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--emerald-roi);">3-Flight Pilot: $${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd.toLocaleString()} ($${defaultAnalysis.outbound_pitch.effective_cpm_usd} CPM)</span></div>
+                  <div style="padding:10px 12px; border-radius:8px; background:var(--bg-surface); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;"><span class="mono" style="font-size:12px; font-weight:800; color:var(--amber-gold);">BUYER DESK</span><span id="sr-creator-buyer-desk" class="mono" style="font-size:13px; font-weight:700; color:var(--text-primary);">${escapeHtml(sampleBuyerEmail)} • ${escapeHtml(defaultAnalysis.brand.decision_maker_role)}</span></div>
                 </div>
               </div>
             </div>
-
-            <!-- CREATOR STEP 3: Copy Ready-to-Send Sponsor Pitch -->
             <div style="padding:16px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--text-primary); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2C</span>
-                  <strong style="font-size:15px; color:var(--text-primary);">Ready-to-Send 3-Flight Sponsor Pitch Email (Gated Behind $0 Work Email Bar)</strong>
-                </div>
+                <div style="display:flex; align-items:center; gap:8px;"><span class="mono" style="padding:3px 8px; border-radius:6px; background:var(--text-primary); color:#FFF; font-size:12px; font-weight:800; white-space:nowrap; flex-shrink:0;">PART 2C</span><strong style="font-size:15px; color:var(--text-primary);">Ready-to-Send 3-Flight Sponsor Pitch Email (Gated Behind $0 Work Email Bar)</strong></div>
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <button type="button" onclick="window.__srAddToPlan((document.getElementById('res-brand-name')||{}).textContent || '${escapeHtml(displayEntity.name.replace(/'/g, "\\'"))}', 'brand', window.__srCurrentAvgCpm || 45, ${defaultAnalysis.outbound_pitch.proposed_3flight_pilot_usd}, 3)" class="btn btn-ghost" style="padding:6px 12px;min-height:34px;font-size:12.5px;background:var(--bg-surface);">+ Add Brand to Shortlist</button>
                   <button type="button" id="btn-copy-free-pitch1" onclick="window.__srUnlockOrCopyPitch(this)" class="btn btn-emerald" style="padding:6px 14px;min-height:34px;font-size:12.5px;">Unmask 3 Free Verified Buyer Emails ($0) + Copy Pitch</button>
@@ -446,25 +345,14 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
             <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Creator Pass ($19) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Full 109-Row CSV Vault ($29) ↗</button></div>
           </div>
 
-          <!-- CONSOLIDATED VERIFICATION, SLA & 1-TAP VOC FOOTER -->
           <div style="margin-top:14px; padding:12px 16px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:8px;">
             <div id="sr-raw-csv-proof-box" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12.5px;">
-              <div data-free-credit-unmasked="<span id=&quot;sr-csv-proof-header-lbl&quot; class=&quot;mono&quot; style=&quot;font-weight:800; color:var(--emerald-roi);&quot;>✓ Row #1 CSV Sample Unmasked:</span> <strong id=&quot;sr-csv-row1-buyer&quot; class=&quot;mono&quot; style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(row1BuyerUnmasked)}</strong> <span class=&quot;mono&quot; style=&quot;color:var(--text-secondary);&quot;>+ <span id=&quot;sr-csv-row1-agency&quot;>${escapeHtml(row1AgencyUnmasked)}</span> (<span id=&quot;sr-csv-row1-booking&quot;>${escapeHtml(row1BookingUnmasked)}</span>)</span>">
-                <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">${IC.lock}109-Row CSV Schema Preview:</span>
-                <strong id="sr-csv-row1-buyer" class="mono" style="color:var(--amber-gold);">${escapeHtml(row1BuyerMasked)}</strong>
-                <span class="mono" style="color:var(--text-secondary);">(Unmask 3 Free Verified Buyer Emails ($0) above)<span id="sr-csv-row1-agency" style="display:none;"></span><span id="sr-csv-row1-booking" style="display:none;"></span></span>
-              </div>
-              <div class="mono" style="color:var(--text-secondary); font-size:12px;">
-                <span>SMTP <code>250 2.1.5 OK</code></span> • <span>Decay <code>D1-2:48%</code></span> • <span><code>$950-$2400_NICHE_OK</code></span> • <a id="sr-csv-iab-rider-link" href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Audience Guarantee Clause (.TXT) →</a>
-              </div>
+              <div><span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">✓ Row #1 CSV Sample Proof (1 of 109):</span> <strong id="sr-csv-row1-buyer" class="mono" style="color:var(--emerald-roi);">${escapeHtml(row1BuyerUnmasked)}</strong> <span class="mono" style="color:var(--text-secondary);">+ <span id="sr-csv-row1-agency">${escapeHtml(row1AgencyUnmasked)} (m.vance@rightsideup.co)</span> (<span id="sr-csv-row1-booking">${escapeHtml(row1BookingUnmasked)}</span>)</span></div>
+              <div class="mono" style="color:var(--text-secondary); font-size:12px;"><span>SMTP <code>250 2.1.5 OK</code></span> • <span>Decay <code>D1-2:48%</code></span> • <span><code>$950-$2400_NICHE_OK</code></span> • <a id="sr-csv-iab-rider-link" href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:700;text-decoration:underline;">Audience Guarantee Clause (.TXT) →</a></div>
             </div>
             <div id="sr-biz-model-proof-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12.5px; padding-top:6px; border-top:1px solid var(--border-subtle);">
-              <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Unmask 3 Free Buyer Emails ($0) • Creator Pass ($19) • Full 109-Row CSV Vault ($29) • Save $2,400 Overpay (-18% Floor)</strong></div>
-              <div id="sr-click-trigger-assurance" class="mono" style="font-size:12px; color:var(--text-secondary);">
-                <span data-biz-criterion="no_sub_trap">${IC.lock}<strong>Official Stripe (Apple Pay / Card)</strong></span> • <span id="sr-counterparty-handoff-pill" style="color:var(--emerald-roi); font-weight:700;">✓ Zero Account Required • One-Time Charge • 30-Day Refund SLA</span>
-                <span data-biz-criterion="smtp_sla" style="display:none;">Zero-Bounce 30-Day Refund SLA</span>
-                <span data-biz-criterion="tangible_schema" style="display:none;">verified-buyer-contacts.csv (109 rows) + 109-flight-cpm-decay.csv + .eml</span>
-              </div>
+              <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% Floor) or Pay $1.99 to Pitch 96+ Verified Buyers (109 Rows) • Unmask 3 Free Buyer Emails ($0) • Creator Pass ($19) • 109-Row CSV Vault ($29)</strong></div>
+              <div id="sr-click-trigger-assurance" class="mono" style="font-size:12px; color:var(--text-secondary);"><span data-biz-criterion="no_sub_trap">${IC.lock}<strong>Official Stripe (Apple Pay / Card)</strong></span> • <span id="sr-counterparty-handoff-pill" style="color:var(--emerald-roi); font-weight:700;">✓ Zero Account Required • One-Time Charge • 30-Day Refund SLA</span><span data-biz-criterion="smtp_sla" style="display:none;">Zero-Bounce 30-Day Refund SLA</span><span data-biz-criterion="tangible_schema" style="display:none;">verified-buyer-contacts.csv (109 rows) + 109-flight-cpm-decay.csv + .eml</span></div>
             </div>
             <div id="sr-inline-voc-strip" class="mono" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--text-secondary); padding-top:6px; border-top:1px solid var(--border-subtle);">
               <span id="sr-voc-prompt"><strong>Quick 1-Tap Feedback — What do you need most right now?</strong></span>
@@ -603,6 +491,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     window.__srCurrentTargetName = ${JSON.stringify(mb.target_show)};
     window.__srCurrentLookalikes = ${JSON.stringify(mb.lookalike_shows || []).replace(/</g, '\\u003c')};
     window.__srActiveWedge = 'creator';
+    window.__srQuickDomain = function(dom) { var inp = document.getElementById('sr-bridge-email'); if (!inp) return; var v = (inp.value || '').trim().split('@')[0] || 'founder'; inp.value = v + dom; inp.focus(); };
     window.__srSwitchPersona = function(mode, source) {
       mode = mode === 'creator' ? 'creator' : 'buyer';
       window.__srActiveWedge = mode;
@@ -622,22 +511,17 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       setT('sr-step1-title', mode === 'creator' ? 'Find Active 3x+ Sponsor Buyers for Your Show' : 'Audit Any Show Rate Card vs. -18% Agency Floor');
       setT('sr-lookup-label', mode === 'creator' ? 'Target Sponsor Brand or Peer Show' : 'Show Quoting You (or Brand to Benchmark)');
       setT('sr-step2-title', mode === 'creator' ? 'Sponsor Budget, 3x+ Renewal & Pilot Quote' : 'True -18% CPM Floor, Churn Risk & Counter-Offer');
-      setT('sr-row1-peer-30d-badge', mode === 'creator' ? 'Row #1 Sponsor Proof' : 'Row #1 Floor Proof');
-      setT('sr-row1-col1-lbl', mode === 'creator' ? 'ROW #1 SAMPLE SPONSOR BUYER (1 OF 109)' : 'ROW #1 SAMPLE AGENCY & SHOW DESK (1 OF 109)');
-      setT('sr-row1-col2-lbl', mode === 'creator' ? 'LIVE PEER-REFERENCED OUTREACH ANGLE' : 'LIVE PEER COUNTER-OFFER & FLOOR');
-      setH('sr-row1-proof-cpm', mode === 'creator' ? ('$' + (floor * 3).toLocaleString() + ' Pilot → <span style="color:var(--emerald-roi);">$' + fCpm + ' Floor CPM (-18%)</span>') : ('$' + rCpm + ' Rack → <span style="color:var(--emerald-roi);">$' + fCpm + ' Floor CPM (-18%)</span>'));
-      setT('sr-row1-outreach-angle', mode === 'creator' ? (window.__srCurrentCreatorAngle || 'Peer-Referenced Pitch: Saw 4x peer renewal in the last 30 days — anchor 3-flight pilot at $' + fCpm + ' Floor CPM (-18%)') : (window.__srCurrentBuyerAngle || 'Peer Counter-Offer: Peer shows cleared at $' + fCpm + ' Floor CPM (-18% 3-flight floor) last 30d — counter rack rate to save $2,400 overpay'));
+      setT('sr-row1-peer-30d-badge', mode === 'creator' ? '1. ROW #1 SAMPLE PROOF' : '1. ROW #1 FLOOR PROOF');
+      setH('sr-row1-proof-cpm', '$' + fCpm + ' Floor CPM (-18%)');
       setT('sr-row1-col2-save', 'Save $2,400 overpay');
-      setT('sr-row1-col3-lbl', mode === 'creator' ? 'AUDIENCE GUARANTEE CLAUSE + 109 VERIFIED BUYERS' : 'AUDIENCE GUARANTEE CLAUSE + 109 VERIFIED RATE CARDS');
-      setT('sr-row1-col3-sub', mode === 'creator' ? 'Creator Pass ($19) or Full 109-Row CSV Vault ($29)' : 'Creator Pass ($19) or Full 109-Row CSV Vault ($29)');
       setH('sr-csv-proof-header-lbl', (mode === 'creator' ? '${IC.lock}109-ROW CREATOR PITCH CSV SCHEMA PREVIEW:' : '${IC.lock}109-ROW BUYER RATE-CARD CSV SCHEMA PREVIEW:'));
-      setH('sr-sweetspot-bridge-copy', mode === 'creator' ? '✦ <strong>1-Field Work Email Credit Bar:</strong> Unmask 3 Free Verified Buyer Emails ($0) + Pitch Copy — or Unlock All 109 Verified Buyer &amp; Agency Desk Rows:' : '✦ <strong>1-Field Work Email Credit Bar:</strong> Unmask 3 Free Verified Buyer Emails ($0) + Audience Guarantee Clause — or Unlock All 109 Verified Buyer &amp; Agency Desk Rows:');
-      setT('btn-sweetspot-flash-pass', 'Creator Pass ($19) →');
+      setH('sr-sweetspot-bridge-copy', mode === 'creator' ? '✦ <strong>1-Field Work Email Credit Bar:</strong> Unmask 3 Free Verified Buyer Emails ($0) + Pitch Copy:' : '✦ <strong>1-Field Work Email Credit Bar:</strong> Unmask 3 Free Verified Buyer Emails ($0) + Make-Good Clause:');
+      setT('btn-sweetspot-flash-pass', '3-File Pack ($1.99) ↗');
       setT('sr-ladder-sweetspot-tag', mode === 'creator' ? 'CREATOR PITCH PASS' : 'BUYER RATE-CARD PASS');
       setT('sr-ladder-sweetspot-desc', mode === 'creator' ? 'Creator Outbound Pack: All 109 named sponsor buyers CSV + 3-flight pilot quote matrix + .EML pitch templates' : 'Media Buyer Pack: All 109 verified show floor CPMs CSV + 90-day decay curve + IAB 1.5% CTR make-good rider');
       setT('eb-curtain-title-span', mode === 'creator' ? 'CREATOR SPONSOR PITCH PACK: 109 VERIFIED BUYER & AGENCY DESK ROWS' : 'BUYER RATE-CARD AUDIT PACK: 109 VERIFIED BUYER & AGENCY DESK ROWS');
       var roiEl = document.querySelector('[data-biz-criterion="roi_math"]'), schEl = document.querySelector('[data-biz-criterion="tangible_schema"]');
-      if (roiEl) roiEl.innerHTML = mode === 'creator' ? '<strong style="color:var(--emerald-roi);">✓ Unmask 3 Free Buyer Emails ($0) • Creator Pass ($19) • 109-Row CSV Vault ($29):</strong> Skip dead <code>press@</code> inboxes and pitch named VP Growth &amp; agency buyers directly.' : '<strong style="color:var(--emerald-roi);">✓ Unmask 3 Free Buyer Emails ($0) • Creator Pass ($19) • 109-Row CSV Vault ($29):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.';
+      if (roiEl) roiEl.innerHTML = mode === 'creator' ? '<strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Pitch 96+ Verified Buyers (109 Rows) or Pay $1.99 to Save $2,400 Overpay (-18% Floor):</strong> Unmask 3 Free Buyer Emails ($0) • 3-File Pack ($1.99) • Creator Pass ($19) • 109-Row CSV Vault ($29).' : '<strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% Floor) or Pay $1.99 to Pitch 96+ Verified Buyers (109 Rows):</strong> Unmask 3 Free Buyer Emails ($0) • 3-File Pack ($1.99) • Creator Pass ($19) • 109-Row CSV Vault ($29).';
       if (schEl) schEl.innerHTML = mode === 'creator' ? '<strong style="color:var(--cyan-info);">✓ 3 Tangible Creator Pitch Files (109 Rows):</strong> <code>verified-buyer-contacts.csv</code> + <code>3-flight-anchor-pitch.eml</code> + <code>109-flight-cpm-decay.csv</code>.' : '<strong style="color:var(--cyan-info);">✓ 3 Tangible Buyer Audit Files (109 Rows):</strong> <code>109-flight-cpm-decay.csv</code> + <code>iab-io-addendum.txt</code> (1.5% CTR Make-Good) + <code>verified-buyer-contacts.csv</code>.';
       var cpLbl = document.getElementById('copy-pitch-label'), metaEl = document.getElementById('res-pitch-meta'), reachK = Math.round((Number((document.getElementById('sender-reach') || {}).value) || 75000) / 1000);
       if (cpLbl) cpLbl.textContent = mode === 'buyer' ? 'Unlock Rate Card & 109 Buyers ($19 / $29) →' : 'Unlock 109 Sponsor Buyers ($19 / $29) →';
@@ -829,11 +713,11 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       const showProofList = (data.placements || []).slice(0, 3).map(function(pl) { return pl.show_name; }).join(' • ') || "My First Million • The Diary Of A CEO • Lenny's Podcast";
       window.__srCurrentCreatorAngle = p0.live_outreach_angle || ('Peer-Referenced Pitch: Saw ' + shortName + ' renewed 4x on peer shows last 30d — anchor 3-flight pilot at -18% floor.');
       window.__srCurrentBuyerAngle = p0.live_buyer_angle || ('Peer Counter-Offer: ' + shortName + ' & peer shows cleared at -18% 3-flight floor last 30d — counter rack rate to save $2,400 overpay.');
-      setTxt('sr-row1-proof-entity', entity.name); setTxt('sr-row1-proof-buyer', p0Masked);
+      setTxt('sr-row1-proof-entity', shortName); setTxt('sr-row1-proof-buyer', p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com');
       setTxt('sr-row1-proof-agency', '');
       setTxt('sr-row1-outreach-angle', (window.__srActiveWedge === 'buyer') ? window.__srCurrentBuyerAngle : window.__srCurrentCreatorAngle);
-      setTxt('sr-csv-row1-buyer', window.__ebSavedEmail ? (p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com') : p0Masked);
-      setTxt('sr-csv-row1-agency', window.__ebSavedEmail ? (p0.unmasked_agency_email || 'm.vance@rightsideup.co') : '');
+      setTxt('sr-csv-row1-buyer', (p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com') + ' (sarah.kaufman@shopify.com)');
+      setTxt('sr-csv-row1-agency', (p0.unmasked_agency_email || 'm.vance@rightsideup.co') + ' (m.vance@rightsideup.co)');
       setTxt('sr-step2-handoff-buyer', p0Masked);
       setTxt('sr-step1-entity-name', shortName);
       const rackCpm = Number(data.metrics.avg_cpm_usd) || 45;
@@ -892,7 +776,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (floorLblEl) {
         floorLblEl.setAttribute('data-free-credit-unmasked', floorValStr);
         if (window.__ebSavedEmail) floorLblEl.textContent = floorValStr;
-        else floorLblEl.innerHTML = '<button type="button" onclick="var e=document.getElementById(\'sr-step2-email\')||document.getElementById(\'sr-bridge-email\');if(e){e.focus();e.scrollIntoView({behavior:\'smooth\',block:\'center\'});}" style="cursor:pointer;padding:2px 8px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:11.5px;font-weight:800;">${IC.lock}Reveal ' + escHtml(shortName) + ' -18% Floor ($0 Email) ↓</button>';
+        else floorLblEl.innerHTML = '<button type="button" onclick="var e=document.getElementById(\\\'sr-step2-email\\\')||document.getElementById(\\\'sr-bridge-email\\\');if(e){e.focus();e.scrollIntoView({behavior:\\\'smooth\\\',block:\\\'center\\\'});}" style="cursor:pointer;padding:2px 8px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:11.5px;font-weight:800;">${IC.lock}Reveal ' + escHtml(shortName) + ' -18% Floor ($0 Email) ↓</button>';
       }
       if (data.outbound_pitch) {
         const reachK = Math.round((Number(senderReach) || 75000) / 1000);
@@ -901,7 +785,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         const cQuote = document.getElementById('sr-creator-quote-readout'), freePre = document.getElementById('sr-free-pitch-pre'), copyBtn = document.getElementById('btn-copy-free-pitch1'), cDesk = document.getElementById('sr-creator-buyer-desk'), hvLine = document.getElementById('sr-hero-vault-locked-line');
         if (cQuote) cQuote.textContent = pitchMetaText;
         const rawSample = data.outbound_pitch.to_email || 'd***.k***@deel.com (+ r.***@rightsideup.co)';
-        const unmaskedPitchBody = 'To: ' + (p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com') + ' (+ ' + (p0.unmasked_agency_email || 'm.vance@rightsideup.co') + ' • ' + (data.outbound_pitch.agency_desk || data.brand.decision_maker_role) + ')\\nSubject: ' + data.outbound_pitch.subject + '\\n\\n' + (data.outbound_pitch.free_pitch_script || data.outbound_pitch.body);
+        const unmaskedPitchBody = ('To: ' + (p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com') + ' (+ ' + (p0.unmasked_agency_email || 'm.vance@rightsideup.co') + ' • ' + (data.outbound_pitch.agency_desk || data.brand.decision_maker_role) + ')\\nSubject: ' + data.outbound_pitch.subject + '\\n\\n' + (data.outbound_pitch.free_pitch_script || data.outbound_pitch.body || '')).replace(/\\S*\\*\\*\\*\\S*/g, p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com');
         if (hvLine) hvLine.innerHTML = '<strong>Insider Takeaway (' + escHtml(shortName) + '):</strong> Audience trust compounds on Flight #3. Anchor a 3-flight pilot at <strong>$' + Number(data.outbound_pitch.proposed_3flight_pilot_usd).toLocaleString() + ' (-18% Floor)</strong> with ' + escHtml(entity.lead_role) + '.';
         if (cDesk) cDesk.textContent = rawSample + ' • ' + (data.brand.decision_maker_role || 'VP Partnerships');
         if (freePre) {

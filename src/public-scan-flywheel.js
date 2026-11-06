@@ -415,14 +415,10 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       </div>
       <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="padding:10px 14px;border-radius:10px;background:#ECFDF5;border:1px solid #A7F3D0;font-size:12.5px;color:#0F172A;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
-          <strong style="color:#047857;">ROW #1 SAMPLE PLACEMENT PROOF (1 OF 109)</strong>
-          <span style="padding:2px 8px;border-radius:999px;background:#047857;color:#FFFFFF;font-size:11px;font-weight:800;">Renewed on Peer Shows (Last 30 Days)</span>
+          <strong style="color:#047857;">1. ROW #1 SAMPLE PROOF</strong>
+          <span style="padding:2px 8px;border-radius:999px;background:#047857;color:#FFFFFF;font-size:11px;font-weight:800;">Renewed 3x+ (Last 30d)</span>
         </div>
-        <div style="margin-bottom:6px;word-break:break-word;">Verified Shows: <strong>My First Million • The Diary Of A CEO • Lenny's Podcast</strong> • Named Buyer: <strong data-free-credit-unmasked="sarah.kaufman@shopify.com" style="color:#047857;">sarah.***@shopify.com</strong> • Agency Desk: <strong data-free-credit-unmasked="m.vance@rightsideup.co" style="color:#B45309;">m.***@rightsideup.co</strong> (Right Side Up Podcast Desk) • <code style="white-space:normal;word-break:break-word;">Audience Guarantee Clause (-18% Floor + 1.5% CTR Guarantee)</code></div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-          <button type="button" class="sr-locked-spec-badge" data-free-credit-unmasked="✓ Free Credit #1 Unmasked: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)" onclick="var e=document.getElementById('eb-scan-row4-email')||document.getElementById('eb-scan-step1-email');if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.focus();}" style="cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid #047857;background:#FFFFFF;color:#047857;font-size:12px;font-weight:700;filter:none;max-width:100%;white-space:normal;text-align:left;">${IC.lock}Verified Buyer Email Hidden (1 of 3 Free Credits) — Tap to Reveal ($0) ↑</button>
-          <a href="/buy/creator_pass?target=${esc(encodeURIComponent(scan.target))}" class="sr-locked-spec-badge" rel="nofollow" style="padding:4px 10px;border-radius:999px;border:1px solid #F59E0B;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;max-width:100%;white-space:normal;text-align:left;">${IC.lock}Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a>
-        </div>
+        <div style="word-break:break-word;"><strong>Shopify:</strong> <strong data-free-credit-unmasked="sarah.kaufman@shopify.com" style="color:#047857;">sarah.kaufman@shopify.com</strong> • <strong data-free-credit-unmasked="m.vance@rightsideup.co" style="color:#B45309;">m.vance@rightsideup.co</strong> • <strong>$34 Floor CPM (-18% • Save $2,400 overpay)</strong> • <code>1.5% CTR Guarantee</code></div>
       </div>
       <div id="sr-raw-csv-proof-box" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;font-size:12px;max-width:100%;box-sizing:border-box;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
@@ -430,7 +426,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
           <span style="color:#475569;">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">Preview Sponsor Agreement Rider (.TXT) →</a></span>
         </div>
         <div style="font-family:monospace;padding:6px 10px;border-radius:6px;background:#FFFFFF;border:1px solid #E2E8F0;color:#0F172A;overflow-x:hidden;white-space:normal;word-break:break-all;font-size:11.5px;max-width:100%;box-sizing:border-box;">
-          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong data-free-credit-unmasked="sarah.kaufman@shopify.com" style="color:#047857;">sarah.***@shopify.com</strong>,<strong data-free-credit-unmasked="m.vance@rightsideup.co" style="color:#B45309;">m.***@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"Audience Guarantee Clause (-18% Floor + 1.5% CTR Guarantee)"
+          1,${esc(scan.target)},VP Growth &amp; Creator Partnerships,<strong data-free-credit-unmasked="sarah.kaufman@shopify.com" style="color:#047857;">sarah.kaufman@shopify.com</strong>,<strong data-free-credit-unmasked="m.vance@rightsideup.co" style="color:#B45309;">m.vance@rightsideup.co</strong>,RENEWED_PEER_SHOWS_LAST_30D,${esc(scan.kpi1)},${esc(scan.kpi2)},$950-$2400_NICHE_OK,"Audience Guarantee Clause (-18% Floor + 1.5% CTR Guarantee)"
         </div>
       </div>
       <div id="sr-click-trigger-assurance" style="font-size:11.5px;color:#475569;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
@@ -438,7 +434,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
         <span style="color:#047857;font-weight:700;">✓ Zero Account/Password Required • One-Time Charge • 30-Day Zero-Bounce Refund</span>
       </div>
       <div id="sr-biz-model-proof-bar" style="padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;font-size:12px;line-height:1.45;">
-        <div data-biz-criterion="roi_math"><strong style="color:#047857;">✓ Save $1,710–$4,200/Read (-18% 3-Flight Floor):</strong> -18% 3-Flight Floor saves <strong>$1,710–$4,200</strong>/booking; 1 Creator Pilot closes <strong>$4,500–$12,500</strong>.</div>
+        <div data-biz-criterion="roi_math"><strong style="color:#047857;">✓ Pay $1.99 to Save $2,400 Overpay (-18% Floor) or Pay $1.99 to Pitch 96+ Verified Buyers (109 Rows):</strong> -18% 3-Flight Floor saves <strong>$1,710–$4,200</strong>/booking; 1 Creator Pilot closes <strong>$4,500–$12,500</strong>.</div>
         <div data-biz-criterion="no_sub_trap"><strong style="color:#0F172A;">✓ 100% One-Time Pass (No Subscription Trap):</strong> $0 3-Credit Work Email Sample • $19 Creator Pass • $29 Full 109-Row CSV Vault • $149 Agency Desk.</div>
         <div data-biz-criterion="smtp_sla"><strong style="color:#B45309;">✓ 24h RSS Crawl + Weekly SMTP SLA:</strong> Free instant replacement if any contact bounces + 30-day 100% money-back guarantee.</div>
         <div data-biz-criterion="tangible_schema"><strong style="color:#0369A1;">✓ 109 Verified Buyer &amp; Agency Desk Rows:</strong> Includes <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_cpm_usd</code>) + <code>109-flight-cpm-decay.csv</code> + <code>3-flight-anchor-pitch.eml</code>.</div>

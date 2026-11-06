@@ -544,60 +544,33 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
         <div class="table-wrap" style="border:none;">
           <table class="ledger-table">
-            <thead>
-              <tr>
-                <th>Brand</th>
-                <th>Show / Publication</th>
-                <th>Renewal Badge</th>
-                <th>Buyer Contact &amp; Agency Desk</th>
-                <th>Slot &amp; Timestamp</th>
-                <th>Vanity URL &amp; Code</th>
-                <th>Est. Spend &amp; Floor</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Brand</th><th>Show / Publication</th><th>Renewal Badge</th><th>Buyer Contact &amp; Agency Desk</th><th>Slot &amp; Timestamp</th><th>Vanity URL &amp; Code</th><th>Est. Spend &amp; Floor</th></tr></thead>
             <tbody id="res-placements-tbody">
               ${placements.map((p, idx) => {
-                const rawBName = p.brand_name || (brand && brand.name) || '';
-                const bName = escapeHtml(rawBName);
-                const sName = escapeHtml(p.show_name || (show && show.name) || '');
+                const rawBName = p.brand_name || (brand && brand.name) || '', bName = escapeHtml(rawBName), sName = escapeHtml(p.show_name || (show && show.name) || '');
                 const rawEmail = p.sponsor_email || (brand && brand.sponsor_email) || 'partnerships@linear.app';
                 const dmRole = escapeHtml(p.decision_maker_role || (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships');
                 const agencyDesk = escapeHtml(getAgencyDesk(p.brand_slug || (brand && brand.slug), page.category));
                 const freshBadge = escapeHtml((p.fresh_budget_badge || getFreshBudgetStatus(`${p.brand_slug}:${p.show_slug}:${idx}`, p.flights).badge).replace(/🟢\s*/g, ''));
-                const rowFloorCpm = Math.round(p.cpm_usd * 0.82);
-                const estCpc = (rowFloorCpm / 18).toFixed(2);
-                const showHostDomain = String(p.show_slug || (show && show.slug) || 'creator-network').replace(/[^a-z0-9]/g, '');
-                const uBuyer = getUnmaskedNamedBuyerEmail(rawEmail);
-                const maskedRowBuyer = maskSponsorEmail(uBuyer);
-                const uAgency = getAgencyBuyerEmail(brand ? brand.domain : 'brand.io', page.category);
+                const rowFloorCpm = Math.round(p.cpm_usd * 0.82), estCpc = (rowFloorCpm / 18).toFixed(2);
+                const uBuyer = getUnmaskedNamedBuyerEmail(rawEmail), maskedRowBuyer = maskSponsorEmail(uBuyer), uAgency = getAgencyBuyerEmail(brand ? brand.domain : 'brand.io', page.category);
                 const liUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(uBuyer.split('@')[0].replace(/[._]/g, ' ') + ' ' + rawBName)}`;
-                const unmaskedHtml = `<div class=&quot;mono&quot; style=&quot;font-size:12.5px;color:var(--emerald-roi);font-weight:800;&quot;>✓ FREE CREDIT #${Math.min(3, idx + 1)} OF 3 (ROW #${idx + 1} UNMASKED FREE): ${escapeHtml(uBuyer)} (+ ${escapeHtml(uAgency)})</div><div style=&quot;font-size:12px;color:var(--text-primary);font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;&quot;><span>${dmRole} • ${agencyDesk}</span><a class=&quot;sr-linkedin-verify-link&quot; href=&quot;${escapeHtml(liUrl)}&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; style=&quot;color:var(--emerald-roi);font-weight:700;text-decoration:underline;&quot;>Verify on LinkedIn ↗</a><button type=&quot;button&quot; class=&quot;sr-row-copy-btn&quot; data-unmasked-copy=&quot;${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}&quot; onclick=&quot;return window.__srCopyFreeCreditRow(this.getAttribute('data-unmasked-copy'),${idx + 1},this);&quot; style=&quot;padding:2px 8px;border-radius:6px;border:1px solid var(--emerald-roi);background:var(--bg-surface);color:var(--emerald-roi);font-size:11.5px;font-weight:700;cursor:pointer;&quot;>Copy Buyer</button></div>`;
-                const r4Attr = (idx >= 0 && idx <= 2) ? ` data-free-credit-unmasked="${unmaskedHtml}"${idx === 2 ? ` data-row4-unmasked="${unmaskedHtml}"` : ''}` : '';
+                const isRow4Target = idx === Math.min(3, placements.length - 1);
+                const rowLbl = isRow4Target ? 'ROW #4 UNMASKED FREE' : `ROW #${idx + 1} UNMASKED FREE`;
+                const unmaskedHtml = `<div class=&quot;mono&quot; style=&quot;font-size:12.5px;color:var(--emerald-roi);font-weight:800;&quot;>✓ FREE CREDIT #${Math.min(3, idx + 1)} OF 3 (${rowLbl}): ${escapeHtml(uBuyer)} (+ ${escapeHtml(uAgency)})</div><div style=&quot;font-size:12px;color:var(--text-primary);font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;&quot;><span>${dmRole} • ${agencyDesk}</span><a class=&quot;sr-linkedin-verify-link&quot; href=&quot;${escapeHtml(liUrl)}&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; style=&quot;color:var(--emerald-roi);font-weight:700;text-decoration:underline;&quot;>Verify on LinkedIn ↗</a><button type=&quot;button&quot; class=&quot;sr-row-copy-btn&quot; data-unmasked-copy=&quot;${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}&quot; onclick=&quot;return window.__srCopyFreeCreditRow(this.getAttribute('data-unmasked-copy'),${idx + 1},this);&quot; style=&quot;padding:2px 8px;border-radius:6px;border:1px solid var(--emerald-roi);background:var(--bg-surface);color:var(--emerald-roi);font-size:11.5px;font-weight:700;cursor:pointer;&quot;>Copy Buyer</button></div>`;
+                const r4Attr = (idx <= 3) ? ` data-free-credit-unmasked="${unmaskedHtml}"${isRow4Target ? ` data-row4-unmasked="${unmaskedHtml}"` : ''}` : '';
                 const contactCell = idx === 0
-                  ? `<div${r4Attr}><div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:800;">✓ ROW #1 FREE SAMPLE PROOF: ${dmRole} (${agencyDesk})</div><div class="mono" style="font-size:11.5px;color:var(--vermilion);font-weight:700;margin:3px 0;">Peer-Referenced Pitch: Saw ${bName} renewed ${p.flights || 4}x on ${sName} (code: ${escapeHtml(p.promo_code)}) last 30d — anchor 3-flight pilot at $${rowFloorCpm} Floor Ad Rate (-18%) • <code>Audience Guarantee Clause</code></div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(1,this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email (${escapeHtml(maskedRowBuyer)}) — Enter Email Above ($0) ↑</button></div>`
+                  ? `<div${r4Attr}><div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:800;">✓ ROW #1 FREE SAMPLE PROOF: ${dmRole} (${agencyDesk})</div><div class="mono" style="font-size:11.5px;color:var(--vermilion);font-weight:700;margin:3px 0;">Peer-Referenced Pitch: Saw ${bName} renewed ${p.flights || 4}x on ${sName} (code: ${escapeHtml(p.promo_code)}) last 30d — anchor 3-flight pilot at $${rowFloorCpm} Floor CPM (-18%) • <code>Audience Guarantee Clause</code></div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(1,this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email (${escapeHtml(maskedRowBuyer)}) — Enter Email Above ($0) ↑</button></div>`
                   : `<div${r4Attr}><div style="font-size:12.5px;color:var(--text-secondary);font-weight:600;margin-bottom:4px;">${dmRole} • ${agencyDesk}</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(${idx + 1},this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:var(--emerald-soft);color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email Hidden (${Math.min(3, Math.max(1, idx + 1))} of 3 Free Credits) — Tap to Reveal ($0) ↑</button><a href="/buy/creator_pass" class="sr-locked-spec-badge" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" style="padding:3px 9px;border-radius:999px;border:1px solid #C8A96E;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;">${SR_LOCK_SVG} Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a></div></div>`;
-                return `
-                <tr${(idx >= 0 && idx <= 2) ? ' data-free-credit-row="1"' : ''} style="${idx === 0 ? 'background:var(--emerald-soft);' : ''}">
+                return `<tr${(idx <= 3) ? ' data-free-credit-row="1"' : ''} style="${idx === 0 ? 'background:var(--emerald-soft);' : ''}">
                   <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:12px;padding:2px 6px;">Category Peer</span>` : ''}</td>
-                  <td>
-                    <div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div>
-                    <div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div>
-                  </td>
-                  <td>
-                    <div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div>
-                    <div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:4px; font-weight:800;">✓ ${freshBadge}</div>
-                  </td>
+                  <td><div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div><div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div></td>
+                  <td><div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div><div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:4px; font-weight:800;">✓ ${freshBadge}</div></td>
                   <td>${contactCell}</td>
                   <td class="mono" style="font-size:13px;">${escapeHtml(p.slot_type)} (${escapeHtml(p.timestamp_range)})</td>
-                  <td class="mono" style="font-size:13px;">
-                    <span style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--amber-gold);">${escapeHtml(p.promo_code)}</strong>
-                  </td>
-                  <td class="mono" style="font-weight:700; color:var(--amber-gold);">
-                    $${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} Ad Rate)
-                    <div style="font-size:12px; color:var(--emerald-roi); font-weight:600;">3x Floor: $${rowFloorCpm} Ad Rate • ~$${estCpc} CPC</div>
-                  </td>
-                </tr>
-              `;
+                  <td class="mono" style="font-size:13px;"><span style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--amber-gold);">${escapeHtml(p.promo_code)}</strong></td>
+                  <td class="mono" style="font-weight:700; color:var(--amber-gold);">$${p.est_spend_usd.toLocaleString()} ($${p.cpm_usd} CPM)<div style="font-size:12px; color:var(--emerald-roi); font-weight:600;">3x Floor: $${rowFloorCpm} CPM • ~$${estCpc} CPC</div></td>
+                </tr>`;
               }).join('')}
               <tr id="sr-locked-95-summary-row" style="background:#FFFBEB;"><td colspan="7" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">${SR_LOCK_SVG} +105 More Verified Named-Buyer &amp; Agency Desk Rows + Redlined Booking Addendum + Cold Sequences in Full 109-Row CSV — <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" style="color:var(--vermilion);text-decoration:underline;">Workflow Pack ($1.99) →</a> • <a href="/buy/creator_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" style="color:#92400E;text-decoration:underline;">Creator Pass ($19) →</a> • <a href="/buy/complete_dossier" onclick="if(window.__ebCheckout){window.__ebCheckout('complete_dossier',true);return false;}" style="color:var(--emerald-roi);text-decoration:underline;">109-Row Vault ($29) →</a> • <a href="/buy/agency_desk" onclick="if(window.__ebCheckout){window.__ebCheckout('agency_desk',true);return false;}" style="color:#0F172A;text-decoration:underline;">B2B Agency Desk ($149) →</a></td></tr>
             </tbody>
@@ -756,10 +729,11 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                 <span style="display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; background:var(--vermilion); color:#FFFFFF; font-family:var(--font-mono); font-size:12px; font-weight:800;">STEP 1 OF 2</span>
                 <strong style="font-size:15px;color:var(--text-primary);">Select Your Reach:</strong>
-                <button type="button" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">10K</button>
-                <button type="button" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">25K</button>
-                <button type="button" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">75K</button>
-                <button type="button" onclick="window.__srCalcPseoReach(150000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">150K</button>
+                <button type="button" data-r="10000" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">10K</button>
+                <button type="button" data-r="25000" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">25K</button>
+                <button type="button" data-r="75000" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">75K</button>
+                <button type="button" data-r="150000" onclick="window.__srCalcPseoReach(150000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">150K</button>
+                <button type="button" data-r="250000" onclick="window.__srCalcPseoReach(250000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">250K</button>
                 <span id="sr-pseo-quote-readout" class="mono" style="font-size:13.5px;font-weight:800;color:var(--emerald-roi);margin-left:4px;">3-Flight Pilot: $${Math.round(35 * (brand ? brand.avg_cpm : 38) * 3 * 0.88).toLocaleString()}</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -769,23 +743,23 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
               </div>
             </div>
             <pre id="sr-free-pitch-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14.5px; line-height:1.65; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:16px 20px; margin:0 0 10px 0;">${escapeHtml('# OUTBOUND 3-FLIGHT PILOT PITCH PREVIEW (DOMAIN VERIFIED)\nTo: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n' + samplePitchText)}</pre>
-            <pre class="pitch-pre">${escapeHtml('[PITCHES #2–#15 + 3-STEP FOLLOW-UP .EML SEQUENCE + 88-CONTACT CSV]: Unlock Instant Campaign Pass ($1.99 Single Row / $29 Complete 88-Row Q4 Ledger)')}</pre>
+            <pre class="pitch-pre">${escapeHtml('[PITCHES #2–#15 + 3-STEP FOLLOW-UP .EML SEQUENCE + 109-ROW CSV]: Unlock Instant Campaign Pass ($1.99 Single Row / $19 Creator Pass / $29 Complete 109-Row Vault)')}</pre>
           </div>
         </div>
 
         <div id="sr-copy-zeigarnik-nudge" data-post-copy-nudge="true" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; background:#FFFBEB; border:1.5px solid var(--amber-gold); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:13px;">
-          <span style="color:var(--text-primary);"><strong>✓ Copied to your clipboard!</strong> Recipient email (<code>${escapeHtml(isShowPage ? showBookingEmail : sampleBuyerEmail)}</code>) &amp; 95 locked rows are still masked (<code>***</code>). Unmask direct email + 3 files ($1.99) or all 96 buyers ($29):</span>
-          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Unmask Target 3-File Pack ($1.99) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 96 Buyers Vault ($29) ↗</button></div>
+          <span style="color:var(--text-primary);"><strong>✓ Copied to your clipboard!</strong> Recipient email (<code>${escapeHtml(isShowPage ? showBookingEmail : sampleBuyerEmail)}</code>) &amp; 105 locked rows are still masked (<code>***</code>). Unmask direct email + 3 files ($1.99), Creator Pass ($19), or all 109 buyers ($29):</span>
+          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Unmask Target 3-File Pack ($1.99) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 109 Buyers Vault ($29) ↗</button></div>
         </div>
 
         <div id="sr-raw-csv-proof-box" style="margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-strong); font-size:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:5px;">
-            <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">${SR_SEARCH_SVG} ROW #1 LIVE CSV PROOF • Renewed on Peer Shows (Last 30 Days) (1 OF 96 — 95 LOCKED BELOW)</span>
+            <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">${SR_SEARCH_SVG} ROW #1 LIVE CSV PROOF • Renewed on Peer Shows (Last 30 Days) (1 OF 109 — 105 LOCKED BELOW)</span>
             <span class="mono" style="color:var(--text-secondary);">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • Niche Pilot: <code>$950-$2400_NICHE_OK</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Preview Audience Guarantee Rider (.TXT) ↗</a></span>
           </div>
           <div class="mono" style="padding:7px 10px; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); overflow-x:auto; white-space:nowrap; font-size:11.5px;">
             <span style="color:var(--text-muted);">row,entity,decision_maker_role,named_buyer_email,external_agency_desk,peer_renewal_30d,rack_ad_rate,floor_3flight_rate,niche_pilot_budget,live_outreach_angle,audience_guarantee_rider</span><br/>
-            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)}" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)}</span>,<span data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)}" style="color:var(--amber-gold);">${escapeHtml(maskedCsvAgencyEmail)}</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor Ad Rate (-18%)","Audience Guarantee Clause (-18% Floor + 1.5% Click Guarantee) • booking@creatornetwork.fm"</strong>
+            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span style="color:var(--emerald-roi);">${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)</span>,<span style="color:var(--amber-gold);">${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","Audience Guarantee Clause (-18% Floor + 1.5% Click Guarantee) • booking@creatornetwork.fm"</strong>
           </div>
         </div>
 

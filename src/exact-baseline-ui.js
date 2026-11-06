@@ -242,29 +242,16 @@ function buildBottomConversionSuiteHtml(cfg, reqPath) {
   </div>
 </div>
 
-<!-- Frosted Light Editorial Conversion Dock (#sticky-mobile-bar) -->
 <div id="sticky-mobile-bar" role="region" aria-label="Instant Access Conversion Dock">
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-    <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:${t.textPrimary};"><span style="width:7px;height:7px;border-radius:50%;background:${t.safeColor};display:inline-block;"></span>${esc(cfg.brandName)}</span>
-    <a href="#in-card-unlock-bar" id="sticky-sub-benefit" style="font-size:13px;color:${t.textSecondary};font-weight:600;text-decoration:none;">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:6px;">
-    <button type="button" id="btn-sticky-micro-unlock" class="eb-action-btn" style="display:none;" onclick="window.__ebCheckout('micro_pass', true)">99¢ File</button>
-    <button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;border:none;padding:7px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('creator_pass', true)">Creator Pass ($19) →</button>
-    <button type="button" id="btn-sticky-vault-unlock" class="eb-action-btn" style="background:${t.safeColor};color:#FFFFFF;font-weight:700;border:none;padding:7px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('playbook_pass', true)">Full 109-Row CSV Vault ($${esc(cfg.corePriceUsd)}) →</button>
-    <button type="button" id="btn-sticky-dock-close" aria-label="Hide bottom bar" title="Hide bottom bar" onclick="try{sessionStorage.setItem('eb_dock_dismissed','1');}catch(_){}var d=document.getElementById('sticky-mobile-bar');if(d){d.classList.remove('eb-dock-visible');d.style.display='none';}" style="background:transparent;border:none;color:${t.textMuted};font-size:16px;font-weight:700;line-height:1;padding:4px 6px;cursor:pointer;">×</button>
-    <button type="button" id="btn-dock-flash-pass" style="display:none;" onclick="window.__ebCheckout('flash_pass', true)">Get Full Pack ($1.99)</button>
-  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:${t.textPrimary};"><span style="width:7px;height:7px;border-radius:50%;background:${t.safeColor};display:inline-block;"></span>${esc(cfg.brandName)}</span><a href="#in-card-unlock-bar" id="sticky-sub-benefit" style="font-size:13px;color:${t.textSecondary};font-weight:600;text-decoration:none;">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</a></div>
+  <div style="display:flex;align-items:center;gap:6px;"><button type="button" id="btn-sticky-micro-unlock" class="eb-action-btn" style="display:none;" onclick="window.__ebCheckout('micro_pass', true)">99¢ File</button><button type="button" id="btn-dock-flash-pass" class="eb-action-btn" style="background:#FFFBEB;color:#92400E;border:1px solid #F59E0B;font-weight:700;padding:7px 12px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('flash_pass', true)">3-File Pack ($1.99) →</button><button type="button" id="btn-sticky-flash-unlock" class="eb-action-btn" style="background:${t.brandPrimary};color:#FFFFFF;font-weight:700;border:none;padding:7px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('creator_pass', true)">Creator Pass ($19) →</button><button type="button" id="btn-sticky-vault-unlock" class="eb-action-btn" style="background:${t.safeColor};color:#FFFFFF;font-weight:700;border:none;padding:7px 14px;border-radius:${t.radiusPill};" onclick="window.__ebCheckout('playbook_pass', true)">109-Row Vault ($${esc(cfg.corePriceUsd)}) →</button><button type="button" id="btn-sticky-dock-close" aria-label="Hide bottom bar" title="Hide bottom bar" onclick="try{sessionStorage.setItem('eb_dock_dismissed','1');}catch(_){}var d=document.getElementById('sticky-mobile-bar');if(d){d.classList.remove('eb-dock-visible');d.style.display='none';}" style="background:transparent;border:none;color:${t.textMuted};font-size:16px;font-weight:700;line-height:1;padding:4px 6px;cursor:pointer;">×</button></div>
 </div>`;
 }
-
 function buildClientRuntimeScript(cfg) {
-  const t = getTheme(cfg);
-  const pillMap = {};
+  const t = getTheme(cfg), pillMap = {};
   for (const p of cfg.coMarketingPills) pillMap[p.key] = p.rowText;
   const firstPartner = cfg.affiliates && cfg.affiliates[0] ? cfg.affiliates[0] : { title: 'Verified Partner', url: '#', cpa: 'Explore' };
   const remDiff = cfg.remediationDiff || { beforeLine: '- [BEFORE] Legacy baseline', afterLine: '+ [AFTER] Optimized baseline', roiBadge: 'Verified Lift' };
-
   return `<script id="exact-baseline-client-runtime">
 (function() {
   var CFG = ${JSON.stringify({ moduleId: cfg.moduleId, brandName: cfg.brandName, domain: cfg.domain, corePriceUsd: cfg.corePriceUsd, proPriceUsd: cfg.proPriceUsd, coreLabel: cfg.coreLabel, freeDeliverableName: cfg.freeDeliverableName || 'Production Deliverable', deliverableName: cfg.deliverableName || 'Complete Pro Deliverable', deliverableFiles: cfg.deliverableFiles || [], presets: (cfg.presets || []).slice(0, 3), searchPlaceholder: cfg.searchPlaceholder || 'Enter domain or brand...', sliderLabel: cfg.sliderLabel || 'Scale', theme: t, firstPartner, remDiff, pillMap, presetKpis: cfg.presetKpis || {} }).replace(/</g, '\\u003c')};
