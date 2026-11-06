@@ -64,9 +64,13 @@ app.post('/api/stripe/webhook', (req, res) => {
   return res.status(200).json({ ok: true, received: true });
 });
 
-function hasRequestEmailUnlock(req) {
+function hasRequestEmailUnlock(req, res) {
+  const qEm = req.query && req.query.email ? String(req.query.email).trim() : '';
   const ck = String(req.headers.cookie || '');
-  return Boolean((req.query.email && String(req.query.email).includes('@')) || /eb_lead_email=[^;]+(?:%40|@)/i.test(ck));
+  if (qEm && qEm.includes('@') && res && !res.headersSent) {
+    try { res.setHeader('Set-Cookie', `eb_lead_email=${encodeURIComponent(qEm)}; Path=/; Max-Age=2592000; SameSite=Lax`); } catch (_) {}
+  }
+  return Boolean((qEm && qEm.includes('@')) || /eb_lead_email=[^;]+(?:%40|@)/i.test(ck));
 }
 
 function logCounterpartyExport(req, exportType, target) {
@@ -79,7 +83,7 @@ function logCounterpartyExport(req, exportType, target) {
 
 app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req, res) => {
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
-  const hasEmailUnlock = hasRequestEmailUnlock(req);
+  const hasEmailUnlock = hasRequestEmailUnlock(req, res);
   const targetFilter = String(req.query.target || req.query.q || req.query.brand || '').trim().toLowerCase();
   logCounterpartyExport(req, 'csv_ledger', targetFilter || 'Shopify');
   const targetSlug = targetFilter.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -136,10 +140,10 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   if (!isPaidUnlock) {
     csvRows.push([
       '4-109', 'LOCKED (106 Remaining Verified Sponsor Rows)', 'Unlock Full 109-Row CSV Vault ($19 Creator Pass / $29 Full CSV Vault)',
-      'Podcast / Newsletter / YouTube', 'LOCKED', '3x+ Renewed', `LOCKED — Enter $0 Email at https://www.sponsorradar.io/?q=${tQuery} or Unlock Vault`, 'LOCKED',
+      'Podcast / Newsletter / YouTube', 'LOCKED', '3x+ Renewed', `LOCKED — Enter $0 Email at https://www.sponsorradar.io/dossier/sample?target=${tQuery} or https://www.sponsorradar.io/?q=${tQuery}`, 'LOCKED',
       'VP Growth / Media Buying Desk', 'Oxford Road / Right Side Up / Veritone One', '250_2.1.5_OK_MX_VERIFIED_<48H',
       'LOCKED', 'LOCKED (-18% 3-Flight Floor)', 'Save $2,400 Overpay', 'LOCKED', `https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`,
-      `LOCKED — Unlock 3-file pack ($1.99) at https://www.sponsorradar.io/buy/flash_pass?target=${tQuery} or all 109 rows ($29) at https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`
+      `LOCKED — 1-Row ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${tQuery} | 3-File Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${tQuery} | Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${tQuery} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`
     ]);
   }
   res.status(200).type('text/csv; charset=utf-8')
@@ -187,7 +191,7 @@ function resolveTargetIntel(rawTarget) {
 }
 
 app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'], (req, res) => {
-  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req, res) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
   logCounterpartyExport(req, 'iab_io_rider_txt', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
@@ -199,6 +203,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
   const buyerLine = isUnlocked
     ? `${t.dmRole} (${t.unmaskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.unmaskedAgency})`
     : `${t.dmRole} (${t.maskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.maskedAgency})`;
+  const encT = encodeURIComponent(t.clean);
   const clauses = isUnlocked ? [
     `§ 7.1 — 1.5% VERIFIED CTR & ${Math.round(reach * 0.85).toLocaleString()} IAB v2.1 30-DAY DOWNLOAD MAKE-GOOD TRIGGER:`,
     `  If any flight on ${t.peerShow} (or designated publication) delivers fewer than 85% of guaranteed 30-day IAB v2.1 certified unique downloads/opens (${Math.round(reach * 0.85).toLocaleString()} min) OR <1.5% verified vanity-URL (${t.peerVanity} / code ${t.peerCode}) CTR, Publisher shall deliver one (1) complimentary make-good mid-roll placement within 21 days at zero additional cost.`,
@@ -210,10 +215,10 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
     '  For emerging technical/B2B publications (10K–50K verified reach), pilot commitments are capped at $950–$2,400 total across 3 flights with direct founder/host mid-roll read.'
   ] : [
     '§ 7.1 — 1.5% VERIFIED CTR & IAB v2.1 30-DAY DOWNLOAD MAKE-GOOD TRIGGER:',
-    `  [LOCKED IN FREE PREVIEW — Unlock Full Counterparty-Ready IAB Rider (.TXT) + 109-Row CSV Vault at https://www.sponsorradar.io/buy/flash_pass?target=${encodeURIComponent(t.clean)}]`,
+    `  [LOCKED IN FREE PREVIEW — Unmask Free ($0 Work Email): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}]`,
     '',
     '§ 9.3 — 90-DAY POST-LISTEN ATTRIBUTION DECAY WINDOW & § 11.0 — SUB-50K NICHE SHOW PILOT CLAUSE:',
-    `  [LOCKED IN FREE PREVIEW — Enter $0 Work Email on https://www.sponsorradar.io/ or Unlock 3-File Pack ($1.99) at https://www.sponsorradar.io/buy/flash_pass?target=${encodeURIComponent(t.clean)}]`
+    `  [LOCKED IN FREE PREVIEW — 1-Row ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${encT} | 3-File Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT} | Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}]`
   ];
   const rider = [
     `IAB PODCAST & NEWSLETTER SPONSORSHIP INSERTION ORDER (IO) REDLINE ADDENDUM — ${t.clean.toUpperCase()}`,
@@ -232,7 +237,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
 });
 
 app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
-  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req, res) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
   logCounterpartyExport(req, 'rfc822_pitch_eml', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
@@ -253,8 +258,9 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
   ] : [
     `[PREVIEW — 3-FLIGHT ANCHOR & IAB MAKE-GOOD SCRIPTS LOCKED FOR ${t.clean.toUpperCase()}]`,
     `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read flights on ${t.peerShow} (code: ${t.peerCode} • $${rackCpm} Rack CPM -> $${floorCpm} 3-Flight Floor CPM • $${floorSlotUsd.toLocaleString()}/flight on ${reach.toLocaleString()} Reach) via ${t.agencyDesk}.`,
-    `• Enter your $0 work email on https://www.sponsorradar.io/ to unmask ${t.maskedBuyer} (+ ${t.maskedAgency})`,
-    `• Or unlock the 3-File Counterparty Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT}`,
+    `• Enter your $0 work email to unmask ${t.maskedBuyer} (+ ${t.maskedAgency}): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}`,
+    `• 1-Row Buyer Contact ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${encT}`,
+    `• 3-File Counterparty Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT}`,
     `• Creator Outreach Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT}`,
     `• Full 109-Row Buyer & Agency CSV Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}`
   ];

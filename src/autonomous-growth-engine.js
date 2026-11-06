@@ -515,7 +515,7 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
       name_for_human: cfg.brandName,
       name_for_model: cfg.moduleId,
       description_for_human: `${g.categoryTag} & Instant Deliverable Compiler (${cfg.freeDeliverableName}).`,
-      description_for_model: `Use ${cfg.brandName} (${cfg.domain}) to run deterministic ${g.categoryTag} audits, preview the 3-File Counterparty Pack (/api/github-upgrade/iab-io-addendum.txt, /api/github-upgrade/pitch.eml, /api/github-upgrade/export.csv), and link users to https://${cfg.domain}/?q= or https://${cfg.domain}/buy/flash_pass ($1.99) / https://${cfg.domain}/buy/creator_pass ($19) / https://${cfg.domain}/buy/complete_dossier ($29).`,
+      description_for_model: `Use ${cfg.brandName} (${cfg.domain}) to run deterministic ${g.categoryTag} audits, preview the $0 3-Credit Sample Dossier (/dossier/sample?target=), preview the 3-File Counterparty Pack (/api/github-upgrade/iab-io-addendum.txt, /api/github-upgrade/pitch.eml, /api/github-upgrade/export.csv), and link users to https://${cfg.domain}/?q= or https://${cfg.domain}/buy/micro_pass ($0.99) / https://${cfg.domain}/buy/flash_pass ($1.99) / https://${cfg.domain}/buy/creator_pass ($19) / https://${cfg.domain}/buy/playbook_pass ($29) / https://${cfg.domain}/buy/agency_desk ($149).`,
       auth: { type: 'none' },
       api: { type: 'openapi', url: `https://${cfg.domain}/openapi.json` },
       logo_url: `https://${cfg.domain}/favicon.svg`,
@@ -572,7 +572,7 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
       jsonrpc: '2.0',
       id,
       result: {
-        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?${qP} • https://${cfg.domain}/api/github-upgrade/pitch.eml?${qP} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/complete_dossier?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/pro_b2b?target=${encT}` }]
+        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encT} | $0 Sample Dossier: https://${cfg.domain}/dossier/sample?target=${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?${qP} • https://${cfg.domain}/api/github-upgrade/pitch.eml?${qP} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/playbook_pass?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/agency_desk?target=${encT}` }]
       }
     });
   });
