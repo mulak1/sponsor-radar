@@ -66,6 +66,8 @@ app.post('/api/stripe/webhook', (req, res) => {
 
 app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req, res) => {
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const hasEmailUnlock = Boolean(req.query.email && String(req.query.email).includes('@'));
+  const targetFilter = String(req.query.target || req.query.q || req.query.brand || '').trim().toLowerCase();
   const allRows = db.prepare(`
     SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
            s.name AS show_name, s.channel_type, s.audience_size
@@ -74,6 +76,13 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
     JOIN shows s ON s.slug = p.show_slug
     ORDER BY p.flights DESC, p.est_spend_usd DESC
   `).all();
+  if (targetFilter) {
+    allRows.sort((a, b) => {
+      const aMatch = (String(a.brand_name).toLowerCase().includes(targetFilter) || String(a.brand_slug).toLowerCase().includes(targetFilter) || String(a.show_name).toLowerCase().includes(targetFilter) || String(a.show_slug).toLowerCase().includes(targetFilter)) ? 1 : 0;
+      const bMatch = (String(b.brand_name).toLowerCase().includes(targetFilter) || String(b.brand_slug).toLowerCase().includes(targetFilter) || String(b.show_name).toLowerCase().includes(targetFilter) || String(b.show_slug).toLowerCase().includes(targetFilter)) ? 1 : 0;
+      return bMatch - aMatch;
+    });
+  }
   const header = [
     'Row_ID', 'Brand_Name', 'Show_Name', 'Channel_Type', 'Audience_Reach', 'Verified_Flights',
     'Named_Decision_Maker_Email', 'External_Agency_Desk_Email', 'Decision_Maker_Role', 'Buying_Agency_Desk',
@@ -83,7 +92,7 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   const csvRows = [header];
   const rowsToExport = isPaidUnlock ? allRows : allRows.slice(0, 3);
   rowsToExport.forEach((r, idx) => {
-    const showUnmasked = isPaidUnlock || idx === 0;
+    const showUnmasked = isPaidUnlock || hasEmailUnlock || idx === 0;
     const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : maskSponsorEmail(r.sponsor_email, r.brand_category);
     const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category);
     const floorCpm = Math.round(r.cpm_usd * 0.82);
@@ -107,7 +116,7 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
     ]);
   }
   res.status(200).type('text/csv; charset=utf-8')
-    .setHeader('Content-Disposition', 'attachment; filename="sponsorradar-96-flight-named-buyers-and-floor-ledger.csv"')
+    .setHeader('Content-Disposition', 'attachment; filename="sponsorradar-109-buyer-and-agency-floor-ledger.csv"')
     .send(csvRows.map((row) => row.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n'));
 });
 
@@ -173,14 +182,15 @@ app.get('/manifest.webmanifest', (req, res) => {
 
 // Dynamic SVG OpenGraph Card Generator (/api/og?slug=...) (Pre-Launch Checklist #7)
 app.get('/api/og', (req, res) => {
-  const slug = String(req.query.slug || 'sponsor-radar-editorial');
-  const seoPage = db.prepare('SELECT * FROM seo_pages WHERE slug = ?').get(slug);
+  const slug = String(req.query.slug || req.query.target || 'sponsor-radar-editorial').trim();
+  const seoPage = db.prepare('SELECT * FROM seo_pages WHERE slug = ? OR target_slug = ?').get(slug, slug.toLowerCase());
+  const brandRow = !seoPage ? db.prepare('SELECT * FROM brands WHERE LOWER(slug) = LOWER(?) OR LOWER(name) = LOWER(?)').get(slug, slug) : null;
   const headline = seoPage
     ? seoPage.title.slice(0, 66)
-    : 'SponsorRadar: 3x+ Renewal Audio & Newsletter Ad-Spend Ledger';
+    : (brandRow ? `${brandRow.name} Verified Sponsorship Floor CPM & Buyer Dossier` : 'SponsorRadar: 109-Row Audio & Newsletter Sponsor Rate-Card Ledger');
   const subline = seoPage
-    ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Avg Effective CPM: $${seoPage.avg_cpm}`
-    : '42+ Sponsor Brands • 46+ Podcasts, Newsletters & YouTube Shows • 1-Click Outbound Pitches';
+    ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Avg Effective CPM: $${seoPage.avg_cpm} (-18% 3-Flight Floor)`
+    : (brandRow ? `Est. Monthly Spend: $${brandRow.est_monthly_spend.toLocaleString()} • Avg CPM: $${brandRow.avg_cpm_usd} • 3-Flight Floor: $${Math.round(brandRow.avg_cpm_usd * 0.82)}` : '109 Verified Buyer & Agency Desk Rows • -18% 3-Flight Floor CPM • IAB IO Rider');
 
   res.setHeader('Content-Type', 'image/svg+xml');
   res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${escapeHtml(headline)}">
@@ -245,7 +255,7 @@ app.get('/api/telemetry/buyer-wedge', (req, res) => {
   const sessionRows = db.prepare('SELECT plan_tier, buyer_wedge, amount_usd, status FROM checkout_sessions').all();
   const mk = (lbl) => ({ label: lbl, events: 0, wedge_selects: 0, leads: 0, checkout_sessions: 0, revenue_usd: 0, rpv_usd: 0 });
   const breakdown = { creator: mk('I want sponsors for my show'), buyer: mk("I'm buying ads & checking CPMs") };
-  const offerTiers = { flash_pass_199: { price_usd: 1.99, sessions: 0, revenue_usd: 0 }, ledger_pack_29: { price_usd: 29, sessions: 0, revenue_usd: 0 }, creator_pro_49: { price_usd: 49, sessions: 0, revenue_usd: 0 }, agency_feed_199: { price_usd: 199, sessions: 0, revenue_usd: 0 } };
+  const offerTiers = { micro_pass: { price_usd: 0.99, sessions: 0, revenue_usd: 0 }, flash_pass_199: { price_usd: 1.99, sessions: 0, revenue_usd: 0 }, creator_pass: { price_usd: 19, sessions: 0, revenue_usd: 0 }, ledger_pack_29: { price_usd: 29, sessions: 0, revenue_usd: 0 }, creator_pro_49: { price_usd: 49, sessions: 0, revenue_usd: 0 }, agency_desk: { price_usd: 149, sessions: 0, revenue_usd: 0 }, agency_feed_199: { price_usd: 199, sessions: 0, revenue_usd: 0 } };
   for (const r of metaRows) {
     let p = {}; try { p = JSON.parse(r.payload_json || '{}'); } catch (_) {}
     const w = p.buyer_wedge === 'creator' ? 'creator' : 'buyer';
@@ -303,14 +313,17 @@ app.post('/api/meta-capi', (req, res) => {
   });
 });
 
-// Self-Serve Stripe Checkout Endpoint ($49/mo Creator Pro & $199/mo Agency Feed)
+// Self-Serve Stripe Checkout Endpoint (99¢ / $1.99 / $19 / $29 / $149)
 app.get('/api/checkout', (req, res) => {
   const sessions = db.prepare('SELECT session_id, plan_tier, amount_usd, customer_email, buyer_wedge, status, created_at FROM checkout_sessions ORDER BY id DESC LIMIT 20').all();
   res.json({
     status: 'ok',
     plans: [
-      { id: 'ledger_pack_29', name: 'Complete 96-Buyer Q4 Ledger & Redlined IO Pack', price_usd: 29, interval: 'one_time' },
-      { id: 'creator_pro_49', name: 'Creator Pro Outbound Engine', price_usd: 49, interval: 'month' },
+      { id: 'micro_pass', name: '1-Row Named Buyer + Agency Pass', price_usd: 0.99, interval: 'one_time' },
+      { id: 'flash_pass', name: '3-File Counterparty Execution Pack (.CSV + .TXT + .EML)', price_usd: 1.99, interval: 'one_time' },
+      { id: 'creator_pass', name: 'Creator Outbound Pass (109-Row CSV + IO Rider + Cold Sequences)', price_usd: 19, interval: 'one_time' },
+      { id: 'ledger_pack_29', name: 'Full 109-Row Named-Buyer & Agency CSV Vault + Redlined IO Pack', price_usd: 29, interval: 'one_time' },
+      { id: 'agency_desk', name: 'Agency & Talent Management Desk (5 Seats + HubSpot/Clay CRM)', price_usd: 149, interval: 'one_time' },
       { id: 'agency_feed_199', name: 'Media Buyer & Agency Intelligence Feed', price_usd: 199, interval: 'month' },
       { id: 'dfy_media_plan_499', name: 'Done-For-You 10-Show Q4 Media Plan & Floor Negotiation', price_usd: 499, interval: 'one_time' }
     ],
@@ -320,15 +333,17 @@ app.get('/api/checkout', (req, res) => {
 
 app.get('/api/github-upgrade/agency-desk-pack.json', (req, res) => {
   const target = String(req.query.target || 'Linear').trim().slice(0, 48);
+  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   res.json({
     ok: true,
     tier: 'agency_desk_b2b',
-    pricing_options: { multi_seat_agency_desk_usd: 149, enterprise_b2b_feed_usd: 199 },
+    pricing_options: { micro_pass_usd: 0.99, flash_pass_usd: 1.99, creator_pass_usd: 19, full_vault_usd: 29, multi_seat_agency_desk_usd: 149, enterprise_b2b_feed_usd: 199 },
     target_entity: target,
     deliverables: {
-      bulk_named_buyer_csv_url: '/api/github-upgrade/export.csv?unlocked=1',
+      bulk_named_buyer_csv_url: `/api/github-upgrade/export.csv?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
       csv_verified_rows: 109,
-      iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}`,
+      iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
+      pitch_eml_url: `/api/github-upgrade/pitch.eml?target=${encodeURIComponent(target)}`,
       crm_webhook_schema: {
         providers: ['HubSpot CRM', 'Clay Webhook', 'Salesforce', 'CSV Outreach Sequence'],
         fields: ['brand_name', 'named_decision_maker_email', 'external_agency_desk_email', 'linkedin_verify_url', 'floor_3flight_cpm_usd', 'iab_makegood_clause', 'renewal_alert_90d_window']
