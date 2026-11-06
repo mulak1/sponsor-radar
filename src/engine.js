@@ -623,6 +623,8 @@ async function analyzeTranscriptAdRead(db, payload = {}) {
       brand_domain: matchedBrand.domain,
       category: matchedBrand.category,
       sponsor_email: maskSponsorEmail(matchedBrand.sponsor_email, matchedBrand.category),
+      unmasked_buyer_email: getUnmaskedNamedBuyerEmail(matchedBrand.sponsor_email),
+      unmasked_agency_email: getAgencyBuyerEmail(matchedBrand.domain, matchedBrand.category),
       decision_maker_role: matchedBrand.decision_maker_role,
       agency_desk: getAgencyDesk(matchedBrand.slug, matchedBrand.category),
       timestamp,

@@ -93,8 +93,8 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   const rowsToExport = isPaidUnlock ? allRows : allRows.slice(0, 3);
   rowsToExport.forEach((r, idx) => {
     const showUnmasked = isPaidUnlock || hasEmailUnlock || idx === 0;
-    const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : maskSponsorEmail(r.sponsor_email, r.brand_category);
-    const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category);
+    const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : maskSponsorEmail(r.sponsor_email, r.brand_category).split(' (')[0];
+    const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category).split(' (')[0];
     const floorCpm = Math.round(r.cpm_usd * 0.82);
     const rackSlot = Math.round((r.audience_size / 1000) * r.cpm_usd);
     const floorSlot = Math.round((r.audience_size / 1000) * floorCpm);
@@ -143,9 +143,9 @@ function resolveTargetIntel(rawTarget) {
   const floorSlotUsd = Math.round(rackSlotUsd * 0.82);
   const rawBuyerEmail = (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
   const unmaskedBuyer = getUnmaskedNamedBuyerEmail(rawBuyerEmail);
-  const maskedBuyer = maskSponsorEmail(unmaskedBuyer);
+  const maskedBuyer = maskSponsorEmail(unmaskedBuyer).split(' (')[0];
   const unmaskedAgency = getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', brand ? brand.category : 'B2B SaaS');
-  const maskedAgency = maskSponsorEmail(unmaskedAgency);
+  const maskedAgency = maskSponsorEmail(unmaskedAgency).split(' (')[0];
   const agencyDesk = getAgencyDesk(brand ? brand.slug : 'shopify', brand ? brand.category : 'B2B SaaS');
   const dmRole = (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships';
   const peerShow = (topPlacement && topPlacement.show_name) || (show && show.name) || 'Lenny\'s Newsletter';

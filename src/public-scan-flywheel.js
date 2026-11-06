@@ -646,15 +646,15 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
     const ua = String(req.headers['user-agent'] || '');
     const accept = String(req.headers['accept'] || '');
     if (req.query.format === 'json') return res.json({ ok: true, scan, permalink: `https://${cfg.domain}/scan/${encodeURIComponent(scan.target)}` });
-    if (/^(curl|httpie|wget)/i.test(ua) || accept.includes('text/plain')) {
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      return res.status(200).send(renderAnsiTerminalScorecard(cfg, scan));
-    }
     if (isMd) {
       const encT = encodeURIComponent(scan.target);
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       res.setHeader('Link', `<https://${cfg.domain}/scan/${encT}>; rel="canonical"`);
       return res.status(200).send(`# ${scan.target} : ${cfg.brandName} Public Audit (${scan.grade} • ${scan.score}/100)\n\n- **Primary KPI**: ${scan.kpi1} (${scan.kpi2})\n- **CNN Model**: ${scan.cnnModel}\n- **CNN Sensor Readout**: ${scan.cnnReadout}\n- **Diagnostic Verdict**: ${scan.issue}\n- **Canonical Permalink**: https://${cfg.domain}/scan/${encT}\n- **Live SVG Badge**: ![${scan.target}](https://${cfg.domain}/badge/${encT}.svg)\n- **Redlined IAB IO Rider Preview (.TXT)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}\n- **Dual-Track Outreach Preview (.EML)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}\n- **3-Row Buyer Contact Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **99¢ Single-Row Unmask**: https://${cfg.domain}/buy/micro_pass?target=${encT}\n- **$1.99 3-File Counterparty Pack**: https://${cfg.domain}/buy/flash_pass?target=${encT}\n- **$19 Creator Outreach Pass**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **$29 Full 109-Row CSV Vault**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **$149 B2B Agency Desk**: https://${cfg.domain}/buy/pro_b2b?target=${encT}\n`);
+    }
+    if (/^(curl|httpie|wget)/i.test(ua) || accept.includes('text/plain')) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      return res.status(200).send(renderAnsiTerminalScorecard(cfg, scan));
     }
     const html = renderPublicScanPageHtml(cfg, scan, badgeColor);
     return res.status(200).type('html').send(renderHtmlFn ? renderHtmlFn(html) : html);
