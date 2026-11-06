@@ -665,8 +665,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/directory">Spend Directory</a>
         <a href="/#pricing">Pricing</a>
       </nav>
-      <div style="display:flex; gap:10px; align-items:center;">
-        <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass');return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" class="btn btn-ghost" style="padding:7px 12px; min-height:36px; font-size:12.5px; text-decoration:none; white-space:nowrap; border:1px solid var(--border-strong); font-weight:800;">
+          <span>3-File Pack ($1.99) →</span>
+        </a>
+        <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
           <span>109-Row Buyer Vault ($29) →</span>
         </a>
       </div>

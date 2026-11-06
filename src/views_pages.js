@@ -152,9 +152,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">${escapeHtml(p.category)}</span>
-                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor Rate</span>
+                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title.replace(/\bCPM\b/g, 'Ad Rate'))}</a>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px;">
                 <span class="mono" style="color:var(--text-secondary);">Cat. Spend: <strong>${fmtSpend(p.est_monthly_spend)}</strong></span>
@@ -190,12 +190,12 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
                   <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
                   <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">$${p.avg_cpm} Rack / $${Math.round(p.avg_cpm * 0.82)} Floor</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title.replace(/\bCPM\b/g, 'Ad Rate'))}</a>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
                 <div class="mono" style="font-size:13.5px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${escapeHtml(maskedEmail)})</div>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
                 <button type="button" onclick="window.__srAddToPlan('${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'brand', ${p.avg_cpm}, ${p.est_monthly_spend || 12000}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
-                <a href="/?q=${encodeURIComponent(b.name || p.title.split(' ')[0])}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Pitch / Audit ↗</a>
+                <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass',true);" class="pill-amber" style="border:none; cursor:pointer; font-size:12.5px; padding:4px 8px;">Unmask Buyer (99¢) ↗</button>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
               </div>
             </div>
@@ -225,12 +225,12 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
                   <span class="mono" style="font-size:13.5px; color:var(--cyan-info); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
                   <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
                 </div>
-                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title.replace(/\bCPM\b/g, 'Ad Rate'))}</a>
+                <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
                 <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
                 <button type="button" onclick="window.__srAddToPlan('${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'show', ${p.avg_cpm}, ${rackUsd}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
-                <a href="/?q=${encodeURIComponent(s.name || p.title.split(' ')[0])}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Audit Quote ↗</a>
+                <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass',true);" class="pill-amber" style="border:none; cursor:pointer; font-size:12.5px; padding:4px 8px;">Floor Pack ($1.99) ↗</button>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
               </div>
             </div>
@@ -876,8 +876,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         <div class="panel-body" style="display:flex; flex-direction:column; gap:16px;">
           ${faqItems.map(item => `
             <div>
-              <h3 style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">${escapeHtml(item.q.replace(/\bCPM\b/g, 'Ad Rate'))}</h3>
-              <p style="font-size:14px; color:var(--text-secondary);">${escapeHtml(item.a.replace(/\bCPM\b/g, 'Ad Rate'))}</p>
+              <h3 style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">${escapeHtml(item.q)}</h3>
+              <p style="font-size:14px; color:var(--text-secondary);">${escapeHtml(item.a)}</p>
             </div>
           `).join('')}
         </div>
@@ -885,12 +885,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
       <!-- Related Spokes -->
       <div class="panel">
-        <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend &amp; Ad Rate Benchmark Reports</span></div>
+        <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend &amp; CPM Ad Rate Benchmark Reports</span></div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
           ${relatedPages.map(r => `
             <a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;">
-              <div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} Ad Rate ($${Math.round(r.avg_cpm * 0.82)} Floor)</div>
-              <div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title.replace(/\bCPM\b/g, 'Ad Rate'))}</div>
+              <div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM ($${Math.round(r.avg_cpm * 0.82)} Floor)</div>
+              <div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div>
             </a>
           `).join('')}
         </div>
@@ -900,11 +900,11 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   `;
 
   const srTitle = isShowPage
-    ? `${show.name} Advertising Cost, Sponsorship Rate Card, ${placements.length} Sponsors & Ad Rate ($${floorCpm} Floor) | SponsorRadar`
+    ? `${show.name} Sponsorship Rates, CPM ($${floorCpm} Floor) & ${placements.length} Verified Sponsors | SponsorRadar`
     : isBrandPage
-      ? `${brand.name} Podcast & Newsletter Sponsorship Spend ($${Math.round(page.est_monthly_spend / 1000)}K/mo), Ad Rates & Buyer Email | SponsorRadar`
-      : `${page.title.replace(/\bCPM\b/g, 'Ad Rate')} (${placements.length} Verified Sponsors, Rate Cards & $${page.avg_cpm} Avg Ad Rate) | SponsorRadar`;
-  const srDesc = `2026 Verified Rate Card & Sponsor Ledger (${placements.length} placements, $${page.avg_cpm} rack Ad Rate vs. $${floorCpm} 3-flight floor Ad Rate, $${Math.round(page.est_monthly_spend / 1000)}K/mo spend, direct booking & buyer emails): ${page.meta_description || page.summary}`;
+      ? `${brand.name} Podcast & Newsletter Sponsors ($${Math.round(page.est_monthly_spend / 1000)}K/mo), CPM Rates & Buyer Email | SponsorRadar`
+      : `${page.title} (${placements.length} Verified Sponsors, Rate Cards & $${page.avg_cpm} Avg CPM) | SponsorRadar`;
+  const srDesc = `2026 Verified Rate Card & Sponsor Ledger (${placements.length} placements, $${page.avg_cpm} rack CPM vs. $${floorCpm} 3-flight floor CPM, $${Math.round(page.est_monthly_spend / 1000)}K/mo spend, 3 free buyer emails or 99¢/$1.99 instant unlock): ${page.meta_description || page.summary}`;
   return renderShell({
     title: srTitle,
     description: srDesc,

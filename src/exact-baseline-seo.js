@@ -945,6 +945,22 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
         ]
       },
       {
+        '@type': 'SoftwareApplication',
+        '@id': `${canonicalUrl}#software`,
+        name: pageTitle,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        url: canonicalUrl,
+        offers: {
+          '@type': 'AggregateOffer',
+          lowPrice: '0.99',
+          highPrice: '149.00',
+          priceCurrency: 'USD',
+          offerCount: 5,
+          availability: 'https://schema.org/InStock'
+        }
+      },
+      {
         '@type': 'ItemList',
         '@id': `${canonicalUrl}#itemlist`,
         name: `${cfg.brandName} Top Verified Benchmarks`,
