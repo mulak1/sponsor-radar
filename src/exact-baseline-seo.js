@@ -87,6 +87,7 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
         for (const p of list) {
           entries.push({
             slug: p.slug,
+            target_slug: p.target_slug || '',
             title: String(p.title || p.h1 || p.slug),
             category: p.category || p.page_type || 'Verified Ad-Read Ledger',
             summary: String(p.summary || p.meta_description || p.meta_desc || cfg.explainerText).slice(0, 158)
@@ -203,8 +204,12 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
     '```',
     `- **ROI Impact**: ${cfg.remediationDiff.roiBadge}`,
     `- **Production Deliverable Bundle**: ${cfg.deliverableName} (${(cfg.deliverableFiles || []).map((f) => `${f.file} [${f.size}]`).join(', ')})`,
+    `- **Preview Redlined IAB IO Make-Good Rider (.TXT)**: ${host}/api/github-upgrade/iab-io-addendum.txt`,
+    `- **Preview Dual-Track RFC-822 Outreach Pitch (.EML)**: ${host}/api/github-upgrade/pitch.eml`,
+    `- **Preview 3-Row Verified Buyer Sample (.CSV)**: ${host}/api/github-upgrade/export.csv`,
     `- **1-Click Stripe Checkout (99¢ Single-File Pass)**: ${host}/buy/micro_pass`,
     `- **1-Click Stripe Checkout ($1.99 Single-Audit Bundle)**: ${host}/buy/flash_pass`,
+    `- **1-Click Stripe Checkout ($19 Creator Outreach Pass)**: ${host}/buy/creator_pass`,
     `- **1-Click Stripe Checkout ($${cfg.corePriceUsd} ${cfg.coreLabel})**: ${host}/buy/complete_dossier`,
     `- **1-Click Stripe Checkout ($${cfg.proPriceUsd} ${cfg.proLabel})**: ${host}/buy/pro_b2b`,
     '',
@@ -215,6 +220,10 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
       const vals = cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val);
       return `| **${p.label}** (\`${p.key}\`) | ${vals.join(' | ')} |`;
     }),
+    '',
+    '## 2B. Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
+    ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
+    ...getGrowthConfig(cfg.moduleId).comparisons.map((c) => `- [${c.title}](${host}/compare/${c.slug}) ([.md](${host}/compare/${c.slug}.md)): ${c.summary}`),
     '',
     `## 3. Complete ${seoEntries.length}-Page Programmatic Benchmark Encyclopedia`,
     ...seoEntries.map((item, idx) => [
@@ -236,13 +245,15 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     return buildLlmsTxtContent(cfg, seoEntries);
   }
   const cleanSlug = String(slugOrIndex).replace(/\.md$/i, '').replace(/^\/seo\//, '');
-  const matched = seoEntries.find((e) => e.slug === cleanSlug) || {
+  const matched = seoEntries.find((e) => e.slug === cleanSlug || e.target_slug === cleanSlug) || {
     slug: cleanSlug,
+    target_slug: cleanSlug,
     title: `${cfg.brandName} Technical Benchmark: ${cleanSlug.replace(/-/g, ' ')}`,
     category: cfg.brandName,
     summary: cfg.explainerText
   };
-  const idx = Math.max(0, seoEntries.findIndex((e) => e.slug === cleanSlug));
+  const entityQ = encodeURIComponent(matched.target_slug || matched.slug);
+  const idx = Math.max(0, seoEntries.findIndex((e) => e.slug === matched.slug));
   const related = [];
   for (let i = 1; related.length < 8 && i < seoEntries.length; i++) {
     related.push(seoEntries[(idx + i * 5) % seoEntries.length]);
@@ -264,7 +275,7 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     '',
     `| Metric | Verified Baseline | Target Post-Remediation |`,
     `| :--- | :--- | :--- |`,
-    ...cfg.kpis.map((k) => `| **${k.label}** | ${k.val} | ${k.delta} |`),
+    ...cfg.kpis.map((k) => `| **${k.label}** | ${k.val} | ${k.delta || k.sub || 'Verified'} |`),
     '',
     '## 2. Production Remediation Diff',
     '```diff',
@@ -277,14 +288,14 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     '',
     `## 4. Run Interactive Audit, Counterparty Previews & 1-Click Direct Stripe Checkout`,
     `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`,
-    `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt](${host}/api/github-upgrade/iab-io-addendum.txt)`,
-    `- Preview Dual-Track RFC-822 Outreach Pitch (.EML): [${host}/api/github-upgrade/pitch.eml](${host}/api/github-upgrade/pitch.eml)`,
-    `- Preview 3-Row Verified Buyer Sample (.CSV): [${host}/api/github-upgrade/export.csv](${host}/api/github-upgrade/export.csv)`,
-    `- 1-Click 99¢ Single-File Instant Export Pass: [${host}/buy/micro_pass](${host}/buy/micro_pass)`,
-    `- 1-Click $1.99 Single-Audit Export Bundle: [${host}/buy/flash_pass](${host}/buy/flash_pass)`,
-    `- 1-Click $19 Creator Outreach Pass: [${host}/buy/creator_pass](${host}/buy/creator_pass)`,
-    `- 1-Click $${cfg.corePriceUsd} ${cfg.coreLabel}: [${host}/buy/complete_dossier](${host}/buy/complete_dossier)`,
-    `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/pro_b2b](${host}/buy/pro_b2b)`
+    `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}](${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ})`,
+    `- Preview Dual-Track RFC-822 Outreach Pitch (.EML): [${host}/api/github-upgrade/pitch.eml?target=${entityQ}](${host}/api/github-upgrade/pitch.eml?target=${entityQ})`,
+    `- Preview 3-Row Verified Buyer Sample (.CSV): [${host}/api/github-upgrade/export.csv?target=${entityQ}](${host}/api/github-upgrade/export.csv?target=${entityQ})`,
+    `- 1-Click 99¢ Single-File Instant Export Pass: [${host}/buy/micro_pass?target=${entityQ}](${host}/buy/micro_pass?target=${entityQ})`,
+    `- 1-Click $1.99 Single-Audit Export Bundle: [${host}/buy/flash_pass?target=${entityQ}](${host}/buy/flash_pass?target=${entityQ})`,
+    `- 1-Click $19 Creator Outreach Pass: [${host}/buy/creator_pass?target=${entityQ}](${host}/buy/creator_pass?target=${entityQ})`,
+    `- 1-Click $${cfg.corePriceUsd} ${cfg.coreLabel}: [${host}/buy/complete_dossier?target=${entityQ}](${host}/buy/complete_dossier?target=${entityQ})`,
+    `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/pro_b2b?target=${entityQ}](${host}/buy/pro_b2b?target=${entityQ})`
   ].join('\n');
 }
 
@@ -367,14 +378,14 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       const entries = getEntries(), exact = entries.find((e) => e.slug === rawTail);
       const cleanCand = rawTail.split(/[\]\(\s"'<>.,;]/)[0].replace(/[^a-zA-Z0-9-_]/g, '').toLowerCase();
       if (!exact && cleanCand) {
-        let matched = entries.find((e) => e.slug === cleanCand || e.slug.startsWith(cleanCand) || cleanCand.startsWith(e.slug));
+        let matched = entries.find((e) => e.slug === cleanCand || e.target_slug === cleanCand || e.slug.startsWith(cleanCand) || cleanCand.startsWith(e.slug));
         if (!matched) {
           const candTokens = cleanCand.split('-').filter((t) => t.length >= 2), firstToken = candTokens[0] || '';
           let bestScore = 0;
           for (const e of entries) {
-            const eSlug = String(e.slug || '').toLowerCase(), eTokens = eSlug.split('-');
-            let score = (firstToken && eTokens[0] === firstToken) ? 5 : 0;
-            for (const t of candTokens) { if (eTokens.includes(t) || eSlug.includes(t)) score += 2; }
+            const eSlug = String(e.slug || '').toLowerCase(), eTarget = String(e.target_slug || '').toLowerCase(), eTokens = eSlug.split('-');
+            let score = (firstToken && (eTokens[0] === firstToken || eTarget === firstToken)) ? 5 : 0;
+            for (const t of candTokens) { if (eTokens.includes(t) || eSlug.includes(t) || eTarget === t) score += 2; }
             if (score > bestScore && score >= 4) { bestScore = score; matched = e; }
           }
         }
@@ -643,7 +654,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       'stripe/stripe-node (★ 4,100+): Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
       'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+): Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
     ],
-    direct_buy_links: { micro_pass_99c: `https://${cfg.domain}/buy/micro_pass`, flash_pass_199: `https://${cfg.domain}/buy/flash_pass`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b` },
+    direct_buy_links: { micro_pass_99c: `https://${cfg.domain}/buy/micro_pass`, flash_pass_199: `https://${cfg.domain}/buy/flash_pass`, creator_pass_19: `https://${cfg.domain}/buy/creator_pass`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b` },
     critical_bugs_eliminated: { bug_1_pseo_express_checkout_and_stripe_price_fallback: true, bug_2_outbound_pitch_direct_stripe_links_zero_free_forever: true, bug_3_get_buy_tier_303_redirect_in_llms_and_md_twins: true, bug_4_transactional_lead_followup_with_direct_buy_links: true }
   }));
 }
@@ -660,22 +671,26 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
   ];
   const podiumCards = top3.map((s, i) => {
     const m = medals[i] || medals[2];
+    const encT = escHtml(encodeURIComponent(s.target));
     return `<div style="display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px;border-radius:${t.radiusCard};background:${t.subtleBg};color:${t.textPrimary};">
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
           <span style="padding:3px 9px;border-radius:${t.radiusPill};background:${m.bg};color:${m.text};font-size:13px;font-weight:800;">${m.icon}</span>
           <span style="padding:3px 10px;border-radius:${t.radiusPill};background:${t.safeSoftBg};color:${t.safeColor};font-family:${t.fontSans};font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:800;">Grade ${escHtml(s.grade)} · ${s.score}/100</span>
         </div>
-        <a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:block;font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;text-decoration:none;">${escHtml(s.target)}</a>
+        <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:block;font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;text-decoration:none;">${escHtml(s.target)}</a>
         <div style="font-size:14px;color:${t.textSecondary};margin-bottom:10px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
       </div>
       <div>
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;">
-          <a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="color:${t.brandPrimary};font-weight:700;text-decoration:none;">View Report →</a>
-          <a href="/api/github-upgrade/iab-io-addendum.txt?target=${escHtml(encodeURIComponent(s.target))}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">IO Rider (.TXT) ↗</a>
-          <a href="/buy/micro_pass?target=${escHtml(encodeURIComponent(s.target))}" style="padding:2px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};border:1px solid #CBD5E1;font-weight:700;text-decoration:none;">1-Row (99¢) ↗</a>
-          <a href="/buy/flash_pass?target=${escHtml(encodeURIComponent(s.target))}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.safeColor};border:1px solid #A7F3D0;font-weight:800;text-decoration:none;">3-File Pack ($1.99) ↗</a>
+          <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="color:${t.brandPrimary};font-weight:700;text-decoration:none;">View Report →</a>
+          <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">IO Rider (.TXT) ↗</a>
+          <a href="/api/github-upgrade/pitch.eml?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">.EML ↗</a>
+          <a href="/api/github-upgrade/export.csv?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">3-Row .CSV ↗</a>
+          <a href="/buy/micro_pass?target=${encT}" style="padding:2px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};border:1px solid #CBD5E1;font-weight:700;text-decoration:none;">1-Row (99¢) ↗</a>
+          <a href="/buy/flash_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.safeColor};border:1px solid #A7F3D0;font-weight:800;text-decoration:none;">3-File Pack ($1.99) ↗</a>
+          <a href="/buy/creator_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid #CBD5E1;font-weight:800;text-decoration:none;">Creator ($19) ↗</a>
         </div>
       </div>
     </div>`;
@@ -822,7 +837,14 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
           highPrice: '149.00',
           priceCurrency: 'USD',
           offerCount: 5,
-          availability: 'https://schema.org/InStock'
+          availability: 'https://schema.org/InStock',
+          offers: [
+            { '@type': 'Offer', name: 'Single-Row Verified Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD', url: `${hostUrl}/buy/micro_pass` },
+            { '@type': 'Offer', name: 'Target 3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD', url: `${hostUrl}/buy/flash_pass` },
+            { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass` },
+            { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/complete_dossier` },
+            { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b` }
+          ]
         }
       },
       {
