@@ -692,10 +692,10 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
     const accept = String(req.headers['accept'] || '');
     if (req.query.format === 'json') return res.json({ ok: true, scan, permalink: `https://${cfg.domain}/scan/${encodeURIComponent(scan.target)}` });
     if (isMd) {
-      const encT = encodeURIComponent(scan.target);
+      const encT = encodeURIComponent(scan.target), sb = lookupSampleBuyer(scan.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       res.setHeader('Link', `<https://${cfg.domain}/scan/${encT}>; rel="canonical"`);
-      return res.status(200).send(`# ${scan.target} : ${cfg.brandName} Public Audit (${scan.grade} • ${scan.score}/100)\n\n- **Primary KPI**: ${scan.kpi1} (${scan.kpi2})\n- **CNN Model**: ${scan.cnnModel}\n- **CNN Sensor Readout**: ${scan.cnnReadout}\n- **Diagnostic Verdict**: ${scan.issue}\n- **Canonical Permalink**: https://${cfg.domain}/scan/${encT}\n- **Live SVG Badge**: ![${scan.target}](https://${cfg.domain}/badge/${encT}.svg)\n- **$0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Redlined IAB IO Rider Preview (.TXT)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}\n- **Dual-Track Outreach Preview (.EML)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}\n- **3-Row Buyer Contact Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **99¢ Single-Row Unmask**: https://${cfg.domain}/buy/micro_pass?target=${encT}\n- **$1.99 3-File Counterparty Pack**: https://${cfg.domain}/buy/flash_pass?target=${encT}\n- **$19 Creator Outreach Pass**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **$29 Full 109-Row CSV Vault**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **$149 B2B Agency Desk**: https://${cfg.domain}/buy/pro_b2b?target=${encT}\n`);
+      return res.status(200).send(`# ${scan.target} : ${cfg.brandName} Public Audit (${scan.grade} • ${scan.score}/100)\n\n- **Primary KPI**: ${scan.kpi1} (${scan.kpi2})\n- **CNN Model**: ${scan.cnnModel}\n- **CNN Sensor Readout**: ${scan.cnnReadout}\n- **Diagnostic Verdict**: ${scan.issue}\n- **Masked Buyer & Agency Desk Preview ($0 Unlock)**: \`${sb.masked}\` (+ \`${sb.agMasked}\`) • $${sb.qCpm} Rack → **$${sb.flCpm} Floor CPM (-18% · Saves $${sb.save3.toLocaleString()})**\n- **Canonical Permalink**: https://${cfg.domain}/scan/${encT}\n- **Live SVG Badge**: ![${scan.target}](https://${cfg.domain}/badge/${encT}.svg)\n- **$0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Redlined IAB IO Rider Preview (.TXT)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}\n- **Dual-Track Outreach Preview (.EML)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}\n- **3-Row Buyer Contact Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **99¢ Single-Row Unmask**: https://${cfg.domain}/buy/micro_pass?target=${encT}\n- **$1.99 3-File Counterparty Pack**: https://${cfg.domain}/buy/flash_pass?target=${encT}\n- **$19 Creator Outreach Pass**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **$29 Full 109-Row CSV Vault**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **$149 B2B Agency Desk**: https://${cfg.domain}/buy/pro_b2b?target=${encT}\n`);
     }
     if (/^(curl|httpie|wget)/i.test(ua) || accept.includes('text/plain')) {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -710,7 +710,7 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
     if (req.path.endsWith('.md')) {
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       res.setHeader('Link', `<https://${cfg.domain}/leaderboard>; rel="canonical"`);
-      const lines = ledger.map((e, i) => `${i + 1}. **[${e.target}](https://${cfg.domain}/scan/${encodeURIComponent(e.target)})** : Grade **${e.grade}** (${e.score}/100) | ${e.kpi1} | ${e.cnnReadout} | [3-Row .CSV](https://${cfg.domain}/api/github-upgrade/export.csv?target=${encodeURIComponent(e.target)}) | [.EML](https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encodeURIComponent(e.target)})`).join('\n');
+      const lines = ledger.map((e, i) => `${i + 1}. **[${e.target}](https://${cfg.domain}/scan/${encodeURIComponent(e.target)})** : Grade **${e.grade}** (${e.score}/100) | ${e.kpi1} | ${e.cnnReadout} | [Sample Dossier](https://${cfg.domain}/dossier/sample?target=${encodeURIComponent(e.target)}) | [.TXT](https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(e.target)}) | [3-Row .CSV](https://${cfg.domain}/api/github-upgrade/export.csv?target=${encodeURIComponent(e.target)}) | [.EML](https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encodeURIComponent(e.target)})`).join('\n');
       return res.status(200).send(`# ${cfg.brandName} Public Leaderboard (Hall of Fame & Needs Fix)\n\n${lines}\n\n- **$0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample\n- **99¢ Single-Row Unmask**: https://${cfg.domain}/buy/micro_pass\n- **$1.99 3-File Counterparty Pack**: https://${cfg.domain}/buy/flash_pass\n- **$19 Creator Outreach Pass**: https://${cfg.domain}/buy/creator_pass\n- **$29 Full 109-Row CSV Vault**: https://${cfg.domain}/buy/playbook_pass\n- **$149 B2B Agency Desk**: https://${cfg.domain}/buy/pro_b2b\n`);
     }
     const html = renderLeaderboardPageHtml(cfg, badgeColor);
@@ -719,7 +719,7 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
 
   app.all('/api/cnn/inspect', (req, res) => {
     const raw = req.body?.target || req.body?.query || req.query?.target || req.query?.q || cat.entities[0].target;
-    const scan = evaluateScanTarget(cfg, raw);
+    const scan = evaluateScanTarget(cfg, raw), sb = lookupSampleBuyer(scan.target), encT = encodeURIComponent(scan.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
     const cls = classifyFn ? classifyFn(req) : { isTest: 0, isCrawler: 0, isOwnerIp: false };
     if (!cls.isTest && !cls.isCrawler && !cls.isOwnerIp) savePublicScanEntry(cfg, scan);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -729,8 +729,11 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
       cnn_architecture: cat.cnnModel,
       sensor_label: cat.cnnSensorLabel,
       scan,
-      permalink_url: `https://${cfg.domain}/scan/${encodeURIComponent(scan.target)}`,
-      badge_svg_url: `https://${cfg.domain}/badge/${encodeURIComponent(scan.target)}.svg`
+      masked_buyer_preview: { buyer_masked: sb.masked, agency_masked: sb.agMasked, rack_cpm_usd: Number(sb.qCpm), floor_3flight_cpm_usd: sb.flCpm, save_3flight_usd: sb.save3 },
+      sample_dossier_url: `https://${cfg.domain}/dossier/sample?target=${encT}`,
+      counterparty_previews: { iab_rider_txt: `https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}`, pitch_eml: `https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}`, sample_csv: `https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}` },
+      permalink_url: `https://${cfg.domain}/scan/${encT}`,
+      badge_svg_url: `https://${cfg.domain}/badge/${encT}.svg`
     });
   });
 

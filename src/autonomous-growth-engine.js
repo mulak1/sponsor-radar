@@ -122,7 +122,7 @@ const GROWTH_CATALOG = {
   }
 };
 
-const { attachPublicScanFlywheel, getAllPublicScanUrls, evaluateScanTarget } = require('./public-scan-flywheel');
+const { attachPublicScanFlywheel, getAllPublicScanUrls, evaluateScanTarget, lookupSampleBuyer } = require('./public-scan-flywheel');
 
 function escXml(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -563,17 +563,17 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
     }
     const args = body.params?.arguments || {};
     const q = String(args.target || args.query || cfg.presets[0]?.key || 'verified');
-    const scan = evaluateScanTarget(cfg, q);
+    const scan = evaluateScanTarget(cfg, q), sb = lookupSampleBuyer(scan.target);
     const encT = encodeURIComponent(scan.target);
-    const qUsd = Math.max(250, Number(args.quoted_usd) || 4500);
-    const rch = Math.max(1000, Number(args.reach) || 85000);
-    const flCpm = Math.max(15, Number(args.floor_cpm) || 38);
+    const qUsd = Math.max(250, Number(args.quoted_usd) || sb.price);
+    const rch = Math.max(1000, Number(args.reach) || sb.reach);
+    const flCpm = Math.max(15, Number(args.floor_cpm) || sb.flCpm);
     const qP = `target=${encT}&floor_cpm=${Math.round(flCpm)}&reach=${rch}&quoted_usd=${qUsd}`;
     return res.json({
       jsonrpc: '2.0',
       id,
       result: {
-        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encT} | $0 Sample Dossier: https://${cfg.domain}/dossier/sample?target=${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?${qP} • https://${cfg.domain}/api/github-upgrade/pitch.eml?${qP} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/playbook_pass?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/agency_desk?target=${encT}` }]
+        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Masked Buyer & Agency Desk ($0 Unlock): ${sb.masked} (+ ${sb.agMasked}) • $${sb.qCpm} Rack → $${sb.flCpm} Floor CPM (-18% · Saves $${sb.save3.toLocaleString()}) | Public Permalink: https://${cfg.domain}/scan/${encT} | $0 Sample Dossier: https://${cfg.domain}/dossier/sample?target=${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?${qP} • https://${cfg.domain}/api/github-upgrade/pitch.eml?${qP} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/playbook_pass?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/agency_desk?target=${encT}` }]
       }
     });
   });
@@ -593,10 +593,10 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
     if (!exactMatch && !isMd) return res.redirect(301, `/${isCompare ? 'compare' : 'tools'}/${item.slug}`);
 
     if (isMd) {
-      const encT = encodeURIComponent(item.target);
+      const encT = encodeURIComponent(item.target), sb = lookupSampleBuyer(item.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       res.setHeader('Link', `<https://${cfg.domain}/${isCompare ? 'compare' : 'tools'}/${item.slug}>; rel="canonical"`);
-      return res.status(200).send(`# ${item.title}\n\n> ${item.summary}\n\n- **Canonical Interactive Tool**: https://${cfg.domain}/${isCompare ? 'compare' : 'tools'}/${item.slug}\n- **Live SVG Benchmark Badge**: ![${cfg.brandName}](https://${cfg.domain}/badge/${encT}.svg)\n- **Preview $0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Preview Redlined IAB IO Rider (.TXT)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}\n- **Preview Dual-Track Outreach Pitch (.EML)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}\n- **Preview 3-Row Verified Buyer Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **1-Click Single-Row Export (99¢)**: https://${cfg.domain}/buy/micro_pass?target=${encT}\n- **1-Click 3-File Bundle ($1.99)**: https://${cfg.domain}/buy/flash_pass?target=${encT}\n- **1-Click Creator Outreach Pass ($19)**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **1-Click Full 109-Row Vault ($${cfg.corePriceUsd || 29})**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **1-Click B2B Agency Desk ($${cfg.proPriceUsd || 149})**: https://${cfg.domain}/buy/pro_b2b?target=${encT}\n`);
+      return res.status(200).send(`# ${item.title}\n\n> ${item.summary}\n\n- **Canonical Interactive Tool**: https://${cfg.domain}/${isCompare ? 'compare' : 'tools'}/${item.slug}\n- **Masked Buyer & Agency Desk Preview ($0 Unlock)**: \`${sb.masked}\` (+ \`${sb.agMasked}\`) • $${sb.qCpm} Rack → **$${sb.flCpm} Floor CPM (-18% · Saves $${sb.save3.toLocaleString()})**\n- **Live SVG Benchmark Badge**: ![${cfg.brandName}](https://${cfg.domain}/badge/${encT}.svg)\n- **Preview $0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Preview Redlined IAB IO Rider (.TXT)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}\n- **Preview Dual-Track Outreach Pitch (.EML)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}\n- **Preview 3-Row Verified Buyer Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **1-Click Single-Row Export (99¢)**: https://${cfg.domain}/buy/micro_pass?target=${encT}\n- **1-Click 3-File Bundle ($1.99)**: https://${cfg.domain}/buy/flash_pass?target=${encT}\n- **1-Click Creator Outreach Pass ($19)**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **1-Click Full 109-Row Vault ($${cfg.corePriceUsd || 29})**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **1-Click B2B Agency Desk ($${cfg.proPriceUsd || 149})**: https://${cfg.domain}/buy/pro_b2b?target=${encT}\n`);
     }
 
     const rawHtml = renderGrowthPageHtml(cfg, item, isCompare ? 'compare' : 'tools');
