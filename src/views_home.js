@@ -299,7 +299,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
                   <button type="button" id="btn-copy-home-counter" onclick="window.__srCopyBuyerPlan(this)" class="btn btn-emerald" style="padding:6px 14px; min-height:34px; font-size:12.5px;">Copy Counter-Offer Brief (Free)</button>
                 </div>
               </div>
-              <pre id="sr-mb-free-pre" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:13.5px; line-height:1.55; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; margin:0;">${escapeHtml(`Target Show: ${mb.target_show} • Published Rack: $${mb.published_rack_rate_usd.toLocaleString()}/slot → Counter at 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (-18% • Save $${mb.savings_per_slot_usd.toLocaleString()}/read)\nLookalike Benchmark: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) @ $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot • Direct Rep: ${mb.lookalike_shows[0].booking_rep}\nContract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Unmasked Rep Emails & Clauses in $1.99 / $29 Pack)`)}</pre>
+              <pre id="sr-mb-free-pre" data-free-credit-unmasked="${escapeHtml(`Target Show: ${mb.target_show} • Published Rack: $${mb.published_rack_rate_usd.toLocaleString()}/slot → Counter at 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (-18% • Save $${mb.savings_per_slot_usd.toLocaleString()}/read)\nLookalike Benchmark: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) @ $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot • Direct Rep: ${row1BuyerUnmasked} (+ ${row1AgencyUnmasked})\nContract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Full 109-Row CSV + Rider in $19 / $29 Pack)`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:13.5px; line-height:1.55; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px; padding:12px 16px; margin:0;">${escapeHtml(`Target Show: ${mb.target_show} • Published Rack: $${mb.published_rack_rate_usd.toLocaleString()}/slot → Counter at 3-Flight Floor: $${mb.negotiated_floor_rate_usd.toLocaleString()}/slot (-18% • Save $${mb.savings_per_slot_usd.toLocaleString()}/read)\nLookalike Benchmark: ${mb.lookalike_shows[0].name} (${(mb.lookalike_shows[0].reach / 1000).toFixed(0)}K reach, ${mb.lookalike_shows[0].overlap}) @ $${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot • Direct Rep: ${mb.lookalike_shows[0].booking_rep}\n[DIRECT REP EMAIL & COUNTER-OFFER BRIEF GATED — Enter your work email in the "Unmask 3 Free Verified Buyer Emails ($0)" bar above to reveal & copy]`)}</pre>
             </div>
           </div>
 
@@ -539,21 +539,20 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (btn) { btn.style.background = 'var(--emerald-soft)'; btn.style.color = 'var(--emerald-roi)'; btn.style.borderColor = 'var(--emerald-roi)'; }
     };
     window.__srCopyBuyerPlan = function(btnEl) {
+      if (!window.__ebSavedEmail && !window.__ebIsUnlocked && window.__srFocusFreeCreditBar) return window.__srFocusFreeCreditBar(1, btnEl);
       var pre = document.getElementById('sr-mb-free-pre'), btn = btnEl || document.getElementById('btn-copy-home-counter'), nudge = document.getElementById('sr-copy-zeigarnik-nudge');
       if (pre && navigator.clipboard) navigator.clipboard.writeText(pre.innerText || pre.textContent || '').catch(function(){});
       if (window.__ebLogEvent) window.__ebLogEvent('copy_summary', { type: 'home_buyer_counter' });
-      if (btn) btn.textContent = '✓ Copied to Clipboard! (Rep Email Masked: ***)';
-      if (nudge && !window.__ebIsUnlocked) { nudge.style.display = 'flex'; }
+      if (btn) btn.textContent = '✓ Unmasked Counter-Offer Brief Copied!';
+      if (nudge && !window.__ebIsUnlocked) nudge.style.display = 'flex';
     };
     window.__srUnlockOrCopyPitch = function(btnEl) {
-      if (!window.__ebSavedEmail && !window.__ebIsUnlocked) {
-        if (window.__srFocusFreeCreditBar) return window.__srFocusFreeCreditBar(1, btnEl);
-      }
+      if (!window.__ebSavedEmail && !window.__ebIsUnlocked && window.__srFocusFreeCreditBar) return window.__srFocusFreeCreditBar(1, btnEl);
       var pre = document.getElementById('sr-free-pitch-pre'), nudge = document.getElementById('sr-copy-zeigarnik-nudge');
       if (pre && navigator.clipboard) navigator.clipboard.writeText(pre.innerText || pre.textContent || '').catch(function(){});
       if (window.__ebLogEvent) window.__ebLogEvent('copy_summary', { type: 'free_pitch_1' });
       if (btnEl) btnEl.textContent = '✓ Unmasked Pitch Copied!';
-      if (nudge && !window.__ebIsUnlocked) { nudge.style.display = 'flex'; }
+      if (nudge && !window.__ebIsUnlocked) nudge.style.display = 'flex';
     };
     window.__srCopyPitchText = window.__srUnlockOrCopyPitch;
     window.__srRenderComparisonMatrix = function() {
@@ -591,18 +590,15 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (window.__srSaveWorkspace) window.__srSaveWorkspace({ budget: b });
       var floorRate = Math.round(rackRate * 0.82), targetFlights = Math.max(1, Math.round(b / Math.max(800, floorRate)));
       var lookalikeSlots = Math.max(targetFlights + 2, Math.round(b / Math.max(750, Math.min(3500, rackRate * 0.22)))), estClicks = Math.round((b / Math.max(20, (window.__srCurrentAvgCpm || 45) * 0.82)) * 18), totalSavings = Math.max(rackRate - floorRate, Math.round(b * 0.18));
-      var el = document.getElementById('sr-moneyball-readout');
+      var el = document.getElementById('sr-moneyball-readout'), savSub = document.getElementById('sr-mb-savings-sub'), lPack = document.getElementById('sr-mb-look-pack'), preEl = document.getElementById('sr-mb-free-pre');
       if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → ' + targetFlights + ' Target Flight' + (targetFlights > 1 ? 's' : '') + ' vs. ' + lookalikeSlots + ' Lookalike Flights';
-      var savSub = document.getElementById('sr-mb-savings-sub');
       if (savSub) savSub.textContent = 'Save $' + totalSavings.toLocaleString() + ' w/ 3-flight floor';
-      var lPack = document.getElementById('sr-mb-look-pack');
       if (lPack) lPack.textContent = lookalikeSlots + ' Peer Flights (~' + estClicks.toLocaleString() + ' Clicks @ ~$' + (b / Math.max(1, estClicks)).toFixed(2) + ' CPC)';
-      var preEl = document.getElementById('sr-mb-free-pre');
-      var l0 = (window.__srCurrentLookalikes && window.__srCurrentLookalikes[0]) || { name: 'Syntax.fm', reach: 95000, overlap: '86% Audience Match', slot_usd: 2150, booking_rep: 'w***.b***@syntax.fm (+ r.***@rightsideup.co)' };
+      var l0 = (window.__srCurrentLookalikes && window.__srCurrentLookalikes[0]) || { name: 'Syntax.fm', reach: 95000, overlap: '86% Audience Match', slot_usd: 2150, booking_rep: 'wes.bos@syntax.fm (+ r.patel@rightsideup.co)' };
       if (preEl) {
-        preEl.textContent = 'Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\n'
-          + 'Lookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') for ~' + estClicks.toLocaleString() + ' est. clicks | Rep: ' + (l0.booking_rep || 'w***.b***@syntax.fm (+ r.***@rightsideup.co)') + '\\n'
-          + 'Contract Terms: Include 1.5% CTR Make-Good Clause & IAB 30-Day Download SLA (Unmasked Rep Emails & Clauses in $1.99 / $29 Pack)';
+        var unm = 'Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\nLookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') for ~' + estClicks.toLocaleString() + ' est. clicks | Verified Rep: ' + (l0.booking_rep || 'wes.bos@syntax.fm (+ r.patel@rightsideup.co)') + '\\nContract Terms: 1.5% CTR Make-Good (§7.1) & IAB 30-Day Download SLA (§4.2)';
+        preEl.setAttribute('data-free-credit-unmasked', unm);
+        preEl.textContent = (window.__ebSavedEmail || window.__ebIsUnlocked) ? unm : ('Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\nLookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') | Rep: [GATED — Enter Email Above ($0) to Unmask & Copy]\\nContract Terms: §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) [Unlock Full Rider in $1.99 Pack]');
       }
       if (!silent && window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });
     };
@@ -622,19 +618,16 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     }
     function selectBrandPreset(queryText, preferredPersona, chipEl) {
       switchToolMode('lookup');
-      const input = document.getElementById('lookup-query');
-      if (input) input.value = queryText;
+      const input = document.getElementById('lookup-query'); if (input) input.value = queryText;
       document.querySelectorAll('.brand-preset-chip').forEach(b => {
         const active = (chipEl && b === chipEl) || b.getAttribute('data-q') === queryText;
-        b.style.background = active ? 'var(--emerald-soft)' : ''; b.style.color = active ? 'var(--emerald-roi)' : '';
-        b.style.borderColor = active ? 'var(--emerald-roi)' : ''; b.style.fontWeight = active ? '800' : '';
+        b.style.background = active ? 'var(--emerald-soft)' : ''; b.style.color = active ? 'var(--emerald-roi)' : ''; b.style.borderColor = active ? 'var(--emerald-roi)' : ''; b.style.fontWeight = active ? '800' : '';
       });
       if (preferredPersona && window.__srSwitchPersona) window.__srSwitchPersona(preferredPersona);
       runBrandLookup(preferredPersona, true);
     }
     function setAudienceReach(reachVal, chipEl) {
-      const reachInput = document.getElementById('sender-reach');
-      if (reachInput) reachInput.value = Number(reachVal) || 75000;
+      const reachInput = document.getElementById('sender-reach'); if (reachInput) reachInput.value = Number(reachVal) || 75000;
       document.querySelectorAll('.reach-chip').forEach(b => {
         const active = (chipEl && b === chipEl) || Number(b.getAttribute('data-r')) === Number(reachVal);
         b.style.background = active ? 'var(--emerald-soft)' : ''; b.style.color = active ? 'var(--emerald-roi)' : ''; b.style.borderColor = active ? 'var(--emerald-roi)' : '';
@@ -651,23 +644,16 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     }
     async function runBrandLookup(preferredPersona, userTriggered) {
       if (typeof __srLiveTimer !== 'undefined' && __srLiveTimer) { clearTimeout(__srLiveTimer); __srLiveTimer = null; }
-      const queryEl = document.getElementById('lookup-query'), errEl = document.getElementById('lookup-error-msg');
-      const query = queryEl ? queryEl.value.trim() : '';
+      const queryEl = document.getElementById('lookup-query'), errEl = document.getElementById('lookup-error-msg'), query = queryEl ? queryEl.value.trim() : '';
       if (!query) { if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Please enter a sponsor brand or creator show name to analyze.'; } return; }
       if (errEl) errEl.style.display = 'none';
-      const senderShow = (document.getElementById('sender-show') || {}).value || 'Creator Media Network';
-      const senderReach = Math.max(500, Number((document.getElementById('sender-reach') || {}).value || 75000) || 75000);
-      const btn = document.getElementById('btn-run-lookup');
+      const senderShow = (document.getElementById('sender-show') || {}).value || 'Creator Media Network', senderReach = Math.max(500, Number((document.getElementById('sender-reach') || {}).value || 75000) || 75000), btn = document.getElementById('btn-run-lookup');
       if (btn) btn.textContent = 'Scanning...';
       try {
         const hdrs = { 'Content-Type': 'application/json' }; if (!userTriggered) hdrs['X-Auto-Init'] = '1';
-        const res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: hdrs, body: JSON.stringify({ mode: 'lookup', query, sender_show_name: senderShow, sender_audience_size: senderReach }) });
-        const data = await res.json();
+        const res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: hdrs, body: JSON.stringify({ mode: 'lookup', query, sender_show_name: senderShow, sender_audience_size: senderReach }) }), data = await res.json();
         renderLookupResults(data, senderReach, preferredPersona, userTriggered);
-        try {
-          if (window.__srSaveWorkspace) window.__srSaveWorkspace({ query, reach: senderReach, senderShow, persona: preferredPersona || window.__srActiveWedge || 'creator' });
-          if (window.history && window.history.replaceState) window.history.replaceState(null, '', '/?q=' + encodeURIComponent(query) + '&reach=' + encodeURIComponent(senderReach));
-        } catch (err) { console.warn('[sr:workspace]', err); }
+        try { if (window.__srSaveWorkspace) window.__srSaveWorkspace({ query, reach: senderReach, senderShow, persona: preferredPersona || window.__srActiveWedge || 'creator' }); if (window.history && window.history.replaceState) window.history.replaceState(null, '', '/?q=' + encodeURIComponent(query) + '&reach=' + encodeURIComponent(senderReach)); } catch (err) { console.warn('[sr:workspace]', err); }
         if (userTriggered) fireMetaEvent('Lead', 0, { tool_mode: 'lookup', query, reach: senderReach, buyer_wedge: window.__srActiveWedge || 'creator' });
         if (userTriggered && btn) {
           btn.style.background = 'var(--emerald-roi)'; btn.innerHTML = '<span>✓ Audited: ' + escHtml((data.display_entity && data.display_entity.name) || query) + '</span><span class="btn-icon-circle" aria-hidden="true">✓</span>';
