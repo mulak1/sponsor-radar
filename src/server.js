@@ -215,18 +215,24 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
 app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
   const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || (req.query.email && String(req.query.email).includes('@')) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
+  const qUsd = Number(req.query.quoted_usd) || 0;
+  const reach = Math.max(5000, Number(req.query.reach) || (qUsd ? Math.round((qUsd / t.rackCpm) * 1000) : t.reach));
+  const rackSlotUsd = Math.max(250, qUsd || t.rackSlotUsd);
+  const rackCpm = Math.max(18, Math.round(rackSlotUsd / (reach / 1000)));
+  const floorCpm = Math.max(15, Math.min(Number(req.query.floor_cpm) || t.floorCpm, Math.round(rackCpm * 0.82)));
+  const floorSlotUsd = Math.min(Math.round(rackSlotUsd * 0.82), Math.round((reach / 1000) * floorCpm));
   const toAddr = isUnlocked ? t.unmaskedBuyer : t.maskedBuyer;
   const ccAddr = isUnlocked ? t.unmaskedAgency : t.maskedAgency;
   const encT = encodeURIComponent(t.clean);
   const bodyLines = isUnlocked ? [
     `[TRACK A — CREATOR 3-FLIGHT PILOT PITCH (${t.clean.toUpperCase()})]`,
-    `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read sponsorship flights on ${t.peerShow} (vanity URL: ${t.peerVanity} • code: ${t.peerCode}) and prepared a 3-flight pilot anchored at your verified -18% agency floor ($${t.floorCpm} net CPM vs. $${t.rackCpm} published rack — $${t.floorSlotUsd.toLocaleString()}/flight for ${t.reach.toLocaleString()} verified reach) with an IAB §7.1 1.5% CTR + ${Math.round(t.reach * 0.85).toLocaleString()} 30-day download make-good guarantee.`,
+    `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read sponsorship flights on ${t.peerShow} (vanity URL: ${t.peerVanity} • code: ${t.peerCode}) and prepared a 3-flight pilot anchored at your verified -18% agency floor ($${floorCpm} net CPM vs. $${rackCpm} published rack — $${floorSlotUsd.toLocaleString()}/flight for ${reach.toLocaleString()} verified reach) with an IAB §7.1 1.5% CTR + ${Math.round(reach * 0.85).toLocaleString()} 30-day download make-good guarantee.`,
     '',
     `[TRACK B — MEDIA BUYER -18% RATE-CARD COUNTER-OFFER (${t.peerShow.toUpperCase()})]`,
-    `Instead of a single-insertion test at the $${t.rackSlotUsd.toLocaleString()} published rack rate ($${t.rackCpm} CPM), we are ready to lock a 3-flight Q4 insertion order at the verified -18% multi-flight agency floor ($${t.floorCpm} CPM / $${t.floorSlotUsd.toLocaleString()} per flight, saving $${Math.max(250, (t.rackSlotUsd - t.floorSlotUsd) * 3).toLocaleString()} across 3 flights) subject to the attached IAB §4.2 Rate Cap and §7.1 Make-Good Rider.`
+    `Instead of a single-insertion test at the $${rackSlotUsd.toLocaleString()} published rack rate ($${rackCpm} CPM), we are ready to lock a 3-flight Q4 insertion order at the verified -18% multi-flight agency floor ($${floorCpm} CPM / $${floorSlotUsd.toLocaleString()} per flight, saving $${Math.max(250, (rackSlotUsd - floorSlotUsd) * 3).toLocaleString()} across 3 flights) subject to the attached IAB §4.2 Rate Cap and §7.1 Make-Good Rider.`
   ] : [
     `[PREVIEW — 3-FLIGHT ANCHOR & IAB MAKE-GOOD SCRIPTS LOCKED FOR ${t.clean.toUpperCase()}]`,
-    `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read flights on ${t.peerShow} (code: ${t.peerCode} • $${t.rackCpm} Rack CPM -> $${t.floorCpm} 3-Flight Floor CPM) via ${t.agencyDesk}.`,
+    `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read flights on ${t.peerShow} (code: ${t.peerCode} • $${rackCpm} Rack CPM -> $${floorCpm} 3-Flight Floor CPM • $${floorSlotUsd.toLocaleString()}/flight on ${reach.toLocaleString()} Reach) via ${t.agencyDesk}.`,
     `• Enter your $0 work email on https://www.sponsorradar.io/ to unmask ${t.maskedBuyer} (+ ${t.maskedAgency})`,
     `• Or unlock the 3-File Counterparty Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT}`,
     `• Creator Outreach Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT}`,
@@ -236,7 +242,7 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
     'From: SponsorRadar Desk <partnerships@sponsorradar.io>',
     `To: "${t.clean} — ${t.dmRole}" <${toAddr}>`,
     `Cc: "${t.agencyDesk}" <${ccAddr}>`,
-    `Subject: [3x-Renewal Verified] 3-Flight Floor Proposal ($${t.floorCpm} CPM) & IAB Make-Good Rider — ${t.clean}`,
+    `Subject: [3x-Renewal Verified] 3-Flight Floor Proposal ($${floorCpm} CPM / $${floorSlotUsd.toLocaleString()}) & IAB Make-Good Rider — ${t.clean}`,
     'MIME-Version: 1.0',
     'Content-Type: text/plain; charset=utf-8',
     '',

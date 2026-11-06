@@ -221,9 +221,10 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
       return `| **${p.label}** (\`${p.key}\`) | ${vals.join(' | ')} |`;
     }),
     '',
-    '## 2B. Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
+    '## 2B. Interactive Micro-Tools, Head-to-Head Comparisons & Public Scan Scorecards (/tools/:slug, /compare/:slug & /scan/:target)',
     ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
     ...getGrowthConfig(cfg.moduleId).comparisons.map((c) => `- [${c.title}](${host}/compare/${c.slug}) ([.md](${host}/compare/${c.slug}.md)): ${c.summary}`),
+    ...loadPublicScanLedger(cfg).slice(0, 32).map((s) => `- [${s.target}: Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
     '',
     `## 3. Complete ${seoEntries.length}-Page Programmatic Benchmark Encyclopedia`,
     ...seoEntries.map((item, idx) => [
