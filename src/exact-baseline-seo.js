@@ -89,7 +89,7 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
             slug: p.slug,
             title: String(p.title || p.h1 || p.slug),
             category: p.category || p.page_type || 'Verified Ad-Read Ledger',
-            summary: String(p.meta_desc || cfg.explainerText).slice(0, 158)
+            summary: String(p.summary || p.meta_description || p.meta_desc || cfg.explainerText).slice(0, 158)
           });
         }
       }
