@@ -637,6 +637,7 @@ function attachExactBaselinePack(app, options = {}) {
   const cfg = VERTICAL_CONFIGS[verticalId] || VERTICAL_CONFIGS.citation_forge;
   const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
   const store = createTelemetryStore(dataDir, cfg.moduleId);
+  if (app && app.locals) { app.locals.ebStore = store; app.locals.ebClassifyTraffic = classifyTrafficRequest; }
   store.syncFromLivePeer(cfg.domain);
   app.get('/api/telemetry/raw-state', (req, res) => res.json(store.getRawState()));
   registerGracefulShutdown(cfg.brandName);

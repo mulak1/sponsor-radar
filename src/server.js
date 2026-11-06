@@ -64,10 +64,17 @@ app.post('/api/stripe/webhook', (req, res) => {
   return res.status(200).json({ ok: true, received: true });
 });
 
+function logCounterpartyExport(req, exportType, target) {
+  const st = app.locals && app.locals.ebStore, cl = (app.locals && app.locals.ebClassifyTraffic) ? app.locals.ebClassifyTraffic(req) : null;
+  if (!st || !cl) return;
+  st.recordEvent({ eventType: 'calculate', pageUrl: req.path, deviceType: cl.deviceType, isTest: cl.isTest, isCrawler: cl.isCrawler, isOwnerIp: cl.isOwnerIp, clientIp: cl.clientIp, meta: { export: exportType, target: String(target || ''), unlocked: Boolean(req.query.email || req.query.session_id || req.query.unlocked === '1') } });
+}
+
 app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req, res) => {
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const hasEmailUnlock = Boolean(req.query.email && String(req.query.email).includes('@'));
   const targetFilter = String(req.query.target || req.query.q || req.query.brand || '').trim().toLowerCase();
+  logCounterpartyExport(req, 'csv_ledger', targetFilter || 'Shopify');
   const targetSlug = targetFilter.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const STOP_TOKENS = new Set(['the', 'and', 'for', 'with', 'podcast', 'newsletter', 'youtube', 'sponsors', 'sponsorship', 'spend', 'rates', 'rate', 'cpm', 'roi', 'strategy', 'benchmarks']);
   const firstToken = targetSlug.split('-').find((w) => w.length >= 3 && !STOP_TOKENS.has(w)) || targetSlug;
@@ -171,6 +178,7 @@ function resolveTargetIntel(rawTarget) {
 app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'], (req, res) => {
   const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || (req.query.email && String(req.query.email).includes('@')) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.q || 'Shopify');
+  logCounterpartyExport(req, 'iab_io_rider_txt', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
   const reach = Math.max(5000, Number(req.query.reach) || (qUsd ? Math.round((qUsd / t.rackCpm) * 1000) : t.reach));
   const rackSlotUsd = Math.max(250, qUsd || t.rackSlotUsd);
@@ -215,6 +223,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
 app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
   const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || (req.query.email && String(req.query.email).includes('@')) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
+  logCounterpartyExport(req, 'rfc822_pitch_eml', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
   const reach = Math.max(5000, Number(req.query.reach) || (qUsd ? Math.round((qUsd / t.rackCpm) * 1000) : t.reach));
   const rackSlotUsd = Math.max(250, qUsd || t.rackSlotUsd);
