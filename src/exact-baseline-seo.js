@@ -290,6 +290,7 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
 
 function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, indexNowKey, srcDir) {
   const getEntries = () => loadVerticalSeoCatalog(cfg, srcDir);
+  getEntries();
   const hostUrl = `https://${cfg.domain}`;
   const todayIso = new Date().toISOString().split('T')[0];
 
@@ -670,8 +671,10 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
       </div>
       <div>
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;">
           <a href="/scan/${escHtml(encodeURIComponent(s.target))}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="color:${t.brandPrimary};font-weight:700;text-decoration:none;">View Report →</a>
+          <a href="/api/github-upgrade/iab-io-addendum.txt?target=${escHtml(encodeURIComponent(s.target))}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">IO Rider (.TXT) ↗</a>
+          <a href="/buy/micro_pass?target=${escHtml(encodeURIComponent(s.target))}" style="padding:2px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};border:1px solid #CBD5E1;font-weight:700;text-decoration:none;">1-Row (99¢) ↗</a>
           <a href="/buy/flash_pass?target=${escHtml(encodeURIComponent(s.target))}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.safeColor};border:1px solid #A7F3D0;font-weight:800;text-decoration:none;">3-File Pack ($1.99) ↗</a>
         </div>
       </div>
@@ -698,11 +701,11 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
 
 function buildMobileSeoCrawlMeshHtml(cfg, reqPath) {
   const t = cfg.theme, isDerm = cfg.moduleId === 'derm_logic';
-  const entries = Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0 ? cfg._cachedSeoCatalog : [];
+  const entries = (Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0) ? cfg._cachedSeoCatalog : loadVerticalSeoCatalog(cfg, __dirname);
   if (entries.length === 0) return '';
   const gCfg = getGrowthConfig(cfg.moduleId);
   const fmtScanLbl = (raw) => ({ 'VitC-AM-Peptides-PM': 'Vitamin C (AM) + Copper Peptides (PM)', 'Ceramide-Tretinoin-Buffer': 'Ceramide Buffer + Tretinoin 0.05%', 'Azelaic15-Niacinamide5': 'Azelaic Acid 15% + Niacinamide 5%', 'BHA2-SnailMucin-Stack': '2% BHA + Snail Mucin Essence', 'VitC+Cu': 'Vitamin C 15% + Copper Peptides 1%', 'Tret+BPO': 'Rx Tretinoin 0.05% + Benzoyl Peroxide', 'TikTok': '7-Active Acid & Retinol Stack' }[raw] || raw);
-  const scanItems = loadPublicScanLedger(cfg).slice(0, 10).map((s) => ({ href: `/scan/${encodeURIComponent(s.target)}`, title: isDerm ? fmtScanLbl(s.target) : `${s.target} (${s.grade})`, cat: 'public-scan' }));
+  const scanItems = loadPublicScanLedger(cfg).slice(0, 21).map((s) => ({ href: `/scan/${encodeURIComponent(s.target)}`, title: isDerm ? fmtScanLbl(s.target) : `${s.target} (${s.grade})`, cat: 'public-scan' }));
   let semanticItems = [];
   if (isDerm) {
     try { const sh = require(path.join(__dirname, 'seo-hubs.js')); if (typeof sh.getAllSemanticHubUrls === 'function') semanticItems = sh.getAllSemanticHubUrls('').map((u) => ({ href: u.loc, title: u.title, cat: 'semantic-hub' })); } catch (_) {}
@@ -743,7 +746,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   let out = String(html).replace(/http:\/\/(?:127\.0\.0\.1|localhost):\d+/g, hostUrl);
 
   // 2. Build unjs/unhead discovery tags + google/schema-dts & AgriciDaniel/claude-seo Unified @graph JSON-LD
-  const entries = Array.isArray(cfg._cachedSeoCatalog) ? cfg._cachedSeoCatalog : [];
+  const entries = (Array.isArray(cfg._cachedSeoCatalog) && cfg._cachedSeoCatalog.length > 0) ? cfg._cachedSeoCatalog : loadVerticalSeoCatalog(cfg, __dirname);
   const gCfg = getGrowthConfig(cfg.moduleId);
   const slugName = cleanPath.replace(/^\/(seo|tools|compare)\//, '');
   const currentEntry = entries.find((e) => e.slug === slugName) || [...gCfg.tools, ...gCfg.comparisons].find((x) => x.slug === slugName);
@@ -801,6 +804,8 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
         variableMeasured: cfg.kpis.map((k) => k.label),
         distribution: [
           { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: `${hostUrl}/api/github-upgrade/export.csv` },
+          { '@type': 'DataDownload', encodingFormat: 'text/plain', contentUrl: `${hostUrl}/api/github-upgrade/iab-io-addendum.txt` },
+          { '@type': 'DataDownload', encodingFormat: 'message/rfc822', contentUrl: `${hostUrl}/api/github-upgrade/pitch.eml` },
           { '@type': 'DataDownload', encodingFormat: 'text/markdown', contentUrl: `${hostUrl}${mdTwinPath}` }
         ]
       },
