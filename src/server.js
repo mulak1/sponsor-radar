@@ -143,9 +143,9 @@ function resolveTargetIntel(rawTarget) {
   const floorSlotUsd = Math.round(rackSlotUsd * 0.82);
   const rawBuyerEmail = (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
   const unmaskedBuyer = getUnmaskedNamedBuyerEmail(rawBuyerEmail);
-  const maskedBuyer = maskSponsorEmail(unmaskedBuyer, brand && brand.category);
+  const maskedBuyer = maskSponsorEmail(unmaskedBuyer);
   const unmaskedAgency = getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', brand ? brand.category : 'B2B SaaS');
-  const maskedAgency = maskSponsorEmail(unmaskedAgency, brand && brand.category);
+  const maskedAgency = maskSponsorEmail(unmaskedAgency);
   const agencyDesk = getAgencyDesk(brand ? brand.slug : 'shopify', brand ? brand.category : 'B2B SaaS');
   const dmRole = (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships';
   const peerShow = (topPlacement && topPlacement.show_name) || (show && show.name) || 'Lenny\'s Newsletter';
