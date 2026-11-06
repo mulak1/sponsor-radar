@@ -355,7 +355,6 @@ function buildClientRuntimeScript(cfg) {
       var pcTitle = document.getElementById('eb-postcalc-cta-title');
       if (pcTitle) pcTitle.textContent = label ? ('Results Ready' + label + ':') : PERSONA.ctaTitle;
     }
-    window.__ebLogEvent('view_paywall', { target: 'vaul_post_calc_spotlight' });
   };
 
   window.__ebFillEmailDomain = function(inputId, domain, formId) {

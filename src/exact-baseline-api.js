@@ -528,14 +528,14 @@ function createTelemetryStore(dataDir, moduleId) {
           if (e.client_ip) headlessCohortSet.add(e.client_ip);
         }
       }
-      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !headlessCohortSet.has(e.client_ip) && !(e.meta && e.meta.vid && headlessCohortSet.has(e.meta.vid)) && !(e.event_type === 'view_paywall' && e.meta && e.meta.target === 'in-card-unlock-bar' && !e.meta.scroll_y) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
+      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !headlessCohortSet.has(e.client_ip) && !(e.meta && e.meta.vid && headlessCohortSet.has(e.meta.vid)) && !(e.event_type === 'view_paywall' && e.meta && (e.meta.target === 'vaul_post_calc_spotlight' || (e.meta.target === 'in-card-unlock-bar' && !e.meta.scroll_y))) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
       const seoBurstUrls = new Set(baseClean.filter((e) => e.page_url && e.page_url.startsWith('/seo/') && Number(e.meta && e.meta.vw) === 1024 && !(e.meta && e.meta.ref)).filter((e, _, arr) => arr.filter((x) => x.page_url === e.page_url && Math.abs(new Date(x.created_at).getTime() - new Date(e.created_at).getTime()) <= 5000).length >= 3).map((e) => `${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
       const isWrsBurst = (e) => Boolean(e.page_url && seoBurstUrls.has(`${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
       const jsVerifiedIps = new Set(baseClean.filter((e) => !isWrsBurst(e) && (e.event_type === 'view_paywall' || e.event_type === 'checkout_intent' || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)))).map((e) => e.client_ip));
       const isJsVerifiedHuman = (e) => isWrsBurst(e) ? false : ((e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid))) : true);
       const unhydratedAll = baseClean.filter((e) => !isJsVerifiedHuman(e));
       const rawCandidates = baseClean.filter(isJsVerifiedHuman);
-      const humanEvents = []; const seenPw = new Map(), seenVis = new Map();
+      const humanEvents = []; const seenPw = new Map(), seenVis = new Map(), seenCalc = new Map();
       for (const e of rawCandidates) {
         const ts = new Date(e.created_at).getTime(), ipKey = e.client_ip || '', ck = (e.meta && e.meta.vid) || ipKey;
         if (e.event_type === 'visit' || e.event_type === 'visit_hydrated') {
@@ -554,6 +554,10 @@ function createTelemetryStore(dataDir, moduleId) {
           const row = { ...(e.event_type === 'visit_hydrated' ? { ...e, event_type: 'visit' } : e), device_type: dev, utm_source: e.utm_source || inferRefSrc(rLow) };
           const rec = { ts, row }; seenVis.set(ck, rec); if (ipKey) seenVis.set(ipKey, rec);
           humanEvents.push(row); continue;
+        }
+        if (e.event_type === 'calculate') {
+          if ((seenCalc.has(ck) && Math.abs(ts - seenCalc.get(ck)) <= 2500) || (ipKey && seenCalc.has(ipKey) && Math.abs(ts - seenCalc.get(ipKey)) <= 2500)) continue;
+          seenCalc.set(ck, ts); if (ipKey) seenCalc.set(ipKey, ts);
         }
         if (e.event_type === 'view_paywall') {
           if (seenPw.has(ck) && Math.abs(ts - seenPw.get(ck)) <= 60000) continue;
