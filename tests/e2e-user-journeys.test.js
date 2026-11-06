@@ -215,11 +215,26 @@ async function runAllJourneys() {
       const ogSvg = await ogXssRes.text();
       assert.ok(!ogSvg.includes('<script>'), 'SVG OG generator must escape raw <script> tags');
 
-      // Mobile Viewport Overflow Check (390x844)
+      // Mobile Viewport Overflow Check (390x844) & Ring-2 Anti-Bombardment DOM Guard
       const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
       await mobilePage.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
       const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
       assert.strictEqual(overflow, false, 'Mobile viewport must have zero horizontal overflow');
+      for (const calmRoute of ['/leaderboard', '/directory', '/seo/ag1-podcast-sponsorship-spend-and-roi']) {
+        await mobilePage.goto(`${BASE_URL}${calmRoute}`, { waitUntil: 'networkidle' });
+        const domDensity = await mobilePage.evaluate(() => {
+          const form = document.getElementById('sr-sweetspot-bridge-form');
+          const formBuyLinks = form ? form.querySelectorAll('a[href^="/buy/"]').length : 0;
+          const domainChips = Array.from(document.querySelectorAll('button')).filter(b => /^@(gmail|outlook)$/i.test((b.textContent || '').trim())).length;
+          const podiumBuyLinks = document.querySelectorAll('#leaderboard-podium-grid a[href^="/buy/"]').length;
+          const rowBuyLinks = document.querySelectorAll('#prompt-matrix-tbody a[href^="/buy/"]').length;
+          return { formBuyLinks, domainChips, podiumBuyLinks, rowBuyLinks };
+        });
+        assert.strictEqual(domDensity.domainChips, 0, `${calmRoute} must have 0 @gmail/@outlook domain chip buttons`);
+        assert.strictEqual(domDensity.formBuyLinks, 0, `${calmRoute} #sr-sweetspot-bridge-form must have 0 /buy/ buttons`);
+        assert.strictEqual(domDensity.podiumBuyLinks, 0, `${calmRoute} podium cards must have 0 /buy/ buttons`);
+        assert.strictEqual(domDensity.rowBuyLinks, 0, `${calmRoute} leaderboard rows must have 0 /buy/ buttons`);
+      }
       await mobilePage.close();
 
       report.journeys['UJ-SR-005'] = 'PASS';

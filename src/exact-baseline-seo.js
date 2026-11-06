@@ -727,13 +727,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;">
           <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="color:${t.brandPrimary};font-weight:700;text-decoration:none;">View Report →</a>
-          <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">IO Rider (.TXT) ↗</a>
-          <a href="/api/github-upgrade/pitch.eml?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">.EML ↗</a>
-          <a href="/api/github-upgrade/export.csv?target=${encT}" target="_blank" style="color:#475569;font-weight:700;text-decoration:underline;">3-Row .CSV ↗</a>
-          <a href="/buy/micro_pass?target=${encT}" style="padding:2px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};border:1px solid #CBD5E1;font-weight:700;text-decoration:none;">1-Row (99¢) ↗</a>
-          <a href="/buy/flash_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.safeColor};border:1px solid #A7F3D0;font-weight:800;text-decoration:none;">3-File Pack ($1.99) ↗</a>
-          <a href="/buy/creator_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid #CBD5E1;font-weight:800;text-decoration:none;">Creator ($19) ↗</a>
-          <a href="/buy/playbook_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#047857;color:#FFFFFF;font-weight:800;text-decoration:none;">109-Row Vault ($29) ↗</a>
+          <a href="/dossier/sample?target=${encT}" target="_blank" style="color:#475569;font-weight:600;text-decoration:underline;">Sample Dossier ↗</a>
         </div>
       </div>
     </div>`;
