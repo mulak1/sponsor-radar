@@ -412,9 +412,9 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
   const isShowPage = page.page_type === 'show_benchmark' && Boolean(show);
   const isBrandPage = page.page_type === 'brand_breakdown' && Boolean(brand);
-  const workbenchQuery = isShowPage ? show.name : (isBrandPage ? brand.name : page.category);
+  const workbenchQuery = isShowPage ? show.name : (brand ? brand.name : page.category);
   const floorCpm = Math.round(page.avg_cpm * 0.82);
-  const showReach = show ? show.audience_size : 500000;
+  const showReach = show ? show.audience_size : ((placements[0] && placements[0].audience_size) || 85000);
   const showRackUsd = show ? show.midroll_rate_usd : Math.round((showReach / 1000) * page.avg_cpm);
   const showFloorUsd = Math.round(showRackUsd * 0.82);
   const firstShowOnBrand = (!isShowPage && placements.length > 0 && placements[0].show_name) ? placements[0].show_name : (show ? show.name : 'The Diary Of A CEO');

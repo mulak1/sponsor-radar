@@ -140,15 +140,14 @@ function resolveTargetIntel(rawTarget) {
   let matchedBrand = db.prepare('SELECT * FROM brands WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? OR LOWER(slug) LIKE ? ORDER BY CASE WHEN LOWER(slug) = ? THEN 0 ELSE 1 END, est_monthly_spend DESC LIMIT 1').get(lookupSlug, spaced, `%${spaced}%`, `%${firstTok}%`, lookupSlug);
   const show = db.prepare('SELECT * FROM shows WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? OR LOWER(slug) LIKE ? ORDER BY CASE WHEN LOWER(slug) = ? THEN 0 ELSE 1 END, audience_size DESC LIMIT 1').get(lookupSlug, spaced, `%${spaced}%`, `%${firstTok}%`, lookupSlug);
   if (show && matchedBrand && show.slug === lookupSlug && matchedBrand.slug !== lookupSlug) matchedBrand = null;
+  const kw = `%${lookupSlug}%`;
   const topPlacement = db.prepare(`
     SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
            s.name AS show_name, s.channel_type, s.audience_size, s.midroll_rate_usd
-    FROM placements p
-    JOIN brands b ON b.slug = p.brand_slug
-    JOIN shows s ON s.slug = p.show_slug
-    WHERE (? != '' AND p.brand_slug = ?) OR (? != '' AND p.show_slug = ?)
+    FROM placements p JOIN brands b ON b.slug = p.brand_slug JOIN shows s ON s.slug = p.show_slug
+    WHERE (? != '' AND p.brand_slug = ?) OR (? != '' AND p.show_slug = ?) OR (? = '' AND ? = '' AND (LOWER(b.vertical) LIKE ? OR LOWER(b.category) LIKE ? OR LOWER(s.niche) LIKE ? OR LOWER(s.channel_type) LIKE ?))
     ORDER BY CASE WHEN (? != '' AND p.show_slug = ? AND ? = '') THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC LIMIT 1
-  `).get(matchedBrand ? matchedBrand.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', show ? show.slug : '', show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '');
+  `).get(matchedBrand ? matchedBrand.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', kw, kw, kw, kw, show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '');
   const brand = matchedBrand || (topPlacement ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(topPlacement.brand_slug) : null) || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify') || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
   const rackCpm = Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42;
   const floorCpm = Math.max(18, Math.round(rackCpm * 0.82));
@@ -626,7 +625,7 @@ app.get('/seo/:slug', (req, res) => {
   if (page.page_type === 'brand_breakdown') {
     brand = db.prepare('SELECT * FROM brands WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -639,7 +638,7 @@ app.get('/seo/:slug', (req, res) => {
   } else if (page.page_type === 'show_benchmark') {
     show = db.prepare('SELECT * FROM shows WHERE slug = ?').get(page.target_slug);
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -655,7 +654,7 @@ app.get('/seo/:slug', (req, res) => {
   } else {
     const kw = `%${page.target_slug}%`;
     placements = db.prepare(`
-      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
@@ -668,7 +667,7 @@ app.get('/seo/:slug', (req, res) => {
     `).all(kw, kw, kw, kw);
     if (placements.length === 0) {
       placements = db.prepare(`
-        SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+        SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
                sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
         FROM placements p
         JOIN brands b ON b.slug = p.brand_slug
@@ -689,7 +688,7 @@ app.get('/seo/:slug', (req, res) => {
     const seen = new Set(placements.map(r => `${r.brand_slug}:${r.show_slug}`));
     const isB2B = /b2b|saas|devtools|fintech|founder|engineering|ai|cloud|security|vc|product/i.test(`${page.category || ''} ${show ? show.niche : ''}`);
     const extraPeers = db.prepare(`
-      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.vertical AS brand_vertical, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type,
+      SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.vertical AS brand_vertical, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
       FROM placements p
       JOIN brands b ON b.slug = p.brand_slug
