@@ -413,7 +413,7 @@ function analyzeSponsorLookup(db, payload = {}) {
       linkedin_verify_url: `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(unmaskedBuyer.split('@')[0].replace(/[._]/g, ' ') + ' ' + (r.brand_name || brand.name))}`,
       decision_maker_role: r.decision_maker_role || brand.decision_maker_role || 'VP Growth & Creator Partnerships',
       agency_desk: getAgencyDesk(r.brand_slug || brand.slug, r.brand_category || brand.category),
-      sponsor_email: idx === 0 ? `${unmaskedBuyer} (+ ${unmaskedAgency})` : masked
+      sponsor_email: masked
     };
   });
   const totalFlights = rawActivePlacements.reduce((acc, r) => acc + r.flights, 0);
