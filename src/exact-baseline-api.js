@@ -598,7 +598,32 @@ function createTelemetryStore(dataDir, moduleId) {
       };
     },
     getHumanLeads: () => state.leads.filter((l) => Number(l.is_test) === 0 && !l.is_owner && Boolean(l.client_ip) && !isExcludedOwnerIp(l.client_ip)),
-    getRawState: () => state
+    getRawState: () => state,
+    syncFromLivePeer(domain) {
+      if (!domain) return;
+      fetch(`https://${domain}/api/telemetry/raw-state`, { headers: { 'User-Agent': 'ExactBaselinePeerSync/1.0' } })
+        .then((r) => (r.ok ? r.json() : fetch(`https://${domain}/api/telemetry/pst-report?hours=720`, { headers: { 'User-Agent': 'ExactBaselinePeerSync/1.0' } }).then((r2) => (r2.ok ? r2.json() : null))))
+        .then((peer) => {
+          if (!peer) return;
+          const evList = Array.isArray(peer.events) ? peer.events : [...(peer.recent_all_events || []), ...(peer.recent_pst_events || [])];
+          const seenEv = new Set(state.events.map((e) => `${e.created_at}|${e.event_type}|${e.client_ip || ''}`));
+          let added = 0;
+          for (const pe of evList) {
+            const k = `${pe.created_at}|${pe.event_type}|${pe.client_ip || ''}`;
+            if (pe.created_at && !seenEv.has(k)) { state.events.push(pe); seenEv.add(k); added++; }
+          }
+          const seenLd = new Set(state.leads.map((l) => `${l.email}|${l.created_at}`));
+          for (const pl of (peer.leads || [])) {
+            const k = `${pl.email}|${pl.created_at}`;
+            if (!seenLd.has(k)) { state.leads.push(pl); seenLd.add(k); added++; }
+          }
+          if (added > 0) {
+            state.events.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+            save();
+          }
+        })
+        .catch(() => {});
+    }
   };
 }
 
@@ -615,6 +640,8 @@ function attachExactBaselinePack(app, options = {}) {
   const cfg = VERTICAL_CONFIGS[verticalId] || VERTICAL_CONFIGS.citation_forge;
   const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
   const store = createTelemetryStore(dataDir, cfg.moduleId);
+  store.syncFromLivePeer(cfg.domain);
+  app.get('/api/telemetry/raw-state', (req, res) => res.json(store.getRawState()));
   registerGracefulShutdown(cfg.brandName);
   loadVerticalSeoCatalog(cfg, __dirname);
   app.get('/healthz', (req, res) => res.status(200).json({ ok: true, status: 'ok', service: cfg.brandName }));
@@ -722,10 +749,14 @@ function attachExactBaselinePack(app, options = {}) {
 
   app.post('/api/telemetry/event', (req, res) => {
     const body = req.body || {}, ua = String(req.headers['user-agent'] || ''), deviceType = /mobile|iphone|android/i.test(ua) ? 'mobile' : 'desktop';
-    const rawEmail = String(body.email || '').trim().slice(0, 254);
+    const rawEmail = String(body.email || (body.meta && body.meta.email) || '').trim().slice(0, 254);
     const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req, rawEmail);
     if (isOwnerIp) res.setHeader('Set-Cookie', 'eb_owner_test=1; Path=/; Max-Age=31536000; SameSite=Lax');
-    store.recordEvent({ eventType: String(body.event_type || body.eventType || 'interaction').slice(0, 64), pageUrl: String(body.page_url || body.pageUrl || '/').slice(0, 256), deviceType: String(body.device_type || deviceType).slice(0, 32), utmSource: String(body.utm_source || '').slice(0, 128), utmCampaign: String(body.utm_campaign || '').slice(0, 128), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
+    const evType = String(body.event_type || body.eventType || 'interaction').slice(0, 64);
+    if (evType === 'lead_capture' && rawEmail && rawEmail.includes('@')) {
+      store.recordLead({ email: rawEmail, summaryText: `${cfg.brandName} Inline Lead (${String(body.page_url || body.pageUrl || '/')})`, utmSource: String((body.meta && body.meta.source) || body.utm_source || 'inline_event'), isTest, isOwnerIp, clientIp });
+    }
+    store.recordEvent({ eventType: evType, pageUrl: String(body.page_url || body.pageUrl || '/').slice(0, 256), deviceType: String(body.device_type || deviceType).slice(0, 32), utmSource: String(body.utm_source || '').slice(0, 128), utmCampaign: String(body.utm_campaign || '').slice(0, 128), isTest, isCrawler, isOwnerIp, clientIp, meta: body.meta || {} });
     res.json({ ok: true, is_test: isTest, is_owner_ip: isOwnerIp, is_crawler: isCrawler });
   });
 
