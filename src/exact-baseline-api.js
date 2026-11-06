@@ -275,10 +275,7 @@ const VERTICAL_CONFIGS = {
       'preset-fungal-safe-barrier': ['96/100', '0.6 pH', '94% Pass', '0 Triggers'], 'Fungal-Safe Barrier Care': ['96/100', '0.6 pH', '94% Pass', '0 Triggers'],
       'preset-glass-skin': ['94/100', '0.8 pH', '89% Pass', '0 Triggers'], 'Glass Skin Hydration': ['94/100', '0.8 pH', '89% Pass', '0 Triggers']
     },
-    presets: [
-      { key: 'TikTok 7-Active Stack', label: '7-Active' }, { key: 'Vitamin C + Copper Peptides', label: 'VitC + Cu' },
-      { key: 'Tretinoin + Benzoyl Peroxide', label: 'Tret + BPO' }, { key: 'Fungal-Safe Barrier Care', label: 'Fungal-Safe' }, { key: 'Glass Skin Hydration', label: 'Glass Skin' }
-    ],
+    presets: [{ key: 'TikTok 7-Active Stack', label: '7-Active' }, { key: 'Vitamin C + Copper Peptides', label: 'VitC + Cu' }, { key: 'Tretinoin + Benzoyl Peroxide', label: 'Tret + BPO' }, { key: 'Fungal-Safe Barrier Care', label: 'Fungal-Safe' }, { key: 'Glass Skin Hydration', label: 'Glass Skin' }],
     coMarketingPills: [
       { key: 'sephora', label: 'pH Clash Risk', rowText: 'Formulation Alert: Mixing low-pH direct acids (pH 3.2) with neutral peptides (pH 6.0) causes rapid hydrolysis.' },
       { key: 'dermstore', label: 'Retinoid Oxidation', rowText: 'Formulation Alert: Combining unencapsulated retinoids with peroxides or low-pH acids triggers barrier stinging.' },
@@ -289,23 +286,13 @@ const VERTICAL_CONFIGS = {
       { title: "Paula's Choice 2% BHA Liquid (Sephora)", badge: 'Exfoliating Night Pick', cpa: 'Shop Verified Formula', url: 'https://www.sephora.com/product/skin-perfecting-2-bha-liquid-exfoliant-P469502' },
       { title: 'La Roche-Posay Cicaplast Baume B5+', badge: 'Recovery Night Cream', cpa: 'Shop Dermatologist Pick', url: 'https://www.ulta.com/p/cicaplast-baume-b5-soothing-therapeutic-multi-purpose-cream-pimprod2018267' }
     ],
-    githubRepo: {
-      name: 'rdkit/rdkit + EU CosIng pKa Matrix + adamgibbons/ics',
-      stars: '159,786 Combined Stars', url: 'https://github.com/rdkit/rdkit',
-      badge: 'Henderson-Hasselbalch pKa + 500-Dalton Layering Engine',
-      title: 'Cosmetic-Chemist ΔpH & 500-Dalton Routine Harmony Engine',
-      summary: 'Calculates free-acid bio-availability, Cu2+/Retinoid redox inactivation, and 4-night skin-cycling schedules.'
-    },
+    githubRepo: { name: 'rdkit/rdkit + EU CosIng pKa Matrix + adamgibbons/ics', stars: '159,786 Combined Stars', url: 'https://github.com/rdkit/rdkit', badge: 'Henderson-Hasselbalch pKa + 500-Dalton Layering Engine', title: 'Cosmetic-Chemist ΔpH & 500-Dalton Routine Harmony Engine', summary: 'Calculates free-acid bio-availability, Cu2+/Retinoid redox inactivation, and 4-night skin-cycling schedules.' },
     deliverableFiles: [
       { file: 'am-pm-vanity-card-9x16.pdf', label: 'Phone Routine Card (PDF)', size: '48.2 KB', schema: 'Step-by-step Morning & Bedtime order tailored to your selected bottles with exact pH dry-down wait times', status: 'VALID' },
       { file: '4-night-skin-cycling.ics', label: '4-Night Calendar (.ICS)', size: '3.1 KB', schema: '1-click Apple & Google Calendar rotation separating your conflicting acids, retinoids, and peptides across 4 nights', status: 'VALID' },
       { file: 'non-comedogenic-swaps.csv', label: 'Pore-Safe Swaps (.CSV)', size: '5.5 KB', schema: '1-to-1 non-comedogenic, fungal-safe product swaps that layer cleanly with your active serums without pilling', status: 'VALID' }
     ],
-    remediationDiff: {
-      beforeLine: 'Morning (7:30 AM): Gentle Rinse -> Antioxidant Serum (exact wait time locked in PDF) -> Barrier Moisturizer & SPF 50.',
-      afterLine: 'Bedtime (9:30 PM): Separates conflicting night actives onto alternating nights -> 3:1:1 Ceramide Barrier Cream.',
-      roiBadge: 'Tailored to Your Shelf · Protects Active Serums'
-    }
+    remediationDiff: { beforeLine: 'Morning (7:30 AM): Gentle Rinse -> Antioxidant Serum (exact wait time locked in PDF) -> Barrier Moisturizer & SPF 50.', afterLine: 'Bedtime (9:30 PM): Separates conflicting night actives onto alternating nights -> 3:1:1 Ceramide Barrier Cream.', roiBadge: 'Tailored to Your Shelf · Protects Active Serums' }
   },
   abandon_alpha: {
     moduleId: 'abandon_alpha', brandName: 'AbandonAlpha', domain: 'www.abandonalpha.com', accentColor: '#0F172A',
@@ -683,7 +670,8 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/api/github-upgrade/export.csv', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/export.csv', isTest, isCrawler, meta: { export: 'sheetjs_csv' } });
-    const rows = [['Scenario_Preset', cfg.kpis[0].label, cfg.kpis[1].label, cfg.kpis[2].label, cfg.kpis[3].label, 'Unlock_Full_Model_URL'], ...cfg.presets.map((p) => [p.label, ...(cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val)), `https://${cfg.domain}/?unlock=flash_pass`])];
+    const isUnlocked = Boolean(req.query?.unlock === '1' || req.query?.session_id);
+    const rows = [['Scenario_Preset', cfg.kpis[0].label, cfg.kpis[1].label, cfg.kpis[2].label, cfg.kpis[3].label, 'Unlock_Full_Model_URL'], ...cfg.presets.map((p, idx) => (idx === 0 || isUnlocked) ? [p.label, ...(cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val)), `https://${cfg.domain}/buy/flash_pass`] : [p.label, '[LOCKED — 3-File Pack ($1.99) or 109-Row Vault ($29)]', '[LOCKED]', '[LOCKED]', '[LOCKED]', `https://${cfg.domain}/buy/flash_pass`])];
     res.status(200).type('text/csv; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-executive-model.csv"`).send(rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\r\n'));
   });
 
@@ -948,14 +936,7 @@ function attachExactBaselinePack(app, options = {}) {
         body = renderExactBaselineEnhancements(body, cfg, req.path);
       }
       if (isHtml) {
-        body = body.replace(/\p{Extended_Pictographic}/gu, '')
-          .replace(/&#128274;|&#128275;|&#128203;|&#10024;|&#9889;|&#9888;|&#128339;|&#128506;/g, '')
-          .replace(/&copy;/gi, 'Copyright')
-          .replace(/\bBEOs\b/g, 'Meal Sheets')
-          .replace(/\bBEO\b/g, 'Meal Sheet')
-          .replace(/300-DPI/gi, 'Print-Ready')
-          .replace(/\bSpecimens\b/g, 'Samples')
-          .replace(/\bSpecimen\b/gi, 'Sample');
+        body = body.replace(/\p{Extended_Pictographic}/gu, '').replace(/&#128274;|&#128275;|&#128203;|&#10024;|&#9889;|&#9888;|&#128339;|&#128506;/g, '').replace(/&copy;/gi, 'Copyright').replace(/\bBEOs\b/g, 'Meal Sheets').replace(/\bBEO\b/g, 'Meal Sheet').replace(/300-DPI/gi, 'Print-Ready').replace(/\bSpecimens\b/g, 'Samples').replace(/\bSpecimen\b/gi, 'Sample');
       }
       return origSend(body);
     };

@@ -169,8 +169,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     /* Sticky Editorial Header Navigation */
     .top-nav {
-      background: rgba(248, 249, 250, 0.94);
-      backdrop-filter: blur(12px);
+      background: #FBF8F3;
       border-bottom: none;
       position: sticky;
       top: 0;

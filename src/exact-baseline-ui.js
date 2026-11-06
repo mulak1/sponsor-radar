@@ -303,61 +303,32 @@ function buildClientRuntimeScript(cfg) {
       fetch('/api/telemetry/event', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: payload }).catch(function(){});
     } catch (_) {}
   };
-  try {
-    if (!window.__ebHydrationLogged) {
-      window.__ebHydrationLogged = true;
-      window.__ebLogEvent('visit_hydrated', { ua_platform: navigator.platform || '', vw: window.innerWidth || 0 });
-    }
-  } catch (_) {}
-
   window.__ebSaveBundleFile = function() {
     try {
       var targetEl = document.getElementById('compiler-code-output') || document.getElementById('res-pitch-body') || document.getElementById('out-sdk-snippet') || document.getElementById('appleWalletCardPreview');
       var bodyText = targetEl ? targetEl.textContent : (CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine);
-      var blob = new Blob([CFG.brandName + ' Verified Deliverable Bundle\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + bodyText], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = CFG.moduleId + '-deliverable-bundle.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      var blob = new Blob([CFG.brandName + ' Verified Deliverable Bundle\\n' + CFG.remDiff.beforeLine + '\\n' + CFG.remDiff.afterLine + '\\n\\n' + bodyText], { type: 'text/plain;charset=utf-8' }), a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = CFG.moduleId + '-deliverable-bundle.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     } catch (_) {}
   };
-
   document.addEventListener('click', function(e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href*="/api/affiliate"], a[rel*="sponsored"], a.affiliate-link-pill, a.affiliate-micro-link') : null;
-    if (a && !a.hasAttribute('onclick')) {
-      window.__ebLogEvent('affiliate_click', { partner: (a.textContent || '').trim().slice(0, 40), href: a.getAttribute('href') || '' });
-    }
+    if (a && !a.hasAttribute('onclick')) window.__ebLogEvent('affiliate_click', { partner: (a.textContent || '').trim().slice(0, 40), href: a.getAttribute('href') || '' });
     var presetBtn = e.target && e.target.closest ? e.target.closest('[onclick*="recalcPseo"], [onclick*="pasteSample"], [onclick*="filterPlacements"], [onclick*="filterLedgerRows"], [onclick*="switchToolMode"], [onclick*="setBrandPreset"], [onclick*="setPresetDomain"], [onclick*="switchCompilerTab"], [onclick*="applyRoutinePreset"], .preset-btn, .obj-btn') : null;
     if (presetBtn) window.__ebLogEvent('calculate', { source: 'native_interactive_control' });
   }, { passive: true });
-
   window.__ebTriggerPostCalcSpotlight = function(entityName) {
     if (window.__ebIsUnlocked) return;
-    var label = entityName ? (' (' + cleanEnt(entityName, 20) + ')') : '';
-    var curtain = document.getElementById('eb-deliverable-curtain');
+    var label = entityName ? (' (' + cleanEnt(entityName, 20) + ')') : '', curtain = document.getElementById('eb-deliverable-curtain');
     if (curtain) curtain.style.boxShadow = '0 10px 28px rgba(15,23,42,0.07)';
-    var pcBar = document.getElementById('eb-postcalc-inline-cta');
-    if (pcBar) {
-      var pcTitle = document.getElementById('eb-postcalc-cta-title');
-      if (pcTitle) pcTitle.textContent = label ? ('Results Ready' + label + ':') : PERSONA.ctaTitle;
-    }
+    var pcBar = document.getElementById('eb-postcalc-inline-cta'), pcTitle = pcBar ? document.getElementById('eb-postcalc-cta-title') : null;
+    if (pcTitle) pcTitle.textContent = label ? ('Results Ready' + label + ':') : PERSONA.ctaTitle;
   };
-
   window.__ebFillEmailDomain = function(inputId, domain, formId) {
-    var inp = document.getElementById(inputId || 'eb-inline-scorecard-email');
-    if (!inp) return;
-    var val = (inp.value || '').trim();
-    var prefix = val.split('@')[0].trim();
-    if (prefix.length > 0) {
-      inp.value = prefix + domain;
-      window.__ebSaveInlineScorecard(null, inputId || 'eb-inline-scorecard-email', formId || 'eb-save-scorecard-bar');
-    } else {
-      inp.value = domain;
-      inp.focus();
-      try { inp.setSelectionRange(0, 0); } catch (_) {}
-    }
+    var inp = document.getElementById(inputId || 'eb-inline-scorecard-email'); if (!inp) return;
+    var val = (inp.value || '').trim(), prefix = val.split('@')[0].trim();
+    if (prefix.length > 0) { inp.value = prefix + domain; window.__ebSaveInlineScorecard(null, inputId || 'eb-inline-scorecard-email', formId || 'eb-save-scorecard-bar'); }
+    else { inp.value = domain; inp.focus(); try { inp.setSelectionRange(0, 0); } catch (_) {} }
   };
 
   window.__ebSetCurtainRoiScale = function(mult) {
@@ -804,7 +775,6 @@ function buildClientRuntimeScript(cfg) {
       }).catch(function(){});
     }, 300);
   };
-
   window.__ebOnSliderInput = function(val) {
     var num = Number(val) || 10, rd = document.getElementById('eb-slider-readout'), boxes = document.querySelectorAll('#free-metrics-grid .eb-kpi-val');
     if (rd) rd.textContent = CFG.sliderLabel + ': ' + num;
@@ -815,12 +785,8 @@ function buildClientRuntimeScript(cfg) {
       else { boxes[0].textContent = '$' + Math.round(num * 665).toLocaleString(); boxes[1].textContent = '$' + Math.round(num * 575).toLocaleString(); }
     }
     if (sliderTimer) clearTimeout(sliderTimer);
-    sliderTimer = setTimeout(function() {
-      window.__ebLogEvent('calculate', { source: 'nouislider_range', value: num });
-      window.__ebShowTripwire();
-    }, 450);
+    sliderTimer = setTimeout(function() { window.__ebLogEvent('calculate', { source: 'nouislider_range', value: num }); window.__ebShowTripwire(); }, 450);
   };
-
   try {
     if ('IntersectionObserver' in window) {
       var obs = window.__ebPaywallObserver = new IntersectionObserver(function(entries) {
@@ -831,19 +797,16 @@ function buildClientRuntimeScript(cfg) {
       ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-postcalc-inline-cta'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
     }
   } catch (_) {}
-
   var ouibounceShown = false, pageEnteredAt = Date.now(), nativeCalcTimer = null;
   function showRescueToast(reason) {
-    if (ouibounceShown || window.__ebIsUnlocked) return;
-    if ((Date.now() - pageEnteredAt) < 18000) return;
+    if (ouibounceShown || window.__ebIsUnlocked || (Date.now() - pageEnteredAt) < 18000) return;
     try {
       var lastTs = Number(localStorage.getItem('eb_toast_dismissed_ts') || 0);
       if (lastTs && (Date.now() - lastTs) < 86400000) return;
       localStorage.setItem('eb_toast_dismissed_ts', String(Date.now()));
     } catch (_) {}
     ouibounceShown = true;
-    var toast = document.getElementById('eb-ouibounce-toast');
-    if (toast) toast.style.display = 'block';
+    var toast = document.getElementById('eb-ouibounce-toast'); if (toast) toast.style.display = 'block';
     window.__ebLogEvent('view_paywall', { target: 'sonner_rescue_' + reason });
   }
   document.addEventListener('mouseleave', function(e) { if (e.clientY <= 8) showRescueToast('desktop_exit'); }, { passive: true });
@@ -856,25 +819,19 @@ function buildClientRuntimeScript(cfg) {
     }
   }, { passive: true });
   window.addEventListener('scroll', function() {
-    var y = window.scrollY || 0;
-    var sb = document.getElementById('sticky-mobile-bar');
+    var y = window.scrollY || 0, sb = document.getElementById('sticky-mobile-bar');
     if (sb) sb.classList.toggle('eb-dock-visible', y > 650 && !navigator.webdriver);
     if (y > 1100 && (Date.now() - pageEnteredAt) > 25000) showRescueToast('deep_scroll');
   }, { passive: true });
-
   window.__ebToggleCmdk = function() {
-    var m = document.getElementById('eb-cmdk-modal');
-    if (!m) return;
+    var m = document.getElementById('eb-cmdk-modal'); if (!m) return;
     m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
     window.__ebLogEvent('tab_switch', { store_pill: 'cmdk_palette' });
   };
   document.addEventListener('keydown', function(e) {
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); window.__ebToggleCmdk(); }
-    else if (e.key === 'Escape') {
-      ['eb-cmdk-modal', 'eb-floating-gate-popover'].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
-    }
+    else if (e.key === 'Escape') ['eb-cmdk-modal', 'eb-floating-gate-popover'].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
   });
-
   window.__ebSelectStorePill = function(key) {
     var pills = document.querySelectorAll('.store-preview-pill[data-store]');
     for (var i = 0; i < pills.length; i++) pills[i].classList.toggle('active', pills[i].getAttribute('data-store') === key);
@@ -945,7 +902,7 @@ function buildClientRuntimeScript(cfg) {
   };
   window.__ebQuickBuy = window.__ebCheckout;
   var __ebBootAll = function() {
-    if (!window.__ebHydratedSent) { window.__ebHydratedSent = true; window.__ebLogEvent('visit_hydrated', { vw: window.innerWidth || 0, vh: window.innerHeight || 0, ref: document.referrer || '' }); }
+    if (!window.__ebHydratedSent) { window.__ebHydratedSent = true; window.__ebHydrationLogged = true; window.__ebLogEvent('visit_hydrated', { ua_platform: navigator.platform || '', vw: window.innerWidth || 0, vh: window.innerHeight || 0, ref: document.referrer || '' }); }
     try { var curP = window.location.pathname || '/', dirRx = new RegExp('^/(seo|tools|compare|brand|show|fix|routine|ingredient|compatibility|bottle)(/|$)'), actHref = (curP.indexOf('/leaderboard') === 0 || curP.indexOf('/scan/') === 0) ? '/leaderboard' : (curP.indexOf('/celebrity') === 0 ? '/celebrity' : (curP.indexOf('/concern') === 0 ? '/concern' : ((curP === '/directory' || dirRx.test(curP)) ? '/directory' : '/#'))); Array.prototype.slice.call(document.querySelectorAll('header nav a, .mobile-nav-strip a')).forEach(function(a) { if (a.classList.contains('btn') || a.classList.contains('btn-primary')) return; var h = a.getAttribute('href') || ''; a.classList.remove('active', 'eb-nav-active'); a.removeAttribute('aria-current'); if ((actHref === '/#' && (h === '/#radar-tool' || h === '/#grader' || h === '/#analyzer')) || h === actHref) { a.classList.add('eb-nav-active'); a.setAttribute('aria-current', 'page'); } }); } catch (_) {}
     window.__ebMountDeliverableCurtain();
     try { if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) { var revEls = Array.prototype.slice.call(document.querySelectorAll('section h2, section h3, #eb-segment-portrait-strip > div, #eb-deliverable-curtain > div > div, .porcelain-vessel-core, .panel, .card')).slice(0, 22); if (window.IntersectionObserver) { var io = new IntersectionObserver(function(entries) { entries.forEach(function(en) { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'translateY(0px)'; io.unobserve(en.target); } }); }, { threshold: 0.05 }); revEls.forEach(function(el) { if (el.getBoundingClientRect().top > 240) { el.style.opacity = '0.92'; el.style.transform = 'translateY(8px)'; el.style.transition = 'opacity 320ms cubic-bezier(0.22,1,0.36,1), transform 320ms cubic-bezier(0.22,1,0.36,1)'; io.observe(el); } }); } } } catch (_) {}
