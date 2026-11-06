@@ -848,18 +848,16 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
           if (pill2) { pill2.textContent = '✓ LOADED: ' + urlQuery.toUpperCase().slice(0, 26) + ' • UNMASK FREE SAMPLE ($0) ↓'; pill2.style.background = 'var(--emerald-roi)'; pill2.style.color = '#FFF'; }
           if (s2) s2.style.boxShadow = '0 0 0 3px var(--emerald-roi), 0 14px 32px rgba(13,107,75,0.18)';
           if (window.scrollY < 100 && !window.location.hash) { setTimeout(function() { var rt = document.getElementById('radar-tool'); if (rt && rt.scrollIntoView) rt.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 180); }
-        } else if (ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona, false); }
-        else if (ws.reach && rEl && String(ws.reach) !== String(rEl.value)) { rEl.value = ws.reach; }
+        } else if (ws.query && qEl && ws.query !== qEl.value) { qEl.value = ws.query; if (ws.reach && rEl) rEl.value = ws.reach; runBrandLookup(ws.persona, false); } else if (ws.reach && rEl && String(ws.reach) !== String(rEl.value)) { rEl.value = ws.reach; }
         if (window.__srRenderComparisonMatrix) window.__srRenderComparisonMatrix();
       } catch (err) { console.warn('[sr:init]', err); }
     });
     async function startStripeCheckout(planTier, amountUsd, emailInputId, hpInputId, confirmed) {
-      const emailEl = document.getElementById(emailInputId), hpEl = hpInputId ? document.getElementById(hpInputId) : null;
-      const email = emailEl && emailEl.value ? emailEl.value.trim() : 'founder@creatorstudio.io', bw = window.__srActiveWedge || 'creator';
+      const emailEl = document.getElementById(emailInputId), hpEl = hpInputId ? document.getElementById(hpInputId) : null, email = emailEl && emailEl.value ? emailEl.value.trim() : 'founder@creatorstudio.io', bw = window.__srActiveWedge || 'creator';
       if (!confirmed && window.__ebCheckout && !(hpEl && hpEl.value)) { window.__ebCheckout((planTier === 'agency_feed_199' || amountUsd >= 149) ? 'pro_b2b' : 'complete_dossier', true); return; }
       try {
-        const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan_tier: planTier, amount_usd: amountUsd, customer_email: email, buyer_wedge: bw, website_url_hp: hpEl ? hpEl.value : '', ...getUtmParams() }) });
-        const data = await res.json(); fireMetaEvent('StartTrial', amountUsd, { plan_tier: planTier, buyer_wedge: bw });
+        const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan_tier: planTier, amount_usd: amountUsd, customer_email: email, buyer_wedge: bw, website_url_hp: hpEl ? hpEl.value : '', ...getUtmParams() }) }), data = await res.json();
+        fireMetaEvent('StartTrial', amountUsd, { plan_tier: planTier, buyer_wedge: bw });
         const banner = document.getElementById('checkout-status-banner'), txt = document.getElementById('checkout-status-text');
         if (banner && txt) { banner.style.display = 'block'; txt.innerHTML = 'Stripe Session ' + escHtml(data.session_id) + ' ready for ' + escHtml(email) + ' (' + escHtml(String(planTier).toUpperCase()) + ' - $' + Number(amountUsd) + '/mo). <a href="' + escHtml(data.checkout_url || '/buy/complete_dossier') + '" style="color:var(--emerald-roi);text-decoration:underline;font-weight:700;margin-left:8px;">Proceed to Stripe Checkout ↗</a>'; }
       } catch (e) { console.error(e); }
@@ -869,77 +867,78 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
 }
 
 function renderLandingPage({ defaultAnalysis }) {
-  const row1 = (defaultAnalysis.placements && defaultAnalysis.placements[0]) || {};
-  const r1Buyer = row1.unmasked_buyer_email || 'sarah.kaufman@shopify.com', r1Agency = row1.unmasked_agency_email || 'm.vance@rightsideup.co';
+  const row1 = (defaultAnalysis.placements && defaultAnalysis.placements[0]) || {}, r1Buyer = row1.unmasked_buyer_email || 'sarah.kaufman@shopify.com', r1Agency = row1.unmasked_agency_email || 'm.vance@rightsideup.co';
   const r1Angle = row1.live_outreach_angle || 'Saw 4x peer renewal last 30d — anchor 3-flight pilot at -18% floor.', r1Rider = row1.iab_makegood_rider_preview || 'IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)';
   const bodyHtml = `
-  <section style="padding:40px 0 60px;">
-    <div class="container" style="max-width:1060px;">
-      <div style="text-align:center; max-width:820px; margin:0 auto 24px;">
-        <span class="pill-emerald">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay</span>
-        <h1 class="headline-xl" style="margin-top:14px;">Pitch the buyer, <span class="serif-italic" style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
-        <p style="color:var(--text-secondary); font-size:16px; margin-top:12px;">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay. Unmask 3 free verified buyer emails ($0 via work email) or unlock the Full 109-Row CSV Vault ($29).</p>
+  <section style="padding:40px 0 60px;"><div class="container" style="max-width:1060px;">
+    <div style="text-align:center; max-width:820px; margin:0 auto 24px;">
+      <span class="pill-emerald">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay</span>
+      <h1 class="headline-xl" style="margin-top:14px;">Pitch the buyer, <span class="serif-italic" style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
+      <p style="color:var(--text-secondary); font-size:16px; margin-top:12px;">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay. Unmask 3 free verified buyer emails ($0 via work email) or unlock the Full 109-Row CSV Vault ($29).</p>
+    </div>
+    <div id="sr-live-deal-card-row1" data-active-wedge="creator" class="panel" style="padding:14px 18px; margin-bottom:14px; border-color:var(--emerald-border); background:var(--emerald-soft);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+        <span class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi);">✦ ROW #1 SPECIMEN DEAL PROOF (1 OF 109 VERIFIED BUYER &amp; AGENCY DESK ROWS)</span>
+        <span class="pill-emerald" style="font-size:11.5px; font-weight:800;">Sample Proof (Shopify): sarah.kaufman@shopify.com</span>
       </div>
-      <div id="sr-live-deal-card-row1" data-active-wedge="creator" class="panel" style="padding:14px 18px; margin-bottom:20px; border-color:var(--emerald-border); background:var(--emerald-soft);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-          <span class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi);">✦ ROW #1 SPECIMEN DEAL PROOF (1 OF 109 VERIFIED BUYER &amp; AGENCY DESK ROWS)</span>
-          <span class="pill-emerald" style="font-size:11.5px; font-weight:800;">Renewed on Peer Shows (Last 30 Days)</span>
-        </div>
-        <div class="mono" style="font-size:13px; color:var(--text-primary); line-height:1.5;">
-          <strong>Named Buyer:</strong> <span id="lp-row1-buyer" style="color:var(--emerald-roi); font-weight:800;">s***.k***@shopify.com</span> • <strong>Agency Desk:</strong> <span id="lp-row1-agency" style="color:var(--amber-gold); font-weight:800;">m.v***@rightsideup.co</span> (Right Side Up Podcast Desk)<br/>
-          <strong>Live Outreach Angle:</strong> <span id="lp-row1-angle">${escapeHtml(r1Angle)}</span> • <code id="lp-row1-rider">${escapeHtml(r1Rider)}</code>
-        </div>
-      </div>
-      <div class="double-bezel" style="margin-bottom:32px;"><div class="panel">
-        <div class="panel-header"><div><span class="pill-emerald">TRY IT FREE ABOVE THE FOLD</span><strong style="margin-left:8px; font-size:14.5px;">Instant Sponsor Spend &amp; 3x-Renewal Verifier</strong></div><div class="mono" style="font-size:13px; color:var(--text-secondary);">Zero signup required to test</div></div>
-        <div class="panel-body">
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-            <input id="lp-query" type="text" class="input-field" value="AG1" placeholder="Type any brand or show (e.g. AG1, Deel, Ramp, Lenny's Podcast)..." style="flex:1; min-width:210px;" />
-            <button type="button" class="btn btn-vermilion" onclick="runLpLookup()"><span>Reveal 3x+ Renewals</span><span class="btn-icon-circle" aria-hidden="true">↗</span></button>
-          </div>
-          <div class="preset-row">
-            <button type="button" class="preset-chip" onclick="setLpPreset('AG1')">AG1 ($1.42M/mo)</button>
-            <button type="button" class="preset-chip" onclick="setLpPreset('Deel')">Deel ($680K/mo)</button>
-            <button type="button" class="preset-chip" onclick="setLpPreset('Ramp')">Ramp ($790K/mo)</button>
-            <button type="button" class="preset-chip" onclick="setLpPreset('Lenny\\'s Podcast')">Lenny's Podcast</button>
-            <button type="button" class="preset-chip" onclick="setLpPreset('Huberman Lab')">Huberman Lab</button>
-          </div>
-          <div class="kpi-grid" style="margin-top:16px;">
-            <div class="kpi-box"><div class="kpi-label">MATCHED ENTITY</div><div class="kpi-val" id="lp-brand-name" style="font-size:18px;">${escapeHtml(defaultAnalysis.brand.name)}</div></div>
-            <div class="kpi-box"><div class="kpi-label">EST. MONTHLY SPEND</div><div class="kpi-val" id="lp-spend" style="color:var(--amber-gold);">$${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}</div></div>
-            <div class="kpi-box"><div class="kpi-label">3x+ RENEWAL SCORE</div><div class="kpi-val" id="lp-score" style="color:var(--emerald-roi);">${defaultAnalysis.metrics.renewal_velocity_score}/100</div></div>
-            <div class="kpi-box"><div class="kpi-label">VERIFIED BUYING DESK</div><div class="kpi-val" id="lp-email" style="font-size:13.5px; color:var(--emerald-roi);">109 Verified Buyer &amp; Agency Desk Rows</div></div>
-          </div>
-        </div>
-      </div></div>
-      <div class="panel" style="padding:28px; text-align:center; border-color:var(--emerald-border); background:var(--bg-elevated);">
-        <span class="pill-emerald">INSTANT 1-CLICK STRIPE EXPRESS • 30-DAY ZERO-BOUNCE GUARANTEE</span>
-        <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin-top:10px;">Unlock All 109 Verified Buyer &amp; Agency Desk Rows ($19 Creator Pass / $29 Full CSV Vault)</h2>
-        <p style="color:var(--text-secondary); max-width:600px; margin:8px auto 20px;">Download the Creator Pass for $19 one-time, or unlock all 109 Verified Buyer &amp; Agency Desk Rows for $29 ($149 B2B Agency Desk).</p>
-        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
-          <a href="/buy/creator_pass?source=lp_express" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" class="btn btn-vermilion" style="padding:12px 22px; font-size:15px; text-decoration:none;"><span>Creator Pass ($19)</span><span class="btn-icon-circle" aria-hidden="true">↗</span></a>
-          <a href="/buy/playbook_pass?source=lp_express" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-emerald" style="padding:12px 22px; font-size:15px; text-decoration:none;"><span>Full 109-Row CSV Vault ($29) ↗</span></a>
-        </div>
-        <input type="text" id="lp-hp-field" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <div id="lp-confirm-msg" class="mono" style="margin-top:12px; font-size:13px; color:var(--emerald-roi); display:none;"></div>
+      <div class="mono" style="font-size:13px; color:var(--text-primary); line-height:1.5;">
+        <strong>Named Buyer:</strong> <span id="lp-row1-buyer" data-free-credit-unmasked="${escapeHtml(r1Buyer)}" style="color:var(--emerald-roi); font-weight:800;">s***.k***@shopify.com</span> • <strong>Agency Desk:</strong> <span id="lp-row1-agency" data-free-credit-unmasked="${escapeHtml(r1Agency)}" style="color:var(--amber-gold); font-weight:800;">m.v***@rightsideup.co</span> (Right Side Up Podcast Desk)<br/>
+        <strong>Live Outreach Angle:</strong> <span id="lp-row1-angle">${escapeHtml(r1Angle)}</span> • <code id="lp-row1-rider">${escapeHtml(r1Rider)}</code>
       </div>
     </div>
-  </section>
+    <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim();window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'lp_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'lp_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.textContent=el.getAttribute('data-free-credit-unmasked');});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Buyer Credits Unlocked';}return false;" style="padding:10px 14px; border-radius:12px; border:1.5px solid var(--emerald-border); background:#FFFFFF; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+      <span style="font-size:13px; color:var(--text-primary); font-weight:700;">Try-Before-You-Buy: Enter work email to unmask 3 Free Buyer &amp; Agency Emails ($0):</span>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1; min-width:250px; justify-content:flex-end; align-items:center;">
+        <input id="sr-bridge-email" type="email" required placeholder="you@company.com ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'lp_sweetspot_blur');}" style="flex:1; min-width:165px; max-width:240px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); font-size:13px;" />
+        <button id="btn-unlock-free-credits" type="submit" class="btn btn-emerald" style="padding:6px 12px; min-height:34px; font-size:12px; font-weight:800;">Unmask 3 Buyer Emails ($0)</button>
+      </div>
+    </form>
+    <div class="double-bezel" style="margin-bottom:32px;"><div class="panel">
+      <div class="panel-header"><div><span class="pill-emerald">TRY IT FREE ABOVE THE FOLD</span><strong style="margin-left:8px; font-size:14.5px;">Instant Sponsor Spend &amp; 3x-Renewal Verifier</strong></div><div class="mono" style="font-size:13px; color:var(--text-secondary);">Zero signup required to test</div></div>
+      <div class="panel-body">
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <input id="lp-query" type="text" class="input-field" value="AG1" placeholder="Type any brand or show (e.g. AG1, Deel, Ramp, Lenny's Podcast)..." style="flex:1; min-width:210px;" />
+          <button type="button" class="btn btn-vermilion" onclick="runLpLookup()"><span>Reveal 3x+ Renewals</span><span class="btn-icon-circle" aria-hidden="true">↗</span></button>
+        </div>
+        <div class="preset-row">
+          <button type="button" class="preset-chip" onclick="setLpPreset('AG1')">AG1 ($1.42M/mo)</button>
+          <button type="button" class="preset-chip" onclick="setLpPreset('Deel')">Deel ($680K/mo)</button>
+          <button type="button" class="preset-chip" onclick="setLpPreset('Ramp')">Ramp ($790K/mo)</button>
+          <button type="button" class="preset-chip" onclick="setLpPreset('Lenny\\'s Podcast')">Lenny's Podcast</button>
+          <button type="button" class="preset-chip" onclick="setLpPreset('Huberman Lab')">Huberman Lab</button>
+        </div>
+        <div class="kpi-grid" style="margin-top:16px;">
+          <div class="kpi-box"><div class="kpi-label">MATCHED ENTITY</div><div class="kpi-val" id="lp-brand-name" style="font-size:18px;">${escapeHtml(defaultAnalysis.brand.name)}</div></div>
+          <div class="kpi-box"><div class="kpi-label">EST. MONTHLY SPEND</div><div class="kpi-val" id="lp-spend" style="color:var(--amber-gold);">$${defaultAnalysis.metrics.est_monthly_spend_usd.toLocaleString()}</div></div>
+          <div class="kpi-box"><div class="kpi-label">3x+ RENEWAL SCORE</div><div class="kpi-val" id="lp-score" style="color:var(--emerald-roi);">${defaultAnalysis.metrics.renewal_velocity_score}/100</div></div>
+          <div class="kpi-box"><div class="kpi-label">VERIFIED BUYING DESK</div><div class="kpi-val" id="lp-email" style="font-size:13.5px; color:var(--emerald-roi);">109 Verified Buyer &amp; Agency Desk Rows</div></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="panel" style="padding:28px; text-align:center; border-color:var(--emerald-border); background:var(--bg-elevated);">
+      <span class="pill-emerald">INSTANT 1-CLICK STRIPE EXPRESS • 30-DAY ZERO-BOUNCE GUARANTEE</span>
+      <h2 style="font-family:var(--font-serif); font-size:28px; font-weight:600; margin-top:10px;">Unlock All 109 Verified Buyer &amp; Agency Desk Rows ($19 Creator Pass / $29 Full CSV Vault)</h2>
+      <p style="color:var(--text-secondary); max-width:600px; margin:8px auto 20px;">Download the Creator Pass for $19 one-time, or unlock all 109 Verified Buyer &amp; Agency Desk Rows for $29 ($149 B2B Agency Desk).</p>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+        <a href="/buy/creator_pass?source=lp_express" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" class="btn btn-vermilion" style="padding:12px 22px; font-size:15px; text-decoration:none;"><span>Creator Pass ($19)</span><span class="btn-icon-circle" aria-hidden="true">↗</span></a>
+        <a href="/buy/playbook_pass?source=lp_express" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-emerald" style="padding:12px 22px; font-size:15px; text-decoration:none;"><span>Full 109-Row CSV Vault ($29) ↗</span></a>
+      </div>
+      <input type="text" id="lp-hp-field" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div id="lp-confirm-msg" class="mono" style="margin-top:12px; font-size:13px; color:var(--emerald-roi); display:none;"></div>
+    </div>
+  </div></section>
   <script>
     function escHtmlLp(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function setLpPreset(q) { const el = document.getElementById('lp-query'); if (el) el.value = q; runLpLookup(); }
     async function runLpLookup() {
-      const q = (document.getElementById('lp-query') || {}).value || 'AG1';
-      const res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'lookup', query: q }) });
-      const data = await res.json();
+      const q = (document.getElementById('lp-query') || {}).value || 'AG1', res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'lookup', query: q }) }), data = await res.json();
       if (data && data.brand) {
         const entity = data.display_entity || { name: data.brand.name }, p0 = (data.placements && data.placements[0]) || {}, setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-        const bEm = p0.sponsor_email || 's***.k***@shopify.com', aEm = 'm.v***@rightsideup.co';
-        setTxt('lp-brand-name', entity.name); setTxt('lp-spend', '$' + Number(data.metrics.est_monthly_spend_usd).toLocaleString());
-        setTxt('lp-score', data.metrics.renewal_velocity_score + '/100'); setTxt('lp-email', '109 Verified Buyer & Agency Desk Rows');
-        setTxt('lp-row1-buyer', bEm); setTxt('lp-row1-agency', aEm);
-        if (p0.live_outreach_angle) setTxt('lp-row1-angle', p0.live_outreach_angle);
-        if (p0.iab_makegood_rider_preview) setTxt('lp-row1-rider', p0.iab_makegood_rider_preview);
+        const hasEmail = Boolean(window.__ebSavedEmail && String(window.__ebSavedEmail).indexOf('@') > 0), bUn = p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com', aUn = p0.unmasked_agency_email || 'm.vance@rightsideup.co';
+        const bEl = document.getElementById('lp-row1-buyer'), aEl = document.getElementById('lp-row1-agency'); if (bEl) bEl.setAttribute('data-free-credit-unmasked', bUn); if (aEl) aEl.setAttribute('data-free-credit-unmasked', aUn);
+        setTxt('lp-brand-name', entity.name); setTxt('lp-spend', '$' + Number(data.metrics.est_monthly_spend_usd).toLocaleString()); setTxt('lp-score', data.metrics.renewal_velocity_score + '/100'); setTxt('lp-email', '109 Verified Buyer & Agency Desk Rows');
+        setTxt('lp-row1-buyer', hasEmail ? bUn : (p0.sponsor_email || 's***.k***@shopify.com')); setTxt('lp-row1-agency', hasEmail ? aUn : 'm.v***@rightsideup.co');
+        if (p0.live_outreach_angle) setTxt('lp-row1-angle', p0.live_outreach_angle); if (p0.iab_makegood_rider_preview) setTxt('lp-row1-rider', p0.iab_makegood_rider_preview);
         fireMetaEvent('Lead', 0, { source: 'lp_interactive_lookup', query: q });
       }
     }
