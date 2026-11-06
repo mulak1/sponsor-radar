@@ -647,25 +647,6 @@ function attachExactBaselinePack(app, options = {}) {
   app.get('/indexnow-key.txt', (req, res) => res.status(200).type('text/plain; charset=utf-8').send(INDEXNOW_KEY));
   attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, INDEXNOW_KEY, __dirname);
 
-  app.get('/feed.xml', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.xml', isTest, isCrawler });
-    const nowRfc = new Date().toUTCString(), seoEntries = loadVerticalSeoCatalog(cfg, __dirname), escX = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const itemsXml = [
-      `    <item><title>${escX(cfg.brandName)} Public Leaderboard &amp; Hall of Fame</title><link>https://${cfg.domain}/leaderboard</link><guid>https://${cfg.domain}/leaderboard</guid><pubDate>${nowRfc}</pubDate><description>${escX(cfg.explainerText)}</description></item>`,
-      ...cfg.presets.map((p) => `    <item><title>${escX(cfg.brandName)} Public Scan: ${escX(p.label)}</title><link>https://${cfg.domain}/scan/${encodeURIComponent(p.key)}</link><guid>https://${cfg.domain}/scan/${encodeURIComponent(p.key)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(cfg.explainerText)}</description></item>`),
-      ...seoEntries.map((e) => `    <item><title>${escX(e.title)}</title><link>https://${cfg.domain}/seo/${escX(e.slug)}</link><guid>https://${cfg.domain}/seo/${escX(e.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escX(e.summary)}</description></item>`)
-    ].join('\n');
-    res.status(200).type('application/rss+xml; charset=utf-8').send(`<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>${escX(cfg.brandName)}: Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>https://${cfg.domain}/</link>\n    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>\n    <atom:link href="https://${cfg.domain}/feed.xml" rel="self" type="application/rss+xml"/>\n    <description>${escX(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`);
-  });
-
-  app.get('/feed.json', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.json', isTest, isCrawler });
-    const seoEntries = loadVerticalSeoCatalog(cfg, __dirname);
-    res.json({ version: 'https://jsonfeed.org/version/1.1', title: `${cfg.brandName}: Live Benchmark Feed`, home_page_url: `https://${cfg.domain}/`, feed_url: `https://${cfg.domain}/feed.json`, items: [{ id: `${cfg.moduleId}_leaderboard`, url: `https://${cfg.domain}/leaderboard`, title: `${cfg.brandName} Public Leaderboard`, content_text: cfg.explainerText }, ...cfg.presets.map((p) => ({ id: `${cfg.moduleId}_${p.key}`, url: `https://${cfg.domain}/scan/${encodeURIComponent(p.key)}`, title: `${cfg.brandName} Executive Audit: ${p.label}`, content_text: cfg.explainerText })), ...seoEntries.map((e) => ({ id: `${cfg.moduleId}_seo_${e.slug}`, url: `https://${cfg.domain}/seo/${e.slug}`, title: e.title, content_text: e.summary }))] });
-  });
-
   app.get('/api/github-upgrade/export.csv', (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/export.csv', isTest, isCrawler, meta: { export: 'sheetjs_csv' } });

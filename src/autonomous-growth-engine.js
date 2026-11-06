@@ -207,6 +207,21 @@ function renderGrowthPageHtml(cfg, item, kind) {
   const canonicalUrl = `https://${cfg.domain}/${kind}/${item.slug}`;
   const badgeSvgUrl = `https://${cfg.domain}/badge/${encodeURIComponent(item.target)}.svg`;
   const mdBadgeSnippet = `[![${cfg.brandName} Verified](${badgeSvgUrl})](${canonicalUrl})`;
+  const isYt = /youtube/i.test(item.slug);
+  const isNl = /newsletter|substack|beehiiv|swapstack|who-sponsors-stuff/i.test(item.slug);
+  const initPrice = isYt ? 6800 : (isNl ? 2400 : 4500);
+  const initReach = isYt ? 120000 : (isNl ? 55000 : 85000);
+  const initFlCpm = isYt ? 42 : (isNl ? 36 : 38.5);
+  const initQCpm = (initPrice / (initReach / 1000)).toFixed(2);
+  const initFlSlot = Math.round((initReach / 1000) * initFlCpm);
+  const initSave3 = Math.max(250, (initPrice - initFlSlot) * 3);
+  const initClicks = Math.round(initReach * 0.018);
+  const initCpc = (initFlSlot / initClicks).toFixed(2);
+  const initTrials = Math.max(2, Math.round(initClicks * 0.035));
+  const initCusts = Math.max(1, Math.round(initClicks * 0.0085));
+  const initCac = Math.round(initFlSlot / initCusts);
+  const initRev = initCusts * 1200;
+  const initRoas = (initRev / initFlSlot).toFixed(1);
   // 1. Dynamic Live SVG Score Badges (`GET /badge/:target.svg`, `GET /api/badge/:target.svg`) : `anuraghazra/github-readme-stats` (★ 79.8k) & `badges/shields` (★ 27.2k)
   // 2. Shields.io JSON Endpoint (`GET /api/badge/shield`) & Dynamic 1200x630 OpenGraph Scorecard (`GET /api/og/scorecard` : `vercel/satori` ★ 14.1k)
   const rows = kind === 'compare'
@@ -283,11 +298,11 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin-bottom:14px;">
         <div>
           <label for="eb-growth-calc-price" style="font-size:12px;font-weight:800;color:${escXml(t.textSecondary)};display:block;margin-bottom:4px;">Quoted Slot Price ($ USD)</label>
-          <input id="eb-growth-calc-price" type="number" value="4500" min="250" step="100" oninput="window.__ebCalcGrowthRoi()" style="width:100%;box-sizing:border-box;padding:8px 11px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:14px;font-weight:700;" />
+          <input id="eb-growth-calc-price" type="number" value="${initPrice}" min="250" step="100" oninput="window.__ebCalcGrowthRoi()" style="width:100%;box-sizing:border-box;padding:8px 11px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:14px;font-weight:700;" />
         </div>
         <div>
           <label for="eb-growth-calc-reach" style="font-size:12px;font-weight:800;color:${escXml(t.textSecondary)};display:block;margin-bottom:4px;">Verified Downloads / Opens</label>
-          <input id="eb-growth-calc-reach" type="number" value="85000" min="1000" step="1000" oninput="window.__ebCalcGrowthRoi()" style="width:100%;box-sizing:border-box;padding:8px 11px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:14px;font-weight:700;" />
+          <input id="eb-growth-calc-reach" type="number" value="${initReach}" min="1000" step="1000" oninput="window.__ebCalcGrowthRoi()" style="width:100%;box-sizing:border-box;padding:8px 11px;border-radius:8px;border:1px solid ${escXml(t.border)};font-size:14px;font-weight:700;" />
         </div>
         <div>
           <label for="eb-growth-calc-acv" style="font-size:12px;font-weight:800;color:${escXml(t.textSecondary)};display:block;margin-bottom:4px;">Your Product ACV / LTV ($)</label>
@@ -297,19 +312,19 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <div id="eb-growth-calc-strip" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
         <div style="padding:12px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};">
           <div style="font-size:11.5px;font-weight:800;color:${escXml(t.textSecondary)};">QUOTED CPM VS. VERIFIED -18% 3-FLIGHT FLOOR</div>
-          <div id="eb-growth-cpm-out" style="font-size:15.5px;font-weight:800;color:#B45309;margin-top:4px;">$52.94 Quoted CPM vs. $38.50 3-Flight Floor</div>
-          <div id="eb-growth-verdict-out" style="font-size:13px;font-weight:700;color:#047857;margin-top:4px;">Counter at $3,273/flight (-18% Floor) • Save $3,681 on 3 flights</div>
-          <div style="margin-top:7px;"><a id="eb-growth-calc-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=39&reach=85000&quoted_usd=4500" target="_blank" style="font-size:12px;font-weight:800;color:#C83E2B;text-decoration:underline;">Download Custom Redlined IAB Rider (.TXT) ↗</a></div>
+          <div id="eb-growth-cpm-out" style="font-size:15.5px;font-weight:800;color:#B45309;margin-top:4px;">$${initQCpm} Quoted CPM vs. $${initFlCpm.toFixed(2)} 3-Flight Floor</div>
+          <div id="eb-growth-verdict-out" style="font-size:13px;font-weight:700;color:#047857;margin-top:4px;">Counter at $${initFlSlot.toLocaleString()}/flight (-18% Floor) • Save $${initSave3.toLocaleString()} on 3 flights</div>
+          <div style="margin-top:7px;"><a id="eb-growth-calc-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=${Math.round(initFlCpm)}&reach=${initReach}&quoted_usd=${initPrice}" target="_blank" style="font-size:12px;font-weight:800;color:#C83E2B;text-decoration:underline;">Download Custom Redlined IAB Rider (.TXT) ↗</a></div>
         </div>
         <div style="padding:12px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};">
           <div style="font-size:11.5px;font-weight:800;color:${escXml(t.textSecondary)};">EST. CLICKS &amp; IMPLIED FLOOR CPC (1.8% CTR)</div>
-          <div id="eb-growth-clicks-out" style="font-size:15.5px;font-weight:800;color:${escXml(t.textPrimary)};margin-top:4px;">1,530 Clicks (~$2.14 Floor CPC)</div>
-          <div id="eb-growth-leads-out" style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:4px;">~54 Trials @ 3.5% Conv. • 1.5% CTR Make-Good</div>
+          <div id="eb-growth-clicks-out" style="font-size:15.5px;font-weight:800;color:${escXml(t.textPrimary)};margin-top:4px;">${initClicks.toLocaleString()} Clicks (~$${initCpc} Floor CPC)</div>
+          <div id="eb-growth-leads-out" style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:4px;">~${initTrials} Trials @ 3.5% Conv. • 1.5% CTR Make-Good</div>
         </div>
         <div style="padding:12px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};">
           <div style="font-size:11.5px;font-weight:800;color:${escXml(t.textSecondary)};">PROJECTED CUSTOMERS, CAC &amp; LTV:SPEND ROAS</div>
-          <div id="eb-growth-cac-out" style="font-size:15.5px;font-weight:800;color:#047857;margin-top:4px;">~13 New Customers • $252 Est. CAC</div>
-          <div id="eb-growth-roas-out" style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:4px;">Projected Revenue: $15,600 (4.8x Return on Floor)</div>
+          <div id="eb-growth-cac-out" style="font-size:15.5px;font-weight:800;color:#047857;margin-top:4px;">~${initCusts} New Customers • $${initCac.toLocaleString()} Est. CAC</div>
+          <div id="eb-growth-roas-out" style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:4px;">Projected Revenue: $${initRev.toLocaleString()} (${initRoas}x Return on Floor)</div>
         </div>
       </div>
     </section>

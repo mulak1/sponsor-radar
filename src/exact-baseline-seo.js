@@ -466,6 +466,27 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     res.status(200).type('application/manifest+json; charset=utf-8').json({ name: cfg.brandName, short_name: cfg.brandName, description: cfg.explainerText, start_url: '/', display: 'browser', background_color: cfg.theme.canvasBg, theme_color: cfg.theme.brandPrimary, icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }] });
   });
 
+  app.get('/feed.xml', (req, res) => {
+    const { isTest, isCrawler } = classifyTrafficRequest(req);
+    if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.xml', isTest, isCrawler });
+    const nowRfc = new Date().toUTCString(), seoEntries = getEntries(), g = getGrowthConfig(cfg.moduleId), scans = loadPublicScanLedger(cfg).slice(0, 21);
+    const itemsXml = [
+      `    <item><title>${escXml(cfg.brandName)} Public Leaderboard &amp; Hall of Fame</title><link>${hostUrl}/leaderboard</link><guid>${hostUrl}/leaderboard</guid><pubDate>${nowRfc}</pubDate><description>${escXml(cfg.explainerText)}</description></item>`,
+      ...g.tools.map((t) => `    <item><title>${escXml(t.title)}</title><link>${hostUrl}/tools/${escXml(t.slug)}</link><guid>${hostUrl}/tools/${escXml(t.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escXml(t.summary)}</description></item>`),
+      ...g.comparisons.map((c) => `    <item><title>${escXml(c.title)}</title><link>${hostUrl}/compare/${escXml(c.slug)}</link><guid>${hostUrl}/compare/${escXml(c.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escXml(c.summary)}</description></item>`),
+      ...scans.map((s) => `    <item><title>${escXml(cfg.brandName)} Public Scan: ${escXml(s.target)} (${escXml(s.grade)})</title><link>${hostUrl}/scan/${encodeURIComponent(s.target)}</link><guid>${hostUrl}/scan/${encodeURIComponent(s.target)}</guid><pubDate>${nowRfc}</pubDate><description>${escXml(`${s.kpi1} • ${s.kpi2} • ${s.cnnReadout}`)}</description></item>`),
+      ...seoEntries.map((e) => `    <item><title>${escXml(e.title)}</title><link>${hostUrl}/seo/${escXml(e.slug)}</link><guid>${hostUrl}/seo/${escXml(e.slug)}</guid><pubDate>${nowRfc}</pubDate><description>${escXml(e.summary)}</description></item>`)
+    ].join('\n');
+    res.status(200).type('application/rss+xml; charset=utf-8').send(`<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>${escXml(cfg.brandName)}: Live Deterministic Benchmarks &amp; Audit Feed</title>\n    <link>${hostUrl}/</link>\n    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>\n    <atom:link href="${hostUrl}/feed.xml" rel="self" type="application/rss+xml"/>\n    <description>${escXml(cfg.explainerText)}</description>\n    <lastBuildDate>${nowRfc}</lastBuildDate>\n${itemsXml}\n  </channel>\n</rss>`);
+  });
+
+  app.get('/feed.json', (req, res) => {
+    const { isTest, isCrawler } = classifyTrafficRequest(req);
+    if (isCrawler) store.recordEvent({ eventType: 'crawler_feed', pageUrl: '/feed.json', isTest, isCrawler });
+    const seoEntries = getEntries(), g = getGrowthConfig(cfg.moduleId), scans = loadPublicScanLedger(cfg).slice(0, 21);
+    res.json({ version: 'https://jsonfeed.org/version/1.1', title: `${cfg.brandName}: Live Benchmark Feed`, home_page_url: `${hostUrl}/`, feed_url: `${hostUrl}/feed.json`, items: [{ id: `${cfg.moduleId}_leaderboard`, url: `${hostUrl}/leaderboard`, title: `${cfg.brandName} Public Leaderboard`, content_text: cfg.explainerText }, ...g.tools.map((t) => ({ id: `${cfg.moduleId}_tool_${t.slug}`, url: `${hostUrl}/tools/${t.slug}`, title: t.title, content_text: t.summary })), ...g.comparisons.map((c) => ({ id: `${cfg.moduleId}_cmp_${c.slug}`, url: `${hostUrl}/compare/${c.slug}`, title: c.title, content_text: c.summary })), ...scans.map((s) => ({ id: `${cfg.moduleId}_scan_${s.target}`, url: `${hostUrl}/scan/${encodeURIComponent(s.target)}`, title: `${cfg.brandName} Audit: ${s.target} (${s.grade})`, content_text: `${s.kpi1} • ${s.kpi2}` })), ...seoEntries.map((e) => ({ id: `${cfg.moduleId}_seo_${e.slug}`, url: `${hostUrl}/seo/${e.slug}`, title: e.title, content_text: e.summary }))] });
+  });
+
   // 5. Multi-Engine IndexNow Full URL Batch Push + WebSub Hub Ping & SEO Status API
   const getFullCanonicalUrlList = () => {
     const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 32), hubUrls = getSemanticHubUrls();
