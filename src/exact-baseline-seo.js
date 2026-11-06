@@ -150,15 +150,19 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [Model Context Protocol (MCP) Registry](${host}/.well-known/mcp-registry.json): Official MCP Registry manifest & JSON-RPC endpoint (${host}/api/mcp/rpc).`,
     `- [Live Dynamic SVG Benchmark Badges](${host}/badge/${encodeURIComponent(cfg.presets[0].key)}.svg): Embeddable README/media-kit badges & 1-line JS widget (${host}/embed.js).`,
     '',
-    '## Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect: Zero JS Required)',
+    '## Counterparty Execution Previews & Direct 1-Click Stripe Checkout Links (HTTP 303 Redirect: Zero JS Required)',
+    `- [Preview Redlined IAB IO Make-Good Rider (.TXT)](${host}/api/github-upgrade/iab-io-addendum.txt): § 4.2 (-18% 3-Flight Floor Rate Cap) + § 7.1 (1.5% CTR & 85% IAB Make-Good Trigger).`,
+    `- [Preview Dual-Track RFC-822 Outreach Pitch (.EML)](${host}/api/github-upgrade/pitch.eml): Track A (Creator 3-Flight Pilot Pitch) + Track B (Media Buyer -18% Rate-Card Counter-Offer).`,
+    `- [Preview 3-Row Verified Buyer & Agency Sample (.CSV)](${host}/api/github-upgrade/export.csv): Live preview of the 109-row verified buyer & agency desk ledger.`,
     `- [99¢ Single-File Instant Export Pass](${host}/buy/micro_pass): Direct 1-click Stripe Checkout for any single production remediation file.`,
     `- [$1.99 Single-Audit Export Bundle (${cfg.freeDeliverableName})](${host}/buy/flash_pass): Direct 1-click Stripe Checkout for the complete single-audit bundle.`,
+    `- [$19 Creator Outreach & 109-Row Buyer CSV Pass](${host}/buy/creator_pass): Direct 1-click Stripe Checkout for creators pitching sponsors.`,
     `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/complete_dossier): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
     `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/pro_b2b): Direct 1-click Stripe Checkout for continuous B2B / Agency access.`,
     '',
     '## Public Scan Permalinks & Hall of Fame Leaderboard (/leaderboard & /scan/:target)',
     `- [Public Hall of Fame (A+) & Wall of Shame Leaderboard](${host}/leaderboard) ([.md](${host}/leaderboard.md)): Ranked public entity scorecards with CNN visual/acoustic sensor readouts.`,
-    ...loadPublicScanLedger(cfg).slice(0, 12).map((s) => `- [${s.target}: Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
+    ...loadPublicScanLedger(cfg).slice(0, 32).map((s) => `- [${s.target}: Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
     '',
     '## Interactive Micro-Tools & Head-to-Head Comparisons (/tools/:slug & /compare/:slug)',
     ...getGrowthConfig(cfg.moduleId).tools.map((t) => `- [${t.title}](${host}/tools/${t.slug}) ([.md](${host}/tools/${t.slug}.md)): ${t.summary}`),
@@ -271,10 +275,14 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     '## 3. Related Verified Benchmarks & Playbooks',
     ...related.map((r) => `- [${r.title}](${host}/seo/${r.slug}) ([.md](${host}/seo/${r.slug}.md)): ${r.summary}`),
     '',
-    `## 4. Run Interactive Audit & 1-Click Direct Stripe Checkout`,
+    `## 4. Run Interactive Audit, Counterparty Previews & 1-Click Direct Stripe Checkout`,
     `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`,
+    `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt](${host}/api/github-upgrade/iab-io-addendum.txt)`,
+    `- Preview Dual-Track RFC-822 Outreach Pitch (.EML): [${host}/api/github-upgrade/pitch.eml](${host}/api/github-upgrade/pitch.eml)`,
+    `- Preview 3-Row Verified Buyer Sample (.CSV): [${host}/api/github-upgrade/export.csv](${host}/api/github-upgrade/export.csv)`,
     `- 1-Click 99¢ Single-File Instant Export Pass: [${host}/buy/micro_pass](${host}/buy/micro_pass)`,
     `- 1-Click $1.99 Single-Audit Export Bundle: [${host}/buy/flash_pass](${host}/buy/flash_pass)`,
+    `- 1-Click $19 Creator Outreach Pass: [${host}/buy/creator_pass](${host}/buy/creator_pass)`,
     `- 1-Click $${cfg.corePriceUsd} ${cfg.coreLabel}: [${host}/buy/complete_dossier](${host}/buy/complete_dossier)`,
     `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/pro_b2b](${host}/buy/pro_b2b)`
   ].join('\n');
@@ -394,7 +402,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const growthUrls = includeStatic ? [
       ...g.tools.map((t) => ({ loc: `${hostUrl}/tools/${escXml(t.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(t.target)}`, title: t.title })),
       ...g.comparisons.map((c) => ({ loc: `${hostUrl}/compare/${escXml(c.slug)}`, priority: '0.9', changefreq: 'weekly', img: `${hostUrl}/api/og/scorecard?target=${encodeURIComponent(c.target)}`, title: c.title })),
-      ...loadPublicScanLedger(cfg).slice(0, 16).map((s) => ({ loc: `${hostUrl}/scan/${escXml(encodeURIComponent(s.target))}`, priority: '0.85', changefreq: 'daily', img: `${hostUrl}/api/badge/cnn/${encodeURIComponent(s.target)}.svg`, title: `${s.target}: ${cfg.brandName} Audit (${s.grade})` })),
+      ...loadPublicScanLedger(cfg).slice(0, 32).map((s) => ({ loc: `${hostUrl}/scan/${escXml(encodeURIComponent(s.target))}`, priority: '0.85', changefreq: 'daily', img: `${hostUrl}/api/badge/cnn/${encodeURIComponent(s.target)}.svg`, title: `${s.target}: ${cfg.brandName} Audit (${s.grade})` })),
       ...hubUrls
     ] : [];
     const staticUrls = includeStatic ? [
@@ -448,7 +456,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
 
   // 5. Multi-Engine IndexNow Full URL Batch Push + WebSub Hub Ping & SEO Status API
   const getFullCanonicalUrlList = () => {
-    const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 16), hubUrls = getSemanticHubUrls();
+    const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 32), hubUrls = getSemanticHubUrls();
     return [
       `${hostUrl}/`, `${hostUrl}/directory`, `${hostUrl}/leaderboard`, `${hostUrl}/leaderboard.md`, `${hostUrl}/lp`,
       `${hostUrl}/llms.txt`, `${hostUrl}/llms-full.txt`, `${hostUrl}/index.md`,
