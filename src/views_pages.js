@@ -28,9 +28,20 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: `SponsorRadar 2026 Programmatic SEO Directory: ${brands.length} Brands, ${shows.length} Shows & ${totalReports} Verified Spend Reports`,
-    description: `Complete directory of ${totalReports} verified podcast, newsletter, and YouTube sponsor spend reports, negotiated CPM rate cards, and 3x-renewal ROI benchmarks.`
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        name: `SponsorRadar 2026 Programmatic SEO Directory: ${brands.length} Brands, ${shows.length} Shows & ${totalReports} Verified Spend Reports`,
+        description: `Complete directory of ${totalReports} verified podcast, newsletter, and YouTube sponsor spend reports, negotiated CPM rate cards, and 3x-renewal ROI benchmarks.`
+      },
+      {
+        '@type': 'SoftwareApplication',
+        name: 'SponsorRadar Verified Sponsorship Intelligence & Rate-Card Directory',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 5 }
+      }
+    ]
   };
 
   const bodyHtml = `
@@ -56,8 +67,8 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         </div>
 
         <!-- Top-Fold $0 Email + $19 / $29 Unlock Bar -->
-        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim();window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 of 3 Free Buyer Credits Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:12px; border:1.5px solid var(--emerald-border); background:var(--emerald-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Try-Before-You-Buy: Unlock 3 Free Verified Buyer Emails ($0) — or Export Full 109-Row CSV + Booking Addendum:</span>
+        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim();window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var rl=document.getElementById('eb-dir-rider-link'),el=document.getElementById('eb-dir-eml-link'),cl=document.getElementById('eb-dir-csv-link');if(rl)rl.href='/api/github-upgrade/iab-io-addendum.txt?email='+encodeURIComponent(v);if(el)el.href='/api/github-upgrade/pitch.eml?email='+encodeURIComponent(v);if(cl)cl.href='/api/github-upgrade/export.csv?email='+encodeURIComponent(v);var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Credits + Rider/EML Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:12px; border:1.5px solid var(--emerald-border); background:var(--emerald-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Try-Before-You-Buy: Unlock 3 Free Verified Buyer Emails ($0) • <a id="eb-dir-rider-link" href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);text-decoration:underline;">IAB IO Rider (.TXT)</a> • <a id="eb-dir-eml-link" href="/api/github-upgrade/pitch.eml" target="_blank" style="color:var(--emerald-roi);text-decoration:underline;">Pitch (.EML)</a> • <a id="eb-dir-csv-link" href="/api/github-upgrade/export.csv" target="_blank" style="color:var(--text-primary);text-decoration:underline;">3-Row Sample (.CSV)</a>:</span>
           <span class="pill-emerald" id="sr-free-credits-badge" style="display:none; font-size:11.5px;">✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn</span>
           <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1; min-width:260px; justify-content:flex-end; align-items:center;">
             <input id="sr-bridge-email" type="email" required placeholder="Enter email for 3 buyer contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'directory_sweetspot_blur');}" style="flex:1; min-width:165px; max-width:240px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13px;" />
@@ -300,16 +311,32 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div class="panel" style="margin-top:28px; padding:24px 28px; background:var(--bg-surface);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
           <div style="max-width:62ch;">
-            <h2 style="font-family:var(--font-serif); font-size:22px; font-weight:600; margin:0 0 6px;">Get All 96 Verified Buyers &amp; Rate Floors</h2>
+            <h2 style="font-family:var(--font-serif); font-size:22px; font-weight:600; margin:0 0 6px;">Get All 96 Verified Buyers &amp; Rate Floors (109 Total Desk Rows)</h2>
             <p style="color:var(--text-secondary); font-size:14.5px; margin:0;">
-              Download <strong>verified-buyer-contacts.csv</strong> (96 verified buyers), <strong>96-flight-rate-decay.csv</strong> (-18% 3-flight floor Ad Rates), and <strong>3-flight-anchor-pitch.eml</strong>.
+              Download <strong>verified-buyer-contacts.csv</strong> (96 verified buyers / 109 desk rows), <strong>iab-io-addendum.txt</strong> (-18% 3-flight floor + 1.5% CTR make-good rider), and <strong>3-flight-anchor-pitch.eml</strong>.
             </p>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass',true)" class="btn btn-ghost" style="padding:10px 14px; font-size:13.5px;">1 Row Only (99¢)</button>
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true)" class="btn btn-vermilion" style="padding:10px 15px; font-size:13.5px;">Target 3-File Pack ($1.99) →</button>
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true)" class="btn btn-emerald" style="padding:11px 16px; font-size:14px;">All 96 Buyers Vault ($29) →</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('micro_pass',true)" class="btn btn-ghost" style="padding:9px 13px; font-size:13px;">1 Row Only (99¢)</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true)" class="btn btn-vermilion" style="padding:9px 14px; font-size:13px;">3-File Pack ($1.99) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true)" class="btn btn-ghost" style="padding:9px 14px; font-size:13px; background:#FFFBEB; color:#92400E; border:1px solid #F59E0B; font-weight:700;">Creator Pass ($19) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true)" class="btn btn-emerald" style="padding:10px 15px; font-size:13.5px;">109-Row Buyer Vault ($29) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('pro_b2b',true)" class="btn btn-ghost" style="padding:9px 13px; font-size:13px;">Agency Desk ($149) →</button>
           </div>
+        </div>
+        <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-hairline); display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:12.5px;">
+          <span class="mono" style="font-weight:700; color:var(--text-muted);">Category Comparisons, Calculators &amp; Live Scorecards:</span>
+          <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="pill-slate" style="text-decoration:none;">Who Sponsors Stuff vs SponsorRadar →</a>
+          <a href="/compare/podchaser-pro-vs-sponsorradar-podcast-sponsor-contacts" class="pill-slate" style="text-decoration:none;">Podchaser Pro vs SponsorRadar →</a>
+          <a href="/compare/paved-vs-passionfroot-vs-sponsorradar-direct-sponsor-outreach" class="pill-slate" style="text-decoration:none;">Paved vs Passionfroot vs SponsorRadar →</a>
+          <a href="/tools/podcast-cpm-fair-rate-calculator" class="pill-slate" style="text-decoration:none;">Podcast CPM Fair Rate Calculator →</a>
+          <a href="/tools/youtube-integration-sponsorship-rate-card-calculator" class="pill-slate" style="text-decoration:none;">YouTube 60s Rate Card Calculator →</a>
+          <a href="/tools/sponsorship-insertion-order-make-good-clause-generator" class="pill-slate" style="text-decoration:none;">IAB Make-Good Clause Generator →</a>
+          <a href="/scan/Shopify" class="pill-emerald" style="text-decoration:none;">Shopify Scan (A+) →</a>
+          <a href="/scan/AG1" class="pill-emerald" style="text-decoration:none;">AG1 Scan (A+) →</a>
+          <a href="/scan/Huberman-Lab" class="pill-emerald" style="text-decoration:none;">Huberman Lab Scan (A+) →</a>
+          <a href="/scan/Acquired" class="pill-emerald" style="text-decoration:none;">Acquired Scan (A+) →</a>
+          <a href="/leaderboard" class="pill-amber" style="text-decoration:none;">Full 21-Target Leaderboard →</a>
         </div>
       </div>
 
