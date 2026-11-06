@@ -39,7 +39,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         name: 'SponsorRadar Verified Sponsorship Intelligence & Rate-Card Directory',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
-        offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 5 }
+        offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 6 }
       }
     ]
   };
@@ -67,7 +67,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         </div>
 
         <!-- Top-Fold $0 Email + $19 / $29 Unlock Bar -->
-        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim();window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var rl=document.getElementById('eb-dir-rider-link'),el=document.getElementById('eb-dir-eml-link'),cl=document.getElementById('eb-dir-csv-link');if(rl)rl.href='/api/github-upgrade/iab-io-addendum.txt?email='+encodeURIComponent(v);if(el)el.href='/api/github-upgrade/pitch.eml?email='+encodeURIComponent(v);if(cl)cl.href='/api/github-upgrade/export.csv?email='+encodeURIComponent(v);var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Credits + Rider/EML Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:12px; border:1.5px solid var(--emerald-border); background:var(--emerald-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim(),t=window.__ebSelectedTarget||window.__ebActiveEntity||'Shopify';window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,target:t,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var rl=document.getElementById('eb-dir-rider-link'),el=document.getElementById('eb-dir-eml-link'),cl=document.getElementById('eb-dir-csv-link');if(rl)rl.href='/api/github-upgrade/iab-io-addendum.txt?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);if(el)el.href='/api/github-upgrade/pitch.eml?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);if(cl)cl.href='/api/github-upgrade/export.csv?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Credits + Rider/EML Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:12px; border:1.5px solid var(--emerald-border); background:var(--emerald-soft); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
           <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Try-Before-You-Buy: Unlock 3 Free Verified Buyer Emails ($0) • <a id="eb-dir-rider-link" href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);text-decoration:underline;">IAB IO Rider (.TXT)</a> • <a id="eb-dir-eml-link" href="/api/github-upgrade/pitch.eml" target="_blank" style="color:var(--emerald-roi);text-decoration:underline;">Pitch (.EML)</a> • <a id="eb-dir-csv-link" href="/api/github-upgrade/export.csv" target="_blank" style="color:var(--text-primary);text-decoration:underline;">3-Row Sample (.CSV)</a>:</span>
           <span class="pill-emerald" id="sr-free-credits-badge" style="display:none; font-size:11.5px;">✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn</span>
           <div style="display:flex; gap:6px; flex-wrap:wrap; flex:1; min-width:260px; justify-content:flex-end; align-items:center;">
@@ -162,7 +162,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const isB2b = /B2B|SaaS|DevTools|AI|Fintech|Security|Tech/i.test(p.category + ' ' + p.title);
             const nicheTarget = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR'].find(k => p.title.toLowerCase().includes(k.toLowerCase())) || (isB2b ? 'Linear' : 'Shopify');
             return `
-            <div class="sr-dir-item" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">${escapeHtml(p.category)}</span>
@@ -202,7 +202,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const maskedEmail = maskSponsorEmail(b.sponsor_email || unmaskedEmail, b.category || p.category);
             const freeUnmaskAttr = idx < 3 ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
             return `
-            <div class="sr-dir-item" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
@@ -239,7 +239,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const chType = s.channel_type || 'Podcast & Newsletter';
             const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || '') + ' ' + p.category + ' ' + p.title);
             return `
-            <div class="sr-dir-item" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13.5px; color:var(--cyan-info); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
@@ -273,7 +273,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const primaryHref = bSeo ? `/seo/${escapeHtml(bSeo)}` : `/?q=${encodeURIComponent(b.name)}#radar-tool`;
               const isB2b = /B2B|SaaS|DevTools|Fintech|Security/i.test(b.vertical + ' ' + b.category);
               return `
-              <div class="sr-dir-item" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
+              <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(b.name)}</a>
                   <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(b.domain)} • ${escapeHtml(b.vertical || b.category)})</span>
@@ -299,7 +299,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const floorUsd = Math.round(s.midroll_rate_usd * 0.82);
               const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || s.category || '') + ' ' + s.name);
               return `
-              <div class="sr-dir-item" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
+              <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(s.name)}</a>
                   <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(s.channel_type)} • ${Math.round(s.audience_size / 1000)}K)</span>
@@ -368,20 +368,23 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           var p = window.__srActiveDirPill || 'all';
           var q = ((document.getElementById('sr-dir-search') || {}).value || '').trim().toLowerCase().replace(/[_.-]+/g, ' ');
           var qTokens = q ? q.split(/\\s+/).filter(Boolean) : [];
-          var items = document.querySelectorAll('.sr-dir-item');
-          var visibleCount = 0;
+          var items = document.querySelectorAll('.sr-dir-item'), visibleCount = 0, firstT = '';
           for (var j = 0; j < items.length; j++) {
-            var el = items[j];
-            var t = el.getAttribute('data-type') || '';
-            var v = el.getAttribute('data-vertical') || '';
-            var cpm = Number(el.getAttribute('data-cpm') || 50);
-            var ren = Number(el.getAttribute('data-renewal') || 80);
+            var el = items[j], t = el.getAttribute('data-type') || '', v = el.getAttribute('data-vertical') || '';
+            var cpm = Number(el.getAttribute('data-cpm') || 50), ren = Number(el.getAttribute('data-renewal') || 80);
             var pillMatch = (p === 'all') || (p === t) || (p === v) || (p === 'lowcpm' && cpm <= 45) || (p === 'highroi' && ren >= 85);
             var hay = (el.textContent || '').toLowerCase().replace(/[_.-]+/g, ' ');
             var textMatch = !qTokens.length || qTokens.every(function(tok) { return hay.indexOf(tok) !== -1; });
             var show = pillMatch && textMatch;
             el.style.display = show ? '' : 'none';
-            if (show) visibleCount++;
+            if (show) { visibleCount++; if (!firstT) firstT = el.getAttribute('data-dir-target') || ''; }
+          }
+          if (firstT && (q || p !== 'all')) {
+            window.__ebSelectedTarget = window.__ebActiveEntity = firstT;
+            var rl = document.getElementById('eb-dir-rider-link'), el2 = document.getElementById('eb-dir-eml-link'), cl = document.getElementById('eb-dir-csv-link'), em = window.__ebSavedEmail ? '&email=' + encodeURIComponent(window.__ebSavedEmail) : '';
+            if (rl) rl.href = '/api/github-upgrade/iab-io-addendum.txt?target=' + encodeURIComponent(firstT) + em;
+            if (el2) el2.href = '/api/github-upgrade/pitch.eml?target=' + encodeURIComponent(firstT) + em;
+            if (cl) cl.href = '/api/github-upgrade/export.csv?target=' + encodeURIComponent(firstT) + em;
           }
           var sections = document.querySelectorAll('.sr-dir-section');
           for (var k = 0; k < sections.length; k++) {
@@ -421,7 +424,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
   const isShowPage = page.page_type === 'show_benchmark' && Boolean(show);
   const isBrandPage = page.page_type === 'brand_breakdown' && Boolean(brand);
-  const workbenchQuery = isShowPage ? show.name : (brand ? brand.name : page.category), exportTarget = isShowPage ? show.name : (brand ? brand.name : ((placements[0] && placements[0].brand_name) || page.category));
+  const workbenchQuery = isShowPage ? show.name : (isBrandPage ? brand.name : (brand ? `${page.category} (${brand.name})` : page.category)), exportTarget = isShowPage ? show.name : (brand ? brand.name : ((placements[0] && placements[0].brand_name) || page.category));
   const rackCpm = show ? show.base_cpm : page.avg_cpm;
   const floorCpm = Math.round(rackCpm * 0.82);
   const showRackUsd = show ? show.midroll_rate_usd : ((placements[0] && Math.round(placements[0].est_spend_usd / Math.max(1, placements[0].flights))) || Math.round(85 * rackCpm));
@@ -590,7 +593,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 const contactCell = idx === 0
                   ? `<div${r4Attr}><div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:800;">✓ ROW #1 FREE SAMPLE PROOF: ${dmRole} (${agencyDesk})</div><div class="mono" style="font-size:11.5px;color:var(--vermilion);font-weight:700;margin:3px 0;">Peer-Referenced Pitch: Saw ${bName} renewed ${p.flights || 4}x on ${sName} (code: ${escapeHtml(p.promo_code)}) last 30d — anchor 3-flight pilot at $${rowFloorCpm} Floor CPM (-18%) • <code>Audience Guarantee Clause</code></div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(1,this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email (${escapeHtml(maskedRowBuyer)}) — Enter Email Above ($0) ↑</button></div>`
                   : `<div${r4Attr}><div style="font-size:12.5px;color:var(--text-secondary);font-weight:600;margin-bottom:4px;">${dmRole} • ${agencyDesk}</div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(${idx + 1},this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:var(--emerald-soft);color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email Hidden (${Math.min(3, Math.max(1, idx + 1))} of 3 Free Credits) — Tap to Reveal ($0) ↑</button><a href="/buy/creator_pass" class="sr-locked-spec-badge" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" style="padding:3px 9px;border-radius:999px;border:1px solid #C8A96E;background:#FFFBEB;color:#92400E;font-size:12px;font-weight:700;text-decoration:none;filter:none;">${SR_LOCK_SVG} Full 109-Row Buyer CSV &amp; Legal Rider ($19 Pack) ↑</a></div></div>`;
-                return `<tr${(idx <= 3) ? ' data-free-credit-row="1"' : ''} style="${idx === 0 ? 'background:var(--emerald-soft);' : ''}">
+                return `<tr${(idx <= 3) ? ' data-free-credit-row="1"' : ''} onclick="window.__ebSelectedTarget='${escapeHtml((rawBName || sName).replace(/'/g, "\\'"))}';window.__ebActiveEntity=window.__ebSelectedTarget;if(window.__ebSyncEmailPreviewLinks)window.__ebSyncEmailPreviewLinks(window.__ebSavedEmail||'');" style="${idx === 0 ? 'background:var(--emerald-soft);' : ''}">
                   <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:12px;padding:2px 6px;">Category Peer</span>` : ''}</td>
                   <td><div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div><div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div></td>
                   <td><div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div><div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:4px; font-weight:800;">✓ ${freshBadge}</div></td>
@@ -668,7 +671,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         const sampleMailto = outboundPitch ? outboundPitch.mailto_href || 'mailto:?subject=3-Flight%20Sponsorship%20Pilot' : 'mailto:?subject=3-Flight%20Sponsorship%20Pilot';
         const sampleBuyerEmail = outboundPitch ? outboundPitch.to_email || 's***.k***@linear.app (+ r.***@rightsideup.co)' : 's***.k***@linear.app (+ r.***@rightsideup.co)';
         const repeatSponsorsLabel = isBrandPage
-          ? `${brand.name} (${placements[0] ? placements[0].flights : 12}x renewal), AG1, and Eight Sleep`
+          ? `${brand.name} (${placements[0] ? placements[0].flights : 12}x renewal), ${/b2b|saas|devtools|fintech|ai|security|cloud|data/i.test(page.category) ? 'Linear, Vanta, and Ramp' : 'AG1, LMNT, and Eight Sleep'}`
           : (placements.slice(0, 3).map(p => `${p.brand_name} (${p.flights}x)`).join(', ') || 'Linear, Supabase, Stripe, and Mercury');
         const counterSubject = `3-Flight Q4 Sponsorship Pilot Inquiry - ${targetShowForBuyer} ($${showFloorUsd.toLocaleString()}/flight Floor)`;
         const counterBody = `Hi ${targetShowForBuyer} Booking Team (${showBookingEmail}),\n\nWe are allocating our Q4 creator media budget and benchmarking against repeat 3x+ sponsors on ${targetShowForBuyer} (including ${repeatSponsorsLabel}).\n\nInstead of a single-insertion test at the $${showRackUsd.toLocaleString()} published rack rate ($${page.avg_cpm} Ad Rate), we are ready to lock in a 3-flight pilot commitment at your verified agency 3-flight floor of $${showFloorUsd.toLocaleString()}/flight ($${floorCpm} Effective Rate, $${(showFloorUsd * 3).toLocaleString()} total package).\n\n• [LOCKED IN PREVIEW]: Exact 1.5% CTR Make-Good Legal Clause, 30-Day Audience Guarantee & Unmasked Direct Booking Rep Email ($1.99 3-File Pack / $19 Creator Pass / $29 Complete 109-Row CSV Vault)`;
