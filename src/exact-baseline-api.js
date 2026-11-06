@@ -921,7 +921,7 @@ function attachExactBaselinePack(app, options = {}) {
         body = renderExactBaselineEnhancements(body, cfg, req.path);
       }
       if (isHtml) {
-        body = body.replace(/\p{Extended_Pictographic}/gu, '').replace(/&#128274;|&#128275;|&#128203;|&#10024;|&#9889;|&#9888;|&#128339;|&#128506;/g, '').replace(/&copy;/gi, 'Copyright').replace(/\bBEOs\b/g, 'Meal Sheets').replace(/\bBEO\b/g, 'Meal Sheet').replace(/300-DPI/gi, 'Print-Ready').replace(/\bSpecimens\b/g, 'Samples').replace(/\bSpecimen\b/gi, 'Sample');
+        body = body.replace(/(?![↗↘↙↖↔↕])\p{Extended_Pictographic}/gu, '').replace(/&#128274;|&#128275;|&#128203;|&#10024;|&#9889;|&#9888;|&#128339;|&#128506;/g, '').replace(/&copy;/gi, 'Copyright').replace(/\bBEOs\b/g, 'Meal Sheets').replace(/\bBEO\b/g, 'Meal Sheet').replace(/300-DPI/gi, 'Print-Ready').replace(/\bSpecimens\b/g, 'Samples').replace(/\bSpecimen\b/gi, 'Sample');
       }
       return origSend(body);
     };

@@ -454,19 +454,11 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
+      { '@type': 'Dataset', name: page.title, description: page.meta_description, url: `${baseUrl}/seo/${page.slug}`, creator: { '@type': 'Organization', name: 'SponsorRadar Intelligence' } },
       {
-        '@type': 'Dataset',
-        name: page.title,
-        description: page.meta_description,
-        url: `${baseUrl}/seo/${page.slug}`,
-        creator: { '@type': 'Organization', name: 'SponsorRadar Intelligence' }
-      },
-      {
-        '@type': 'SoftwareApplication',
-        name: 'SponsorRadar Ad-Spend & 3x-Renewal Analyzer',
-        applicationCategory: 'BusinessApplication',
-        operatingSystem: 'Web',
+        '@type': 'SoftwareApplication', name: 'SponsorRadar Ad-Spend & 3x-Renewal Analyzer', applicationCategory: 'BusinessApplication', operatingSystem: 'Web',
         offers: [
+          { '@type': 'Offer', name: '3-Credit Sample Unlock', price: '0.00', priceCurrency: 'USD' },
           { '@type': 'Offer', name: '1-Row Named Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD' },
           { '@type': 'Offer', name: '3-File Sponsor & Rate Card Pack', price: '1.99', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Creator Outbound Pass (109-Row CSV + Cold Sequences)', price: '19.00', priceCurrency: 'USD' },
@@ -474,14 +466,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           { '@type': 'Offer', name: 'Agency & Talent Desk (5 Seats + CRM)', price: '149.00', priceCurrency: 'USD' }
         ]
       },
-      {
-        '@type': 'FAQPage',
-        mainEntity: faqItems.map(item => ({
-          '@type': 'Question',
-          name: item.q,
-          acceptedAnswer: { '@type': 'Answer', text: item.a }
-        }))
-      },
+      { '@type': 'FAQPage', mainEntity: faqItems.map(item => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) },
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -492,12 +477,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       }
     ]
   };
-
-  const displayH1 = String(page.h1 || page.title || '').trim();
-  const pageTypeBadge = isShowPage ? 'SHOW RATE-CARD & SPONSOR DOSSIER' : (isBrandPage ? 'BRAND SPEND & 3x-RENEWAL DOSSIER' : 'CATEGORY AD RATE BENCHMARK HUB');
-  const firstShowCpm = (!isShowPage && placements.length > 0 && placements[0].cpm_usd) ? placements[0].cpm_usd : page.avg_cpm;
-  const firstShowRack = (!isShowPage && placements.length > 0 && placements[0].est_spend_usd) ? Math.round(placements[0].est_spend_usd / Math.max(1, placements[0].flights)) : showRackUsd;
-  const firstShowFloor = Math.round(firstShowRack * 0.82);
+  const initCreator = !isShowPage;
 
   const bodyHtml = `
   <article style="padding:32px 0;">
@@ -510,12 +490,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           <span>${escapeHtml(workbenchQuery)}</span>
         </nav>
         <div id="sr-buyer-wedge-toggle" role="group" aria-label="1-Tap Buyer Wedge Selector" style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:3px 6px; border-radius:999px; border:1px solid var(--border-strong);">
-          <button type="button" id="hero-role-creator" data-wedge="creator" aria-pressed="true" onclick="window.__srSwitchPersona('creator','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid var(--emerald-roi); background:var(--emerald-soft); color:var(--emerald-roi);">${SR_MIC_SVG} I want sponsors for my show</button>
-          <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-pressed="false" onclick="window.__srSwitchPersona('buyer','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);">${SR_CHART_SVG} I'm buying ads &amp; checking Ad Rates</button>
+          <button type="button" id="hero-role-creator" data-wedge="creator" aria-pressed="${initCreator ? 'true' : 'false'}" onclick="window.__srSwitchPersona('creator','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid ${initCreator ? 'var(--emerald-roi)' : 'var(--border-subtle)'}; background:${initCreator ? 'var(--emerald-soft)' : 'var(--bg-surface)'}; color:${initCreator ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">${SR_MIC_SVG} I want sponsors for my show</button>
+          <button type="button" id="hero-role-buyer" data-wedge="buyer" aria-pressed="${initCreator ? 'false' : 'true'}" onclick="window.__srSwitchPersona('buyer','seo_hero_toggle')" style="padding:5px 12px; border-radius:999px; font-size:12.5px; font-weight:800; cursor:pointer; border:1.5px solid ${initCreator ? 'var(--border-subtle)' : 'var(--emerald-roi)'}; background:${initCreator ? 'var(--bg-surface)' : 'var(--emerald-soft)'}; color:${initCreator ? 'var(--text-secondary)' : 'var(--emerald-roi)'};">${SR_CHART_SVG} I'm buying ads &amp; checking Ad Rates</button>
         </div>
       </div>
 
-      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">Pitch the buyer, not dead inboxes: ${escapeHtml(workbenchQuery)}</h1>
+      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">${initCreator ? 'Pitch the buyer, not dead inboxes' : 'Audit true Ad Rates, not rack rates'}: ${escapeHtml(workbenchQuery)}</h1>
       <p class="subhead" style="display:none;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor Ad Rates ($${floorCpm} Effective Rate) and Row #1 sample proof.</p>
 
       <!-- Top-Fold $0 Email + 99¢ / $1.99 / $19 / $29 Unlock Bar (Visible Immediately Above the Fold on Mobile & Desktop) -->
@@ -703,8 +683,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <div class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">STEP-BY-STEP NEGOTIATION &amp; PITCH WORKBENCH</div>
             <h2 style="font-family:var(--font-serif); font-size:21px; font-weight:700; margin:0 0 10px 0; color:var(--text-primary);">Simulate Your Budget, Compare Lookalike Shows &amp; Copy Your Offer</h2>
             <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:5px; border-radius:999px;">
-              <button type="button" id="btn-sr-persona-creator" data-wedge="creator" onclick="window.__srSwitchPersona('creator','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--text-secondary);">${SR_MIC_SVG} I want sponsors for my show</button>
-              <button type="button" id="btn-sr-persona-buyer" data-wedge="buyer" onclick="window.__srSwitchPersona('buyer','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:var(--emerald-soft); color:var(--emerald-roi);">${SR_CHART_SVG} I'm buying ads &amp; checking Ad Rates</button>
+              <button type="button" id="btn-sr-persona-creator" data-wedge="creator" onclick="window.__srSwitchPersona('creator','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:${initCreator ? 'var(--emerald-soft)' : 'transparent'}; color:${initCreator ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">${SR_MIC_SVG} I want sponsors for my show</button>
+              <button type="button" id="btn-sr-persona-buyer" data-wedge="buyer" onclick="window.__srSwitchPersona('buyer','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:${initCreator ? 'transparent' : 'var(--emerald-soft)'}; color:${initCreator ? 'var(--text-secondary)' : 'var(--emerald-roi)'};">${SR_CHART_SVG} I'm buying ads &amp; checking Ad Rates</button>
             </div>
           </div>
           <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -714,7 +694,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
 
         <!-- PANE 1: BRAND MEDIA BUYER 2-STEP WORKFLOW -->
-        <div id="sr-pane-buyer" style="display:flex; flex-direction:column; gap:18px;">
+        <div id="sr-pane-buyer" style="display:${initCreator ? 'none' : 'flex'}; flex-direction:column; gap:18px;">
           <!-- STEP 1: Budget Slider & Lookalike Arbitrage Cards -->
           <div style="padding:20px 22px; border-radius:14px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
@@ -767,7 +747,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
 
         <!-- PANE 2: CREATOR OUTBOUND 2-STEP PITCH & 1-CLICK MAILTO GENERATOR -->
-        <div id="sr-pane-creator" style="display:none;">
+        <div id="sr-pane-creator" style="display:${initCreator ? 'block' : 'none'};">
           <div style="padding:20px 22px; border-radius:14px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px 0;padding-bottom:12px;border-bottom:1px solid var(--border-subtle);">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -819,7 +799,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
 
         <script>
-          window.__srActiveWedge = 'creator';
+          window.__srActiveWedge = '${initCreator ? 'creator' : 'buyer'}';
           window.__srSwitchPersona = function(mode, source) {
             mode = mode === 'creator' ? 'creator' : 'buyer'; window.__srActiveWedge = mode;
             try { localStorage.setItem('sr_buyer_wedge', mode); document.cookie = 'sr_wedge=' + mode + '; Path=/; Max-Age=2592000; SameSite=Lax'; } catch (_) {}
@@ -895,8 +875,16 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             return false;
           };
           window.__srCalcPseoReach = function(reach, cpm) {
-            var single = Math.round((reach / 1000) * cpm), pkg = Math.round(single * 3 * 0.82), el = document.getElementById('sr-pseo-quote-readout');
-            if (el) el.textContent = (reach / 1000) + 'K Reach → $' + single.toLocaleString() + '/slot • 3-Flight Pilot: $' + pkg.toLocaleString();
+            var single = Math.round((reach / 1000) * cpm), floorSlot = Math.round(single * 0.82), pkg = floorSlot * 3, el = document.getElementById('sr-pseo-quote-readout');
+            if (el) el.textContent = (reach / 1000) + 'K Reach → $' + single.toLocaleString() + '/slot ($' + floorSlot.toLocaleString() + ' Floor) • 3-Flight Pilot: $' + pkg.toLocaleString();
+            document.querySelectorAll('#sr-pane-creator button[data-r]').forEach(function(b) { var act = Number(b.getAttribute('data-r')) === Number(reach); b.style.background = act ? 'var(--emerald-soft)' : 'var(--bg-surface)'; b.style.borderColor = act ? 'var(--emerald-roi)' : 'var(--border-subtle)'; b.style.color = act ? 'var(--emerald-roi)' : 'var(--text-primary)'; });
+            var pPre = document.getElementById('sr-free-pitch-pre');
+            if (pPre) {
+              var uAttr = pPre.getAttribute('data-free-credit-unmasked') || '', curTxt = pPre.textContent || '';
+              var repl = function(s) { return s.replace(/\b\d+K\s+(?:verified\s+)?(?:audience|reach|subscribers|listeners)/gi, (reach / 1000) + 'K verified audience').replace(/\$[\d,]+\/flight/g, '$' + floorSlot.toLocaleString() + '/flight').replace(/\$[\d,]+\s+total\s+3-flight/gi, '$' + pkg.toLocaleString() + ' total 3-flight'); };
+              if (uAttr) pPre.setAttribute('data-free-credit-unmasked', repl(uAttr));
+              pPre.textContent = repl(curTxt);
+            }
             if (window.__srRunSeoQuoteAudit) window.__srRunSeoQuoteAudit(single, reach, (reach / 1000) + 'K Creator Reach');
           };
         </script>
