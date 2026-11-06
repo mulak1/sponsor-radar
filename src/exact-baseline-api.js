@@ -584,7 +584,7 @@ function createTelemetryStore(dataDir, moduleId) {
       const mkW = (lbl) => ({ label: lbl, visits: 0, wedge_taps: 0, calculations: 0, copies: 0, view_paywall: 0, row_micro_unlocks: 0, leads: 0, checkout_intents: 0, paid_orders: 0, paid_revenue_usd: 0, rpv_usd: 0 });
       const wedgeFunnel = { creator: mkW('I want sponsors for my show'), buyer: mkW("I'm buying ads & checking CPMs") };
       const mkOff = (lbl, p) => ({ label: lbl, price_usd: p, checkout_intents: 0, paid_orders: 0, paid_revenue_usd: 0, rpv_usd: 0 });
-      const offerFunnel = { flash_pass: mkOff('Row / Target 3-File Pack ($1.99)', 1.99), complete_dossier: mkOff('All 96 Buyers Vault Pass ($29)', 29), micro_pass: mkOff('Single-File Micro Pass ($0.99)', 0.99), pro_b2b: mkOff('Agency B2B Feed ($199)', 199) };
+      const offerFunnel = { micro_pass: mkOff('Single-File Micro Pass ($0.99)', 0.99), flash_pass: mkOff('Row / Target 3-File Pack ($1.99)', 1.99), creator_pass: mkOff('Creator Pass ($19)', 19), complete_dossier: mkOff('All 109 Buyers Vault Pass ($29)', 29), agency_desk: mkOff('B2B Agency Desk ($149)', 149), pro_b2b: mkOff('Agency B2B Feed ($199)', 199) };
       for (const e of state.events.filter((x) => !x.is_crawler)) {
         const b = wedgeFunnel[resW(e)] || wedgeFunnel.buyer;
         if (e.event_type === 'visit') b.visits++; else if (e.event_type === 'wedge_select' || (e.event_type === 'tab_switch' && /^persona_/.test(String(e.meta?.store_pill || '')))) b.wedge_taps++; else if (e.event_type === 'calculate') b.calculations++; else if (e.event_type === 'copy_summary') b.copies++; else if (e.event_type === 'view_paywall') b.view_paywall++; else if (e.event_type === 'row_micro_unlock_focus') b.row_micro_unlocks++;
@@ -928,7 +928,7 @@ function attachExactBaselinePack(app, options = {}) {
     }
     if (req.method === 'POST' && req.path === '/api/checkout') {
       const reqTier = String(req.body?.tier || req.body?.plan || req.body?.planTier || req.body?.planId || '').toLowerCase();
-      if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'playbook_pass' || reqTier === 'complete_dossier' || reqTier === 'pro_b2b') return handleTierCheckout(req, res);
+      if (reqTier === 'micro_pass' || reqTier === 'flash_pass' || reqTier === 'creator_pass' || reqTier === 'playbook_pass' || reqTier === 'complete_dossier' || reqTier === 'vault_49' || reqTier === 'agency_desk' || reqTier === 'pro_b2b') return handleTierCheckout(req, res);
       const cEmail = String(req.body?.email || req.body?.customerEmail || req.body?.customer_email || '').trim();
       if (cEmail && cEmail.includes('@') && !/^(patient@dermlogic\.io|founder@creatorstudio\.io|founder@merchant\.io|founder@dtcstore\.io|vp-marketing@)/i.test(cEmail)) {
         store.recordLead({ email: cEmail, summaryText: 'Native Checkout Form Lead', utmSource: 'native_checkout', isTest, isOwnerIp, clientIp });
