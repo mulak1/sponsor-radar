@@ -660,6 +660,7 @@ app.get('/seo/:slug', (req, res) => {
     }
   } else {
     const kw = `%${page.target_slug}%`;
+    const titleLc = `${page.slug} ${page.title || ''}`.toLowerCase();
     placements = db.prepare(`
       SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
              sb.slug AS brand_seo_slug, ss.slug AS show_seo_slug
@@ -668,10 +669,10 @@ app.get('/seo/:slug', (req, res) => {
       JOIN shows s ON s.slug = p.show_slug
       LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
       LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
-      WHERE (b.vertical LIKE ? OR b.category LIKE ? OR s.niche LIKE ? OR s.channel_type LIKE ? OR ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%')
-      ORDER BY CASE WHEN ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%' THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC
+      WHERE (b.vertical LIKE ? OR b.category LIKE ? OR s.niche LIKE ? OR s.channel_type LIKE ? OR ? LIKE '%' || p.brand_slug || '%' OR ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%')
+      ORDER BY CASE WHEN ? LIKE '%' || p.brand_slug || '%' OR ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%' THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC
       LIMIT 12
-    `).all(kw, kw, kw, kw, page.slug, page.slug);
+    `).all(kw, kw, kw, kw, titleLc, titleLc, titleLc, titleLc);
     if (placements.length === 0) {
       placements = db.prepare(`
         SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,
