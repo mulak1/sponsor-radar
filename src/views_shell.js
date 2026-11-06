@@ -662,7 +662,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#radar-tool">Spend Radar</a>
         <a href="/leaderboard">Leaderboard</a>
         <a href="/directory">Spend Directory</a>
-        <a href="/tools/podcast-cpm-calculator">CPM Calculator</a>
+        <a href="/tools/podcast-sponsorship-cpm-roi-calculator">CPM Calculator</a>
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
@@ -724,10 +724,10 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <div>
           <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Free Tools &amp; Comparisons</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
-            <a href="/tools/podcast-cpm-calculator">Podcast CPM Calculator</a>
-            <a href="/tools/newsletter-sponsorship-pricing-calculator">Newsletter Pricing Calculator</a>
-            <a href="/compare/sponsorradar-vs-who-sponsors-stuff">vs. Who Sponsors Stuff</a>
-            <a href="/compare/sponsorradar-vs-passionfroot">vs. Passionfroot</a>
+            <a href="/tools/podcast-sponsorship-cpm-roi-calculator">Podcast CPM Calculator</a>
+            <a href="/tools/newsletter-ad-spend-renewal-estimator">Newsletter Pricing Calculator</a>
+            <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database">vs. Who Sponsors Stuff</a>
+            <a href="/compare/paved-vs-passionfroot-vs-sponsorradar-direct-sponsor-outreach">vs. Passionfroot</a>
           </div>
         </div>
         <div>
