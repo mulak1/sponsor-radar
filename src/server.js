@@ -151,8 +151,8 @@ function resolveTargetIntel(rawTarget) {
   const brand = matchedBrand || (topPlacement ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(topPlacement.brand_slug) : null) || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify') || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
   const rackCpm = Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42;
   const floorCpm = Math.max(18, Math.round(rackCpm * 0.82));
-  const reach = Number(show ? show.audience_size : (topPlacement ? topPlacement.audience_size : 75000)) || 75000;
-  const rackSlotUsd = Number(show ? show.midroll_rate_usd : Math.round((reach / 1000) * rackCpm)) || 3150;
+  const rackSlotUsd = Number(show ? show.midroll_rate_usd : (topPlacement ? topPlacement.est_spend_usd : 3150)) || 3150;
+  const reach = Math.max(10000, Math.round((rackSlotUsd / rackCpm) * 1000));
   const floorSlotUsd = Math.round(rackSlotUsd * 0.82);
   const rawBuyerEmail = (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
   const unmaskedBuyer = getUnmaskedNamedBuyerEmail(rawBuyerEmail);
@@ -171,11 +171,12 @@ function resolveTargetIntel(rawTarget) {
 app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'], (req, res) => {
   const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || (req.query.email && String(req.query.email).includes('@')) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const t = resolveTargetIntel(req.query.target || req.query.q || 'Shopify');
-  const floorCpm = Math.max(18, Number(req.query.floor_cpm) || t.floorCpm);
-  const reach = Math.max(10000, Number(req.query.reach) || t.reach);
-  const floorSlotUsd = req.query.floor_cpm || req.query.reach ? Math.round((reach / 1000) * floorCpm) : t.floorSlotUsd;
-  const rackSlotUsd = Math.max(floorSlotUsd, Number(req.query.quoted_usd) || t.rackSlotUsd);
-  const rackCpm = req.query.quoted_usd ? Math.round(rackSlotUsd / (reach / 1000)) : t.rackCpm;
+  const qUsd = Number(req.query.quoted_usd) || 0;
+  const reach = Math.max(5000, Number(req.query.reach) || (qUsd ? Math.round((qUsd / t.rackCpm) * 1000) : t.reach));
+  const rackSlotUsd = Math.max(250, qUsd || t.rackSlotUsd);
+  const rackCpm = Math.max(18, Math.round(rackSlotUsd / (reach / 1000)));
+  const floorCpm = Math.max(15, Math.min(Number(req.query.floor_cpm) || t.floorCpm, Math.round(rackCpm * 0.82)));
+  const floorSlotUsd = Math.min(Math.round(rackSlotUsd * 0.82), Math.round((reach / 1000) * floorCpm));
   const buyerLine = isUnlocked
     ? `${t.dmRole} (${t.unmaskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.unmaskedAgency})`
     : `${t.dmRole} (${t.maskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.maskedAgency})`;
@@ -661,10 +662,10 @@ app.get('/seo/:slug', (req, res) => {
       JOIN shows s ON s.slug = p.show_slug
       LEFT JOIN seo_pages sb ON sb.page_type = 'brand_breakdown' AND sb.target_slug = p.brand_slug
       LEFT JOIN seo_pages ss ON ss.page_type = 'show_benchmark' AND ss.target_slug = p.show_slug
-      WHERE (b.vertical LIKE ? OR b.category LIKE ? OR s.niche LIKE ? OR s.channel_type LIKE ?)
-      ORDER BY p.flights DESC, p.est_spend_usd DESC
+      WHERE (b.vertical LIKE ? OR b.category LIKE ? OR s.niche LIKE ? OR s.channel_type LIKE ? OR ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%')
+      ORDER BY CASE WHEN ? LIKE '%' || REPLACE(p.show_slug, '-newsletter', '') || '%' THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC
       LIMIT 12
-    `).all(kw, kw, kw, kw);
+    `).all(kw, kw, kw, kw, page.slug, page.slug);
     if (placements.length === 0) {
       placements = db.prepare(`
         SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.sponsor_email, b.decision_maker_role, s.name AS show_name, s.channel_type, s.audience_size,

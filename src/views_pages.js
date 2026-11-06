@@ -413,9 +413,10 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const isShowPage = page.page_type === 'show_benchmark' && Boolean(show);
   const isBrandPage = page.page_type === 'brand_breakdown' && Boolean(brand);
   const workbenchQuery = isShowPage ? show.name : (brand ? brand.name : page.category);
-  const floorCpm = Math.round(page.avg_cpm * 0.82);
-  const showReach = show ? show.audience_size : ((placements[0] && placements[0].audience_size) || 85000);
-  const showRackUsd = show ? show.midroll_rate_usd : Math.round((showReach / 1000) * page.avg_cpm);
+  const rackCpm = show ? show.base_cpm : page.avg_cpm;
+  const floorCpm = Math.round(rackCpm * 0.82);
+  const showRackUsd = show ? show.midroll_rate_usd : ((placements[0] && placements[0].est_spend_usd) || Math.round(85 * rackCpm));
+  const showReach = Math.max(10000, Math.round((showRackUsd / Math.max(18, rackCpm)) * 1000));
   const showFloorUsd = Math.round(showRackUsd * 0.82);
   const firstShowOnBrand = (!isShowPage && placements.length > 0 && placements[0].show_name) ? placements[0].show_name : (show ? show.name : 'The Diary Of A CEO');
   const targetShowForBuyer = show ? show.name : firstShowOnBrand;
