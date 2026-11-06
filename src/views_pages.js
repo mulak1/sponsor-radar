@@ -514,7 +514,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
       </div>
 
-      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(workbenchQuery)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">Pitch the buyer, not dead inboxes: ${escapeHtml(workbenchQuery)}</h1>
+      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">Pitch the buyer, not dead inboxes: ${escapeHtml(workbenchQuery)}</h1>
       <p class="subhead" style="display:none;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor Ad Rates ($${floorCpm} Effective Rate) and Row #1 sample proof.</p>
 
       <!-- Top-Fold $0 Email + 99¢ / $1.99 / $19 / $29 Unlock Bar (Visible Immediately Above the Fold on Mobile & Desktop) -->

@@ -872,7 +872,7 @@ function buildClientRuntimeScript(cfg) {
   };
   window.__ebSyncEmailPreviewLinks = function(em) {
     if (!em || em.indexOf('@') < 1) return;
-    var actT = window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
+    var actT = (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
     Array.prototype.slice.call(document.querySelectorAll('a[href*="/api/github-upgrade/export.csv"], a[href*="/api/github-upgrade/iab-io-addendum.txt"], a[href*="/api/github-upgrade/pitch.eml"]')).forEach(function(a) {
       var h = a.getAttribute('href') || ''; if (h.indexOf('email=') === -1) h += (h.indexOf('?') === -1 ? '?' : '&') + 'email=' + encodeURIComponent(em); if (actT && h.indexOf('target=') === -1) h += (h.indexOf('?') === -1 ? '?' : '&') + 'target=' + encodeURIComponent(actT); a.setAttribute('href', h);
     });
@@ -886,13 +886,13 @@ function buildClientRuntimeScript(cfg) {
     window.__ebSyncEmailPreviewLinks(em);
     var bdg = document.getElementById('sr-free-credits-badge'); if (bdg) { bdg.style.display = 'inline-flex'; bdg.textContent = '✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn'; }
     var uBtn = document.getElementById('btn-unlock-free-credits'); if (uBtn) { uBtn.textContent = '✓ 3 of 3 Free Buyer Credits Unlocked'; uBtn.style.background = '#047857'; uBtn.style.color = '#FFFFFF'; }
-    var actT = window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
+    var actT = (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
     if (window.__ebLastCapturedEmail !== em) { window.__ebLastCapturedEmail = em; origFetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, customer_email: em, target: actT, pageUrl: window.location.pathname, utmSource: src || 'free_3_buyer_credits', buyer_wedge: window.__ebGetBuyerWedge() }) }).catch(function(){}); }
     return em;
   };
   ['blur', 'change'].forEach(function(evName) { document.addEventListener(evName, function(e) { var t = e.target; if (t && t.type === 'email' && t.value) window.__ebCaptureEmailLead(t.value, t.id || 'email_input_' + evName); }, true); });
   window.__ebCheckout = function(tier, confirmed) {
-    var cleanTier = typeof tier === 'string' ? tier : 'flash_pass', actTarget = window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
+    var cleanTier = typeof tier === 'string' ? tier : 'flash_pass', actTarget = (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
     var emInputs = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).filter(function(el) { return el && el.value && el.value.indexOf('@') > 0 && !/^(creator|agency)@sponsorradar\.io$/i.test(el.value.trim()); });
     var rawEm = (emInputs[0] && emInputs[0].value.trim()) || window.__ebSavedEmail || ''; try { if (!rawEm) rawEm = localStorage.getItem('eb_lead_email') || ''; } catch (_) {}
     var emVal = rawEm ? window.__ebCaptureEmailLead(rawEm, 'checkout_prefill_' + cleanTier) : '', wedge = window.__ebGetBuyerWedge();
