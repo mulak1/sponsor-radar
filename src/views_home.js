@@ -481,11 +481,9 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
   <script>
     const SAMPLE_TRANSCRIPTS_MAP = ${JSON.stringify(sampleTranscripts).replace(/</g, '\\u003c')};
     function escHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
-    window.__srCurrentRackRate = ${mb.published_rack_rate_usd};
-    window.__srCurrentAvgCpm = ${defaultAnalysis.metrics.avg_cpm_usd};
-    window.__srCurrentTargetName = ${JSON.stringify(mb.target_show)};
-    window.__srCurrentLookalikes = ${JSON.stringify(mb.lookalike_shows || []).replace(/</g, '\\u003c')};
-    window.__srActiveWedge = 'creator';
+    window.__srCurrentRackRate = ${mb.published_rack_rate_usd}; window.__srCurrentAvgCpm = ${defaultAnalysis.metrics.avg_cpm_usd}; window.__srCurrentTargetName = ${JSON.stringify(mb.target_show)};
+    window.__srCurrentLookalikes = ${JSON.stringify(mb.lookalike_shows || []).replace(/</g, '\\u003c')}; window.__srActiveWedge = 'creator';
+    window.__ebActiveEntity = window.__ebSelectedTarget = ${JSON.stringify(displayEntity.name.split('(')[0].trim()).replace(/</g, '\\u003c')}; window.__srCurrentUnmaskedRep = ${JSON.stringify(row1BuyerUnmasked + ' (+ ' + row1AgencyUnmasked + ')').replace(/</g, '\\u003c')};
     window.__srQuickDomain = function(dom) { var inp = document.getElementById('sr-bridge-email'); if (!inp) return; var v = (inp.value || '').trim().split('@')[0] || 'founder'; inp.value = v + dom; inp.focus(); };
     window.__srSwitchPersona = function(mode, source) {
       mode = mode === 'creator' ? 'creator' : 'buyer';
@@ -577,6 +575,10 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         }
       }
       if (sub) sub.innerHTML = 'Break-Even: <strong>' + beSignups + ' signups</strong> @ $' + ltv + ' LTV • Est. ~' + clicks.toLocaleString() + ' clicks → ~' + estCust + ' customers (~$' + floorCac + ' Floor CAC) • IO Rider §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) • <a href="/buy/flash_pass?source=qa_rider" onclick="if(window.__ebCheckout){window.__ebCheckout(\\\'flash_pass\\\',true);return false;}" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Unlock Rider &amp; Floor Pack ($1.99) ↗</a>';
+      var qTgt = encodeURIComponent(window.__ebActiveEntity || 'Shopify') + '&floor_cpm=' + fairFloorCpm + '&reach=' + reach + '&quoted_usd=' + price + (window.__ebSavedEmail ? ('&email=' + encodeURIComponent(window.__ebSavedEmail)) : '');
+      ['eb-home-rider-link', 'sr-csv-iab-rider-link'].forEach(function(id) { var el = document.getElementById(id); if (el) el.href = '/api/github-upgrade/iab-io-addendum.txt?target=' + qTgt; });
+      var hEml = document.getElementById('eb-home-eml-link'), preEl = document.getElementById('sr-mb-free-pre'); if (hEml) hEml.href = '/api/github-upgrade/pitch.eml?target=' + qTgt;
+      if (preEl) { var rpl = function(s) { var lns = String(s || '').split('\\n'); if (lns.length > 0) lns[0] = 'Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + price.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + fairFloorUsd.toLocaleString() + '/slot (-18% • Save $' + Math.max(0, price - fairFloorUsd).toLocaleString() + '/read)'; return lns.join('\\n'); }; preEl.setAttribute('data-free-credit-unmasked', rpl(preEl.getAttribute('data-free-credit-unmasked'))); preEl.textContent = rpl(preEl.textContent); }
       if (window.__srSaveWorkspace) window.__srSaveWorkspace({ qaPrice: price, qaReach: reach, qaLtv: ltv });
       if (!silent && window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'home_quote_auditor', quoted_usd: price, reach: reach, floor_usd: fairFloorUsd, ltv_usd: ltv });
     };
