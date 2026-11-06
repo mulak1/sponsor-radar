@@ -836,7 +836,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     window.addEventListener('DOMContentLoaded', function() {
       try {
         var ws = window.__srGetWorkspace ? window.__srGetWorkspace() : {}, sp = new URLSearchParams(window.location.search || '');
-        var urlQuery = (sp.get('q') || sp.get('brand') || sp.get('show') || '').trim();
+        var urlQuery = (sp.get('q') || sp.get('target') || sp.get('preset') || sp.get('brand') || sp.get('show') || '').trim();
         var hasUrlQuery = Boolean(urlQuery);
         var qEl = document.getElementById('lookup-query'), rEl = document.getElementById('sender-reach');
         var qaP = document.getElementById('sr-home-qa-price'), qaR = document.getElementById('sr-home-qa-reach'), mbS = document.getElementById('sr-moneyball-slider');

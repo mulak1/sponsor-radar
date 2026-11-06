@@ -462,7 +462,7 @@ app.get('/api/github-upgrade/agency-desk-pack.json', (req, res) => {
       bulk_named_buyer_csv_url: `/api/github-upgrade/export.csv?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
       csv_verified_rows: 109,
       iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
-      pitch_eml_url: `/api/github-upgrade/pitch.eml?target=${encodeURIComponent(target)}`,
+      pitch_eml_url: `/api/github-upgrade/pitch.eml?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
       crm_webhook_schema: {
         providers: ['HubSpot CRM', 'Clay Webhook', 'Salesforce', 'CSV Outreach Sequence'],
         fields: ['brand_name', 'named_decision_maker_email', 'external_agency_desk_email', 'linkedin_verify_url', 'floor_3flight_cpm_usd', 'iab_makegood_clause', 'renewal_alert_90d_window']
@@ -574,7 +574,7 @@ app.get('/', (req, res) => {
   `).all();
   const seoPages = db.prepare('SELECT * FROM seo_pages ORDER BY est_monthly_spend DESC').all();
   const pubQuery = String(req.query.pub || '').replace(/[<>"'`]/g, '').trim().slice(0, 80);
-  const initialQuery = String(req.query.q || req.query.brand || req.query.show || 'Shopify').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Shopify';
+  const initialQuery = String(req.query.q || req.query.target || req.query.preset || req.query.brand || req.query.show || 'Shopify').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'Shopify';
   const initialReach = Math.max(500, Number(req.query.reach) || 75000);
   const defaultAnalysis = analyzeSponsorLookup(db, {
     query: initialQuery,
@@ -597,7 +597,8 @@ app.get('/', (req, res) => {
 
 // Paid-Social Landing Page (/lp)
 app.get('/lp', (req, res) => {
-  const defaultAnalysis = analyzeSponsorLookup(db, { query: 'AG1' });
+  const lpQuery = String(req.query.q || req.query.target || req.query.brand || 'AG1').replace(/[<>"'`]/g, '').trim().slice(0, 80) || 'AG1';
+  const defaultAnalysis = analyzeSponsorLookup(db, { query: lpQuery });
   res.send(renderLandingPage({ defaultAnalysis }));
 });
 
