@@ -485,10 +485,10 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
           get: { operationId: 'previewBuyerFloorCsv', summary: 'Preview the 109-row verified buyer & agency floor ledger (.CSV) sorted by target entity', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }, { name: 'email', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'CSV preview with Row 1 unmasked (or Rows 1-3 with work email)' } } }
         },
         '/api/github-upgrade/iab-io-addendum.txt': {
-          get: { operationId: 'previewIabIoAddendumTxt', summary: 'Preview the Redlined IAB IO Make-Good Rider (.TXT, §4.2 Rate Cap & §7.1 1.5% CTR Make-Good)', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'Redlined IAB IO Addendum text' } } }
+          get: { operationId: 'previewIabIoAddendumTxt', summary: 'Preview the Redlined IAB IO Make-Good Rider (.TXT, §4.2 Rate Cap & §7.1 1.5% CTR Make-Good)', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }, { name: 'floor_cpm', in: 'query', required: false, schema: { type: 'number' } }, { name: 'reach', in: 'query', required: false, schema: { type: 'integer' } }, { name: 'quoted_usd', in: 'query', required: false, schema: { type: 'number' } }, { name: 'email', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'Redlined IAB IO Addendum text' } } }
         },
         '/api/github-upgrade/pitch.eml': {
-          get: { operationId: 'previewDualTrackPitchEml', summary: 'Preview the Dual-Track RFC-822 Outreach & Counter-Offer (.EML)', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'RFC-822 .eml outreach template' } } }
+          get: { operationId: 'previewDualTrackPitchEml', summary: 'Preview the Dual-Track RFC-822 Outreach & Counter-Offer (.EML)', parameters: [{ name: 'target', in: 'query', required: false, schema: { type: 'string' } }, { name: 'floor_cpm', in: 'query', required: false, schema: { type: 'number' } }, { name: 'reach', in: 'query', required: false, schema: { type: 'integer' } }, { name: 'quoted_usd', in: 'query', required: false, schema: { type: 'number' } }, { name: 'email', in: 'query', required: false, schema: { type: 'string' } }], responses: { '200': { description: 'RFC-822 .eml outreach template' } } }
         },
         '/api/github-upgrade/fuse-search': {
           get: { operationId: 'runInstantBenchmark', summary: `Run deterministic ${cfg.brandName} benchmark for any target entity`, parameters: [{ name: 'q', in: 'query', required: true, schema: { type: 'string' } }], responses: { '200': { description: 'Deterministic KPIs and remediation preview' } } }
@@ -534,7 +534,8 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
       transport: { type: 'http-json-rpc', endpoint: `https://${cfg.domain}/api/mcp/rpc` },
       tools: [
         { name: `audit_${cfg.moduleId}`, description: `Run deterministic ${g.categoryTag} audit and return canonical report URL + KPIs`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
-        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run deterministic CNN visual/acoustic sensor inspection and create a permanent /scan/:target public permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } }
+        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run deterministic CNN visual/acoustic sensor inspection and create a permanent /scan/:target public permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } },
+        { name: `compile_counterparty_pack_${cfg.moduleId}`, description: `Calculate -18% 3-flight floor savings and generate parameterized IAB IO Rider (.TXT), Dual-Track Pitch (.EML), and 3-Row Sample (.CSV) links`, inputSchema: { type: 'object', properties: { target: { type: 'string' }, quoted_usd: { type: 'number' }, reach: { type: 'number' }, floor_cpm: { type: 'number' } }, required: ['target'] } }
       ]
     });
   });
@@ -553,17 +554,23 @@ function attachAutonomousGrowthEngine(app, cfg, store, renderHtmlFn, classifyFn)
     if (body.method === 'tools/list') {
       return res.json({ jsonrpc: '2.0', id, result: { tools: [
         { name: `audit_${cfg.moduleId}`, description: `Run ${cfg.brandName} deterministic benchmark`, inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
-        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run CNN sensor inspection and publish /scan/:target permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } }
+        { name: `inspect_cnn_${cfg.moduleId}`, description: `Run CNN sensor inspection and publish /scan/:target permalink`, inputSchema: { type: 'object', properties: { target: { type: 'string' } }, required: ['target'] } },
+        { name: `compile_counterparty_pack_${cfg.moduleId}`, description: `Generate parameterized .TXT / .EML / .CSV counterparty links for any quote & reach`, inputSchema: { type: 'object', properties: { target: { type: 'string' }, quoted_usd: { type: 'number' }, reach: { type: 'number' }, floor_cpm: { type: 'number' } }, required: ['target'] } }
       ] } });
     }
-    const q = String(body.params?.arguments?.target || body.params?.arguments?.query || cfg.presets[0]?.key || 'verified');
+    const args = body.params?.arguments || {};
+    const q = String(args.target || args.query || cfg.presets[0]?.key || 'verified');
     const scan = evaluateScanTarget(cfg, q);
     const encT = encodeURIComponent(scan.target);
+    const qUsd = Math.max(250, Number(args.quoted_usd) || 4500);
+    const rch = Math.max(1000, Number(args.reach) || 85000);
+    const flCpm = Math.max(15, Number(args.floor_cpm) || 38);
+    const qP = `target=${encT}&floor_cpm=${Math.round(flCpm)}&reach=${rch}&quoted_usd=${qUsd}`;
     return res.json({
       jsonrpc: '2.0',
       id,
       result: {
-        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT} • https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/complete_dossier?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/pro_b2b?target=${encT}` }]
+        content: [{ type: 'text', text: `${cfg.brandName} Audit (${scan.target}): Grade ${scan.grade} (${scan.score}/100) | ${scan.kpi1} • ${scan.cnnReadout} | Public Permalink: https://${cfg.domain}/scan/${encT} | Counterparty Previews: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?${qP} • https://${cfg.domain}/api/github-upgrade/pitch.eml?${qP} • https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT} | 1-Click Checkout: 1-Row (99¢) https://${cfg.domain}/buy/micro_pass?target=${encT} | 3-File Pack ($1.99) https://${cfg.domain}/buy/flash_pass?target=${encT} | Creator Pass ($19) https://${cfg.domain}/buy/creator_pass?target=${encT} | Full 109-Row Vault ($${cfg.corePriceUsd || 29}) https://${cfg.domain}/buy/complete_dossier?target=${encT} | Agency Desk ($${cfg.proPriceUsd || 149}) https://${cfg.domain}/buy/pro_b2b?target=${encT}` }]
       }
     });
   });

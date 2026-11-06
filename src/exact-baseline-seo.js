@@ -84,10 +84,13 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
       if (fs.existsSync(seedPath)) {
         const mod = require(seedPath);
         const list = mod.SEO_PAGES || [];
+        const NICHE_MAP = { fintech: 'Ramp', security: 'Vanta', hr: 'Deel', devops: 'Datadog', ai: 'Linear', newsletter: 'HubSpot', founder: 'Brex', health: 'AG1', consumer: 'Shopify', marketing: 'HubSpot', crypto: 'Coinbase', ecommerce: 'Shopify' };
         for (const p of list) {
+          const parenMatch = String(p.title || '').match(/\(([^,;)]+)/);
+          const resolvedTarget = (p.page_type === 'niche_directory' || NICHE_MAP[p.target_slug]) ? (parenMatch ? parenMatch[1].trim() : (NICHE_MAP[p.target_slug] || 'Shopify')) : (p.target_slug || 'Shopify');
           entries.push({
             slug: p.slug,
-            target_slug: p.target_slug || '',
+            target_slug: resolvedTarget,
             avg_cpm: p.avg_cpm || 45,
             floor_cpm: Math.round((p.avg_cpm || 45) * 0.82),
             est_monthly_spend: p.est_monthly_spend || 85000,
