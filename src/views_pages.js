@@ -863,11 +863,14 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
       </div>
 
-      <!-- Related Spokes -->
+      <!-- Related Spokes & Category Comparisons -->
       <div class="panel">
-        <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend &amp; CPM Ad Rate Benchmark Reports</span></div>
+        <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend, CPM Calculators &amp; Category Comparisons</span></div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
           ${relatedPages.map(r => `<a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM ($${Math.round(r.avg_cpm * 0.82)} Floor)</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div></a>`).join('')}
+          <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">COMPETITOR COMPARISON • SAVE $2,971/YR</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Who Sponsors Stuff vs. SponsorRadar ($29 One-Time CSV Vault)</div></a>
+          <a href="/compare/podchaser-pro-vs-sponsorradar-podcast-sponsor-contacts" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">BUYER &amp; AGENCY DESK COMPARISON</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Podchaser Pro vs. SponsorRadar: Named Buyers &amp; -18% Floor CPMs</div></a>
+          <a href="/tools/sponsorship-insertion-order-make-good-clause-generator" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700;">FREE IAB IO RIDER TOOL</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">IAB Podcast &amp; Newsletter Insertion Order Make-Good Generator</div></a>
         </div>
       </div>
     </div>
