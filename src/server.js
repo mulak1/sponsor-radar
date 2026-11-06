@@ -68,6 +68,9 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const hasEmailUnlock = Boolean(req.query.email && String(req.query.email).includes('@'));
   const targetFilter = String(req.query.target || req.query.q || req.query.brand || '').trim().toLowerCase();
+  const targetSlug = targetFilter.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const STOP_TOKENS = new Set(['the', 'and', 'for', 'with', 'podcast', 'newsletter', 'youtube', 'sponsors', 'sponsorship', 'spend', 'rates', 'rate', 'cpm', 'roi', 'strategy', 'benchmarks']);
+  const firstToken = targetSlug.split('-').find((w) => w.length >= 3 && !STOP_TOKENS.has(w)) || targetSlug;
   const allRows = db.prepare(`
     SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
            s.name AS show_name, s.channel_type, s.audience_size
@@ -78,9 +81,15 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   `).all();
   if (targetFilter) {
     allRows.sort((a, b) => {
-      const aMatch = (String(a.brand_name).toLowerCase().includes(targetFilter) || String(a.brand_slug).toLowerCase().includes(targetFilter) || String(a.show_name).toLowerCase().includes(targetFilter) || String(a.show_slug).toLowerCase().includes(targetFilter)) ? 1 : 0;
-      const bMatch = (String(b.brand_name).toLowerCase().includes(targetFilter) || String(b.brand_slug).toLowerCase().includes(targetFilter) || String(b.show_name).toLowerCase().includes(targetFilter) || String(b.show_slug).toLowerCase().includes(targetFilter)) ? 1 : 0;
-      return bMatch - aMatch;
+      const scoreRow = (r) => {
+        const bSlug = String(r.brand_slug || '').toLowerCase(), sSlug = String(r.show_slug || '').toLowerCase();
+        const bName = String(r.brand_name || '').toLowerCase(), sName = String(r.show_name || '').toLowerCase();
+        if (bSlug === targetSlug || sSlug === targetSlug || bName === targetFilter || sName === targetFilter) return 3;
+        if (bName.includes(targetFilter) || sName.includes(targetFilter) || bSlug.includes(targetSlug) || sSlug.includes(targetSlug)) return 2;
+        if (firstToken && (bSlug.includes(firstToken) || sSlug.includes(firstToken))) return 1;
+        return 0;
+      };
+      return scoreRow(b) - scoreRow(a);
     });
   }
   const header = [
@@ -123,19 +132,24 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
 function resolveTargetIntel(rawTarget) {
   const clean = String(rawTarget || 'Shopify').replace(/[<>"']/g, '').trim() || 'Shopify';
   const slugCand = clean.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const brand = db.prepare('SELECT * FROM brands WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? ORDER BY est_monthly_spend DESC LIMIT 1').get(slugCand, clean, `%${clean}%`)
-    || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify')
-    || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
-  const show = db.prepare('SELECT * FROM shows WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? ORDER BY audience_size DESC LIMIT 1').get(slugCand, clean, `%${clean}%`);
+  const seoHit = db.prepare('SELECT target_slug FROM seo_pages WHERE LOWER(slug) = ? LIMIT 1').get(slugCand);
+  const lookupSlug = (seoHit && seoHit.target_slug) ? String(seoHit.target_slug).toLowerCase() : slugCand;
+  const spaced = lookupSlug.replace(/-/g, ' ');
+  const STOP_WORDS = new Set(['the', 'and', 'for', 'with', 'podcast', 'newsletter', 'youtube', 'sponsors', 'sponsorship', 'spend', 'rates', 'rate', 'cpm', 'roi', 'strategy', 'benchmarks']);
+  const firstTok = lookupSlug.split('-').find((w) => w.length >= 3 && !STOP_WORDS.has(w)) || lookupSlug;
+  let matchedBrand = db.prepare('SELECT * FROM brands WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? OR LOWER(slug) LIKE ? ORDER BY CASE WHEN LOWER(slug) = ? THEN 0 ELSE 1 END, est_monthly_spend DESC LIMIT 1').get(lookupSlug, spaced, `%${spaced}%`, `%${firstTok}%`, lookupSlug);
+  const show = db.prepare('SELECT * FROM shows WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?) OR LOWER(name) LIKE ? OR LOWER(slug) LIKE ? ORDER BY CASE WHEN LOWER(slug) = ? THEN 0 ELSE 1 END, audience_size DESC LIMIT 1').get(lookupSlug, spaced, `%${spaced}%`, `%${firstTok}%`, lookupSlug);
+  if (show && matchedBrand && show.slug === lookupSlug && matchedBrand.slug !== lookupSlug) matchedBrand = null;
   const topPlacement = db.prepare(`
     SELECT p.*, b.name AS brand_name, b.domain AS brand_domain, b.category AS brand_category, b.sponsor_email, b.decision_maker_role,
            s.name AS show_name, s.channel_type, s.audience_size, s.midroll_rate_usd
     FROM placements p
     JOIN brands b ON b.slug = p.brand_slug
     JOIN shows s ON s.slug = p.show_slug
-    WHERE p.brand_slug = ? OR p.show_slug = ?
-    ORDER BY p.flights DESC, p.est_spend_usd DESC LIMIT 1
-  `).get(brand ? brand.slug : 'shopify', show ? show.slug : '');
+    WHERE (? != '' AND p.brand_slug = ?) OR (? != '' AND p.show_slug = ?)
+    ORDER BY CASE WHEN (? != '' AND p.show_slug = ? AND ? = '') THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC LIMIT 1
+  `).get(matchedBrand ? matchedBrand.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', show ? show.slug : '', show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '');
+  const brand = matchedBrand || (topPlacement ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(topPlacement.brand_slug) : null) || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify') || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
   const rackCpm = Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42;
   const floorCpm = Math.max(18, Math.round(rackCpm * 0.82));
   const reach = Number(show ? show.audience_size : (topPlacement ? topPlacement.audience_size : 75000)) || 75000;
