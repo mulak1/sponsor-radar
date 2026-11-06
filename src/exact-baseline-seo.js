@@ -88,6 +88,9 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
           entries.push({
             slug: p.slug,
             target_slug: p.target_slug || '',
+            avg_cpm: p.avg_cpm || 45,
+            floor_cpm: Math.round((p.avg_cpm || 45) * 0.82),
+            est_monthly_spend: p.est_monthly_spend || 85000,
             title: String(p.title || p.h1 || p.slug),
             category: p.category || p.page_type || 'Verified Ad-Read Ledger',
             summary: String(p.summary || p.meta_description || p.meta_desc || cfg.explainerText).slice(0, 158)
@@ -231,8 +234,9 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
       `### ${idx + 1}. ${item.title}`,
       `- **Canonical URL**: ${host}/seo/${item.slug}`,
       `- **Clean Markdown Twin**: ${host}/seo/${item.slug}.md`,
-      `- **Category**: ${item.category}`,
+      `- **Category**: ${item.category}${item.avg_cpm ? ` • $${item.avg_cpm} Rack CPM → $${item.floor_cpm} 3-Flight Floor CPM (-18%) • ~$${(item.est_monthly_spend || 85000).toLocaleString()}/mo Verified Spend` : ''}`,
       `- **Answer-First Executive Summary**: ${item.summary}`,
+      `- **Counterparty Execution Files**: [IAB Rider (.TXT)](${host}/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(item.target_slug || item.slug)}&floor_cpm=${item.floor_cpm || 38}) | [Pitch (.EML)](${host}/api/github-upgrade/pitch.eml?target=${encodeURIComponent(item.target_slug || item.slug)}&floor_cpm=${item.floor_cpm || 38}) | [3-Row Sample (.CSV)](${host}/api/github-upgrade/export.csv?target=${encodeURIComponent(item.target_slug || item.slug)})`,
       `- **Interactive Calculator**: [Run live ${item.title} audit on ${cfg.brandName}](${host}/seo/${item.slug})`,
       ''
     ].join('\n'))
@@ -254,6 +258,7 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     summary: cfg.explainerText
   };
   const entityQ = encodeURIComponent(matched.target_slug || matched.slug);
+  const flParam = matched.floor_cpm ? `&floor_cpm=${matched.floor_cpm}` : '';
   const idx = Math.max(0, seoEntries.findIndex((e) => e.slug === matched.slug));
   const related = [];
   for (let i = 1; related.length < 8 && i < seoEntries.length; i++) {
@@ -265,17 +270,19 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     `canonical_url: "${host}/seo/${matched.slug}"`,
     `markdown_twin_url: "${host}/seo/${matched.slug}.md"`,
     `category: "${matched.category}"`,
+    ...(matched.avg_cpm ? [`rack_cpm_usd: ${matched.avg_cpm}`, `floor_3flight_cpm_usd: ${matched.floor_cpm}`, `est_monthly_spend_usd: ${matched.est_monthly_spend}`] : []),
     '---',
     '',
     `# ${matched.title}`,
     '',
-    `> **Answer-First Summary**: ${matched.summary}`,
+    `> **Answer-First Summary**: ${matched.summary}${matched.avg_cpm ? ` Verified placements average **$${matched.avg_cpm} Rack CPM** vs. **$${matched.floor_cpm} 3-Flight Floor CPM (-18%)** across **~$${(matched.est_monthly_spend || 85000).toLocaleString()}/month** tracked spend.` : ''}`,
     '',
     `## 1. Live Deterministic Benchmark & KPI Baseline (${cfg.brandName})`,
     `${cfg.explainerText}`,
     '',
     `| Metric | Verified Baseline | Target Post-Remediation |`,
     `| :--- | :--- | :--- |`,
+    ...(matched.avg_cpm ? [`| **Page-Specific Ad Rate & Spend** | $${matched.avg_cpm} Rack CPM (~$${(matched.est_monthly_spend || 85000).toLocaleString()}/mo) | $${matched.floor_cpm} 3-Flight Floor CPM (-18% + 1.5% CTR Make-Good) |`] : []),
     ...cfg.kpis.map((k) => `| **${k.label}** | ${k.val} | ${k.delta || k.sub || 'Verified'} |`),
     '',
     '## 2. Production Remediation Diff',
@@ -289,8 +296,8 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
     '',
     `## 4. Run Interactive Audit, Counterparty Previews & 1-Click Direct Stripe Checkout`,
     `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`,
-    `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}](${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ})`,
-    `- Preview Dual-Track RFC-822 Outreach Pitch (.EML): [${host}/api/github-upgrade/pitch.eml?target=${entityQ}](${host}/api/github-upgrade/pitch.eml?target=${entityQ})`,
+    `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}${flParam}](${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}${flParam})`,
+    `- Preview Dual-Track RFC-822 Outreach Pitch (.EML): [${host}/api/github-upgrade/pitch.eml?target=${entityQ}${flParam}](${host}/api/github-upgrade/pitch.eml?target=${entityQ}${flParam})`,
     `- Preview 3-Row Verified Buyer Sample (.CSV): [${host}/api/github-upgrade/export.csv?target=${entityQ}](${host}/api/github-upgrade/export.csv?target=${entityQ})`,
     `- 1-Click 99¢ Single-File Instant Export Pass: [${host}/buy/micro_pass?target=${entityQ}](${host}/buy/micro_pass?target=${entityQ})`,
     `- 1-Click $1.99 Single-Audit Export Bundle: [${host}/buy/flash_pass?target=${entityQ}](${host}/buy/flash_pass?target=${entityQ})`,

@@ -138,6 +138,7 @@ function getAllGrowthUrls(cfg) {
   const urls = [...getAllPublicScanUrls(cfg)];
   for (const t of g.tools) urls.push(`${base}/tools/${t.slug}`);
   for (const c of g.comparisons) urls.push(`${base}/compare/${c.slug}`);
+  for (const s of (cfg._cachedSeoCatalog || [])) urls.push(`${base}/seo/${s.slug}`);
   return urls;
 }
 
