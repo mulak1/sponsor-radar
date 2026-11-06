@@ -662,11 +662,15 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/#radar-tool">Spend Radar</a>
         <a href="/leaderboard">Leaderboard</a>
         <a href="/directory">Spend Directory</a>
+        <a href="/tools/podcast-cpm-calculator">CPM Calculator</a>
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" class="btn btn-ghost" style="padding:7px 12px; min-height:36px; font-size:12.5px; text-decoration:none; white-space:nowrap; border:1px solid var(--border-strong); font-weight:800;">
+        <a href="/buy/flash_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" class="btn btn-ghost" style="padding:7px 11px; min-height:36px; font-size:12.5px; text-decoration:none; white-space:nowrap; border:1px solid var(--border-strong); font-weight:800;">
           <span>3-File Pack ($1.99) →</span>
+        </a>
+        <a href="/buy/creator_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" class="btn btn-emerald nav-cta-secondary" style="padding:7px 11px; min-height:36px; font-size:12.5px; text-decoration:none; white-space:nowrap; font-weight:800;">
+          <span>Creator Pass ($19) →</span>
         </a>
         <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
           <span>109-Row Buyer Vault ($29) →</span>
@@ -712,8 +716,18 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/#radar-tool">Interactive Spend Radar</a>
             <a href="/leaderboard">Industry Leaderboard</a>
-            <a href="/directory">60+ pSEO Spend Reports</a>
-            <a href="/sitemap.xml">XML Sitemap</a>
+            <a href="/directory">124+ pSEO Spend Dossiers</a>
+            <a href="/scan/Shopify">Verified Brand Scans</a>
+            <a href="/sitemap.xml">XML Sitemap (161+ URLs)</a>
+          </div>
+        </div>
+        <div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Free Tools &amp; Comparisons</div>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <a href="/tools/podcast-cpm-calculator">Podcast CPM Calculator</a>
+            <a href="/tools/newsletter-sponsorship-pricing-calculator">Newsletter Pricing Calculator</a>
+            <a href="/compare/sponsorradar-vs-who-sponsors-stuff">vs. Who Sponsors Stuff</a>
+            <a href="/compare/sponsorradar-vs-passionfroot">vs. Passionfroot</a>
           </div>
         </div>
         <div>
@@ -726,10 +740,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
           </div>
         </div>
         <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Legal &amp; Trust</div>
+          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Legal &amp; AI Protocols</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms of Service</a>
+            <a href="/llms.txt">llms.txt (Agent Index)</a>
             <a href="/robots.txt">robots.txt</a>
           </div>
         </div>
@@ -874,10 +889,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         var safe = String(x.name).replace(/[<>"'&]/g, '');
         return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:#262320;color:#A7F3D0;font-family:var(--font-sans);font-size:13px;font-weight:700;">' + safe + ' ($' + Math.round((x.cpm || 42) * 0.82) + ' Floor) <button type="button" data-rm-name="' + safe + '" onclick="window.__srRemoveFromPlan(this.getAttribute(\\\'data-rm-name\\\'))" title="Remove target" aria-label="Remove ' + safe + '" style="background:none;border:none;color:#FCA5A5;cursor:pointer;font-weight:800;padding:0 2px;">×</button></span>';
       }).join(' ');
+      var firstTarget = encodeURIComponent(String((list[0] && list[0].name) || 'Shopify'));
       bar.style.display = 'block';
       bar.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;"><strong style="color:#6EE7B7;font-family:var(--font-sans);font-size:13px;line-height:1.35;">My Q4 Media Plan Shortlist (<span id="sr-shortlist-count">' + list.length + '</span> Saved in Browser)</strong><div style="display:inline-flex;align-items:center;gap:8px;flex-shrink:0;"><span style="font-family:var(--font-sans);font-size:13px;color:#FCD34D;font-weight:600;">Save $' + totalSavings.toLocaleString() + ' @ -18% Floor</span><button type="button" id="sr-shortlist-close-btn" onclick="window.__srHideShortlistBar()" aria-label="Hide shortlist tray" title="Hide shortlist tray" style="width:24px;height:24px;border-radius:6px;background:#262320;border:1px solid #3F3A34;color:#CBD5E1;font-size:15px;font-weight:700;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">×</button></div></div>'
         + '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' + pills + '</div>'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;"><span style="font-family:var(--font-sans);font-size:13px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;"><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:13px;font-weight:700;cursor:pointer;">Share Plan URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\')" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:13px;font-weight:800;cursor:pointer;">Unlock Full Q4 Plan ($29) →</button></div></div>';
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;"><span style="font-family:var(--font-sans);font-size:13px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;flex-wrap:wrap;"><a href="/api/github-upgrade/export.csv?target=' + firstTarget + '" target="_blank" style="padding:5px 8px;border-radius:6px;border:1px solid #10B981;background:#064E3B;color:#A7F3D0;font-size:12px;font-weight:700;text-decoration:none;">3-Row .CSV ↗</a><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:12px;font-weight:700;cursor:pointer;">Share URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'creator_pass\\\',true)" style="padding:5px 9px;border-radius:6px;border:1px solid #0F766E;background:#0F766E;color:#FFFFFF;font-size:12px;font-weight:800;cursor:pointer;">Creator ($19)</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\',true)" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:12px;font-weight:800;cursor:pointer;">Full Vault ($29) →</button></div></div>';
     };
   </script>
 </body>

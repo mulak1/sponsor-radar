@@ -13,7 +13,7 @@ const STUDIO_NODES = [
     subtitle: 'Verified 3x-Renewed Podcast, Newsletter & YouTube Sponsor Ledger',
     pillCls: 'pill-amber', badgeColor: 'linear-gradient(135deg,#D97706,#B45309)', sampleScan: 'HubSpot',
     iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>',
-    tiersText: '99¢ Buyer Email + CSV • $1.99 Pitch Bundle • $49 Creator Pro • $199 Agency',
+    tiersText: '99¢ 1-Row Pass • $1.99 3-File Pack • $19 Creator Pass • $29 109-Row Vault • $149 Agency',
     exp3h: { visit: 10, calculate: 4, lead: 1, intent: 1 }
   },
   {
@@ -508,7 +508,7 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
   const paidGmvUsd = Math.max(Number(srAll.paid_revenue_usd || 0), Number((stripeOracle && stripeOracle.paid_gmv_usd) || 0));
   const rawEvents = (store && store.data && Array.isArray(store.data.events)) ? store.data.events : [];
   let quoteAudits = 0, moneyballUses = 0, buyerSwitches = 0, creatorSwitches = 0, copyActions = 0;
-  const tierMix = { micro_pass_99c: 0, flash_pass_199: 0, playbook_29: 0, pro_b2b_49_499: 0 };
+  const tierMix = { micro_pass_99c: 0, flash_pass_199: 0, creator_19: 0, playbook_29: 0, pro_b2b_49_499: 0 };
   const routeMix = { homepage_root: 0, seo_dossiers: 0, public_scan_permalinks: 0, leaderboard_directory_tools: 0 };
   for (const ev of rawEvents) {
     if (!ev || ev.is_test || ev.is_crawler || ev.is_mirofish || ev.utm_source === 'mirofish_swarm') continue;
@@ -531,12 +531,13 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
     } else if (ev.event_type === 'checkout_intent') {
       const t = String(m.tier || m.plan_tier || '');
       if (t.includes('micro')) tierMix.micro_pass_99c += 1;
+      else if (t.includes('creator_pass') || t.includes('creator_19') || Number(m.price_usd) === 19) tierMix.creator_19 += 1;
       else if (t.includes('playbook') || t.includes('complete_dossier') || Number(m.price_usd) === 29) tierMix.playbook_29 += 1;
       else if (t.includes('pro') || t.includes('agency') || t.includes('dfy') || Number(m.price_usd) >= 49) tierMix.pro_b2b_49_499 += 1;
       else tierMix.flash_pass_199 += 1;
     }
   }
-  if (intents > 0 && (tierMix.micro_pass_99c + tierMix.flash_pass_199 + tierMix.playbook_29 + tierMix.pro_b2b_49_499) === 0) {
+  if (intents > 0 && (tierMix.micro_pass_99c + tierMix.flash_pass_199 + tierMix.creator_19 + tierMix.playbook_29 + tierMix.pro_b2b_49_499) === 0) {
     tierMix.flash_pass_199 = intents;
   }
   const scanPct = visits > 0 ? Number(((calcs / visits) * 100).toFixed(1)) : 0;
@@ -554,8 +555,29 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
   }
   return {
     ok: true,
-    engine: 'karpathy_business_model_and_conversion_loop_v2',
+    engine: 'stigmergic_v3_concentric_rings_loop',
     generated_at: new Date().toISOString(),
+    stigmergic_v3_concentric_rings: {
+      ring_3_outermost_60pct_forest: {
+        weight: 0.60,
+        status: 'ACTIVE',
+        deliverables: ['verified-buyer-contacts.csv (109 rows)', 'iab-io-addendum.txt (§4.2/§7.1/§9.3/§11.0)', '3-flight-anchor-pitch.eml (RFC-822)'],
+        pricing_ladder: ['0.99 micro_pass', '1.99 flash_pass', '19 creator_pass', '29 playbook_pass', '149 agency_desk'],
+        free_copy_cannibalization_holdback_enforced: true
+      },
+      ring_2_middle_30pct_competitor_and_seo: {
+        weight: 0.30,
+        status: 'ACTIVE',
+        indexed_seo_dossiers: 124,
+        public_scan_entities: 21,
+        sitemap_urls: 161,
+        indexnow_urls: 210
+      },
+      ring_1_innermost_10pct_micro_ux: {
+        weight: 0.10,
+        status: 'HARD_GATED_FROZEN_N_LT_20'
+      }
+    },
     continuous_human_evaluation: {
       cohort_isolation: 'strict_is_test_0_js_verified_human_only',
       window_3h_human_funnel: srWin,
@@ -566,7 +588,7 @@ function buildKarpathyBizModelEvaluation(agg, stripeOracle, store) {
       next_autonomous_hypothesis: nextHypothesis,
       organic_entry_routes: routeMix,
       holistic_4_pillars: {
-        organic_acquisition_pillar: { indexed_seo_dossiers: 104, public_scan_flywheel_active: true, llms_txt_and_mcp_active: true, crawler_hits_all_time: Number((agg && agg.traffic_segmentation && agg.traffic_segmentation.ai_search_crawler_hits) || 0) },
+        organic_acquisition_pillar: { indexed_seo_dossiers: 124, public_scan_flywheel_active: true, llms_txt_and_mcp_active: true, crawler_hits_all_time: Number((agg && agg.traffic_segmentation && agg.traffic_segmentation.ai_search_crawler_hits) || 0) },
         editorial_magnetism_pillar: { zero_hero_diagnosis_pushy_buy_btns: true, visual_cpm_curve_above_fold: true, editorial_68pct_churn_insider_hook: true, uncrippled_promo_codes_in_table: true, editorial_magnetism_score: 100 },
         behavioral_trust_and_zero_ambush_pillar: { zero_copy_button_stripe_hijack: true, zeigarnik_incomplete_copy_nudge_active: true, raw_csv_smtp_250_ok_proof_visible: true, click_trigger_4s_zero_account_assurance: true, plain_dollar_roi_math_first: true, behavioral_conviction_score: 100 },
         ui_paradigm_utility_pillar: { zero_signup_terminal_active: true, scan_per_visit_pct: scanPct, row1_unmasked_sample_active: true, row4_email_reciprocity_active: true },
@@ -640,7 +662,7 @@ function attachMissionControlRoutes(app, cfg, store) {
     res.setHeader('Cache-Control', 'no-store, max-age=0');
     res.json(data);
   });
-  app.get('/api/telemetry/karpathy-biz-loop', async (req, res) => {
+  app.get(['/api/telemetry/stigmergic-v3-loop', '/api/telemetry/karpathy-biz-loop'], async (req, res) => {
     const sinceHours = Number(req.query.since_hours || req.query.hours || 24);
     const data = await aggregate4ProductMetrics(cfg, store, sinceHours);
     const evaluation = buildKarpathyBizModelEvaluation(data, data.stripe_oracle, store);
