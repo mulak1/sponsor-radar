@@ -699,11 +699,13 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       const showProofList = (data.placements || []).slice(0, 3).map(function(pl) { return pl.show_name; }).join(' • ') || "My First Million • The Diary Of A CEO • Lenny's Podcast";
       window.__srCurrentCreatorAngle = p0.live_outreach_angle || ('Peer-Referenced Pitch: Saw ' + shortName + ' renewed 4x on peer shows last 30d — anchor 3-flight pilot at -18% floor.');
       window.__srCurrentBuyerAngle = p0.live_buyer_angle || ('Peer Counter-Offer: ' + shortName + ' & peer shows cleared at -18% 3-flight floor last 30d — counter rack rate to save $2,400 overpay.');
-      setTxt('sr-row1-proof-entity', shortName); setTxt('sr-row1-proof-buyer', p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com');
-      setTxt('sr-row1-proof-agency', '');
-      setTxt('sr-row1-outreach-angle', (window.__srActiveWedge === 'buyer') ? window.__srCurrentBuyerAngle : window.__srCurrentCreatorAngle);
-      setTxt('sr-csv-row1-buyer', (p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com') + ' (sarah.kaufman@shopify.com)');
-      setTxt('sr-csv-row1-agency', (p0.unmasked_agency_email || 'm.vance@rightsideup.co') + ' (m.vance@rightsideup.co)');
+      const isUnm = Boolean(window.__ebSavedEmail || window.__ebIsUnlocked || !userTriggered), uB = p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com', uA = p0.unmasked_agency_email || 'm.vance@rightsideup.co';
+      setTxt('sr-row1-proof-entity', isUnm ? shortName : (shortName + ' (Sample Proof: Shopify)'));
+      const r1B = document.getElementById('sr-row1-proof-buyer'), csvB = document.getElementById('sr-csv-row1-buyer'), csvA = document.getElementById('sr-csv-row1-agency');
+      if (r1B) { r1B.setAttribute('data-free-credit-unmasked', uB); r1B.textContent = isUnm ? uB : ('sarah.kaufman@shopify.com [' + shortName + ' Buyer Gated: Enter $0 Email Above]'); }
+      setTxt('sr-row1-proof-agency', ''); setTxt('sr-row1-outreach-angle', (window.__srActiveWedge === 'buyer') ? window.__srCurrentBuyerAngle : window.__srCurrentCreatorAngle);
+      if (csvB) { csvB.setAttribute('data-free-credit-unmasked', uB); csvB.textContent = isUnm ? (uB + ' (sarah.kaufman@shopify.com)') : ('[GATED FOR ' + shortName.toUpperCase() + ' — Enter $0 Email Above]'); }
+      if (csvA) { csvA.setAttribute('data-free-credit-unmasked', uA); csvA.textContent = isUnm ? (uA + ' (m.vance@rightsideup.co)') : '[GATED AGENCY DESK — Enter $0 Email Above]'; }
       setTxt('sr-step2-handoff-buyer', p0Masked);
       setTxt('sr-step1-entity-name', shortName);
       const rackCpm = Number(data.metrics.avg_cpm_usd) || 45;

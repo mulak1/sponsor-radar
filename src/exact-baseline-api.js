@@ -572,13 +572,13 @@ function createTelemetryStore(dataDir, moduleId) {
       const wedgeFunnel = { creator: mkW('I want sponsors for my show'), buyer: mkW("I'm buying ads & checking CPMs") };
       const mkOff = (lbl, p) => ({ label: lbl, price_usd: p, checkout_intents: 0, paid_orders: 0, paid_revenue_usd: 0, rpv_usd: 0 });
       const offerFunnel = { micro_pass: mkOff('Single-File Micro Pass ($0.99)', 0.99), flash_pass: mkOff('Row / Target 3-File Pack ($1.99)', 1.99), creator_pass: mkOff('Creator Pass ($19)', 19), complete_dossier: mkOff('All 109 Buyers Vault Pass ($29)', 29), agency_desk: mkOff('B2B Agency Desk ($149)', 149), pro_b2b: mkOff('Agency B2B Feed ($199)', 199) };
-      for (const e of state.events.filter((x) => !x.is_crawler)) {
+      for (const e of humanEvents) {
         const b = wedgeFunnel[resW(e)] || wedgeFunnel.buyer;
         if (e.event_type === 'visit') b.visits++; else if (e.event_type === 'wedge_select' || (e.event_type === 'tab_switch' && /^persona_/.test(String(e.meta?.store_pill || '')))) b.wedge_taps++; else if (e.event_type === 'calculate') b.calculations++; else if (e.event_type === 'copy_summary') b.copies++; else if (e.event_type === 'view_paywall') b.view_paywall++; else if (e.event_type === 'row_micro_unlock_focus') b.row_micro_unlocks++;
         else if (e.event_type === 'checkout_intent') { b.checkout_intents++; const rawTk = String(e.meta?.tier || e.meta?.plan || 'flash_pass'), tKey = rawTk === 'playbook_pass' ? 'complete_dossier' : rawTk; if (offerFunnel[tKey]) offerFunnel[tKey].checkout_intents++; }
       }
-      for (const l of state.leads) (wedgeFunnel[resW(l)] || wedgeFunnel.buyer).leads++;
-      for (const o of state.orders.filter((x) => x.status === 'paid')) {
+      for (const l of humanLeadsList) (wedgeFunnel[resW(l)] || wedgeFunnel.buyer).leads++;
+      for (const o of paidOrdersList) {
         const wb = wedgeFunnel[resW(o)] || wedgeFunnel.buyer, amt = Number(o.amount_usd) || 0, oKey = o.tier === 'playbook_pass' ? 'complete_dossier' : o.tier;
         wb.paid_orders++; wb.paid_revenue_usd = Number((wb.paid_revenue_usd + amt).toFixed(2));
         const ot = offerFunnel[oKey] || offerFunnel.flash_pass; ot.paid_orders++; ot.paid_revenue_usd = Number((ot.paid_revenue_usd + amt).toFixed(2));
