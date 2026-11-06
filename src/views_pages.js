@@ -18,7 +18,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
   const showPages = seoPages.filter(p => p.page_type === 'show_benchmark');
   const nichePages = seoPages.filter(p => p.page_type === 'niche_directory');
   const totalReports = seoPages.length;
-  const totalContacts = 96;
+  const totalContacts = 109;
   const totalEntities = totalReports + brands.length + shows.length;
 
   const brandSlugMap = new Map(brandPages.map(p => [p.target_slug, p.slug]));
@@ -134,6 +134,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
               <a href="/buy/flash_pass?source=directory_top" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" class="btn btn-vermilion" style="padding:5px 12px; min-height:32px; font-size:12.5px; text-decoration:none;">Unlock 3-File Target Pack ($1.99) →</a>
+              <a href="/buy/creator_pass?source=directory_top" onclick="if(window.__ebCheckout){window.__ebCheckout('creator_pass',true);return false;}" class="btn btn-ghost" style="padding:5px 12px; min-height:32px; font-size:12.5px; text-decoration:none; background:#FFFBEB; color:#92400E; border:1px solid #F59E0B; font-weight:700;">Creator Pass ($19) →</a>
               <a href="/buy/playbook_pass?source=directory_top" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-emerald" style="padding:5px 12px; min-height:32px; font-size:12.5px; text-decoration:none;">Download All ${totalContacts} Contacts CSV ($29) →</a>
             </div>
           </div>
@@ -193,9 +194,10 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const isB2b = /B2B|SaaS|DevTools|Fintech|Security/i.test(vertical + ' ' + p.category);
             const renewalPct = b.renewal_rate_pct || 86;
             const dmRole = b.decision_maker_role || 'VP Growth & Creator Partnerships';
-            const unmaskedEmail = getUnmaskedNamedBuyerEmail(b);
-            const maskedEmail = maskSponsorEmail(unmaskedEmail);
-            const freeUnmaskAttr = idx < 3 ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)}</strong>)"` : '';
+            const unmaskedEmail = getUnmaskedNamedBuyerEmail(b.sponsor_email || `partnerships@${b.domain || 'brand.io'}`);
+            const agencyEmail = getAgencyBuyerEmail(b.domain || 'brand.io', b.category || p.category);
+            const maskedEmail = maskSponsorEmail(b.sponsor_email || unmaskedEmail, b.category || p.category);
+            const freeUnmaskAttr = idx < 3 ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
             return `
             <div class="sr-dir-item" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
@@ -453,8 +455,11 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
         offers: [
+          { '@type': 'Offer', name: '1-Row Named Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD' },
           { '@type': 'Offer', name: '3-File Sponsor & Rate Card Pack', price: '1.99', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'All 96 Buyers Vault (One-Time)', price: '29.00', priceCurrency: 'USD' }
+          { '@type': 'Offer', name: 'Creator Outbound Pass (109-Row CSV + Cold Sequences)', price: '19.00', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'All 109 Buyers Vault (One-Time)', price: '29.00', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Agency & Talent Desk (5 Seats + CRM)', price: '149.00', priceCurrency: 'USD' }
         ]
       },
       {
@@ -469,7 +474,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'SponsorRadar Home', item: `${baseUrl}/` },
-          { '@type': 'ListItem', position: 2, name: '104 Verified Reports', item: `${baseUrl}/directory` },
+          { '@type': 'ListItem', position: 2, name: '124 Verified Reports', item: `${baseUrl}/directory` },
           { '@type': 'ListItem', position: 3, name: page.title, item: `${baseUrl}/seo/${page.slug}` }
         ]
       }
@@ -489,7 +494,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
         <nav aria-label="Breadcrumb" class="mono" style="font-size:13px; color:var(--text-muted);">
           <a href="/" style="color:var(--vermilion); font-weight:600;">SponsorRadar Home</a> /
-          <a href="/directory" style="color:var(--vermilion); font-weight:600;">108 Verified Reports</a> /
+          <a href="/directory" style="color:var(--vermilion); font-weight:600;">124 Verified Reports</a> /
           <span>${escapeHtml(workbenchQuery)}</span>
         </nav>
         <div id="sr-buyer-wedge-toggle" role="group" aria-label="1-Tap Buyer Wedge Selector" style="display:inline-flex; gap:6px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:3px 6px; border-radius:999px; border:1px solid var(--border-strong);">
@@ -775,17 +780,17 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
         <div id="sr-copy-zeigarnik-nudge" data-post-copy-nudge="true" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; background:#FFFBEB; border:1.5px solid var(--amber-gold); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:13px;">
           <span style="color:var(--text-primary);"><strong>✓ Copied to your clipboard!</strong> Want all 109 Verified Buyer &amp; Agency Desk Rows + Redlined IO Make-Good Rider (.TXT) + Cold Outreach Sequences?</span>
-          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">3-File Pack ($1.99) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 109 Buyers Vault ($29) ↗</button></div>
+          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">3-File Pack ($1.99) ↗</button><button type="button" id="btn-zeigarnik-unmask-creator" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-ghost" style="padding:6px 13px; min-height:34px; font-size:12.5px; background:#FFFBEB; color:#92400E; border:1px solid #F59E0B; font-weight:700;">Creator Pass ($19) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 109 Buyers Vault ($29) ↗</button></div>
         </div>
 
         <div id="sr-raw-csv-proof-box" style="margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-strong); font-size:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:5px;">
             <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">${SR_SEARCH_SVG} ROW #1 LIVE CSV PROOF • Renewed on Peer Shows (Last 30 Days) (1 OF 109 — 105 LOCKED BELOW)</span>
-            <span class="mono" style="color:var(--text-secondary);">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • Niche Pilot: <code>$950-$2400_NICHE_OK</code> • <a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Preview Audience Guarantee Rider (.TXT) ↗</a></span>
+            <span class="mono" style="color:var(--text-secondary);">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • 90d Decay: <code>D1-2:48% | D3-14:34% | D15-90:18%</code> • Niche Pilot: <code>$950-$2400_NICHE_OK</code> • <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(workbenchQuery)}" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Preview Audience Guarantee Rider (.TXT) ↗</a></span>
           </div>
           <div class="mono" style="padding:7px 10px; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); overflow-x:auto; white-space:nowrap; font-size:11.5px;">
             <span style="color:var(--text-muted);">row,entity,decision_maker_role,named_buyer_email,external_agency_desk,peer_renewal_30d,rack_ad_rate,floor_3flight_rate,niche_pilot_budget,live_outreach_angle,audience_guarantee_rider</span><br/>
-            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span style="color:var(--emerald-roi);">${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)</span>,<span style="color:var(--amber-gold);">${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","Audience Guarantee Clause (-18% Floor + 1.5% Click Guarantee) • booking@creatornetwork.fm"</strong>
+            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span id="sr-csv-row1-buyer" data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)} (Sample Proof: sarah.kaufman@shopify.com)</span>,<span id="sr-csv-row1-agency" data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)" style="color:var(--amber-gold);">${escapeHtml(maskedCsvAgencyEmail)} (Sample Proof: m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","Audience Guarantee Clause (-18% Floor + 1.5% Click Guarantee) • booking@creatornetwork.fm"</strong>
           </div>
         </div>
 
@@ -797,7 +802,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% 3-Flight Floor):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.</div>
           <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">✓ 100% One-Time Pass (No Subscription Trap):</strong> Pay once (<strong>99¢</strong> 1 Row • <strong>$1.99</strong> 3-File Target Pack • <strong>$19</strong> Creator Pass • <strong>$29</strong> 109-Row Vault). Never auto-renews.</div>
           <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Weekly SMTP + Zero-Bounce SLA:</strong> Crawled every 24h from RSS &amp; YouTube ad reads. Free instant replacement if any email bounces + 30-day 100% money-back guarantee.</div>
-          <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Tangible Files + Row #1 Sample Proof:</strong> <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_rate_usd</code>) + <code>96-flight-rate-decay.csv</code> + <code>3-flight-anchor-pitch.eml</code>.</div>
+          <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Tangible Files + Row #1 Sample Proof:</strong> <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_rate_usd</code>) + <code>iab-io-addendum.txt</code> + <code>3-flight-anchor-pitch.eml</code>.</div>
         </div>
 
         <script>
@@ -861,7 +866,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             if (cacOut) cacOut.textContent = '~' + custs + ' Paid Customers • $' + cac.toLocaleString() + ' Est. CAC';
             if (roasOut) roasOut.textContent = 'Projected LTV Revenue: $' + rev.toLocaleString() + ' (' + roas + 'x LTV:Spend Return)';
             var counterPre = document.getElementById('sr-buyer-counter-pre'), safeShowTitle = ${JSON.stringify(targetShowForBuyer).replace(/</g, '\\u003c')}, safeSponsorsLabel = ${JSON.stringify(repeatSponsorsLabel).replace(/</g, '\\u003c')};
-            if (counterPre) counterPre.textContent = 'To: ${showBookingEmail}\\nSubject: 3-Flight Q4 Sponsorship Pilot Inquiry - ' + safeShowTitle + ' ($' + fairFloorPrice.toLocaleString() + '/flight Floor)\\n\\nHi ' + safeShowTitle + ' Booking Team (${showBookingEmail}),\\n\\nWe are allocating our Q4 creator media budget and benchmarking your $' + price.toLocaleString() + ' quote (' + Math.round(reach / 1000) + 'K reach, $' + quotedCpm.toFixed(1) + ' Ad Rate) against repeat 3x+ sponsors on ' + safeShowTitle + ' (' + safeSponsorsLabel + ').\\n\\nWe are ready to commit to a 3-flight pilot package at the verified agency 3-flight floor of $' + fairFloorPrice.toLocaleString() + '/flight ($' + (fairFloorPrice * 3).toLocaleString() + ' total 3-flight Booking Order) with a 1.5% CTR make-good clause (~' + clicks.toLocaleString() + ' clicks target) and 30-day verified audience reporting.';
+            var fullCounterTxt = 'To: ${escapeHtml(rawCsvBuyerEmail)} (+ ${escapeHtml(rawCsvAgencyEmail)})\\nSubject: 3-Flight Q4 Sponsorship Pilot Inquiry - ' + safeShowTitle + ' ($' + fairFloorPrice.toLocaleString() + '/flight Floor)\\n\\nHi ' + safeShowTitle + ' Booking Team,\\n\\nWe are allocating our Q4 creator media budget and benchmarking your $' + price.toLocaleString() + ' quote (' + Math.round(reach / 1000) + 'K reach, $' + quotedCpm.toFixed(1) + ' Ad Rate) against repeat 3x+ sponsors on ' + safeShowTitle + ' (' + safeSponsorsLabel + ').\\n\\nWe are ready to commit to a 3-flight pilot package at the verified agency 3-flight floor of $' + fairFloorPrice.toLocaleString() + '/flight ($' + (fairFloorPrice * 3).toLocaleString() + ' total 3-flight Booking Order) with a 1.5% CTR make-good clause (~' + clicks.toLocaleString() + ' clicks target) and 30-day verified audience reporting.';
+            if (counterPre) { counterPre.setAttribute('data-free-credit-unmasked', fullCounterTxt); counterPre.textContent = (window.__ebSavedEmail || window.__ebIsUnlocked) ? fullCounterTxt : ('To: ${showBookingEmail}\\nSubject: 3-Flight Q4 Sponsorship Pilot Inquiry - ' + safeShowTitle + ' ($' + fairFloorPrice.toLocaleString() + '/flight Floor)\\n\\n[DIRECT REP EMAIL & REDLINED COUNTER-OFFER GATED — Enter your work email in the "Unlock 3 Free Buyer Emails ($0)" bar above to reveal & copy]'); }
             if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'seo_quote_auditor', price: price, reach: reach, fair_floor: fairFloorPrice });
           };
           window.__srQuickDomain = function(dom) { var inp = document.getElementById('sr-bridge-email'); if (!inp) return; var v = (inp.value || '').trim().split('@')[0] || 'founder'; inp.value = v + dom; inp.focus(); };
@@ -918,7 +924,7 @@ function renderLegalPage(type) {
 }
 
 function renderNotFoundPage(requestedPath) {
-  const bodyHtml = `<section style="padding:72px 0; text-align:center;"><div class="container" style="max-width:640px;"><span class="pill-vermilion">HTTP 404 • ROUTE NOT IN LEDGER</span><h1 class="headline-xl">Ad-Spend Route Not Found</h1><p style="color:var(--text-secondary); margin-bottom:24px;">The path <code class="mono" style="color:var(--vermilion);">${escapeHtml(requestedPath)}</code> did not match an active brand or show slug. Jump back to the live workbench or browse all 108 verified pSEO reports.</p><div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;"><a href="/" class="btn btn-vermilion"><span>Return to Live Workbench</span><span class="btn-icon-circle" aria-hidden="true">↗</span></a><a href="/directory" class="btn btn-ghost">Browse 108 Spend Reports</a></div></div></section>`;
+  const bodyHtml = `<section style="padding:72px 0; text-align:center;"><div class="container" style="max-width:640px;"><span class="pill-vermilion">HTTP 404 • ROUTE NOT IN LEDGER</span><h1 class="headline-xl">Ad-Spend Route Not Found</h1><p style="color:var(--text-secondary); margin-bottom:24px;">The path <code class="mono" style="color:var(--vermilion);">${escapeHtml(requestedPath)}</code> did not match an active brand or show slug. Jump back to the live workbench or browse all 124 verified pSEO dossiers.</p><div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;"><a href="/" class="btn btn-vermilion"><span>Return to Live Workbench</span><span class="btn-icon-circle" aria-hidden="true">↗</span></a><a href="/directory" class="btn btn-ghost">Browse 124 Spend Dossiers</a><a href="/scan/Shopify" class="btn btn-ghost">View Shopify Scorecard</a></div></div></section>`;
   return renderShell({ title: '404 Not Found | SponsorRadar Media Intelligence', description: 'Page not found on SponsorRadar Media Intelligence Platform.', canonicalPath: '/404', ogSlug: '404', jsonLd: null, bodyHtml });
 }
 
