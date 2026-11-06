@@ -464,16 +464,19 @@ app.get('/api/checkout', (req, res) => {
 app.get('/api/github-upgrade/agency-desk-pack.json', (req, res) => {
   const target = String(req.query.target || 'Linear').trim().slice(0, 48);
   const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const hasEmail = hasRequestEmailUnlock(req);
+  const qSuffix = isUnlocked ? '&unlocked=1' : (hasEmail && req.query.email ? `&email=${encodeURIComponent(String(req.query.email).trim())}` : '');
   res.json({
     ok: true,
     tier: 'agency_desk_b2b',
     pricing_options: { micro_pass_usd: 0.99, flash_pass_usd: 1.99, creator_pass_usd: 19, full_vault_usd: 29, multi_seat_agency_desk_usd: 149, enterprise_b2b_feed_usd: 199 },
     target_entity: target,
     deliverables: {
-      bulk_named_buyer_csv_url: `/api/github-upgrade/export.csv?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
+      sample_3credit_dossier_url: `/dossier/sample?target=${encodeURIComponent(target)}${qSuffix}`,
+      bulk_named_buyer_csv_url: `/api/github-upgrade/export.csv?target=${encodeURIComponent(target)}${qSuffix}`,
       csv_verified_rows: 109,
-      iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
-      pitch_eml_url: `/api/github-upgrade/pitch.eml?target=${encodeURIComponent(target)}${isUnlocked ? '&unlocked=1' : ''}`,
+      iab_io_makegood_rider_url: `/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(target)}${qSuffix}`,
+      pitch_eml_url: `/api/github-upgrade/pitch.eml?target=${encodeURIComponent(target)}${qSuffix}`,
       crm_webhook_schema: {
         providers: ['HubSpot CRM', 'Clay Webhook', 'Salesforce', 'CSV Outreach Sequence'],
         fields: ['brand_name', 'named_decision_maker_email', 'external_agency_desk_email', 'linkedin_verify_url', 'floor_3flight_cpm_usd', 'iab_makegood_clause', 'renewal_alert_90d_window']

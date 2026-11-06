@@ -412,10 +412,10 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     next();
   });
 
-  app.get(['/seo/:slug.md', '/dossier/sample.md', '/directory.md'], (req, res) => {
+  app.get(['/seo/:slug.md', '/dossier/sample.md', '/directory.md', '/lp.md'], (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, isTest, isCrawler });
-    const slugKey = req.params.slug || (req.path === '/dossier/sample.md' ? String(req.query.target || 'shopify') : 'index');
+    const slugKey = req.params.slug || ((req.path === '/dossier/sample.md' || req.path === '/lp.md') ? String(req.query.target || req.query.q || 'shopify') : 'index');
     const canonPath = req.params.slug ? `/seo/${encodeURIComponent(req.params.slug)}` : req.path.replace(/\.md$/, '');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
     res.setHeader('Link', `<${hostUrl}${canonPath}>; rel="canonical"`);
@@ -797,7 +797,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const hostUrl = `https://${cfg.domain}`;
   const cleanPath = reqPath === '/' ? '' : String(reqPath || '');
   const canonicalUrl = `${hostUrl}${cleanPath || '/'}`;
-  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : ((/^\/(seo|tools|compare|scan|report)\//.test(cleanPath) || cleanPath === '/leaderboard' || cleanPath === '/directory' || cleanPath === '/dossier/sample') ? `${cleanPath}.md` : '/llms.txt');
+  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : ((/^\/(seo|tools|compare|scan|report)\//.test(cleanPath) || cleanPath === '/leaderboard' || cleanPath === '/directory' || cleanPath === '/dossier/sample' || cleanPath === '/lp') ? `${cleanPath}.md` : '/llms.txt');
 
   // 1. Normalize any accidental http://127.0.0.1:<port> or http://localhost:<port> canonical/OG/schema URLs to production https://<domain>
   let out = String(html).replace(/http:\/\/(?:127\.0\.0\.1|localhost):\d+/g, hostUrl);
