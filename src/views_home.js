@@ -596,7 +596,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (lPack) lPack.textContent = lookalikeSlots + ' Peer Flights (~' + estClicks.toLocaleString() + ' Clicks @ ~$' + (b / Math.max(1, estClicks)).toFixed(2) + ' CPC)';
       var l0 = (window.__srCurrentLookalikes && window.__srCurrentLookalikes[0]) || { name: 'Syntax.fm', reach: 95000, overlap: '86% Audience Match', slot_usd: 2150, booking_rep: 'wes.bos@syntax.fm (+ r.patel@rightsideup.co)' };
       if (preEl) {
-        var unm = 'Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\nLookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') for ~' + estClicks.toLocaleString() + ' est. clicks | Verified Rep: ' + (l0.booking_rep || 'wes.bos@syntax.fm (+ r.patel@rightsideup.co)') + '\\nContract Terms: 1.5% CTR Make-Good (§7.1) & IAB 30-Day Download SLA (§4.2)';
+        var unm = 'Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\nLookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') for ~' + estClicks.toLocaleString() + ' est. clicks | Verified Rep: ' + (window.__srCurrentUnmaskedRep || 'sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)') + '\\nContract Terms: 1.5% CTR Make-Good (§7.1) & IAB 30-Day Download SLA (§4.2)';
         preEl.setAttribute('data-free-credit-unmasked', unm);
         preEl.textContent = (window.__ebSavedEmail || window.__ebIsUnlocked) ? unm : ('Target Show: ' + (window.__srCurrentTargetName || 'Target Show') + ' • Published Rack: $' + rackRate.toLocaleString() + '/slot → Counter at 3-Flight Floor: $' + floorRate.toLocaleString() + '/slot (-18% • Save $' + (rackRate - floorRate).toLocaleString() + '/read)\\nLookalike Benchmark ($' + b.toLocaleString() + ' Budget): Reallocate across ' + lookalikeSlots + ' peer flights (e.g. ' + l0.name + ' @ $' + Number(l0.slot_usd).toLocaleString() + '/slot, ' + l0.overlap + ') | Rep: [GATED — Enter Email Above ($0) to Unmask & Copy]\\nContract Terms: §4.2 (-18% Cap) + §7.1 (1.5% CTR Make-Good) [Unlock Full Rider in $1.99 Pack]');
       }
@@ -670,7 +670,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       if (preferredPersona) window.__srSwitchPersona(preferredPersona);
       const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
       setTxt('res-entity-label', isShowMatch ? 'MATCHED CREATOR SHOW' : 'SPONSOR / ENTITY');
-      const shortName = entity.name.split('(')[0].trim();
+      const shortName = entity.name.split('(')[0].trim(); window.__ebActiveEntity = window.__ebSelectedTarget = shortName;
       setTxt('res-match-pill', userTriggered ? ('✓ Step 1 Done: ' + shortName) : (isShowMatch ? 'SHOW RATE CARD MATCH • DAILY 24H CRAWL' : (data.matched_type === 'dynamic_brand' ? 'LIVE DOMAIN MODEL • UPDATED TODAY' : 'VERIFIED 3x+ LEDGER • UPDATED DAILY (24H)')));
       if (userTriggered) {
         const cue = document.getElementById('sr-step1-next-cue'), cueTxt = document.getElementById('sr-step1-next-cue-text'), s2 = document.getElementById('sr-step2-panel'), pill2 = document.getElementById('res-live-readout-pill'), hb = document.getElementById('sr-step2-handoff-bar'), sf = document.getElementById('sr-sweetspot-bridge-form');
@@ -699,7 +699,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
       const showProofList = (data.placements || []).slice(0, 3).map(function(pl) { return pl.show_name; }).join(' • ') || "My First Million • The Diary Of A CEO • Lenny's Podcast";
       window.__srCurrentCreatorAngle = p0.live_outreach_angle || ('Peer-Referenced Pitch: Saw ' + shortName + ' renewed 4x on peer shows last 30d — anchor 3-flight pilot at -18% floor.');
       window.__srCurrentBuyerAngle = p0.live_buyer_angle || ('Peer Counter-Offer: ' + shortName + ' & peer shows cleared at -18% 3-flight floor last 30d — counter rack rate to save $2,400 overpay.');
-      const isUnm = Boolean(window.__ebSavedEmail || window.__ebIsUnlocked || !userTriggered), uB = p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com', uA = p0.unmasked_agency_email || 'm.vance@rightsideup.co';
+      const isUnm = Boolean(window.__ebSavedEmail || window.__ebIsUnlocked || !userTriggered), uB = p0.unmasked_buyer_email || 'sarah.kaufman@shopify.com', uA = p0.unmasked_agency_email || 'm.vance@rightsideup.co'; window.__srCurrentUnmaskedRep = uB + ' (+ ' + uA + ')';
       setTxt('sr-row1-proof-entity', isUnm ? shortName : (shortName + ' (Sample Proof: Shopify)'));
       const r1B = document.getElementById('sr-row1-proof-buyer'), csvB = document.getElementById('sr-csv-row1-buyer'), csvA = document.getElementById('sr-csv-row1-agency');
       if (r1B) { r1B.setAttribute('data-free-credit-unmasked', uB); r1B.textContent = isUnm ? uB : ('sarah.kaufman@shopify.com [' + shortName + ' Buyer Gated: Enter $0 Email Above]'); }
@@ -927,7 +927,7 @@ function renderLandingPage({ defaultAnalysis }) {
     </div>
   </div></section>
   <script>
-    function escHtmlLp(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    window.__ebActiveEntity = ${JSON.stringify(lpName).replace(/</g, '\\u003c')}; function escHtmlLp(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function setLpPreset(q) { const el = document.getElementById('lp-query'); if (el) el.value = q; runLpLookup(); }
     async function runLpLookup() {
       const q = (document.getElementById('lp-query') || {}).value || 'AG1', res = await fetch('/api/analyze-sponsor', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'lookup', query: q }) }), data = await res.json();
@@ -943,8 +943,8 @@ function renderLandingPage({ defaultAnalysis }) {
       }
     }
   </script>`;
-  const lpJsonLd = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'SponsorRadar 3x+ Renewal & CPM Benchmark Ledger', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', offers: [{ '@type': 'Offer', name: '1-Row Buyer Contact', price: '0.99', priceCurrency: 'USD' }, { '@type': 'Offer', name: '3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'Creator Pass', price: '19.00', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'Full 109-Row CSV Vault', price: '29.00', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'B2B Agency Desk', price: '149.00', priceCurrency: 'USD' }] };
-  return renderShell({ title: 'Pitch the buyer, not dead inboxes | SponsorRadar 3x+ Renewal Ledger', description: '109 Verified Buyer & Agency Desk Rows • Save $2,400 overpay across 46+ podcasts, newsletters, and YouTube channels.', canonicalPath: '/lp', ogSlug: 'sponsor-radar-lp', jsonLd: lpJsonLd, bodyHtml });
+  const lpJsonLd = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'SponsorRadar 3x+ Renewal & CPM Benchmark Ledger', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', offers: [{ '@type': 'Offer', name: '3-Credit Sample Unlock', price: '0.00', priceCurrency: 'USD' }, { '@type': 'Offer', name: '1-Row Buyer Contact', price: '0.99', priceCurrency: 'USD' }, { '@type': 'Offer', name: '3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'Creator Pass', price: '19.00', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'Full 109-Row CSV Vault', price: '29.00', priceCurrency: 'USD' }, { '@type': 'Offer', name: 'B2B Agency Desk', price: '149.00', priceCurrency: 'USD' }] };
+  return renderShell({ title: `${lpName !== 'AG1' ? `${lpName} Sponsorship Spend & Buyer Contacts • ` : ''}Pitch the buyer, not dead inboxes | SponsorRadar 3x+ Renewal Ledger`, description: `${lpName !== 'AG1' ? `${lpName} verified sponsorship spend, buyer emails & -18% floor rates. ` : ''}109 Verified Buyer & Agency Desk Rows • Save $2,400 overpay across 46+ podcasts, newsletters, and YouTube channels.`, canonicalPath: '/lp', ogSlug: 'sponsor-radar-lp', jsonLd: lpJsonLd, bodyHtml });
 }
 
 module.exports = { escapeHtml, renderBrandLogoSvg, renderShell, renderHomePage, renderLandingPage };

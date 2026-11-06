@@ -844,6 +844,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             if (el) el.innerHTML = '$' + b.toLocaleString() + ' Budget → <span style="color:var(--amber-gold);">' + targetFlights + ' Target Flight' + (targetFlights > 1 ? 's' : '') + '</span> vs. <span style="color:var(--emerald-roi);">' + lookalikeSlots + ' Lookalike Flights (~' + estClicks.toLocaleString() + ' Clicks)</span>';
             var c1Sub = document.getElementById('sr-seo-mb-card1-sub');
             if (c1Sub) c1Sub.textContent = 'Save $' + Math.round(b * 0.18).toLocaleString() + ' on a $' + b.toLocaleString() + ' budget w/ 3-flight floor + 1.5% CTR make-good';
+            if (window.__srRunSeoQuoteAudit) window.__srRunSeoQuoteAudit(Math.round(b / Math.max(1, targetFlights)), null, '$' + b.toLocaleString() + ' Campaign Budget');
             if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'moneyball_budget_slider', budget_usd: b });
           };
           window.__srRunSeoQuoteAudit = function(presetPrice, presetReach, label) {
