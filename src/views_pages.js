@@ -521,7 +521,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <span id="sr-row1-peer-30d-badge" class="pill-emerald" style="font-size:11px;padding:2px 7px;font-weight:800;margin-right:6px;">1. ROW #1 SAMPLE PROOF</span>${isShowPage ? `-18% 3-Flight Floor` : `${proven3xCount}/${placements.length} Renewed 3x+`} • <span style="color:var(--emerald-roi);">109 Verified Buyer &amp; Agency Rows</span>
           </div>
           <div style="font-size:13.5px; color:var(--text-primary); font-weight:500; margin-top:5px; line-height:1.45;">
-            <span id="sr-row1-outreach-angle"><strong>Sample Proof (Shopify):</strong> <strong class="mono" style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</strong> (+ <span class="mono">m.vance@rightsideup.co</span>) • <strong>${escapeHtml(workbenchQuery)}:</strong> $${floorCpm} Floor CPM (-18% floor, save $2,400 overpay)</span> • <code id="sr-row1-iab-rider-preview" style="color:var(--emerald-roi);font-weight:800;">Audience Guarantee Clause</code> (<a href="/api/github-upgrade/iab-io-addendum.txt" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Rider ↗</a>).
+            <span id="sr-row1-outreach-angle"><strong>Sample Proof (Shopify):</strong> <strong class="mono" style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</strong> (+ <span class="mono">m.vance@rightsideup.co</span>) • <strong>${escapeHtml(workbenchQuery)}:</strong> $${floorCpm} Floor CPM (-18% floor, save $2,400 overpay)</span> • <code id="sr-row1-iab-rider-preview" style="color:var(--emerald-roi);font-weight:800;">Audience Guarantee Clause</code> (<a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Rider ↗</a>).
           </div>
           <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
             <a href="#res-placements-tbody" onclick="var t=document.getElementById('res-placements-tbody');if(t){t.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">1. View ${placements.length} Verified Rows ↓</a>
@@ -799,7 +799,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
 
         <script>
-          window.__srActiveWedge = '${initCreator ? 'creator' : 'buyer'}';
+          window.__srActiveWedge = '${initCreator ? 'creator' : 'buyer'}'; window.__ebActiveEntity = ${JSON.stringify(exportTarget).replace(/</g, '\\u003c')};
           window.__srSwitchPersona = function(mode, source) {
             mode = mode === 'creator' ? 'creator' : 'buyer'; window.__srActiveWedge = mode;
             try { localStorage.setItem('sr_buyer_wedge', mode); document.cookie = 'sr_wedge=' + mode + '; Path=/; Max-Age=2592000; SameSite=Lax'; } catch (_) {}
