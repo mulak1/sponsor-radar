@@ -84,10 +84,13 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
       if (fs.existsSync(seedPath)) {
         const mod = require(seedPath);
         const list = mod.SEO_PAGES || [];
-        const NICHE_MAP = { fintech: 'Ramp', security: 'Vanta', hr: 'Deel', devops: 'Datadog', ai: 'Linear', newsletter: 'HubSpot', founder: 'Brex', health: 'AG1', consumer: 'Shopify', marketing: 'HubSpot', crypto: 'Coinbase', ecommerce: 'Shopify' };
+        const NICHE_MAP = { 'b2b saas': 'Linear', ai: 'Perplexity AI', devtools: 'Vercel', fintech: 'Ramp', 'b2b fintech': 'Ramp', dtc: 'AG1', security: 'Vanta', newsletter: 'HubSpot', fitness: 'WHOOP', productivity: 'Notion', strategy: 'HubSpot', engineering: 'Linear', vc: 'Mercury', youtube: 'Fireship', payroll: 'Deel', smb: 'Shopify', infrastructure: 'Datadog', hr: 'Deel', devops: 'Datadog', founder: 'Brex', health: 'AG1', consumer: 'Shopify', marketing: 'HubSpot', crypto: 'Coinbase', ecommerce: 'Shopify' };
+        const KNOWN_TARGETS = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR', 'Syntax.fm', 'Latent Space', 'All-In', 'Eight Sleep', 'Retool', 'Perplexity', 'Vercel', 'Stripe', 'Mercury', 'Brex'];
         for (const p of list) {
-          const parenMatch = String(p.title || '').match(/\(([^,;)]+)/);
-          const resolvedTarget = (p.page_type === 'niche_directory' || NICHE_MAP[p.target_slug]) ? (parenMatch ? parenMatch[1].trim() : (NICHE_MAP[p.target_slug] || 'Shopify')) : (p.target_slug || 'Shopify');
+          const titleStr = String(p.title || '');
+          const matchedKnown = KNOWN_TARGETS.find(k => titleStr.toLowerCase().includes(k.toLowerCase()));
+          const nicheKey = String(p.target_slug || '').toLowerCase();
+          const resolvedTarget = (p.page_type === 'niche_directory' || NICHE_MAP[nicheKey]) ? (matchedKnown || NICHE_MAP[nicheKey] || 'Shopify') : (p.target_slug || 'Shopify');
           entries.push({
             slug: p.slug,
             target_slug: resolvedTarget,
