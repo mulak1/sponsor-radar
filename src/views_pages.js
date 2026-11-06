@@ -415,7 +415,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const workbenchQuery = isShowPage ? show.name : (brand ? brand.name : page.category);
   const rackCpm = show ? show.base_cpm : page.avg_cpm;
   const floorCpm = Math.round(rackCpm * 0.82);
-  const showRackUsd = show ? show.midroll_rate_usd : ((placements[0] && placements[0].est_spend_usd) || Math.round(85 * rackCpm));
+  const showRackUsd = show ? show.midroll_rate_usd : ((placements[0] && Math.round(placements[0].est_spend_usd / Math.max(1, placements[0].flights))) || Math.round(85 * rackCpm));
   const showReach = Math.max(10000, Math.round((showRackUsd / Math.max(18, rackCpm)) * 1000));
   const showFloorUsd = Math.round(showRackUsd * 0.82);
   const firstShowOnBrand = (!isShowPage && placements.length > 0 && placements[0].show_name) ? placements[0].show_name : (show ? show.name : 'The Diary Of A CEO');

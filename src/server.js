@@ -151,7 +151,7 @@ function resolveTargetIntel(rawTarget) {
   const brand = matchedBrand || (topPlacement ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(topPlacement.brand_slug) : null) || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify') || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
   const rackCpm = Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42;
   const floorCpm = Math.max(18, Math.round(rackCpm * 0.82));
-  const rackSlotUsd = Number(show ? show.midroll_rate_usd : (topPlacement ? topPlacement.est_spend_usd : 3150)) || 3150;
+  const rackSlotUsd = Number(show ? show.midroll_rate_usd : (topPlacement ? Math.round(topPlacement.est_spend_usd / Math.max(1, topPlacement.flights)) : 3150)) || 3150;
   const reach = Math.max(10000, Math.round((rackSlotUsd / rackCpm) * 1000));
   const floorSlotUsd = Math.round(rackSlotUsd * 0.82);
   const rawBuyerEmail = (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
