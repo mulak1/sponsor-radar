@@ -415,10 +415,10 @@ function classifyTrafficRequest(req, extraEmail = '') {
   let isBurstScrape = false;
   const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/'))));
   if (isHtmlRoute && !req.headers['accept-language']) isBurstScrape = true;
-  if (isHtmlRoute && clientIp && !isOwnerIp) {
-    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 30000);
+  if (isHtmlRoute && clientIp && !isOwnerIp && !String(req.headers.cookie || '').includes('vs_vid=')) {
+    const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 10000);
     recent.push({ ts: now, path: req.path }); ipBurstWindow.set(clientIp, recent);
-    if (recent.length >= 3 || recent.filter((x) => x.path === req.path && now - x.ts < 15000).length >= 2) isBurstScrape = true;
+    if (recent.length >= 6 || recent.filter((x) => x.path === req.path && now - x.ts < 5000).length >= 3) isBurstScrape = true;
   }
   const isSearchOrAiCrawler = !isMirofish && (CRAWLER_UA_REGEX.test(ua) || isPrefetch || isBurstScrape);
   if (isMirofish || isOwnerIp || isPlaywrightHeader || isQueryTest || isSearchOrAiCrawler || !ua || ua.includes('headlesschrome') || ua.includes('playwright') || ua.includes('puppeteer') || ua.includes('cypress') || ua.includes('curl/') || ua.includes('python-requests') || ua.includes('node-fetch') || ua.includes('undici') || ua.includes('go-http-client') || ua.includes('railway') || ua.includes('bot') || ua.includes('crawler') || ua.includes('spider') || emailLower.includes('example.com') || emailLower.includes('playwright') || emailLower.includes('test')) {
@@ -934,7 +934,7 @@ function attachExactBaselinePack(app, options = {}) {
       const isHtml = typeof body === 'string' && (String(res.getHeader('Content-Type') || '').includes('text/html') || body.trim().startsWith('<!DOCTYPE html>'));
       if (isHtml && req.method === 'GET' && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || req.path === '/leaderboard' || req.path === '/privacy' || req.path === '/terms' || req.path.startsWith('/dossier/sample') || req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/') || req.path.startsWith('/report/')) && !body.includes('id="eb-bottom-conversion-suite"')) {
         try { res.setHeader('X-Robots-Tag', 'all, index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'); res.setHeader('Link', `<https://${cfg.domain}/llms.txt>; rel="llms-txt", <https://${cfg.domain}/llms-full.txt>; rel="llms-full-txt", <https://${cfg.domain}/openapi.json>; rel="service-desc", <https://${cfg.domain}/feed.xml>; rel="alternate"; type="application/rss+xml"`); } catch (_) {}
-        store.recordEvent({ eventType: 'visit', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || ''), utmCampaign: String(req.query?.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp });
+        store.recordEvent({ eventType: 'visit', pageUrl: req.originalUrl || req.path, deviceType, utmSource: String(req.query?.utm_source || ''), utmCampaign: String(req.query?.utm_campaign || ''), isTest, isCrawler, isOwnerIp, clientIp, meta: { ref: String(req.headers.referer || '').slice(0, 180) || undefined } });
         body = renderExactBaselineEnhancements(body, cfg, req.path);
       }
       if (isHtml) {
