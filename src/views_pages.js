@@ -159,6 +159,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           ${nichePages.map(p => {
             const floorCpm = Math.round(p.avg_cpm * 0.82);
             const isB2b = /B2B|SaaS|DevTools|AI|Fintech|Security|Tech/i.test(p.category + ' ' + p.title);
+            const nicheTarget = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR'].find(k => p.title.toLowerCase().includes(k.toLowerCase())) || (isB2b ? 'Linear' : 'Shopify');
             return `
             <div class="sr-dir-item" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
@@ -168,10 +169,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; flex-wrap:wrap; gap:6px;">
                 <span class="mono" style="color:var(--text-secondary);">Cat. Spend: <strong>${fmtSpend(p.est_monthly_spend)}</strong></span>
-                <div style="display:flex; gap:10px;">
-                  <a href="/?q=${encodeURIComponent(p.category)}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Workbench ↗</a>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(nicheTarget)}&floor_cpm=${floorCpm}" target="_blank" class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">Rider (.TXT) ↗</a>
+                  <a href="/?q=${encodeURIComponent(nicheTarget)}#radar-tool" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Workbench ↗</a>
                   <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Open Hub →</a>
                 </div>
               </div>
@@ -210,6 +212,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
                 <button type="button" onclick="window.__srAddToPlan('${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'brand', ${p.avg_cpm}, ${p.est_monthly_spend || 12000}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
+                <a href="/api/github-upgrade/pitch.eml?target=${encodeURIComponent(b.name || p.target_slug)}&floor_cpm=${Math.round(p.avg_cpm * 0.82)}" target="_blank" class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-decoration:underline;">Pitch (.EML) ↗</a>
                 <a href="/api/github-upgrade/export.csv?target=${encodeURIComponent(b.name || p.target_slug)}" target="_blank" class="mono" style="font-size:12px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">3-Row .CSV ↗</a>
                 <button type="button" onclick="window.__ebSelectedTarget='${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}';if(window.__ebCheckout)window.__ebCheckout('micro_pass',true);" class="pill-amber" style="border:none; cursor:pointer; font-size:12.5px; padding:4px 8px;">Unmask Buyer (99¢) ↗</button>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
@@ -246,8 +249,8 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
                 <button type="button" onclick="window.__srAddToPlan('${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'show', ${p.avg_cpm}, ${rackUsd}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
-                <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(s.name || p.target_slug)}" target="_blank" class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-decoration:underline;">IAB Rider (.TXT) ↗</a>
-                <button type="button" onclick="window.__ebSelectedTarget='${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}';if(window.__ebCheckout)window.__ebCheckout('micro_pass',true);" class="pill-amber" style="border:none; cursor:pointer; font-size:12.5px; padding:4px 8px;">Floor Pack ($1.99) ↗</button>
+                <a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(s.name || p.target_slug)}&floor_cpm=${Math.round(p.avg_cpm * 0.82)}&reach=${s.audience_size || 120000}&quoted_usd=${rackUsd}" target="_blank" class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-decoration:underline;">IAB Rider (.TXT) ↗</a>
+                <button type="button" onclick="window.__ebSelectedTarget='${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}';if(window.__ebCheckout)window.__ebCheckout('flash_pass',true);" class="pill-amber" style="border:none; cursor:pointer; font-size:12.5px; padding:4px 8px;">Floor Pack ($1.99) ↗</button>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
               </div>
             </div>
