@@ -85,7 +85,7 @@ function loadVerticalSeoCatalog(cfg, srcDir) {
         const mod = require(seedPath);
         const list = mod.SEO_PAGES || [];
         const NICHE_MAP = { 'b2b saas': 'Linear', ai: 'Perplexity AI', devtools: 'Vercel', fintech: 'Ramp', 'b2b fintech': 'Ramp', dtc: 'AG1', security: 'Vanta', newsletter: 'HubSpot', fitness: 'WHOOP', productivity: 'Notion', strategy: 'HubSpot', engineering: 'Linear', vc: 'Mercury', youtube: 'Fireship', payroll: 'Deel', smb: 'Shopify', infrastructure: 'Datadog', hr: 'Deel', devops: 'Datadog', founder: 'Brex', health: 'AG1', consumer: 'Shopify', marketing: 'HubSpot', crypto: 'Coinbase', ecommerce: 'Shopify' };
-        const KNOWN_TARGETS = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR', 'Syntax.fm', 'Latent Space', 'All-In', 'Eight Sleep', 'Retool', 'Perplexity', 'Vercel', 'Stripe', 'Mercury', 'Brex'];
+        const KNOWN_TARGETS = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR', 'Syntax.fm', 'Latent Space', 'All-In', 'Eight Sleep', 'Retool', 'Perplexity', 'Vercel', 'Stripe', 'Mercury', 'Brex', 'PostHog', 'Supabase', 'Cursor', 'Anthropic', 'Cloudflare', 'Rippling', 'Gusto', 'Airtable', 'Notion', 'Morning Brew', 'Stratechery', 'Lex Fridman', 'Huberman Lab', 'Acquired'];
         for (const p of list) {
           const titleStr = String(p.title || '');
           const matchedKnown = KNOWN_TARGETS.find(k => titleStr.toLowerCase().includes(k.toLowerCase()));
@@ -503,17 +503,18 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
 
   // 5. Multi-Engine IndexNow Full URL Batch Push + WebSub Hub Ping & SEO Status API
   const getFullCanonicalUrlList = () => {
-    const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 32), hubUrls = getSemanticHubUrls();
-    return [
-      `${hostUrl}/`, `${hostUrl}/directory`, `${hostUrl}/leaderboard`, `${hostUrl}/leaderboard.md`, `${hostUrl}/lp`,
+    const entries = getEntries(), scanItems = loadPublicScanLedger(cfg).slice(0, 32), hubUrls = getSemanticHubUrls(), g = getGrowthConfig(cfg.moduleId);
+    return Array.from(new Set([
+      `${hostUrl}/`, `${hostUrl}/directory`, `${hostUrl}/leaderboard`, `${hostUrl}/leaderboard.md`, `${hostUrl}/lp`, `${hostUrl}/dossier/sample`,
       `${hostUrl}/llms.txt`, `${hostUrl}/llms-full.txt`, `${hostUrl}/index.md`,
       `${hostUrl}/sitemap-index.xml`, `${hostUrl}/sitemap.xml`, `${hostUrl}/sitemap-scans.xml`, `${hostUrl}/feed.xml`,
-      ...scanItems.map((s) => `${hostUrl}/scan/${encodeURIComponent(s.target)}`),
       ...getAllGrowthUrls(cfg),
       ...hubUrls.map((u) => u.loc),
-      ...entries.map((e) => `${hostUrl}/seo/${e.slug}`),
-      ...entries.slice(0, 20).map((e) => `${hostUrl}/seo/${e.slug}.md`)
-    ];
+      ...g.tools.map((t) => `${hostUrl}/tools/${t.slug}.md`),
+      ...g.comparisons.map((c) => `${hostUrl}/compare/${c.slug}.md`),
+      ...scanItems.map((s) => `${hostUrl}/scan/${encodeURIComponent(s.target)}.md`),
+      ...entries.slice(0, 30).map((e) => `${hostUrl}/seo/${e.slug}.md`)
+    ]));
   };
 
   let lastIndexNowPushMs = 0;
@@ -726,6 +727,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
           <a href="/buy/micro_pass?target=${encT}" style="padding:2px 8px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.textPrimary};border:1px solid #CBD5E1;font-weight:700;text-decoration:none;">1-Row (99¢) ↗</a>
           <a href="/buy/flash_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.safeColor};border:1px solid #A7F3D0;font-weight:800;text-decoration:none;">3-File Pack ($1.99) ↗</a>
           <a href="/buy/creator_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#FFFFFF;color:${t.brandPrimary};border:1px solid #CBD5E1;font-weight:800;text-decoration:none;">Creator ($19) ↗</a>
+          <a href="/buy/playbook_pass?target=${encT}" style="padding:3px 9px;border-radius:${t.radiusPill};background:#047857;color:#FFFFFF;font-weight:800;text-decoration:none;">109-Row Vault ($29) ↗</a>
         </div>
       </div>
     </div>`;
@@ -870,16 +872,17 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
         url: canonicalUrl,
         offers: {
           '@type': 'AggregateOffer',
-          lowPrice: '0.99',
+          lowPrice: '0.00',
           highPrice: '149.00',
           priceCurrency: 'USD',
-          offerCount: 5,
+          offerCount: 6,
           availability: 'https://schema.org/InStock',
           offers: [
+            { '@type': 'Offer', name: '3-Credit Work Email Sample + IAB Rider Preview', price: '0.00', priceCurrency: 'USD', url: `${hostUrl}/dossier/sample${tq}` },
             { '@type': 'Offer', name: 'Single-Row Verified Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD', url: `${hostUrl}/buy/micro_pass${tq}` },
             { '@type': 'Offer', name: 'Target 3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD', url: `${hostUrl}/buy/flash_pass${tq}` },
             { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass${tq}` },
-            { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/complete_dossier${tq}` },
+            { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/playbook_pass${tq}` },
             { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b${tq}` }
           ]
         }
