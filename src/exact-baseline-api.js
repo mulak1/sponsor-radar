@@ -521,11 +521,18 @@ function createTelemetryStore(dataDir, moduleId) {
       const nowMs = Date.now(), cutoffMs = nowMs - windowHours * 3600 * 1000, prevCutMs = cutoffMs - windowHours * 3600 * 1000;
       const toPstString = (iso) => new Date(new Date(iso).getTime() - 7 * 3600 * 1000).toISOString().replace('T', ' ').slice(0, 19);
       const inferRefSrc = (r) => r.includes('google.') ? 'google_organic' : (r.includes('bing.') ? 'bing_organic' : (r.includes('chatgpt.') || r.includes('openai.') ? 'chatgpt_ai' : (r.includes('perplexity.') ? 'perplexity_ai' : (r.includes('reddit.') ? 'reddit_social' : (r.includes('github.') ? 'github_dev' : '')))));
-      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
+      const headlessCohortSet = new Set();
+      for (const e of state.events) {
+        if (e.meta && !e.meta.ref && (((Number(e.meta.vw) === 800 && Number(e.meta.vh) === 600) || (Number(e.meta.vw) === 1024 && Number(e.meta.vh) === 1024) || (Number(e.meta.vw) === 1905 && Number(e.meta.vh) === 1080) || (Number(e.meta.vw) === 1280 && Number(e.meta.vh) === 1600)) || e.meta.ua_platform === 'Linux x86_64' || /outcropdealflow|nukescanner|veille-nouveaux-domaines/i.test(String(e.meta.ua || '')))) {
+          if (e.meta.vid) headlessCohortSet.add(e.meta.vid);
+          if (e.client_ip) headlessCohortSet.add(e.client_ip);
+        }
+      }
+      const baseClean = state.events.filter((e) => Number(e.is_test) === 0 && !e.is_owner && !e.is_mirofish && Boolean(e.client_ip) && !isExcludedOwnerIp(e.client_ip) && !headlessCohortSet.has(e.client_ip) && !(e.meta && e.meta.vid && headlessCohortSet.has(e.meta.vid)) && !(e.event_type === 'view_paywall' && e.meta && e.meta.target === 'in-card-unlock-bar' && !e.meta.scroll_y) && !(e.meta && /\/api\/(?:telemetry|meta-capi)/i.test(String(e.meta.ref || ''))) && !(e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer));
       const seoBurstUrls = new Set(baseClean.filter((e) => e.page_url && e.page_url.startsWith('/seo/') && Number(e.meta && e.meta.vw) === 1024 && !(e.meta && e.meta.ref)).filter((e, _, arr) => arr.filter((x) => x.page_url === e.page_url && Math.abs(new Date(x.created_at).getTime() - new Date(e.created_at).getTime()) <= 5000).length >= 3).map((e) => `${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
       const isWrsBurst = (e) => Boolean(e.page_url && seoBurstUrls.has(`${e.page_url}|${Math.floor(new Date(e.created_at).getTime() / 10000)}`));
       const jsVerifiedIps = new Set(baseClean.filter((e) => !isWrsBurst(e) && (e.event_type === 'view_paywall' || e.event_type === 'checkout_intent' || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)))).map((e) => e.client_ip));
-      const isJsVerifiedHuman = (e) => isWrsBurst(e) ? false : ((e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid)) || (nowMs - new Date(e.created_at).getTime() <= 20000)) : true);
+      const isJsVerifiedHuman = (e) => isWrsBurst(e) ? false : ((e.event_type === 'visit' || e.event_type === 'calculate') ? (jsVerifiedIps.has(e.client_ip) || Boolean(e.meta && (e.meta.js_hydrated || e.meta.vid))) : true);
       const unhydratedAll = baseClean.filter((e) => !isJsVerifiedHuman(e));
       const rawCandidates = baseClean.filter(isJsVerifiedHuman);
       const humanEvents = []; const seenPw = new Map(), seenVis = new Map();

@@ -838,7 +838,7 @@ function buildClientRuntimeScript(cfg) {
     if ('IntersectionObserver' in window) {
       var obs = window.__ebPaywallObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-          if (entry.isIntersecting && !window.__ebPaywallLogged) { window.__ebPaywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain' }); }
+          if (entry.isIntersecting && !window.__ebPaywallLogged && (window.__ebUserInteracted || (window.scrollY || 0) > 120)) { window.__ebPaywallLogged = true; window.__ebLogEvent('view_paywall', { target: entry.target.id || 'eb-deliverable-curtain', scroll_y: Math.round(window.scrollY || 0) }); }
         });
       }, { threshold: 0.15 });
       ['in-card-unlock-bar', 'eb-deliverable-curtain', 'eb-postcalc-inline-cta'].forEach(function(id) { var el = document.getElementById(id); if (el) obs.observe(el); });
