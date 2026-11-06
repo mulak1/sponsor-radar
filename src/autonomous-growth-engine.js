@@ -259,13 +259,14 @@ function renderGrowthPageHtml(cfg, item, kind) {
           <div style="font-size:14px;font-weight:800;color:${escXml(t.textPrimary)};">Download the Ready-to-Use Action Pack</div>
           <div style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:2px;">Instant download · One-time payment (never a subscription) · 30-day guarantee</div>
         </div>
-        <div id="eb-growth-row4-msg" style="display:none !important;">
-          <input id="eb-growth-row4-email" type="email" placeholder="you@company.com" aria-label="Work email to unlock Row 4" />
-          <button id="eb-growth-row4-btn" type="button">Reveal Row #4 →</button>
+        <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <input id="eb-growth-row4-email" type="email" placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock Row 4" onblur="if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value,'growth_tool_blur')" style="padding:7px 11px;border-radius:8px;border:1px solid #CBD5E1;font-size:13px;min-width:190px;" />
+          <button id="eb-growth-row4-btn" type="button" onclick="var e=document.getElementById('eb-growth-row4-email');if(e&&e.value&&window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(e.value,'growth_tool_btn');this.textContent='✓ 3 Free Buyer Credits Sent';" style="padding:7px 12px;border-radius:8px;border:1px solid #047857;background:#ECFDF5;color:#047857;font-size:12.5px;font-weight:800;cursor:pointer;">Unmask 3 Free ($0) →</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <a href="/buy/micro_pass" rel="nofollow" style="padding:9px 14px;border-radius:8px;background:#FFFFFF;color:${escXml(t.textPrimary)};border:1px solid ${escXml(t.border)};font-size:13.5px;font-weight:700;text-decoration:none;">Single File (99¢)</a>
-          <a href="/buy/flash_pass" rel="nofollow" style="padding:9px 16px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13.5px;font-weight:800;text-decoration:none;">Get Complete 3-File Pack ($1.99) →</a>
+          <a href="/buy/micro_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('micro_pass',true);return false;}" rel="nofollow" style="padding:8px 12px;border-radius:8px;background:#FFFFFF;color:${escXml(t.textPrimary)};border:1px solid ${escXml(t.border)};font-size:13px;font-weight:700;text-decoration:none;">1-Row (99¢)</a>
+          <a href="/buy/flash_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('flash_pass',true);return false;}" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">3-File Pack ($1.99) →</a>
+          <a href="/buy/playbook_pass" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:#047857;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">109-Row Vault ($29) →</a>
         </div>
       </div>
     </section>
