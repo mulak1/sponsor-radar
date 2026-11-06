@@ -114,10 +114,14 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   ];
   const csvRows = [header];
   const rowsToExport = isPaidUnlock ? allRows : allRows.slice(0, 3);
+  const tQuery = encodeURIComponent(targetFilter || 'Shopify');
   rowsToExport.forEach((r, idx) => {
-    const showUnmasked = isPaidUnlock || hasEmailUnlock || idx === 0;
-    const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : maskSponsorEmail(r.sponsor_email, r.brand_category).split(' (')[0];
-    const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category).split(' (')[0];
+    const isShopifyRow = String(r.brand_slug || '').toLowerCase() === 'shopify';
+    const showUnmasked = isPaidUnlock || hasEmailUnlock || (idx === 0 && isShopifyRow);
+    const maskedNamed = maskSponsorEmail(r.sponsor_email, r.brand_category).split(' (')[0];
+    const maskedAgency = maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category).split(' (')[0];
+    const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : (idx === 0 ? `${maskedNamed} [Enter $0 Email at SponsorRadar.io/?q=${tQuery} to Unmask — Sample: sarah.kaufman@shopify.com]` : maskedNamed);
+    const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : (idx === 0 ? `${maskedAgency} [Sample: m.vance@rightsideup.co]` : maskedAgency);
     const floorCpm = Math.round(r.cpm_usd * 0.82);
     const rackSlot = Math.round((r.audience_size / 1000) * r.cpm_usd);
     const floorSlot = Math.round((r.audience_size / 1000) * floorCpm);
@@ -132,14 +136,14 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   if (!isPaidUnlock) {
     csvRows.push([
       '4-109', 'LOCKED (106 Remaining Verified Sponsor Rows)', 'Unlock Full 109-Row CSV Vault ($19 Creator Pass / $29 Full CSV Vault)',
-      'Podcast / Newsletter / YouTube', 'LOCKED', '3x+ Renewed', 'LOCKED — Enter $0 Email or Unlock Vault', 'LOCKED',
+      'Podcast / Newsletter / YouTube', 'LOCKED', '3x+ Renewed', `LOCKED — Enter $0 Email at https://www.sponsorradar.io/?q=${tQuery} or Unlock Vault`, 'LOCKED',
       'VP Growth / Media Buying Desk', 'Oxford Road / Right Side Up / Veritone One', '250_2.1.5_OK_MX_VERIFIED_<48H',
-      'LOCKED', 'LOCKED (-18% 3-Flight Floor)', 'Save $2,400 Overpay', 'LOCKED', 'https://www.sponsorradar.io/buy/playbook_pass',
-      'LOCKED — Unlock all 109 rows at https://www.sponsorradar.io/buy/playbook_pass'
+      'LOCKED', 'LOCKED (-18% 3-Flight Floor)', 'Save $2,400 Overpay', 'LOCKED', `https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`,
+      `LOCKED — Unlock 3-file pack ($1.99) at https://www.sponsorradar.io/buy/flash_pass?target=${tQuery} or all 109 rows ($29) at https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`
     ]);
   }
   res.status(200).type('text/csv; charset=utf-8')
-    .setHeader('Content-Disposition', 'attachment; filename="sponsorradar-109-buyer-and-agency-floor-ledger.csv"')
+    .setHeader('Content-Disposition', `attachment; filename="${targetSlug || 'shopify'}-sponsorradar-109-buyer-and-agency-floor-ledger.csv"`)
     .send(csvRows.map((row) => row.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n'));
 });
 
