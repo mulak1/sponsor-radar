@@ -252,19 +252,20 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
   return lines.join('\n');
 }
 
-function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
+function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex, explicitCanonPath = '') {
   const host = `https://${cfg.domain}`;
   if (!slugOrIndex || slugOrIndex === 'index') {
     return buildLlmsTxtContent(cfg, seoEntries);
   }
-  const cleanSlug = String(slugOrIndex).replace(/\.md$/i, '').replace(/^\/seo\//, '');
-  const matched = seoEntries.find((e) => e.slug === cleanSlug || e.target_slug === cleanSlug) || {
+  const cleanSlug = String(slugOrIndex).toLowerCase().replace(/\.md$/i, '').replace(/^\/seo\//, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const matched = seoEntries.find((e) => e.slug === cleanSlug || e.target_slug === cleanSlug || (cleanSlug.length >= 3 && (String(e.target_slug || '').includes(cleanSlug) || String(e.slug || '').startsWith(cleanSlug)))) || {
     slug: cleanSlug,
     target_slug: cleanSlug,
     title: `${cfg.brandName} Technical Benchmark: ${cleanSlug.replace(/-/g, ' ')}`,
     category: cfg.brandName,
     summary: cfg.explainerText
   };
+  const canonUrl = explicitCanonPath || `/seo/${matched.slug}`;
   const entityQ = encodeURIComponent(matched.target_slug || matched.slug);
   const flParam = matched.floor_cpm ? `&floor_cpm=${matched.floor_cpm}` : '';
   const idx = Math.max(0, seoEntries.findIndex((e) => e.slug === matched.slug));
@@ -275,8 +276,8 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex) {
   return [
     '---',
     `title: "${matched.title} | ${cfg.brandName}"`,
-    `canonical_url: "${host}/seo/${matched.slug}"`,
-    `markdown_twin_url: "${host}/seo/${matched.slug}.md"`,
+    `canonical_url: "${host}${canonUrl}"`,
+    `markdown_twin_url: "${host}${canonUrl}.md"`,
     `category: "${matched.category}"`,
     ...(matched.avg_cpm ? [`rack_cpm_usd: ${matched.avg_cpm}`, `floor_3flight_cpm_usd: ${matched.floor_cpm}`, `est_monthly_spend_usd: ${matched.est_monthly_spend}`] : []),
     '---',
@@ -419,7 +420,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     const canonPath = req.params.slug ? `/seo/${encodeURIComponent(req.params.slug)}` : req.path.replace(/\.md$/, '');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
     res.setHeader('Link', `<${hostUrl}${canonPath}>; rel="canonical"`);
-    res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), slugKey));
+    res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), slugKey, req.params.slug ? '' : canonPath));
   });
 
   // 3. ekalinin/sitemap.js Segmented & Image-Enriched XML Sitemaps (strictly canonical 200 OK HTML URLs)
