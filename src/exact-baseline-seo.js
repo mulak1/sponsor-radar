@@ -412,12 +412,14 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
     next();
   });
 
-  app.get('/seo/:slug.md', (req, res) => {
+  app.get(['/seo/:slug.md', '/dossier/sample.md', '/directory.md'], (req, res) => {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     if (isCrawler) store.recordEvent({ eventType: 'crawler_index', pageUrl: req.path, isTest, isCrawler });
+    const slugKey = req.params.slug || (req.path === '/dossier/sample.md' ? String(req.query.target || 'shopify') : 'index');
+    const canonPath = req.params.slug ? `/seo/${encodeURIComponent(req.params.slug)}` : req.path.replace(/\.md$/, '');
     res.setHeader('X-Robots-Tag', 'all, index, follow');
-    res.setHeader('Link', `<${hostUrl}/seo/${encodeURIComponent(req.params.slug)}>; rel="canonical"`);
-    res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), req.params.slug));
+    res.setHeader('Link', `<${hostUrl}${canonPath}>; rel="canonical"`);
+    res.status(200).type('text/markdown; charset=utf-8').send(buildMarkdownTwinContent(cfg, getEntries(), slugKey));
   });
 
   // 3. ekalinin/sitemap.js Segmented & Image-Enriched XML Sitemaps (strictly canonical 200 OK HTML URLs)
@@ -795,7 +797,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
   const hostUrl = `https://${cfg.domain}`;
   const cleanPath = reqPath === '/' ? '' : String(reqPath || '');
   const canonicalUrl = `${hostUrl}${cleanPath || '/'}`;
-  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : ((/^\/(seo|tools|compare|scan|report)\//.test(cleanPath) || cleanPath === '/leaderboard') ? `${cleanPath}.md` : '/llms.txt');
+  const mdTwinPath = (!cleanPath || cleanPath === '/') ? '/index.md' : ((/^\/(seo|tools|compare|scan|report)\//.test(cleanPath) || cleanPath === '/leaderboard' || cleanPath === '/directory' || cleanPath === '/dossier/sample') ? `${cleanPath}.md` : '/llms.txt');
 
   // 1. Normalize any accidental http://127.0.0.1:<port> or http://localhost:<port> canonical/OG/schema URLs to production https://<domain>
   let out = String(html).replace(/http:\/\/(?:127\.0\.0\.1|localhost):\d+/g, hostUrl);
