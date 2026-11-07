@@ -263,7 +263,8 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex, explicitCanonPat
   };
   const canonUrl = explicitCanonPath || `/seo/${matched.slug}`;
   const entityQ = encodeURIComponent(matched.target_slug || matched.slug);
-  const flParam = matched.floor_cpm ? `&floor_cpm=${matched.floor_cpm}` : '';
+  const isRow1 = String(matched.target_slug || matched.slug || '').toLowerCase() === 'shopify';
+  const flParam = (isRow1 && matched.floor_cpm) ? `&floor_cpm=${matched.floor_cpm}` : '';
   const idx = Math.max(0, seoEntries.findIndex((e) => e.slug === matched.slug));
   const related = [];
   for (let i = 1; related.length < 8 && i < seoEntries.length; i++) {
@@ -275,19 +276,19 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex, explicitCanonPat
     `canonical_url: "${host}${canonUrl}"`,
     `markdown_twin_url: "${host}${canonUrl}.md"`,
     `category: "${matched.category}"`,
-    ...(matched.avg_cpm ? [`rack_cpm_usd: ${matched.avg_cpm}`, `floor_3flight_cpm_usd: ${matched.floor_cpm}`, `est_monthly_spend_usd: ${matched.est_monthly_spend}`] : []),
+    ...(matched.avg_cpm ? [`rack_cpm_usd: ${matched.avg_cpm}`, `floor_3flight_cpm_usd: "${isRow1 ? matched.floor_cpm : 'LOCKED ($0 Email)'}"`, `est_monthly_spend_usd: ${matched.est_monthly_spend}`] : []),
     '---',
     '',
     `# ${matched.title}`,
     '',
-    `> **Answer-First Summary**: ${matched.summary}${matched.avg_cpm ? ` Verified placements average **$${matched.avg_cpm} Rack CPM** vs. **$${matched.floor_cpm} 3-Flight Floor CPM (-18%)** across **~$${(matched.est_monthly_spend || 85000).toLocaleString()}/month** tracked spend.` : ''}`,
+    `> **Answer-First Summary**: ${matched.summary}${matched.avg_cpm ? ` Verified placements average **$${matched.avg_cpm} Rack CPM** vs. **${isRow1 ? `$${matched.floor_cpm} 3-Flight Floor CPM (-18%)` : '3-Flight Floor CPM: Locked ($0 Email)'}** across **~$${(matched.est_monthly_spend || 85000).toLocaleString()}/month** tracked spend.` : ''}`,
     '',
     `## 1. Live Deterministic Benchmark & KPI Baseline (${cfg.brandName})`,
     `${cfg.explainerText}`,
     '',
     `| Metric | Verified Baseline | Target Post-Remediation |`,
     `| :--- | :--- | :--- |`,
-    ...(matched.avg_cpm ? [`| **Page-Specific Ad Rate & Spend** | $${matched.avg_cpm} Rack CPM (~$${(matched.est_monthly_spend || 85000).toLocaleString()}/mo) | $${matched.floor_cpm} 3-Flight Floor CPM (-18% + 1.5% CTR Make-Good) |`] : []),
+    ...(matched.avg_cpm ? [`| **Page-Specific Ad Rate & Spend** | $${matched.avg_cpm} Rack CPM (~$${(matched.est_monthly_spend || 85000).toLocaleString()}/mo) | ${isRow1 ? `$${matched.floor_cpm} 3-Flight Floor CPM (-18% + 1.5% CTR Make-Good)` : '3-Flight Floor CPM: Locked ($0 Email)'} |`] : []),
     ...cfg.kpis.map((k) => `| **${k.label}** | ${k.val} | ${k.delta || k.sub || 'Verified'} |`),
     '',
     '## 2. Production Remediation Diff',
@@ -703,9 +704,9 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
   const top3 = ledger.filter((s) => s.score >= 85).slice(0, 3);
   const fix2 = ledger.filter((s) => s.score < 80).slice(0, 2);
   const medals = [
-    { icon: '#1 LEADER', bg: '#FFFBEB', border: '#FDE68A', text: '#92400E' },
+    { icon: '#1 LEADER', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' },
     { icon: '#2 RUNNER-UP', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' },
-    { icon: '#3 TOP TIER', bg: '#FFF7ED', border: '#FED7AA', text: '#9A3412' }
+    { icon: '#3 TOP TIER', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' }
   ];
   const podiumCards = top3.map((s, i) => {
     const m = medals[i] || medals[2];
@@ -724,12 +725,12 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;">
           <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="color:${t.brandPrimary};font-weight:700;text-decoration:none;">View Report →</a>
-          <a href="/dossier/sample?target=${encT}" target="_blank" style="color:#475569;font-weight:600;text-decoration:underline;">Sample Dossier ↗</a>
+          <a href="/dossier/sample?target=${encT}" target="_blank" style="color:#475569;font-weight:600;font-size:12.5px;text-decoration:underline;">Sample Dossier ↗</a>
         </div>
       </div>
     </div>`;
   }).join('');
-  const fixPills = fix2.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:${t.radiusPill};background:#FFF1F2;color:#9F1239;font-size:13.5px;font-weight:700;text-decoration:none;"><span>${escHtml(s.target)}</span><span style="font-variant-numeric:tabular-nums;">Grade ${escHtml(s.grade)} (${s.score}/100)</span><span>See Why →</span></a>`).join('');
+  const fixPills = fix2.map((s) => `<a href="/scan/${escHtml(encodeURIComponent(s.target))}" style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:${t.radiusPill};background:#F1F5F9;color:#334155;font-size:13.5px;font-weight:700;text-decoration:none;"><span>${escHtml(s.target)}</span><span style="font-variant-numeric:tabular-nums;">Grade ${escHtml(s.grade)} (${s.score}/100)</span><span>See Why →</span></a>`).join('');
 
   return `<section id="eb-leaderboard-home-showcase" class="container" aria-label="${escHtml(cfg.brandName)} Live Industry Leaderboard Podium" style="margin:20px auto;font-family:${t.fontSans};">
     <div class="eb-panel-card" style="margin:0;padding:24px;background:${t.cardBg};">

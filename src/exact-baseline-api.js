@@ -126,12 +126,12 @@ const VERTICAL_CONFIGS = {
     }
   },
   sponsor_radar: {
-    moduleId: 'sponsor_radar', brandName: 'SponsorRadar', domain: 'www.sponsorradar.io', accentColor: '#C23B22',
+    moduleId: 'sponsor_radar', brandName: 'SponsorRadar', domain: 'www.sponsorradar.io', accentColor: '#047857',
     theme: {
       canvasBg: '#F8F9FA', cardBg: '#FFFFFF', subtleBg: '#F1F3F5', dockBg: 'rgba(248, 249, 250, 0.96)',
-      border: '#DEE2E6', accentBorder: '#F5C2B8', textPrimary: '#14171A', textSecondary: '#212529', textMuted: '#495057',
-      brandPrimary: '#C23B22', brandSoftBg: '#FFF4F1', brandText: '#9B2C18',
-      safeColor: '#0F766E', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#92400E',
+      border: '#DEE2E6', accentBorder: '#CBD5E1', textPrimary: '#14171A', textSecondary: '#212529', textMuted: '#495057',
+      brandPrimary: '#047857', brandSoftBg: '#F1F5F9', brandText: '#0F172A',
+      safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#475569',
       fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       radiusCard: '8px', radiusPill: '8px', shadow: 'none'
     },
