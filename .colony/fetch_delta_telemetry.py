@@ -27,21 +27,32 @@ def iso_to_pst(iso_str: str) -> str:
         return iso_str
 
 
-def is_human(row: dict) -> bool:
-    if (
-        int(row.get("is_test") or 0) != 0
-        or int(row.get("is_owner") or 0) != 0
-        or int(row.get("is_crawler") or 0) != 0
-    ):
-        return False
+def extract_meta(row: dict) -> dict:
     meta = row.get("meta") or {}
     if isinstance(meta, str):
         try:
             meta = json.loads(meta)
         except Exception:
             meta = {}
+    return meta if isinstance(meta, dict) else {}
+
+
+def is_human(row: dict, js_verified_ips: set | None = None) -> bool:
+    if (
+        int(row.get("is_test") or 0) != 0
+        or int(row.get("is_owner") or 0) != 0
+        or int(row.get("is_crawler") or 0) != 0
+        or int(row.get("is_mirofish") or 0) != 0
+    ):
+        return False
+    meta = extract_meta(row)
     if meta.get("export") and not meta.get("has_session") and not meta.get("vid"):
         return False
+    ev_type = str(row.get("event_type") or "")
+    if js_verified_ips is not None and ev_type in ("visit", "calculate"):
+        ip = str(row.get("client_ip") or "")
+        if not (meta.get("js_hydrated") or meta.get("vid") or (ip and ip in js_verified_ips)):
+            return False
     return True
 
 
@@ -63,9 +74,24 @@ def main():
     ).decode("utf-8", errors="replace")
     data = json.loads(out)
 
+    all_events = data.get("events", [])
+    js_verified_ips = {
+        str(e.get("client_ip") or "")
+        for e in all_events
+        if int(e.get("is_test") or 0) == 0
+        and int(e.get("is_owner") or 0) == 0
+        and int(e.get("is_crawler") or 0) == 0
+        and e.get("client_ip")
+        and (
+            str(e.get("event_type") or "") in ("visit_hydrated", "view_paywall", "checkout_intent", "copy_summary", "wedge_select")
+            or extract_meta(e).get("js_hydrated")
+            or extract_meta(e).get("vid")
+        )
+    }
+
     delta_events = []
-    for e in data.get("events", []):
-        if not is_human(e):
+    for e in all_events:
+        if not is_human(e, js_verified_ips):
             continue
         ts = str(e.get("created_at", ""))
         if last_ts < ts <= now_ts:
