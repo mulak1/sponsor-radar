@@ -409,8 +409,8 @@ function buildClientRuntimeScript(cfg) {
       var pre = document.getElementById('eb-prism-proof-preview');
       if (pre && data) { pre.setAttribute('data-demo-open', '0'); pre.innerHTML = window.__ebBuildProofHtml('summary', actTab, customDiagLine); window.__ebLastCurtainPreview = pre.innerHTML; }
       var btn = document.getElementById('btn-curtain-flash-pass'), pcBtn = document.getElementById('btn-postcalc-flash-pass');
-      if (btn) btn.textContent = CFG.moduleId === 'derm_logic' ? 'Save Complete Routine Kit ($1.99) →' : ('Get All 3 Files for ' + cEnt + ' ($1.99) →');
-      if (pcBtn) pcBtn.textContent = CFG.moduleId === 'derm_logic' ? 'Save Complete Routine Kit ($1.99) →' : ('Get ' + cEnt + ' Pack ($1.99) →');
+      if (btn) btn.textContent = CFG.moduleId === 'derm_logic' ? 'Save Complete Routine Kit ($1.99) →' : (CFG.moduleId === 'sponsor_radar' ? 'Creator Pass ($19) →' : ('Get All 3 Files for ' + cEnt + ' ($1.99) →'));
+      if (pcBtn) pcBtn.textContent = CFG.moduleId === 'derm_logic' ? 'Save Complete Routine Kit ($1.99) →' : (CFG.moduleId === 'sponsor_radar' ? ('Unlock ' + cEnt + ' Pack ($19 / $29) →') : ('Get ' + cEnt + ' Pack ($1.99) →'));
       Array.prototype.slice.call(document.querySelectorAll('a[href*="/api/github-upgrade/export.csv"], a[href*="/api/github-upgrade/iab-io-addendum.txt"], a[href*="/api/github-upgrade/pitch.eml"], a[href*="/dossier/sample"]')).forEach(function(a) { var h = a.getAttribute('href') || ''; if (h.indexOf('target=') !== -1) a.setAttribute('href', h.replace(/target=[^&]*/, 'target=' + encodeURIComponent(cEnt))); else a.setAttribute('href', h + (h.indexOf('?') === -1 ? '?' : '&') + 'target=' + encodeURIComponent(cEnt)); });
       window.__ebTriggerPostCalcSpotlight(cEnt);
     }).catch(function(){});
@@ -673,15 +673,17 @@ function buildClientRuntimeScript(cfg) {
   window.__ebLogObjection = function(code, btn) {
     window.__ebLogEvent('tab_switch', { store_pill: 'objection_' + code, page: window.location.pathname });
     if (btn) { btn.style.background = CFG.theme.brandSoftBg; btn.style.color = CFG.theme.brandPrimary; btn.style.borderColor = CFG.theme.accentBorder; }
-    var desc = document.getElementById('eb-ouibounce-desc'), em = document.getElementById('eb-ouibounce-email');
-    if (code === 'need_agency_depth' && desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">Row #1 Sample Unmasked on Page!</strong> Or unlock the <strong>$1.99 3-File Pack</strong> below:';
-    else if (desc) { desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">No card required!</strong> Enter your email below to reveal Row #4 free on-screen right now:'; if (em) em.focus(); }
+    var desc = document.getElementById('eb-ouibounce-desc'), em = document.getElementById('eb-ouibounce-email'), srPassLbl = CFG.moduleId === 'sponsor_radar' ? '$19 Creator Pass' : '$1.99 3-File Pack';
+    if (code === 'need_agency_depth' && desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">Row #1 Sample Unmasked on Page!</strong> Or unlock the <strong>' + srPassLbl + '</strong> below:';
+    else if (desc) { desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">No card required!</strong> Enter your work email below to unmask 3 Free Buyer Credits ($0) right now:'; if (em) em.focus(); }
   };
   window.__ebSendExitSummary = function(ev) {
     if (ev && ev.preventDefault) ev.preventDefault();
     var input = document.getElementById('eb-ouibounce-email'), email = input ? input.value.trim() : ''; if (!email) return false;
+    if (window.__ebCaptureEmailLead) window.__ebCaptureEmailLead(email, 'exit_intent_downsell');
     var r4 = document.querySelector('tr.eb-blurred-deliverable'); if (r4) { r4.classList.remove('eb-blurred-deliverable'); r4.style.background = CFG.theme.safeSoftBg; }
-    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) }).then(function() { var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc'); if (btn) btn.textContent = 'Row #4 Revealed!'; if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">Row #4 Unblurred &amp; 1-Click Links Sent!</strong> <a href="/buy/flash_pass" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;">Unlock 3-File Pack ($1.99) →</a>'; }).catch(function() {});
+    var upTier = CFG.moduleId === 'sponsor_radar' ? 'creator_pass' : 'flash_pass', upLbl = CFG.moduleId === 'sponsor_radar' ? 'Creator Pass ($19) →' : 'Unlock 3-File Pack ($1.99) →';
+    fetch('/api/leads/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, pageUrl: window.location.pathname, utmSource: 'exit_intent_downsell' }) }).then(function() { var btn = document.getElementById('btn-ouibounce-submit'), desc = document.getElementById('eb-ouibounce-desc'); if (btn) btn.textContent = '✓ 3 Free Unlocked!'; if (desc) desc.innerHTML = '<strong style="color:' + CFG.theme.safeColor + ';">✓ 3 Free Buyer Credits Unmasked on Page!</strong> <a href="/buy/' + upTier + '" onclick="window.__ebCheckout(\\\'' + upTier + '\\\',true);return false;" style="color:' + CFG.theme.brandPrimary + ';font-weight:700;">' + upLbl + '</a>'; }).catch(function() {});
     return false;
   };
 
@@ -878,7 +880,7 @@ function buildClientRuntimeScript(cfg) {
   };
   ['blur', 'change'].forEach(function(evName) { document.addEventListener(evName, function(e) { var t = e.target; if (t && t.type === 'email' && t.value) window.__ebCaptureEmailLead(t.value, t.id || 'email_input_' + evName); }, true); }); document.addEventListener('click', function(e) { var a = e.target && e.target.closest ? e.target.closest('a[href*="/api/github-upgrade/"], a[href*="/dossier/sample"], a[href*="/buy/"]') : null; if (!a) return; var emIn = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).find(function(el) { return el && el.value && el.value.indexOf('@') > 0; }); if (emIn && !window.__ebSavedEmail) window.__ebCaptureEmailLead(emIn.value, 'counterparty_link_click'); if (window.__ebSavedEmail) window.__ebSyncEmailPreviewLinks(window.__ebSavedEmail); var pb = document.getElementById('sr-post-email-upgrade-bridge') || document.getElementById('sr-copy-zeigarnik-nudge'); if (pb) pb.style.display = 'flex'; }, true);
   window.__ebCheckout = function(tier, confirmed) {
-    var cleanTier = typeof tier === 'string' ? tier : 'flash_pass', actTarget = window.__ebSelectedTarget || (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('sr-emotional-want-hook') && document.getElementById('sr-emotional-want-hook').getAttribute('data-entity-name')) || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
+    var cleanTier = typeof tier === 'string' ? tier : (CFG.moduleId === 'sponsor_radar' ? 'creator_pass' : 'flash_pass'), actTarget = window.__ebSelectedTarget || (document.getElementById('eb-cnn-wb-input') && document.getElementById('eb-cnn-wb-input').value) || window.__ebActiveEntity || (document.getElementById('sr-emotional-want-hook') && document.getElementById('sr-emotional-want-hook').getAttribute('data-entity-name')) || (document.getElementById('lookup-query') && document.getElementById('lookup-query').value) || '';
     var emInputs = Array.prototype.slice.call(document.querySelectorAll('input[type="email"]')).filter(function(el) { return el && el.value && el.value.indexOf('@') > 0 && !/^(creator|agency)@sponsorradar\.io$/i.test(el.value.trim()); });
     var rawEm = (emInputs[0] && emInputs[0].value.trim()) || window.__ebSavedEmail || ''; try { if (!rawEm) rawEm = localStorage.getItem('eb_lead_email') || ''; } catch (_) {}
     var emVal = rawEm ? window.__ebCaptureEmailLead(rawEm, 'checkout_prefill_' + cleanTier) : '', wedge = window.__ebGetBuyerWedge();
