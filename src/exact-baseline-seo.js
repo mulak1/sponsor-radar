@@ -235,7 +235,7 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
     '',
     `## 3. Complete ${seoEntries.length}-Page Programmatic Benchmark Encyclopedia`,
     ...seoEntries.map((item, idx) => {
-      const isRow1 = idx === 0 || String(item.target_slug || item.slug || '').includes('shopify');
+      const isRow1 = String(item.target_slug || item.slug || '').toLowerCase().includes('shopify');
       const flParam = (isRow1 && item.floor_cpm) ? `&floor_cpm=${item.floor_cpm}` : '';
       return [
         `### ${idx + 1}. ${item.title}`,
