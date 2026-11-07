@@ -271,8 +271,16 @@ async function runAllJourneys() {
         assert.ok(domDensity.pricingBtns <= 3, `${calmRoute} #pricing must have <=3 buttons, got ${domDensity.pricingBtns}`);
       }
 
-      // Verify /seo/:slug #sr-sweetspot-bridge-form onsubmit executes cleanly without unescaped attribute quotes
+      // Verify /seo/:slug #sr-sweetspot-bridge-form onsubmit and inline <script> helpers execute cleanly without syntax/regex errors
       await mobilePage.goto(`${BASE_URL}/seo/ag1-podcast-sponsorship-spend-and-roi`, { waitUntil: 'networkidle' });
+      const seoScriptCheck = await mobilePage.evaluate(() => ({
+        hasQuoteAudit: typeof window.__srRunSeoQuoteAudit === 'function',
+        hasCalcPseoReach: typeof window.__srCalcPseoReach === 'function',
+        hasSwitchPersona: typeof window.__srSwitchPersona === 'function'
+      }));
+      assert.strictEqual(seoScriptCheck.hasQuoteAudit, true, '/seo/:slug must define window.__srRunSeoQuoteAudit without regex/script syntax error');
+      assert.strictEqual(seoScriptCheck.hasCalcPseoReach, true, '/seo/:slug must define window.__srCalcPseoReach without regex/script syntax error');
+      assert.strictEqual(seoScriptCheck.hasSwitchPersona, true, '/seo/:slug must define window.__srSwitchPersona without regex/script syntax error');
       await mobilePage.fill('#sr-bridge-email', 'buyer@creatorstudio.fm');
       await mobilePage.click('#btn-unlock-free-credits');
       const btnTextAfterSubmit = await mobilePage.textContent('#btn-unlock-free-credits');

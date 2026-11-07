@@ -893,7 +893,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             var pPre = document.getElementById('sr-free-pitch-pre');
             if (pPre) {
               var uAttr = pPre.getAttribute('data-free-credit-unmasked') || '', curTxt = pPre.textContent || '';
-              var repl = function(s) { return s.replace(/\b\d+K\s+(?:verified\s+)?(?:audience|reach|subscribers|listeners)/gi, (reach / 1000) + 'K verified audience').replace(/\$[\d,]+\/flight/g, '$' + floorSlot.toLocaleString() + '/flight').replace(/\$[\d,]+\s+total\s+3-flight/gi, '$' + pkg.toLocaleString() + ' total 3-flight'); };
+              var repl = function(s) { return s.replace(/\\b\\d+K\\s+(?:verified\\s+)?(?:audience|reach|subscribers|listeners)/gi, (reach / 1000) + 'K verified audience').replace(/\\$[\\d,]+\\/flight/g, '$' + floorSlot.toLocaleString() + '/flight').replace(/\\$[\\d,]+\\s+total\\s+3-flight/gi, '$' + pkg.toLocaleString() + ' total 3-flight'); };
               if (uAttr) pPre.setAttribute('data-free-credit-unmasked', repl(uAttr));
               pPre.textContent = repl(curTxt);
             }
