@@ -180,8 +180,16 @@ function savePublicScanEntry(cfg, entry) {
 function evaluateScanTarget(cfg, rawTarget) {
   const cat = getFlywheelCatalog(cfg.moduleId);
   const target = cleanTargetInput(rawTarget, cat.entities[0].target);
-  const existing = loadPublicScanLedger(cfg).find((e) => e.target.toLowerCase() === target.toLowerCase());
+  const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const existing = loadPublicScanLedger(cfg).find((e) => norm(e.target) === norm(target));
   if (existing) return { ...existing, cnnModel: cat.cnnModel, cnnSensorLabel: cat.cnnSensorLabel };
+  if (cfg.moduleId === 'sponsor_radar' && typeof SCAN_BUYERS === 'object') {
+    const sbKey = Object.keys(SCAN_BUYERS).find((k) => norm(k) === norm(target));
+    if (sbKey) {
+      const sb = lookupSampleBuyer(sbKey);
+      return { target: sbKey, grade: 'A', score: 92, status: 'HALL_OF_FAME', kpi1: `$${Math.max(180, Math.round((sb.price * 24) / 1000))}K/mo Spend`, kpi2: '9x Renewal Streak', cnnReadout: `94.2% Verified 3x+ Sponsor Retention • $${sb.qCpm} Rack Rate`, issue: `-18% 3-Flight Floor Active ($${sb.flCpm} Floor CPM)`, cnnModel: cat.cnnModel, cnnSensorLabel: cat.cnnSensorLabel };
+    }
+  }
   let hash = 0;
   for (let i = 0; i < target.length; i++) hash = ((hash << 5) - hash + target.charCodeAt(i)) | 0;
   const abs = Math.abs(hash), score = 58 + (abs % 39);
