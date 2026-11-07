@@ -191,7 +191,8 @@ function resolveTargetIntel(rawTarget) {
 }
 
 app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'], (req, res) => {
-  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req, res) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const hasEmailUnlock = hasRequestEmailUnlock(req, res);
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
   logCounterpartyExport(req, 'iab_io_rider_txt', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
@@ -200,11 +201,11 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
   const rackCpm = Math.max(18, Math.round(rackSlotUsd / (reach / 1000)));
   const floorCpm = Math.max(15, Math.min(Number(req.query.floor_cpm) || t.floorCpm, Math.round(rackCpm * 0.82)));
   const floorSlotUsd = Math.min(Math.round(rackSlotUsd * 0.82), Math.round((reach / 1000) * floorCpm));
-  const buyerLine = isUnlocked
+  const buyerLine = (isPaidUnlock || hasEmailUnlock)
     ? `${t.dmRole} (${t.unmaskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.unmaskedAgency})`
     : `${t.dmRole} (${t.maskedBuyer}) • Agency Desk: ${t.agencyDesk} (${t.maskedAgency})`;
   const encT = encodeURIComponent(t.clean);
-  const clauses = isUnlocked ? [
+  const clauses = isPaidUnlock ? [
     `§ 7.1 — 1.5% VERIFIED CTR & ${Math.round(reach * 0.85).toLocaleString()} IAB v2.1 30-DAY DOWNLOAD MAKE-GOOD TRIGGER:`,
     `  If any flight on ${t.peerShow} (or designated publication) delivers fewer than 85% of guaranteed 30-day IAB v2.1 certified unique downloads/opens (${Math.round(reach * 0.85).toLocaleString()} min) OR <1.5% verified vanity-URL (${t.peerVanity} / code ${t.peerCode}) CTR, Publisher shall deliver one (1) complimentary make-good mid-roll placement within 21 days at zero additional cost.`,
     '',
@@ -215,7 +216,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
     '  For emerging technical/B2B publications (10K–50K verified reach), pilot commitments are capped at $950–$2,400 total across 3 flights with direct founder/host mid-roll read.'
   ] : [
     '§ 7.1 — 1.5% VERIFIED CTR & IAB v2.1 30-DAY DOWNLOAD MAKE-GOOD TRIGGER:',
-    `  [LOCKED IN FREE PREVIEW — Unmask Free ($0 Work Email): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}]`,
+    `  [LOCKED IN FREE PREVIEW — Unlock Full Redlined IAB IO Legal Clauses via Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT} or Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}]`,
     '',
     '§ 9.3 — 90-DAY POST-LISTEN ATTRIBUTION DECAY WINDOW & § 11.0 — SUB-50K NICHE SHOW PILOT CLAUSE:',
     `  [LOCKED IN FREE PREVIEW — Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT} | Agency Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${encT}]`
@@ -237,7 +238,8 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
 });
 
 app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
-  const isUnlocked = Boolean(req.query.unlocked === '1' || req.query.session_id || hasRequestEmailUnlock(req, res) || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
+  const hasEmailUnlock = hasRequestEmailUnlock(req, res);
   const t = resolveTargetIntel(req.query.target || req.query.brand || req.query.q || 'Shopify');
   logCounterpartyExport(req, 'rfc822_pitch_eml', t.clean);
   const qUsd = Number(req.query.quoted_usd) || 0;
@@ -246,20 +248,22 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
   const rackCpm = Math.max(18, Math.round(rackSlotUsd / (reach / 1000)));
   const floorCpm = Math.max(15, Math.min(Number(req.query.floor_cpm) || t.floorCpm, Math.round(rackCpm * 0.82)));
   const floorSlotUsd = Math.min(Math.round(rackSlotUsd * 0.82), Math.round((reach / 1000) * floorCpm));
-  const toAddr = isUnlocked ? t.unmaskedBuyer : t.maskedBuyer;
-  const ccAddr = isUnlocked ? t.unmaskedAgency : t.maskedAgency;
+  const toAddr = (isPaidUnlock || hasEmailUnlock) ? t.unmaskedBuyer : t.maskedBuyer;
+  const ccAddr = (isPaidUnlock || hasEmailUnlock) ? t.unmaskedAgency : t.maskedAgency;
   const encT = encodeURIComponent(t.clean);
-  const bodyLines = isUnlocked ? [
+  const bodyLines = isPaidUnlock ? [
     `[TRACK A — CREATOR 3-FLIGHT PILOT PITCH (${t.clean.toUpperCase()})]`,
     `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read sponsorship flights on ${t.peerShow} (vanity URL: ${t.peerVanity} • code: ${t.peerCode}) and prepared a 3-flight pilot anchored at your verified -18% agency floor ($${floorCpm} net CPM vs. $${rackCpm} published rack — $${floorSlotUsd.toLocaleString()}/flight for ${reach.toLocaleString()} verified reach) with an IAB §7.1 1.5% CTR + ${Math.round(reach * 0.85).toLocaleString()} 30-day download make-good guarantee.`,
     '',
     `[TRACK B — MEDIA BUYER -18% RATE-CARD COUNTER-OFFER (${t.peerShow.toUpperCase()})]`,
     `Instead of a single-insertion test at the $${rackSlotUsd.toLocaleString()} published rack rate ($${rackCpm} CPM), we are ready to lock a 3-flight Q4 insertion order at the verified -18% multi-flight agency floor ($${floorCpm} CPM / $${floorSlotUsd.toLocaleString()} per flight, saving $${Math.max(250, (rackSlotUsd - floorSlotUsd) * 3).toLocaleString()} across 3 flights) subject to the attached IAB §4.2 Rate Cap and §7.1 Make-Good Rider.`
   ] : [
-    `[PREVIEW — 3-FLIGHT ANCHOR & IAB MAKE-GOOD SCRIPTS LOCKED FOR ${t.clean.toUpperCase()}]`,
+    `[TRACK A PREVIEW — ${t.clean.toUpperCase()} 3x+ RENEWAL & -18% FLOOR BENCHMARK]`,
     `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read flights on ${t.peerShow} (code: ${t.peerCode} • $${rackCpm} Rack CPM -> $${floorCpm} 3-Flight Floor CPM • $${floorSlotUsd.toLocaleString()}/flight on ${reach.toLocaleString()} Reach) via ${t.agencyDesk}.`,
-    `• Enter your $0 work email to unmask ${t.maskedBuyer} (+ ${t.maskedAgency}): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}`,
-    `• Creator Outreach Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT}`,
+    '',
+    `[TRACK B & FULL IAB §7.1 MAKE-GOOD NEGOTIATION SCRIPTS LOCKED IN FREE PREVIEW]`,
+    ...(hasEmailUnlock ? [] : [`• Enter your $0 work email to unmask ${t.maskedBuyer} (+ ${t.maskedAgency}): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}`]),
+    `• Creator Outreach Pass ($19 — Full Dual-Track Outreach Scripts + Redlined IAB IO Rider + 109-Row Buyer CSV): https://www.sponsorradar.io/buy/creator_pass?target=${encT}`,
     `• Full 109-Row Buyer & Agency CSV Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}`,
     `• B2B Agency & Talent Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${encT}`
   ];

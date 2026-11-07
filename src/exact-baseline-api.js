@@ -652,7 +652,7 @@ function attachExactBaselinePack(app, options = {}) {
     const { isTest, isCrawler } = classifyTrafficRequest(req);
     store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/export.csv', isTest, isCrawler, meta: { export: 'sheetjs_csv' } });
     const isUnlocked = Boolean(req.query?.unlock === '1' || req.query?.session_id);
-    const rows = [['Scenario_Preset', cfg.kpis[0].label, cfg.kpis[1].label, cfg.kpis[2].label, cfg.kpis[3].label, 'Unlock_Full_Model_URL'], ...cfg.presets.map((p, idx) => (idx === 0 || isUnlocked) ? [p.label, ...(cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val)), `https://${cfg.domain}/buy/flash_pass`] : [p.label, '[LOCKED — 3-File Pack ($1.99) or 109-Row Vault ($29)]', '[LOCKED]', '[LOCKED]', '[LOCKED]', `https://${cfg.domain}/buy/flash_pass`])];
+    const rows = [['Scenario_Preset', cfg.kpis[0].label, cfg.kpis[1].label, cfg.kpis[2].label, cfg.kpis[3].label, 'Unlock_Full_Model_URL'], ...cfg.presets.map((p, idx) => (idx === 0 || isUnlocked) ? [p.label, ...(cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val)), `https://${cfg.domain}/buy/creator_pass`] : [p.label, '[LOCKED — Creator Pass ($19) or 109-Row Vault ($29)]', '[LOCKED]', '[LOCKED]', '[LOCKED]', `https://${cfg.domain}/buy/complete_dossier`])];
     res.status(200).type('text/csv; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-executive-model.csv"`).send(rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\r\n'));
   });
 
