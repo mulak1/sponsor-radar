@@ -135,13 +135,13 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
     const floorCpm = Math.round(r.cpm_usd * 0.82);
     const rackSlot = Math.round((r.audience_size / 1000) * r.cpm_usd);
     const floorSlot = Math.round((r.audience_size / 1000) * floorCpm);
-    const floorCpmCell = (showUnmasked || idx === 0) ? `$${floorCpm}` : 'LOCKED ($0 Email)';
+    const floorCpmCell = showUnmasked ? `$${floorCpm}` : 'LOCKED ($0 Email)';
     csvRows.push([
       idx + 1, r.brand_name, r.show_name, r.channel_type, r.audience_size, r.flights,
       namedEmail, agencyEmail, r.decision_maker_role, getAgencyDesk(r.brand_slug, r.brand_category),
-      '250_2.1.5_OK_MX_VERIFIED_<48H', `$${r.cpm_usd}`, floorCpmCell, `$${Math.max(250, rackSlot - floorSlot)}`,
+      '250_2.1.5_OK_MX_VERIFIED_<48H', `$${r.cpm_usd}`, floorCpmCell, showUnmasked ? `$${Math.max(250, rackSlot - floorSlot)}` : 'LOCKED ($0 Email)',
       r.promo_code, r.vanity_url,
-      isPaidUnlock ? `IO §4.2 (-18% 3-Flight Floor: $${floorSlot}) + §7.1 (1.5% CTR / ${Math.round(r.audience_size * 0.85)} IAB 30d Download Make-Good)` : `IO §4.2 (-18% 3-Flight Floor: ${(showUnmasked || idx === 0) ? `$${floorSlot}` : 'LOCKED ($0 Email)'}) + [§7.1 1.5% CTR Make-Good Clause Locked in $19/$29 Vault]`
+      isPaidUnlock ? `IO §4.2 (-18% 3-Flight Floor: $${floorSlot}) + §7.1 (1.5% CTR / ${Math.round(r.audience_size * 0.85)} IAB 30d Download Make-Good)` : `IO §4.2 (-18% 3-Flight Floor: ${showUnmasked ? `$${floorSlot}` : 'LOCKED ($0 Email)'}) + [§7.1 1.5% CTR Make-Good Clause Locked in $19/$29 Vault]`
     ]);
   });
   if (!isPaidUnlock) {
@@ -377,7 +377,7 @@ app.get('/manifest.webmanifest', (req, res) => {
     start_url: '/',
     display: 'browser',
     background_color: '#FBF8F3',
-    theme_color: '#E84E36',
+    theme_color: '#047857',
     icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }]
   });
 });
@@ -389,17 +389,18 @@ app.get('/api/og', (req, res) => {
   const seoPage = db.prepare('SELECT * FROM seo_pages WHERE slug = ? OR target_slug = ?').get(slug, cleanSlug);
   const brandRow = !seoPage ? db.prepare('SELECT * FROM brands WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?)').get(cleanSlug, slug) : null;
   const showRow = (!seoPage && !brandRow) ? db.prepare('SELECT * FROM shows WHERE LOWER(slug) = ? OR LOWER(name) = LOWER(?)').get(cleanSlug, slug) : null;
+  const isRow1 = (seoPage && seoPage.target_slug === 'shopify') || (brandRow && brandRow.slug === 'shopify');
   const headline = seoPage
     ? seoPage.title.slice(0, 66)
     : (brandRow
       ? `${brandRow.name} Verified Sponsorship Floor CPM & Buyer Dossier`
       : (showRow ? `${showRow.name} Verified Rate Card & -18% 3-Flight Floor CPM` : 'SponsorRadar: 109-Row Audio & Newsletter Sponsor Rate-Card Ledger'));
   const subline = seoPage
-    ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Avg Effective CPM: $${seoPage.avg_cpm} (-18% 3-Flight Floor: $${Math.round(seoPage.avg_cpm * 0.82)})`
+    ? `Est. Monthly Spend: $${seoPage.est_monthly_spend.toLocaleString()} • Rack CPM: $${seoPage.avg_cpm} (${isRow1 ? `-18% Floor: $${Math.round(seoPage.avg_cpm * 0.82)}` : '-18% 3-Flight Floor'})`
     : (brandRow
-      ? `Est. Monthly Spend: $${brandRow.est_monthly_spend.toLocaleString()} • Rack CPM: $${brandRow.avg_cpm} • 3-Flight Floor: $${Math.round(brandRow.avg_cpm * 0.82)}`
+      ? `Est. Monthly Spend: $${brandRow.est_monthly_spend.toLocaleString()} • Rack CPM: $${brandRow.avg_cpm} • ${isRow1 ? `3-Flight Floor: $${Math.round(brandRow.avg_cpm * 0.82)}` : '-18% 3-Flight Floor'}`
       : (showRow
-        ? `Reach: ${Math.round(showRow.audience_size / 1000)}K • Rack: $${showRow.midroll_rate_usd.toLocaleString()} ($${showRow.base_cpm} CPM) • Floor: $${Math.round(showRow.midroll_rate_usd * 0.82).toLocaleString()}`
+        ? `Reach: ${Math.round(showRow.audience_size / 1000)}K • Rack: $${showRow.midroll_rate_usd.toLocaleString()} ($${showRow.base_cpm} CPM) • -18% 3-Flight Floor`
         : '109 Verified Buyer & Agency Desk Rows • -18% 3-Flight Floor CPM • IAB IO Rider'));
 
   res.setHeader('Content-Type', 'image/svg+xml');
@@ -409,7 +410,7 @@ app.get('/api/og', (req, res) => {
     <rect x="76" y="84" width="320" height="40" rx="8" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" />
     <text x="96" y="110" fill="#0F766E" font-family="monospace" font-size="16" font-weight="bold">3x+ RENEWED ROI MEDIA LEDGER</text>
     <text x="76" y="225" fill="#161412" font-family="Georgia, serif" font-size="42" font-weight="bold">${escapeHtml(headline)}</text>
-    <text x="76" y="305" fill="#E84E36" font-family="monospace" font-size="24" font-weight="bold">${escapeHtml(subline)}</text>
+    <text x="76" y="305" fill="#047857" font-family="monospace" font-size="24" font-weight="bold">${escapeHtml(subline)}</text>
     <text x="76" y="520" fill="#57524A" font-family="monospace" font-size="18">SPONSORRADAR EDITORIAL MEDIA INTELLIGENCE • IAB 30-DAY VERIFIED</text>
   </svg>`);
 });
