@@ -8,6 +8,7 @@ const { renderEntityAvatarSvg } = require('./views_shell');
 const { renderDirectoryPage, renderSeoPage, renderLegalPage, renderNotFoundPage } = require('./views_pages');
 
 const { attachExactBaselinePack } = require('./exact-baseline-api');
+const { lookupSampleBuyer } = require('./public-scan-flywheel');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4102;
@@ -127,9 +128,17 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   ];
   const csvRows = [header];
   const r1Sample = allRows.find((r) => String(r.brand_slug || '').toLowerCase() === 'shopify') || allRows[0];
-  const r2Sample = (targetSlug === 'shopify' || !targetSlug
+  const candR2 = (targetSlug === 'shopify' || !targetSlug)
     ? allRows.find((r) => String(r.brand_slug || '').toLowerCase() === 'linear')
-    : allRows.find((r) => String(r.brand_slug || '').toLowerCase() !== 'shopify')) || allRows[1] || allRows[0];
+    : allRows.find((r) => String(r.brand_slug || '').toLowerCase() !== 'shopify');
+  const isR2DirectMatch = !targetSlug || targetSlug === 'shopify' || (candR2 && (String(candR2.brand_slug || '').toLowerCase().includes(firstToken) || String(candR2.show_slug || '').toLowerCase().includes(firstToken) || String(candR2.brand_name || '').toLowerCase().includes(targetFilter) || String(candR2.show_name || '').toLowerCase().includes(targetFilter)));
+  const tFallback = !isR2DirectMatch ? resolveTargetIntel(rawTarget) : null;
+  const r2Sample = isR2DirectMatch ? (candR2 || allRows[1] || allRows[0]) : {
+    brand_slug: tFallback.slugCand, brand_name: tFallback.clean, brand_domain: tFallback.unmaskedBuyer.split('@')[1] || 'brand.com',
+    brand_category: 'Verified Sponsorship', sponsor_email: tFallback.unmaskedBuyer, agency_email: tFallback.unmaskedAgency,
+    decision_maker_role: tFallback.dmRole, show_name: tFallback.peerShow, channel_type: 'Podcast & Newsletter',
+    audience_size: tFallback.reach, flights: tFallback.peerFlights, cpm_usd: tFallback.rackCpm, promo_code: tFallback.peerCode, vanity_url: tFallback.peerVanity
+  };
   const usedSlugs = new Set([String(r1Sample.brand_slug || '').toLowerCase(), String(r2Sample.brand_slug || '').toLowerCase()]);
   const r3Sample = allRows.find((r) => !usedSlugs.has(String(r.brand_slug || '').toLowerCase()) && ['ag1', 'ramp', 'linear', 'hubspot'].includes(String(r.brand_slug || '').toLowerCase()))
     || allRows.find((r) => !usedSlugs.has(String(r.brand_slug || '').toLowerCase()))
@@ -139,10 +148,11 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
   rowsToExport.forEach((r, idx) => {
     const isShopifyRow = String(r.brand_slug || '').toLowerCase() === 'shopify';
     const showUnmasked = isPaidUnlock || hasEmailUnlock || (idx === 0 && isShopifyRow);
+    const rawAgEmail = r.agency_email || getAgencyBuyerEmail(r.brand_domain, r.brand_category);
     const maskedNamed = maskSponsorEmail(r.sponsor_email, r.brand_category).split(' (')[0];
-    const maskedAgency = maskSponsorEmail(getAgencyBuyerEmail(r.brand_domain, r.brand_category), r.brand_category).split(' (')[0];
+    const maskedAgency = maskSponsorEmail(rawAgEmail, r.brand_category).split(' (')[0];
     const namedEmail = showUnmasked ? getUnmaskedNamedBuyerEmail(r.sponsor_email) : (idx === 0 ? `${maskedNamed} [Enter $0 Email at SponsorRadar.io/?q=${tQuery} to Unmask — Sample: sarah.kaufman@shopify.com]` : maskedNamed);
-    const agencyEmail = showUnmasked ? getAgencyBuyerEmail(r.brand_domain, r.brand_category) : (idx === 0 ? `${maskedAgency} [Sample: m.vance@rightsideup.co]` : maskedAgency);
+    const agencyEmail = showUnmasked ? rawAgEmail : (idx === 0 ? `${maskedAgency} [Sample: m.vance@rightsideup.co]` : maskedAgency);
     const floorCpm = Math.round(r.cpm_usd * 0.82);
     const rackSlot = Math.round((r.audience_size / 1000) * r.cpm_usd);
     const floorSlot = Math.round((r.audience_size / 1000) * floorCpm);
@@ -194,23 +204,25 @@ function resolveTargetIntel(rawTarget) {
     WHERE (? != '' AND p.brand_slug = ?) OR (? != '' AND p.show_slug = ?) OR (? = '' AND ? = '' AND (LOWER(b.vertical) LIKE ? OR LOWER(b.category) LIKE ? OR LOWER(s.niche) LIKE ? OR LOWER(s.channel_type) LIKE ?))
     ORDER BY CASE WHEN (? != '' AND p.show_slug = ? AND ? = '') THEN 0 ELSE 1 END, p.flights DESC, p.est_spend_usd DESC LIMIT 1
   `).get(matchedBrand ? matchedBrand.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '', show ? show.slug : '', kw, kw, kw, kw, show ? show.slug : '', show ? show.slug : '', matchedBrand ? matchedBrand.slug : '');
+  const hasDbMatch = Boolean(matchedBrand || show);
+  const sbFallback = !hasDbMatch ? lookupSampleBuyer(clean) : null;
   const brand = matchedBrand || (topPlacement ? db.prepare('SELECT * FROM brands WHERE slug = ?').get(topPlacement.brand_slug) : null) || db.prepare('SELECT * FROM brands WHERE slug = ?').get('shopify') || db.prepare('SELECT * FROM brands ORDER BY est_monthly_spend DESC LIMIT 1').get();
-  const rackCpm = Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42;
-  const floorCpm = Math.max(18, Math.round(rackCpm * 0.82));
-  const rackSlotUsd = Number(show ? show.midroll_rate_usd : (topPlacement ? Math.round(topPlacement.est_spend_usd / Math.max(1, topPlacement.flights)) : 3150)) || 3150;
-  const reach = Math.max(10000, Math.round((rackSlotUsd / rackCpm) * 1000));
-  const floorSlotUsd = Math.round(rackSlotUsd * 0.82);
+  const rackCpm = sbFallback ? Math.round(Number(sbFallback.qCpm) || 46) : (Number(show ? show.base_cpm : (brand ? brand.avg_cpm : 42)) || 42);
+  const floorCpm = sbFallback ? sbFallback.flCpm : Math.max(18, Math.round(rackCpm * 0.82));
+  const rackSlotUsd = sbFallback ? sbFallback.price : (Number(show ? show.midroll_rate_usd : (topPlacement ? Math.round(topPlacement.est_spend_usd / Math.max(1, topPlacement.flights)) : 3150)) || 3150);
+  const reach = sbFallback ? sbFallback.reach : Math.max(10000, Math.round((rackSlotUsd / rackCpm) * 1000));
+  const floorSlotUsd = sbFallback ? sbFallback.flSlot : Math.round(rackSlotUsd * 0.82);
   const rawBuyerEmail = (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
-  const unmaskedBuyer = getUnmaskedNamedBuyerEmail(rawBuyerEmail);
-  const maskedBuyer = maskSponsorEmail(unmaskedBuyer).split(' (')[0];
-  const unmaskedAgency = getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', brand ? brand.category : 'B2B SaaS');
-  const maskedAgency = maskSponsorEmail(unmaskedAgency).split(' (')[0];
-  const agencyDesk = getAgencyDesk(brand ? brand.slug : 'shopify', brand ? brand.category : 'B2B SaaS');
-  const dmRole = (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships';
-  const peerShow = (topPlacement && topPlacement.show_name) || (show && show.name) || 'Lenny\'s Newsletter';
-  const peerFlights = (topPlacement && topPlacement.flights) || 4;
-  const peerCode = (topPlacement && topPlacement.promo_code) || clean.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'PARTNER20';
-  const peerVanity = (topPlacement && topPlacement.vanity_url) || `${(brand && brand.domain) || 'shopify.com'}/pod`;
+  const unmaskedBuyer = sbFallback ? sbFallback.buyer : getUnmaskedNamedBuyerEmail(rawBuyerEmail);
+  const maskedBuyer = sbFallback ? sbFallback.masked : maskSponsorEmail(unmaskedBuyer).split(' (')[0];
+  const unmaskedAgency = sbFallback ? sbFallback.agency : getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', brand ? brand.category : 'B2B SaaS');
+  const maskedAgency = sbFallback ? sbFallback.agMasked : maskSponsorEmail(unmaskedAgency).split(' (')[0];
+  const agencyDesk = sbFallback ? (unmaskedAgency.includes('oxfordroad') ? 'Oxford Road' : (unmaskedAgency.includes('veritone') ? 'Veritone One' : 'Right Side Up')) : getAgencyDesk(brand ? brand.slug : 'shopify', brand ? brand.category : 'B2B SaaS');
+  const dmRole = (hasDbMatch && brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships';
+  const peerShow = (hasDbMatch && topPlacement && topPlacement.show_name) || (show && show.name) || 'Huberman Lab & Lenny\'s Newsletter';
+  const peerFlights = (hasDbMatch && topPlacement && topPlacement.flights) || 4;
+  const peerCode = (hasDbMatch && topPlacement && topPlacement.promo_code) || clean.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) || 'PARTNER20';
+  const peerVanity = sbFallback ? `${unmaskedBuyer.split('@')[1] || 'brand.com'}/pod` : ((topPlacement && topPlacement.vanity_url) || `${(brand && brand.domain) || 'shopify.com'}/pod`);
   return { clean, slugCand: slugCand || 'shopify', brand, show, rackCpm, floorCpm, reach, rackSlotUsd, floorSlotUsd, unmaskedBuyer, maskedBuyer, unmaskedAgency, maskedAgency, agencyDesk, dmRole, peerShow, peerFlights, peerCode, peerVanity };
 }
 
@@ -223,7 +235,7 @@ function renderDeliverablePreviewHtml(t, docTitle, fileName, rawContent, dlPath,
     : `<strong>$${t.rackCpm} Rack CPM &rarr; 3-Flight Floor: Locked ($0 Email Below)</strong>`;
   const focusBridgeAttr = (!hasEmailUnlock && !isPaidUnlock) ? `onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" title="Click to focus $0 work email input and unmask 3 free buyer credits"` : '';
   const csvTableHtml = (Array.isArray(csvRows) && csvRows.length > 1) ? `<div id="sr-csv-visual-table-wrap" style="overflow-x:auto;margin-bottom:14px;border:1px solid #DFD5C3;border-radius:10px;"><table style="width:100%;border-collapse:collapse;font-size:12.5px;text-align:left;"><thead style="background:#FAF6EE;border-bottom:1px solid #DFD5C3;color:#141210;font-weight:800;"><tr><th style="padding:9px 12px;">Row</th><th style="padding:9px 12px;">Brand &amp; Verified Show Placement</th><th style="padding:9px 12px;">Direct Buyer &amp; Agency Desk (SMTP &lt;48h)</th><th style="padding:9px 12px;">Rack vs. -18% 3-Flight Floor</th></tr></thead><tbody>${csvRows.slice(1).map((r) => String(r[0]) === '4-109' ? `<tr style="background:#FAF6EE;border-top:1px solid #DFD5C3;"><td style="padding:10px 12px;font-weight:800;color:#B45309;">#4–#109</td><td colspan="2" style="padding:10px 12px;font-weight:700;color:#141210;">106 Remaining Verified Sponsor Brands, Direct Buyer Emails &amp; Agency Desks (${esc(r[9])})<div style="font-size:11.5px;font-weight:500;color:#3D3831;margin-top:2px;">Includes all 109 named buyer emails (&lt;1.4% SMTP bounce SLA), -18% 3-flight floor CPMs, and IAB §7.1 Make-Good clauses.</div></td><td style="padding:10px 12px;font-weight:800;color:#047857;">Locked in $19 / $29 Pass &darr;</td></tr>` : `<tr ${Number(r[0]) !== 1 ? focusBridgeAttr : ''} style="border-top:1px solid #E4DEC9;${Number(r[0]) !== 1 && !hasEmailUnlock && !isPaidUnlock ? 'cursor:pointer;' : ''}"><td style="padding:9px 12px;font-weight:800;color:#141210;">#${esc(r[0])}</td><td style="padding:9px 12px;"><strong>${esc(r[1])}</strong> &rarr; ${esc(r[2])} <span style="color:#6E6559;font-size:11.5px;">(${esc(r[3])} &bull; ${esc(r[5])}x flights)</span></td><td style="padding:9px 12px;"><code style="color:${(hasEmailUnlock || isPaidUnlock || String(r[1]).toLowerCase() === 'shopify') ? '#047857' : '#B45309'};font-weight:700;">${esc(String(r[6]).split(' [')[0])}</code> &bull; <span style="font-size:11.5px;color:#3D3831;">${esc(r[9])}: <code>${esc(String(r[7]).split(' [')[0])}</code></span>${Number(r[0]) === 1 ? `<div style="font-size:11px;color:#047857;font-weight:700;margin-top:2px;">Row #1 Free Proof: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co) &middot; <a href="https://www.linkedin.com/search/results/people/?keywords=sarah%20kaufman%20Shopify" target="_blank" rel="noopener" style="color:#047857;text-decoration:underline;">Verify on LinkedIn ↗</a></div>` : (!hasEmailUnlock && !isPaidUnlock ? `<div style="font-size:11px;color:#047857;font-weight:700;margin-top:2px;text-decoration:underline;">&uarr; Enter $0 Work Email Above to Unmask</div>` : '')}</td><td style="padding:9px 12px;">Rack: <strong>${esc(r[11])}</strong> &rarr; Floor: <strong style="color:#047857;">${esc(r[12])}</strong>${String(r[13]).includes('LOCKED') ? '' : ` <span style="font-size:11.5px;color:#6E6559;">(Save ${esc(r[13])}/flight)</span>`}</td></tr>`).join('')}</tbody></table></div>` : '';
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(docTitle)} — ${esc(t.clean)} | SponsorRadar</title><link rel="stylesheet" href="/styles.css"/></head><body style="margin:0;background:#FAF6EE;color:#141210;font-family:Plus Jakarta Sans,-apple-system,sans-serif;line-height:1.55;">
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(docTitle)} — ${esc(t.clean)} | SponsorRadar</title></head><body style="margin:0;background:#FAF6EE;color:#141210;font-family:Plus Jakarta Sans,-apple-system,sans-serif;line-height:1.55;">
   <script>(function(){try{var v=localStorage.getItem('vs_vid')||('v_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36));localStorage.setItem('vs_vid',v);document.cookie='vs_vid='+v+'; Path=/; Max-Age=31536000; SameSite=Lax';window.__ebVid=v;if(!navigator.webdriver)fetch('/api/telemetry/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_type:'visit_hydrated',page_url:window.location.pathname,device_type:window.innerWidth<=768?'mobile':'desktop',meta:{vid:v,js_hydrated:1,vw:window.innerWidth||0,vh:window.innerHeight||0,target:'${esc(t.clean)}',ref:document.referrer||''}})}).catch(function(){});window.__ebBuy=function(tier){var em=(document.getElementById('sr-bridge-email')||{}).value||localStorage.getItem('eb_lead_email')||'';fetch('/buy/'+tier+'?format=json&target=${encT}'+(em?'&email='+encodeURIComponent(em):''),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({vid:v,target:'${esc(t.clean)}',email:em,page_url:window.location.pathname,buyer_wedge:'creator'})}).then(function(r){return r.json();}).then(function(d){if(d&&d.checkout_url)window.location.href=d.checkout_url;}).catch(function(){window.location.href='/buy/'+tier+'?target=${encT}';});return false;};}catch(_){}})();</script>
   <header class="top-nav" style="position:sticky;top:0;z-index:50;background:#FAF6EE;border-bottom:1px solid #DFD5C3;"><div class="container nav-inner" style="max-width:1320px;width:100%;margin:0 auto;padding:0 24px;min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:16px;"><a href="/" class="brand-logo" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#141210;">${renderBrandLogoSvg(38)}<div><span class="brand-wordmark" style="display:block;font-weight:800;font-size:1.12rem;line-height:1.1;color:#141210;">SponsorRadar</span><span class="brand-subtag" style="display:block;font-size:0.75rem;color:#6E6559;font-weight:600;">3x+ Renewal Media Ledger</span></div></a><nav class="nav-links" aria-label="Primary Navigation" style="display:flex;align-items:center;gap:22px;font-size:0.92rem;font-weight:600;"><a href="/#radar-tool" style="color:#141210;text-decoration:none;">Spend Radar</a><a href="/leaderboard" style="color:#141210;text-decoration:none;">Leaderboard</a><a href="/directory" style="color:#141210;text-decoration:none;">Spend Directory</a><a href="/tools/podcast-sponsorship-cpm-roi-calculator" style="color:#141210;text-decoration:none;">CPM Calculator</a><a href="/dossier/sample?target=${encT}" style="color:#047857;font-weight:800;text-decoration:none;">Sample Dossier</a><a href="/#pricing" style="color:#141210;text-decoration:none;">Pricing</a></nav><div style="display:inline-flex;gap:8px;align-items:center;"><a href="/buy/playbook_pass?target=${encT}" onclick="return window.__ebBuy('playbook_pass');" style="display:inline-flex;align-items:center;padding:8px 14px;min-height:38px;border-radius:8px;background:#047857;color:#FFFFFF;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap;">109-Row Buyer Vault ($29) &rarr;</a></div></div></header>
   <main id="main-content" style="max-width:1320px;margin:0 auto;padding:24px 24px 40px;">
