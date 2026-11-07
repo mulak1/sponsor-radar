@@ -715,6 +715,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
   const podiumCards = top3.map((s, i) => {
     const m = medals[i] || medals[2];
     const encT = escHtml(encodeURIComponent(s.target));
+    const isRow1 = String(s.target || '').toLowerCase() === 'shopify';
     return `<div style="display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px;border-radius:${t.radiusCard};background:${t.subtleBg};color:${t.textPrimary};">
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
@@ -723,7 +724,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
         </div>
         <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:block;font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;text-decoration:none;">${escHtml(s.target)}</a>
         <div style="font-size:14px;color:${t.textSecondary};margin-bottom:6px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
-        <div style="font-size:12px;color:${i === 0 ? t.safeColor : t.textMuted};font-weight:700;margin-bottom:10px;">${i === 0 ? 'Row #1 Buyer Proof: partnerships@drinkag1.com · m.vance@rightsideup.co' : 'Buyer &amp; Agency Email: Masked in Free Preview ($0 3-Credit Sample)'}</div>
+        <div style="font-size:12px;color:${isRow1 ? t.safeColor : t.textMuted};font-weight:700;margin-bottom:10px;">${isRow1 ? 'Row #1 Buyer Proof: sarah.kaufman@shopify.com · m.vance@rightsideup.co' : 'Buyer &amp; Agency Email: Masked in Free Preview ($0 3-Credit Sample)'}</div>
       </div>
       <div>
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
