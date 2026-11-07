@@ -49,11 +49,17 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
     <div class="container">
       <!-- Executive Header & Dual-Track Orientation -->
       <div style="margin-bottom:22px;">
-        <div style="margin-bottom:12px;">
-          <h1 class="headline-xl" style="font-size:clamp(1.95rem, 3vw, 2.55rem);line-height:1.15;margin:0 0 6px 0;">Pitch the buyer, not dead inboxes.</h1>
-          <p class="subhead" style="margin:0; font-size:15.5px; color:var(--text-secondary); max-width:78ch;">
-            Browse <strong>${totalReports} verified sponsorship dossiers</strong>, <strong>${totalContacts} verified buyer &amp; agency rows</strong>, and <strong>-18% 3-flight floor Ad Rates</strong> (save $2,400 overpay).
-          </p>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px;">
+          <div style="flex:1;min-width:300px;">
+            <h1 class="headline-xl" style="font-size:clamp(1.95rem, 3vw, 2.55rem);line-height:1.15;margin:0 0 6px 0;">Pitch the Buyer, Not Dead Inboxes.</h1>
+            <p class="subhead" style="margin:0; font-size:15.5px; color:var(--text-secondary); max-width:78ch;">
+              Browse <strong>${totalReports} verified sponsorship dossiers</strong>, <strong>${totalContacts} verified buyer &amp; agency rows</strong>, and <strong>-18% 3-flight floor Ad Rates</strong> (save $2,400 overpay).
+            </p>
+          </div>
+          <div id="sr-dir-visual-card" style="width:296px;max-width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border-subtle);background:var(--bg-surface);box-shadow:0 4px 14px rgba(20,18,16,0.06);flex-shrink:0;">
+            <img src="/assets/podcast-newsletter-hub.jpg" alt="Podcast &amp; Newsletter Creator Sponsorship Hub" width="296" height="165" loading="eager" style="width:100%;height:auto;display:block;" />
+            <div style="padding:7px 12px;background:var(--bg-canvas);border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:6px;"><span style="font-size:11px;font-weight:700;color:var(--text-primary);">Podcast &amp; Newsletter Hub</span><span style="font-size:10.5px;font-weight:800;color:var(--emerald-roi);background:var(--emerald-soft);padding:2px 7px;border-radius:999px;">${totalReports} Dossiers</span></div>
+          </div>
         </div>
 
         <!-- Consolidated Top-Fold Row #1 Sample Proof + $0 Email Unlock Bar -->
@@ -475,7 +481,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
 
       <div style="display:flex; align-items:center; gap:14px; margin:0 0 14px 0;">
         ${renderEntityAvatarSvg(exportTarget, isShowPage ? 'show' : 'brand', 44)}
-        <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0;">${initCreator ? 'Pitch the buyer, not dead inboxes' : 'Audit true Ad Rates, not rack rates'}: ${escapeHtml(workbenchQuery)}</h1>
+        <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0;">${initCreator ? 'Pitch the Buyer, Not Dead Inboxes' : 'Audit True Ad Rates, Not Rack Rates'}: ${escapeHtml(workbenchQuery)}</h1>
       </div>
       <p class="subhead" style="display:none;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor Ad Rates and Row #1 sample proof.</p>
 
@@ -767,7 +773,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             if (bPane && cPane) { bPane.style.display = mode === 'buyer' ? 'flex' : 'none'; cPane.style.display = mode === 'creator' ? 'block' : 'none'; }
             [ [bBtn, mode === 'buyer'], [cBtn, mode === 'creator'], [hB, mode === 'buyer'], [hC, mode === 'creator'] ].forEach(function(p) { if (p[0]) { p[0].style.background = p[1] ? 'var(--emerald-soft)' : 'transparent'; p[0].style.color = p[1] ? 'var(--emerald-roi)' : 'var(--text-secondary)'; p[0].setAttribute('aria-pressed', p[1] ? 'true' : 'false'); } });
             var h1 = document.getElementById('sr-emotional-want-hook'), ent = (h1 && h1.getAttribute('data-entity-name')) || '${escapeHtml(workbenchQuery.replace(/'/g, "\\'"))}';
-            if (h1) h1.textContent = (mode === 'creator' ? 'Pitch the buyer, not dead inboxes: ' : 'Audit true Ad Rates, not rack rates: ') + ent;
+            if (h1) h1.textContent = (mode === 'creator' ? 'Pitch the Buyer, Not Dead Inboxes: ' : 'Audit True Ad Rates, Not Rack Rates: ') + ent;
             var sw = document.getElementById('sr-sweetspot-bridge-lead'), sb = document.getElementById('btn-sweetspot-flash-pass');
             if (sw) sw.innerHTML = mode === 'creator' ? '<strong>Try-Before-You-Buy:</strong> Unlock 3 Free ' + ent + ' Buyer Emails ($0)' : '<strong>Try-Before-You-Buy:</strong> Unlock 3 Free ' + ent + ' Floor Ad Rates ($0)';
             if (sb) sb.textContent = 'Creator Pass ($19) ↗';

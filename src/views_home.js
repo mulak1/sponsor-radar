@@ -63,7 +63,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               </div>
               <div style="display:none;"><span id="sr-logical-need-chip">✓ 109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 Overpay</span><span id="sr-vc-data-moat-chip">181 Deals Audited</span></div>
             </div>
-            <h1 class="headline-xl" id="sr-emotional-want-hook" style="font-size:clamp(28px, 3.4vw, 44px); line-height:1.08; margin:0;">Pitch the buyer, <span style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
+            <h1 class="headline-xl" id="sr-emotional-want-hook" style="font-size:clamp(28px, 3.4vw, 44px); line-height:1.08; margin:0;">Pitch the Buyer, <span style="color:var(--emerald-roi);">Not Dead Inboxes.</span></h1>
             <p class="subhead" style="margin:0; font-size:15.5px; color:var(--text-secondary); line-height:1.55; max-width:60ch;">Audit verified 3x+ podcast &amp; newsletter sponsor renewals, negotiate at the <strong>-18% 3-flight floor CPM</strong>, and unlock <strong>109 named buyer &amp; agency desk contacts</strong>.</p>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-top:4px;">
               <div style="display:inline-flex; align-items:center; gap:5px;">
@@ -77,14 +77,14 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
               <span class="mono" style="font-size:12.5px; font-weight:700; color:var(--text-secondary);">42 Active Brands • 46 Flagship Shows • 181 Verified Flights</span>
             </div>
           </div>
-          <div id="sr-studio-visual-card" style="position:relative; border-radius:18px; overflow:hidden; border:1px solid var(--border-strong); box-shadow:var(--shadow-editorial); background:#141210; min-height:200px; max-height:225px; display:flex; align-items:flex-end;">
-            <img src="/assets/studio-media-kit.jpg" alt="SponsorRadar Creator Podcast Studio, Rate-Card Insertion Order &amp; Renewal Analytics Desk" width="960" height="540" loading="eager" decoding="async" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 42%; opacity:0.9;" />
-            <div style="position:relative; z-index:2; width:100%; background:linear-gradient(180deg, rgba(20,18,16,0.08) 0%, rgba(20,18,16,0.88) 65%, rgba(20,18,16,0.96) 100%); padding:32px 18px 14px; color:#FAF6EE; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;">
+          <div id="sr-studio-visual-card" style="border-radius:16px; overflow:hidden; border:1px solid var(--border-strong); box-shadow:var(--shadow-editorial); background:var(--bg-surface); display:flex; flex-direction:column;">
+            <img src="/assets/studio-media-kit.jpg" alt="SponsorRadar Creator Podcast Studio, Rate-Card Insertion Order &amp; Renewal Analytics Desk" width="960" height="540" loading="eager" decoding="async" style="width:100%; height:auto; display:block;" />
+            <div style="padding:10px 14px; background:var(--bg-surface); border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
               <div>
-                <div class="mono" style="font-size:11px; font-weight:800; color:#6EE7B7; letter-spacing:0.05em; text-transform:uppercase;">Live Acoustic &amp; Rate-Card Desk</div>
-                <div style="font-size:14.5px; font-weight:700; color:#FFFFFF; margin-top:2px;">Verified 3x+ Renewal Ledger &amp; IAB Make-Good Rider</div>
+                <div class="mono" style="font-size:11px; font-weight:800; color:var(--emerald-roi); letter-spacing:0.04em; text-transform:uppercase;">Live Acoustic &amp; Rate-Card Desk</div>
+                <div style="font-size:13px; font-weight:700; color:var(--text-primary);">Verified 3x+ Renewal Ledger &amp; IAB Make-Good Rider</div>
               </div>
-              <span class="mono" style="padding:4px 10px; border-radius:8px; background:rgba(4,120,87,0.92); color:#FFFFFF; font-size:12px; font-weight:700; border:1px solid #34D399;">-18% 3-Flight Floor</span>
+              <span class="mono" style="padding:3px 9px; border-radius:6px; background:var(--emerald-soft); color:var(--emerald-roi); font-size:11.5px; font-weight:700; border:1px solid var(--emerald-border);">-18% 3-Flight Floor</span>
             </div>
           </div>
         </div>
@@ -476,7 +476,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         pair[0].style.borderColor = pair[1] ? 'var(--emerald-roi)' : 'var(--border-subtle)'; pair[0].setAttribute('aria-pressed', pair[1] ? 'true' : 'false');
       });
       var setH = function(id, h) { var e = document.getElementById(id); if (e) e.innerHTML = h; }, setT = function(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; };
-      setH('sr-emotional-want-hook', mode === 'creator' ? 'Pitch the buyer, <span style="color:var(--emerald-roi);">not dead inboxes.</span>' : 'Audit true CPMs, <span style="color:var(--emerald-roi);">not rack rates.</span>');
+      setH('sr-emotional-want-hook', mode === 'creator' ? 'Pitch the Buyer, <span style="color:var(--emerald-roi);">Not Dead Inboxes.</span>' : 'Audit True CPMs, <span style="color:var(--emerald-roi);">Not Rack Rates.</span>');
       var card = document.getElementById('sr-live-deal-card-row1'); if (card) card.setAttribute('data-active-wedge', mode);
       var rCpm = window.__srCurrentAvgCpm || 42, fCpm = Math.round(rCpm * 0.82), rack = window.__srCurrentRackRate || 9500, floor = Math.round(rack * 0.82);
       var actE = window.__ebActiveEntity || window.__ebSelectedTarget || 'Shopify', isR1 = Boolean(window.__ebSavedEmail || window.__ebIsUnlocked || String(actE).toLowerCase() === 'shopify');
@@ -851,7 +851,7 @@ function renderLandingPage({ defaultAnalysis }) {
   <section style="padding:40px 0 60px;"><div class="container" style="max-width:1060px;">
     <div style="text-align:center; max-width:820px; margin:0 auto 24px;">
       <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary);">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay</span>
-      <h1 class="headline-xl" data-entity-name="${escapeHtml(lpName)}" style="margin-top:10px;">Pitch the buyer, <span class="serif-italic" style="color:var(--emerald-roi);">not dead inboxes.</span></h1>
+      <h1 class="headline-xl" data-entity-name="${escapeHtml(lpName)}" style="margin-top:10px;">Pitch the Buyer, <span class="serif-italic" style="color:var(--emerald-roi);">Not Dead Inboxes.</span></h1>
       <p style="color:var(--text-secondary); font-size:16px; margin-top:12px;">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay. Unmask 3 free verified buyer emails ($0 via work email) or unlock the Full 109-Row CSV Vault ($29).</p>
     </div>
     <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim(),q=((document.getElementById('lp-query')||{}).value||'${escapeHtml(lpName.replace(/'/g, "\\'"))}').trim(),eq=encodeURIComponent(q)+'&email='+encodeURIComponent(v);window.__ebSavedEmail=v;window.__ebActiveEntity=window.__ebSelectedTarget=q;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'lp_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,source:'lp_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.textContent=el.getAttribute('data-free-credit-unmasked');});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Buyer Credits Unlocked';var sl=document.getElementById('eb-lp-sample-link');if(sl)sl.href='/dossier/sample?target='+eq;[['lp-buy-flash','creator_pass'],['lp-buy-vault','playbook_pass']].forEach(function(p){var btn=document.getElementById(p[0]);if(btn)btn.href='/buy/'+p[1]+'?source=lp_express&target='+eq;});}return false;" style="padding:12px 16px; border-radius:12px; border:1px solid var(--border-strong); background:#FFFFFF; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
