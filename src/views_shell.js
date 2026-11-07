@@ -824,7 +824,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       if (!exists) {
         list.push({ name: cleanName, type: type || 'show', cpm: Number(cpm) || 42, spendUsd: Number(spendUsd) || 6500, flights: Number(flights) || 3 });
       }
-      ws = window.__srSaveWorkspace({ shortlist: list.slice(-8) });
+      ws = window.__srSaveWorkspace({ shortlist: list.slice(-4) });
       if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'shortlist_add', target: cleanName, count: ws.shortlist.length });
       if (typeof window.__srRenderComparisonMatrix === 'function') window.__srRenderComparisonMatrix();
     };
@@ -856,7 +856,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         var sp = new URLSearchParams(window.location.search || '');
         var planParam = sp.get('plan');
         if (planParam) {
-          var items = planParam.split(',').map(function(s) { return s.trim(); }).filter(Boolean).slice(0, 6);
+          var items = planParam.split(',').map(function(s) { return s.trim(); }).filter(Boolean).slice(0, 4);
           if (items.length) {
             var seeded = items.map(function(nm, idx) { return { name: nm, type: 'show', cpm: 42 - idx * 3, spendUsd: 7800 - idx * 900, flights: 3 }; });
             window.__srSaveWorkspace({ shortlist: seeded, budget: Number(sp.get('budget')) || 15000, persona: sp.get('mode') || 'buyer' });
@@ -890,7 +890,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       bar.style.display = 'block';
       bar.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;"><strong style="color:#6EE7B7;font-family:var(--font-sans);font-size:13px;line-height:1.35;">My Q4 Media Plan Shortlist (<span id="sr-shortlist-count">' + list.length + '</span> Saved in Browser)</strong><div style="display:inline-flex;align-items:center;gap:8px;flex-shrink:0;"><span style="font-family:var(--font-sans);font-size:13px;color:#FCD34D;font-weight:600;">Save $' + totalSavings.toLocaleString() + ' @ -18% Floor</span><button type="button" id="sr-shortlist-close-btn" onclick="window.__srHideShortlistBar()" aria-label="Hide shortlist tray" title="Hide shortlist tray" style="width:24px;height:24px;border-radius:6px;background:#262320;border:1px solid #3F3A34;color:#CBD5E1;font-size:15px;font-weight:700;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;">×</button></div></div>'
         + '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">' + pills + '</div>'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;"><span style="font-family:var(--font-sans);font-size:13px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;flex-wrap:wrap;"><a href="/api/github-upgrade/export.csv?target=' + firstTarget + '" target="_blank" style="padding:5px 8px;border-radius:6px;border:1px solid #10B981;background:#064E3B;color:#A7F3D0;font-size:12px;font-weight:700;text-decoration:none;">3-Row .CSV ↗</a><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:12px;font-weight:700;cursor:pointer;">Share URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'creator_pass\\\',true)" style="padding:5px 9px;border-radius:6px;border:1px solid #0F766E;background:#0F766E;color:#FFFFFF;font-size:12px;font-weight:800;cursor:pointer;">Creator ($19)</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\',true)" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:12px;font-weight:800;cursor:pointer;">Full Vault ($29) →</button></div></div>';
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:6px;"><span style="font-family:var(--font-sans);font-size:13px;">3-Flight Floor Total: <strong>$' + totalFloor.toLocaleString() + '</strong> (~$' + avgCpm + ' eCPM)</span><div style="display:flex;gap:6px;flex-wrap:wrap;"><button type="button" onclick="window.__srCopySharePlanUrl(this)" style="padding:5px 9px;border-radius:6px;border:1px solid #475569;background:#262320;color:#FBF8F3;font-size:12px;font-weight:700;cursor:pointer;">Share Plan URL</button><button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout(\\\'playbook_pass\\\',true)" style="padding:5px 10px;border-radius:6px;border:none;background:#E84E36;color:#FFFFFF;font-size:12px;font-weight:800;cursor:pointer;">Unlock 109-Row Vault ($29) →</button></div></div>';
     };
   </script>
 </body>
