@@ -39,7 +39,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         name: 'SponsorRadar Verified Sponsorship Intelligence & Rate-Card Directory',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
-        offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 6 }
+        offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 4 }
       }
     ]
   };
@@ -431,8 +431,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         '@type': 'SoftwareApplication', name: 'SponsorRadar Ad-Spend & 3x-Renewal Analyzer', applicationCategory: 'BusinessApplication', operatingSystem: 'Web',
         offers: [
           { '@type': 'Offer', name: '3-Credit Sample Unlock', price: '0.00', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: '1-Row Named Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: '3-File Sponsor & Rate Card Pack', price: '1.99', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Creator Outbound Pass (109-Row CSV + Cold Sequences)', price: '19.00', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'All 109 Buyers Vault (One-Time)', price: '29.00', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Agency & Talent Desk (5 Seats + CRM)', price: '149.00', priceCurrency: 'USD' }
@@ -871,9 +869,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="panel">
         <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend, CPM Calculators &amp; Category Comparisons</span></div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
-          ${relatedPages.slice(0, 3).map(r => `<a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM ($${Math.round(r.avg_cpm * 0.82)} Floor)</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div></a>`).join('')}
+          ${relatedPages.slice(0, 2).map(r => `<a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM ($${Math.round(r.avg_cpm * 0.82)} Floor)</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div></a>`).join('')}
           <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">COMPETITOR COMPARISON • SAVE $2,971/YR</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Who Sponsors Stuff vs. SponsorRadar ($29 One-Time CSV Vault)</div></a>
-          <a href="/tools/sponsorship-insertion-order-make-good-clause-generator" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--vermilion); font-weight:700;">FREE IAB IO RIDER TOOL</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">IAB Podcast &amp; Newsletter Insertion Order Make-Good Generator</div></a>
           <a href="/leaderboard" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">PUBLIC HALL OF FAME LEADERBOARD</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Compare All 30 Ranked Brands &amp; Shows on the Public Leaderboard</div></a>
         </div>
       </div>
