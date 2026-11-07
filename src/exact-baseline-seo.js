@@ -167,7 +167,7 @@ function buildLlmsTxtContent(cfg, seoEntries) {
     `- [Preview 3-Row Verified Buyer & Agency Sample (.CSV)](${host}/api/github-upgrade/export.csv): Live preview of the 109-row verified buyer & agency desk ledger.`,
     `- [$19 Creator Outreach & 109-Row Buyer CSV Pass](${host}/buy/creator_pass): Direct 1-click Stripe Checkout for creators pitching sponsors (One-Time).`,
     `- [$${cfg.corePriceUsd} ${cfg.coreLabel}](${host}/buy/playbook_pass): Direct 1-click Stripe Checkout for the full production pack (${(cfg.deliverableFiles || []).map((f) => f.file).join(', ')}).`,
-    `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/pro_b2b): Direct 1-click Stripe Checkout for one-time B2B Agency & Talent Management Desk access (5 seats + HubSpot/Clay CRM export).`,
+    `- [$${cfg.proPriceUsd} ${cfg.proLabel}](${host}/buy/agency_desk): Direct 1-click Stripe Checkout for one-time B2B Agency & Talent Management Desk access (5 seats + HubSpot/Clay CRM export).`,
     '',
     '## Public Scan Permalinks & Hall of Fame Leaderboard (/leaderboard & /scan/:target)',
     `- [Public Hall of Fame (A+) & Wall of Shame Leaderboard](${host}/leaderboard) ([.md](${host}/leaderboard.md)): Ranked public entity scorecards with CNN visual/acoustic sensor readouts.`,
@@ -218,7 +218,7 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
     `- **Preview 3-Row Verified Buyer Sample (.CSV)**: ${host}/api/github-upgrade/export.csv`,
     `- **1-Click Stripe Checkout ($19 Creator Outreach Pass)**: ${host}/buy/creator_pass`,
     `- **1-Click Stripe Checkout ($${cfg.corePriceUsd} ${cfg.coreLabel})**: ${host}/buy/playbook_pass`,
-    `- **1-Click Stripe Checkout ($${cfg.proPriceUsd} ${cfg.proLabel})**: ${host}/buy/pro_b2b`,
+    `- **1-Click Stripe Checkout ($${cfg.proPriceUsd} ${cfg.proLabel})**: ${host}/buy/agency_desk`,
     '',
     '## 2. Benchmark KPI Matrix Across Verified Presets',
     `| Scenario Preset | ${cfg.kpis.map((k) => k.label).join(' | ')} |`,
@@ -300,6 +300,8 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex, explicitCanonPat
     ...related.map((r) => `- [${r.title}](${host}/seo/${r.slug}) ([.md](${host}/seo/${r.slug}.md)): ${r.summary}`),
     '',
     `## 4. Run Interactive Audit, Counterparty Previews & 1-Click Direct Stripe Checkout`,
+    `- **Row #1 Verified Buyer Proof (Free)**: \`sarah.kaufman@shopify.com\` | **Agency Desk**: \`m.vance@rightsideup.co\` (Right Side Up) — <1.4% 7-day SMTP bounce SLA`,
+    `- **Ring 3 Holdback Contract**: \`$0\` Work Email Sample unmasks 3 buyer/agency emails + Track A Opener + IAB §4.2 Rate Cap; \`$19\` Creator Pass / \`$29\` 109-Row Vault unlocks all 109 rows + IAB §7.1 (1.5% CTR Make-Good Clause) + Track B Counter-Offer + 3-Step Follow-Ups.`,
     `- Launch interactive calculator: [${host}/seo/${matched.slug}](${host}/seo/${matched.slug})`,
     `- Preview $0 3-Credit Sample Dossier: [${host}/dossier/sample?target=${entityQ}](${host}/dossier/sample?target=${entityQ})`,
     `- Preview Redlined IAB IO Make-Good Rider (.TXT): [${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}${flParam}](${host}/api/github-upgrade/iab-io-addendum.txt?target=${entityQ}${flParam})`,
@@ -307,7 +309,7 @@ function buildMarkdownTwinContent(cfg, seoEntries, slugOrIndex, explicitCanonPat
     `- Preview 3-Row Verified Buyer Sample (.CSV): [${host}/api/github-upgrade/export.csv?target=${entityQ}](${host}/api/github-upgrade/export.csv?target=${entityQ})`,
     `- 1-Click $19 Creator Outreach Pass: [${host}/buy/creator_pass?target=${entityQ}](${host}/buy/creator_pass?target=${entityQ})`,
     `- 1-Click $${cfg.corePriceUsd} ${cfg.coreLabel}: [${host}/buy/playbook_pass?target=${entityQ}](${host}/buy/playbook_pass?target=${entityQ})`,
-    `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/pro_b2b?target=${entityQ}](${host}/buy/pro_b2b?target=${entityQ})`
+    `- 1-Click $${cfg.proPriceUsd} ${cfg.proLabel}: [${host}/buy/agency_desk?target=${entityQ}](${host}/buy/agency_desk?target=${entityQ})`
   ].join('\n');
 }
 
@@ -690,7 +692,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       'stripe/stripe-node (★ 4,100+): Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
       'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+): Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
     ],
-    direct_buy_links: { creator_pass_19: `https://${cfg.domain}/buy/creator_pass`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b` },
+    direct_buy_links: { creator_pass_19: `https://${cfg.domain}/buy/creator_pass`, playbook_pass_29: `https://${cfg.domain}/buy/playbook_pass`, agency_desk_149: `https://${cfg.domain}/buy/agency_desk` },
     critical_bugs_eliminated: { bug_1_pseo_express_checkout_and_stripe_price_fallback: true, bug_2_outbound_pitch_direct_stripe_links_zero_free_forever: true, bug_3_get_buy_tier_303_redirect_in_llms_and_md_twins: true, bug_4_transactional_lead_followup_with_direct_buy_links: true }
   }));
 }
@@ -715,7 +717,8 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
           <span style="padding:3px 10px;border-radius:${t.radiusPill};background:${t.safeSoftBg};color:${t.safeColor};font-family:${t.fontSans};font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:800;">Grade ${escHtml(s.grade)} · ${s.score}/100</span>
         </div>
         <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:block;font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;text-decoration:none;">${escHtml(s.target)}</a>
-        <div style="font-size:14px;color:${t.textSecondary};margin-bottom:10px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
+        <div style="font-size:14px;color:${t.textSecondary};margin-bottom:6px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
+        <div style="font-size:12px;color:${i === 0 ? t.safeColor : t.textMuted};font-weight:700;margin-bottom:10px;">${i === 0 ? 'Row #1 Buyer Proof: partnerships@drinkag1.com · m.vance@rightsideup.co' : 'Buyer &amp; Agency Email: Masked in Free Preview ($0 3-Credit Sample)'}</div>
       </div>
       <div>
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
@@ -875,7 +878,7 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
             { '@type': 'Offer', name: '3-Credit Work Email Sample + IAB Rider Preview', price: '0.00', priceCurrency: 'USD', url: `${hostUrl}/dossier/sample${tq}` },
             { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass${tq}` },
             { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/playbook_pass${tq}` },
-            { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b${tq}` }
+            { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/agency_desk${tq}` }
           ]
         }
       },
