@@ -151,16 +151,19 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">1. High-Intent Niche &amp; Category Ad Rate Benchmark Directories (${nichePages.length} Reports)</span>
         </div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
-          ${nichePages.map(p => {
+          ${nichePages.map((p, idx) => {
             const floorCpm = Math.round(p.avg_cpm * 0.82);
             const isB2b = /B2B|SaaS|DevTools|AI|Fintech|Security|Tech/i.test(p.category + ' ' + p.title);
             const nicheTarget = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR'].find(k => p.title.toLowerCase().includes(k.toLowerCase())) || (isB2b ? 'Linear' : 'Shopify');
+            const nicheFloorHtml = idx === 0
+              ? `$${p.avg_cpm} Rack / $${floorCpm} Floor CPM`
+              : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpm} Floor CPM">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(p.category)}</span>
-                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${nicheFloorHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
@@ -677,7 +680,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:14px;">
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
                 <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option A • Target Show 3-Flight Floor</div>
-                <div id="sr-seo-mb-card1" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></div>
+                <div id="sr-seo-mb-card1" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);" data-free-credit-unmasked="$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)">${isRow1Page ? `$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)` : 'Floor Locked ($0 Email ↑)'}</span></div>
                 <div id="sr-seo-mb-card1-sub" style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot w/ 3-flight commitment + 1.5% CTR make-good</div>
               </div>
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
@@ -741,7 +744,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           </div>
           <div class="mono" style="padding:7px 10px; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); overflow-x:auto; white-space:nowrap; font-size:11.5px;">
             <span style="color:var(--text-muted);">row,entity,decision_maker_role,named_buyer_email,external_agency_desk,peer_renewal_30d,rack_ad_rate,floor_3flight_rate,niche_pilot_budget,live_outreach_angle,audience_guarantee_rider</span><br/>
-            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span id="sr-csv-row1-buyer" data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)} (Sample Proof: sarah.kaufman@shopify.com)</span>,<span id="sr-csv-row1-agency" data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)" style="color:var(--text-secondary);">${escapeHtml(maskedCsvAgencyEmail)} (Sample Proof: m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","[HOLD BACK: Full Redlined IAB §7.1 Make-Good Clause &amp; Rows #4–#109 in $19 Creator Pass / $29 109-Row Vault]"</strong>
+            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span id="sr-csv-row1-buyer" data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)} (Sample Proof: sarah.kaufman@shopify.com)</span>,<span id="sr-csv-row1-agency" data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)" style="color:var(--text-secondary);">${escapeHtml(maskedCsvAgencyEmail)} (Sample Proof: m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},${isRow1Page ? `$${floorCpm}` : `<span data-free-credit-unmasked="$${floorCpm}">LOCKED ($0 Email)</span>`},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at -18% Floor","[HOLD BACK: Full Redlined IAB §7.1 Make-Good Clause &amp; Rows #4–#109 in $19 Creator Pass / $29 109-Row Vault]"</strong>
           </div>
         </div>
 
@@ -864,9 +867,9 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="panel">
         <div class="panel-header"><span style="font-weight:800;">Related Sponsorship Spend, CPM Calculators &amp; Category Comparisons</span></div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
-          ${relatedPages.slice(0, 2).map(r => `<a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} CPM ($${Math.round(r.avg_cpm * 0.82)} Floor)</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div></a>`).join('')}
-          <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">COMPETITOR COMPARISON • SAVE $2,971/YR</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Who Sponsors Stuff vs. SponsorRadar ($29 One-Time CSV Vault)</div></a>
-          <a href="/leaderboard" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--amber-gold); font-weight:700;">PUBLIC HALL OF FAME LEADERBOARD</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Compare All 30 Ranked Brands &amp; Shows on the Public Leaderboard</div></a>
+          ${relatedPages.slice(0, 2).map(r => `<a href="/seo/${escapeHtml(r.slug)}" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(r.category)} • $${r.avg_cpm} Rack CPM (${String(r.slug || '').includes('shopify') ? `$${Math.round(r.avg_cpm * 0.82)} Floor` : '3x Floor Locked'})</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">${escapeHtml(r.title)}</div></a>`).join('')}
+          <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">COMPETITOR COMPARISON • SAVE $2,971/YR</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Who Sponsors Stuff vs. SponsorRadar ($29 One-Time CSV Vault)</div></a>
+          <a href="/leaderboard" class="panel" style="padding:14px; background:var(--bg-elevated); box-shadow:none;"><div class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">PUBLIC HALL OF FAME LEADERBOARD</div><div style="font-weight:700; font-size:13.5px; margin-top:4px; color:var(--text-primary);">Compare All 30 Ranked Brands &amp; Shows on the Public Leaderboard</div></a>
         </div>
       </div>
     </div>
