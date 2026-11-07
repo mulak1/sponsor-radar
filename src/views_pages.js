@@ -190,12 +190,16 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const agencyEmail = getAgencyBuyerEmail(b.domain || 'brand.io', b.category || p.category);
             const maskedEmail = maskSponsorEmail(b.sponsor_email || unmaskedEmail, b.category || p.category);
             const freeUnmaskAttr = idx < 3 ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
+            const floorCpmVal = Math.round(p.avg_cpm * 0.82);
+            const floorChipHtml = idx === 0
+              ? `$${p.avg_cpm} Rack / $${floorCpmVal} Floor`
+              : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
-                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${Math.round(p.avg_cpm * 0.82)} Floor</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${floorChipHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
                 <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${idx === 0 ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
@@ -215,22 +219,25 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <span style="font-weight:800;">3. Creator Show Media-Kits, Rack vs. Floor Rates &amp; Ad Rate Benchmarks (${showPages.length} Reports)</span>
         </div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
-          ${showPages.map(p => {
+          ${showPages.map((p, idx) => {
             const s = showBySlug.get(p.target_slug) || {};
             const rackUsd = s.midroll_rate_usd || 8500;
             const floorUsd = Math.round(rackUsd * 0.82);
             const reachK = Math.round((s.audience_size || 120000) / 1000);
             const chType = s.channel_type || 'Podcast & Newsletter';
             const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || '') + ' ' + p.category + ' ' + p.title);
+            const showFloorLine = idx === 0
+              ? `Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong>`
+              : `<span data-free-credit-unmasked="Rack: $${rackUsd.toLocaleString()}/read → 3-Flight Floor: $${floorUsd.toLocaleString()} (-18%)">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
                   <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
-                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
+                <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${showFloorLine}</div>
               </div>
               <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
@@ -246,7 +253,6 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel sr-dir-section">
           <div class="panel-header">
             <span style="font-weight:800;">All ${brands.length} Indexed Sponsor Brands (Direct Buyer Lookup)</span>
-            <span class="pill-amber">100% INTERACTIVE</span>
           </div>
           <div class="panel-body">
             ${brands.map(b => {
@@ -256,12 +262,12 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               return `
               <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
-                  <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(b.name)}</a>
+                  <a href="${primaryHref}" style="font-weight:700; color:var(--text-primary); text-decoration:underline;">${escapeHtml(b.name)}</a>
                   <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(b.domain)} • ${escapeHtml(b.vertical || b.category)})</span>
                 </span>
                 <span style="display:inline-flex; align-items:center; gap:8px;">
-                  <span class="mono" style="color:var(--amber-gold); font-weight:700; font-size:13.5px;">${fmtSpend(b.est_monthly_spend)} • ${b.renewal_rate_pct}% 3x • $${b.avg_cpm} Ad Rate</span>
-                  <a href="/?q=${encodeURIComponent(b.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:13.5px; padding:3px 8px;">Audit ↗</a>
+                  <span class="mono" style="color:var(--text-secondary); font-weight:700; font-size:13.5px;">${fmtSpend(b.est_monthly_spend)} • ${b.renewal_rate_pct}% 3x • $${b.avg_cpm} Ad Rate</span>
+                  <a href="/?q=${encodeURIComponent(b.name)}#radar-tool" style="color:var(--emerald-roi); font-weight:700; text-decoration:underline; font-size:13px;">Audit ↗</a>
                 </span>
               </div>
             `;
@@ -271,23 +277,25 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         <div class="panel sr-dir-section">
           <div class="panel-header">
             <span style="font-weight:800;">All ${shows.length} Indexed Podcasts, Newsletters &amp; YouTube Shows</span>
-            <span class="pill-emerald">RACK VS. FLOOR</span>
           </div>
           <div class="panel-body">
-            ${shows.map(s => {
+            ${shows.map((s, idx) => {
               const sSeo = showSlugMap.get(s.slug);
               const primaryHref = sSeo ? `/seo/${escapeHtml(sSeo)}` : `/?q=${encodeURIComponent(s.name)}#radar-tool`;
               const floorUsd = Math.round(s.midroll_rate_usd * 0.82);
               const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || s.category || '') + ' ' + s.name);
+              const idxRateLine = idx === 0
+                ? `$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor`
+                : `<span data-free-credit-unmasked="$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor">$${s.midroll_rate_usd.toLocaleString()} Rack • 3x Floor Locked</span>`;
               return `
               <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
-                  <a href="${primaryHref}" style="font-weight:700; color:var(--vermilion); text-decoration:underline;">${escapeHtml(s.name)}</a>
+                  <a href="${primaryHref}" style="font-weight:700; color:var(--text-primary); text-decoration:underline;">${escapeHtml(s.name)}</a>
                   <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(s.channel_type)} • ${Math.round(s.audience_size / 1000)}K)</span>
                 </span>
                 <span style="display:inline-flex; align-items:center; gap:8px;">
-                  <span class="mono" style="color:var(--emerald-roi); font-weight:700; font-size:13.5px;">$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor • $${s.base_cpm} Ad Rate</span>
-                  <a href="/?q=${encodeURIComponent(s.name)}#radar-tool" class="pill-slate" style="text-decoration:none; font-size:13.5px; padding:3px 8px;">Quote ↗</a>
+                  <span class="mono" style="color:var(--text-secondary); font-weight:700; font-size:13.5px;">${idxRateLine}</span>
+                  <a href="/?q=${encodeURIComponent(s.name)}#radar-tool" style="color:var(--emerald-roi); font-weight:700; text-decoration:underline; font-size:13px;">Quote ↗</a>
                 </span>
               </div>
             `;
@@ -306,7 +314,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             </p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true)" class="btn btn-vermilion" style="padding:10px 15px; font-size:13.5px;">Creator Pass ($19) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true)" class="btn btn-ghost" style="padding:10px 15px; font-size:13.5px;">Creator Pass ($19) →</button>
             <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true)" class="btn btn-emerald" style="padding:10px 16px; font-size:13.5px;">109-Row Buyer Vault ($29) →</button>
           </div>
         </div>
@@ -315,7 +323,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="pill-slate" style="text-decoration:none;">Who Sponsors Stuff vs SponsorRadar →</a>
           <a href="/tools/podcast-cpm-fair-rate-calculator" class="pill-slate" style="text-decoration:none;">Podcast CPM Fair Rate Calculator →</a>
           <a href="/tools/sponsorship-insertion-order-make-good-clause-generator" class="pill-slate" style="text-decoration:none;">IAB Make-Good Clause Generator →</a>
-          <a href="/leaderboard" class="pill-amber" style="text-decoration:none;">Full 30-Target Leaderboard →</a>
+          <a href="/leaderboard" class="pill-slate" style="text-decoration:none;">Full 30-Target Leaderboard →</a>
         </div>
       </div>
 
