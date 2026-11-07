@@ -639,7 +639,7 @@ function buildClientRuntimeScript(cfg) {
     try { localStorage.setItem(STORAGE_KEY, '1'); document.cookie = 'eb_unlocked=1; Path=/; Max-Age=31536000; SameSite=Lax'; } catch (_) {}
     var gTr = document.getElementById('eb-table-row4-gate-tr'); if (gTr && gTr.parentNode) gTr.parentNode.removeChild(gTr);
     var blurred = document.querySelectorAll('.eb-blurred-deliverable'); for (var i = 0; i < blurred.length; i++) blurred[i].classList.remove('eb-blurred-deliverable');
-    Array.prototype.slice.call(document.querySelectorAll('[data-raw-email]')).forEach(function(nd) { nd.textContent = nd.getAttribute('data-raw-email'); }); Array.prototype.slice.call(document.querySelectorAll('[data-free-credit-unmasked], [data-row4-unmasked]')).forEach(function(el) { el.innerHTML = el.getAttribute('data-free-credit-unmasked') || el.getAttribute('data-row4-unmasked'); });
+    Array.prototype.slice.call(document.querySelectorAll('[data-raw-email]')).forEach(function(nd) { nd.textContent = nd.getAttribute('data-raw-email'); }); Array.prototype.slice.call(document.querySelectorAll('[data-free-credit-unmasked], [data-row4-unmasked]')).forEach(function(el) { var v = el.getAttribute('data-free-credit-unmasked') || el.getAttribute('data-row4-unmasked'); if (el.tagName === 'PRE') el.textContent = v; else el.innerHTML = v; });
     var spU = new URLSearchParams(window.location.search || ''), curtain = document.getElementById('eb-deliverable-curtain'), qEnt = encodeURIComponent(window.__ebActiveEntity || spU.get('target') || spU.get('q') || (document.querySelector('.dossier-hero-title') && document.querySelector('.dossier-hero-title').getAttribute('data-entity-name')) || 'Shopify');
     if (curtain) {
       curtain.style.background = CFG.theme.safeSoftBg; curtain.style.borderColor = CFG.theme.safeBorder;
@@ -873,7 +873,7 @@ function buildClientRuntimeScript(cfg) {
     var em = String(rawEm || '').trim(); if (!em || em.indexOf('@') < 1 || em.indexOf('.') < 3) return '';
     window.__ebSavedEmail = em; try { localStorage.setItem('eb_lead_email', em); localStorage.setItem('sr_free_credits_unlocked', '3'); document.cookie = 'eb_lead_email=' + encodeURIComponent(em) + '; Path=/; Max-Age=2592000; SameSite=Lax'; } catch (_) {}
     Array.prototype.slice.call(document.querySelectorAll('tr[data-free-credit-row="1"], tr.eb-blurred-deliverable')).slice(0, 3).forEach(function(tr) { tr.classList.remove('eb-blurred-deliverable'); tr.setAttribute('data-row4-unlocked', '1'); tr.style.filter = 'none'; tr.style.background = CFG.theme.safeSoftBg; });
-    Array.prototype.slice.call(document.querySelectorAll('[data-free-credit-unmasked], [data-row4-unmasked]')).forEach(function(el) { el.innerHTML = el.getAttribute('data-free-credit-unmasked') || el.getAttribute('data-row4-unmasked'); });
+    Array.prototype.slice.call(document.querySelectorAll('[data-free-credit-unmasked], [data-row4-unmasked]')).forEach(function(el) { var v = el.getAttribute('data-free-credit-unmasked') || el.getAttribute('data-row4-unmasked'); if (el.tagName === 'PRE') el.textContent = v; else el.innerHTML = v; });
     window.__ebSyncEmailPreviewLinks(em);
     var bdg = document.getElementById('sr-free-credits-badge'); if (bdg) { bdg.style.display = 'inline-flex'; bdg.textContent = '✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn'; }
     var uBtn = document.getElementById('btn-unlock-free-credits'); if (uBtn) { uBtn.textContent = '✓ 3 of 3 Free Buyer Credits Unlocked'; uBtn.style.background = '#047857'; uBtn.style.color = '#FFFFFF'; }
