@@ -49,24 +49,18 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
     <div class="container">
       <!-- Executive Header & Dual-Track Orientation -->
       <div style="margin-bottom:22px;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:14px;">
-          <div>
-            <h1 class="headline-xl" style="font-size:clamp(1.95rem, 3vw, 2.55rem);line-height:1.15;margin:0 0 8px 0;">Pitch the buyer, not dead inboxes.</h1>
-            <p class="subhead" style="margin:0; font-size:16px; color:var(--text-secondary); max-width:78ch;">
-              Browse <strong>${totalReports} verified sponsorship dossiers</strong>, <strong>${totalContacts} verified buyer &amp; agency rows</strong>, and <strong>-18% 3-flight floor Ad Rates</strong> (save $2,400 overpay).
-            </p>
-          </div>
-          <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:var(--bg-surface); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle);">
-            <div style="font-size:12.5px; color:var(--text-secondary);">
-              <span class="mono" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:2px;">Row #1 Free Sample Proof</span>
-              <strong style="color:var(--text-primary); display:block;">Shopify: <code style="color:var(--emerald-roi);font-weight:700;">sarah.kaufman@shopify.com</code> • <code style="color:var(--text-secondary);font-weight:600;">m.vance@rightsideup.co</code></strong>
-            </div>
-          </div>
+        <div style="margin-bottom:12px;">
+          <h1 class="headline-xl" style="font-size:clamp(1.95rem, 3vw, 2.55rem);line-height:1.15;margin:0 0 6px 0;">Pitch the buyer, not dead inboxes.</h1>
+          <p class="subhead" style="margin:0; font-size:15.5px; color:var(--text-secondary); max-width:78ch;">
+            Browse <strong>${totalReports} verified sponsorship dossiers</strong>, <strong>${totalContacts} verified buyer &amp; agency rows</strong>, and <strong>-18% 3-flight floor Ad Rates</strong> (save $2,400 overpay).
+          </p>
         </div>
 
-        <!-- Top-Fold $0 Email Unlock Bar -->
+        <!-- Consolidated Top-Fold Row #1 Sample Proof + $0 Email Unlock Bar -->
         <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim(),t=window.__ebSelectedTarget||window.__ebActiveEntity||'Shopify';window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,target:t,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var sl=document.getElementById('eb-dir-sample-link');if(sl)sl.href='/dossier/sample?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);document.querySelectorAll('a[href*=&quot;/api/github-upgrade/&quot;],a[href^=&quot;/dossier/sample&quot;]').forEach(function(a){var h=a.getAttribute('href')||'';if(h.indexOf('email=')===-1)a.setAttribute('href',h+(h.indexOf('?')===-1?'?':'&')+'email='+encodeURIComponent(v));});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Buyer Credits Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); background:var(--bg-surface); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Unlock 3 Free Verified Buyer Emails ($0) • <a id="eb-dir-sample-link" href="/dossier/sample?target=Shopify" target="_blank" style="color:var(--emerald-roi);text-decoration:underline;">Sample Dossier ↗</a></span>
+          <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="font-size:13px; color:var(--text-primary);">
+            <strong>Row #1 Sample Proof (Shopify):</strong> <code style="color:var(--emerald-roi);font-weight:700;">sarah.kaufman@shopify.com</code> • <code style="color:var(--text-secondary);font-weight:600;">m.vance@rightsideup.co</code> ($49 Rack → $40 Floor) • <a id="eb-dir-sample-link" href="/dossier/sample?target=Shopify" target="_blank" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">Sample Dossier ↗</a>
+          </div>
           <span class="pill-emerald" id="sr-free-credits-badge" style="display:none; font-size:11.5px;">✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn</span>
           <div style="display:flex; gap:8px; flex-wrap:wrap; flex:1; min-width:260px; justify-content:flex-end; align-items:center;">
             <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'directory_sweetspot_blur');}" style="flex:1; min-width:190px; max-width:260px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13px;" />
@@ -192,9 +186,10 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const unmaskedEmail = getUnmaskedNamedBuyerEmail(b.sponsor_email || `partnerships@${b.domain || 'brand.io'}`);
             const agencyEmail = getAgencyBuyerEmail(b.domain || 'brand.io', b.category || p.category);
             const maskedEmail = maskSponsorEmail(b.sponsor_email || unmaskedEmail, b.category || p.category);
-            const freeUnmaskAttr = idx < 3 ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
+            const isRow1Brand = String(p.target_slug || p.slug || '').toLowerCase().includes('shopify');
+            const freeUnmaskAttr = (idx < 3 || isRow1Brand) ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
             const floorCpmVal = Math.round(p.avg_cpm * 0.82);
-            const floorChipHtml = idx === 0
+            const floorChipHtml = isRow1Brand
               ? `$${p.avg_cpm} Rack / $${floorCpmVal} Floor`
               : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
@@ -205,7 +200,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
                   <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${floorChipHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${idx === 0 ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
+                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${isRow1Brand ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
               </div>
               <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
