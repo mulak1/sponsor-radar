@@ -190,6 +190,46 @@ function resolveTargetIntel(rawTarget) {
   return { clean, slugCand: slugCand || 'shopify', brand, show, rackCpm, floorCpm, reach, rackSlotUsd, floorSlotUsd, unmaskedBuyer, maskedBuyer, unmaskedAgency, maskedAgency, agencyDesk, dmRole, peerShow, peerFlights, peerCode, peerVanity };
 }
 
+function renderDeliverablePreviewHtml(t, docTitle, fileName, rawContent, dlPath, hasEmailUnlock, isPaidUnlock) {
+  const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const encT = encodeURIComponent(t.clean);
+  const statusPill = isPaidUnlock ? '✓ Full Paid Pass Active' : (hasEmailUnlock ? '✓ 3 Free Buyer Credits Unmasked ($0)' : `Row #1 Proof: sarah.kaufman@shopify.com • ${t.clean}: ${t.maskedBuyer}`);
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(docTitle)} — ${esc(t.clean)} | SponsorRadar</title><link rel="stylesheet" href="/styles.css"/></head><body style="margin:0;background:#FBF8F3;color:#181512;font-family:Plus Jakarta Sans,-apple-system,sans-serif;line-height:1.55;">
+  <script>(function(){try{var v=localStorage.getItem('vs_vid')||('v_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36));localStorage.setItem('vs_vid',v);document.cookie='vs_vid='+v+'; Path=/; Max-Age=31536000; SameSite=Lax';window.__ebVid=v;window.__ebBuy=function(tier){var em=(document.getElementById('sr-bridge-email')||{}).value||localStorage.getItem('eb_lead_email')||'';fetch('/buy/'+tier+'?format=json&target=${encT}'+(em?'&email='+encodeURIComponent(em):''),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({vid:v,target:'${esc(t.clean)}',email:em,page_url:window.location.pathname,buyer_wedge:'creator'})}).then(function(r){return r.json();}).then(function(d){if(d&&d.checkout_url)window.location.href=d.checkout_url;}).catch(function(){window.location.href='/buy/'+tier+'?target=${encT}';});return false;};}catch(_){}})();</script>
+  <header class="top-nav" style="background:#FBF8F3;border-bottom:1px solid #E4DEC9;padding:12px 24px;"><div style="max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;"><a href="/?q=${encT}" style="font-weight:800;font-size:1.05rem;color:#181512;text-decoration:none;">&larr; Back to SponsorRadar (${esc(t.clean)})</a><div style="display:inline-flex;gap:8px;align-items:center;"><a href="/dossier/sample?target=${encT}" style="padding:7px 12px;border-radius:999px;background:#FFFFFF;border:1px solid #D5CCB8;color:#181512;font-size:12.5px;font-weight:800;text-decoration:none;">$0 Sample Dossier</a><a href="/buy/playbook_pass?target=${encT}" onclick="return window.__ebBuy('playbook_pass');" style="padding:8px 14px;border-radius:999px;background:#C83E2B;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">109-Row Buyer Vault ($29) &rarr;</a></div></div></header>
+  <main id="main-content" style="max-width:1080px;margin:0 auto;padding:20px 24px 40px;">
+    <h1 style="font-size:clamp(1.45rem,2.4vw,1.95rem);margin:0 0 6px 0;">${esc(docTitle)}: ${esc(t.clean)}</h1>
+    <p style="margin:0 0 14px 0;color:#575046;font-size:14.5px;">Verified Rate-Card Floor: <strong>$${t.rackCpm} Rack CPM &rarr; $${t.floorCpm} 3-Flight Floor CPM (-18% &bull; $${t.floorSlotUsd.toLocaleString()}/flight)</strong> &bull; Agency Desk: <strong>${esc(t.agencyDesk)}</strong></p>
+    <form id="sr-sweetspot-bridge-form" onsubmit="event.preventDefault();var em=((document.getElementById('sr-bridge-email')||{}).value||'').trim();if(!em||em.indexOf('@')<1)return false;try{localStorage.setItem('eb_lead_email',em);document.cookie='eb_lead_email='+encodeURIComponent(em)+'; Path=/; Max-Age=2592000; SameSite=Lax';}catch(_){}fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,target:'${esc(t.clean)}',utmSource:'deliverable_preview_bridge',summaryText:'Deliverable Preview 3 Free Credits Unlock: ${esc(t.clean)}'})}).finally(function(){var u=new URL(window.location.href);u.searchParams.set('email',em);window.location.href=u.toString();});return false;" style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px;">
+      <div style="color:#065F46;font-weight:700;">${esc(statusPill)} &middot; <span style="font-weight:600;">Enter work email ($0) to unmask ${esc(t.clean)} buyer &amp; agency emails in this document:</span></div>
+      <div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 ${esc(t.clean)} contacts ($0)..." style="padding:7px 12px;border-radius:999px;border:1px solid #047857;background:#FFFFFF;font-size:12.5px;min-width:215px;" />
+        <button id="btn-unlock-free-credits" type="submit" style="padding:7px 14px;border-radius:999px;border:none;background:#047857;color:#FFFFFF;font-size:12.5px;font-weight:800;cursor:pointer;">Unmask in Document ($0) &rarr;</button>
+      </div>
+    </form>
+    <div style="background:#FFFFFF;border:1px solid #D5CCB8;border-radius:14px;padding:16px 18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #E4DEC9;">
+        <code style="font-size:12.5px;font-weight:700;color:#475569;">${esc(fileName)}</code>
+        <div style="display:inline-flex;gap:8px;align-items:center;">
+          <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('sr-doc-pre').innerText);this.textContent='✓ Copied to Clipboard';" style="padding:6px 12px;border-radius:8px;border:1px solid #047857;background:#ECFDF5;color:#047857;font-size:12.5px;font-weight:800;cursor:pointer;">Copy Document</button>
+          <a href="${esc(dlPath)}" style="padding:6px 12px;border-radius:8px;border:1px solid #D5CCB8;background:#FBF8F3;color:#181512;font-size:12.5px;font-weight:800;text-decoration:none;">Download Raw File &darr;</a>
+        </div>
+      </div>
+      <pre id="sr-doc-pre" style="margin:0;padding:14px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;font-family:JetBrains Mono,monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#0F172A;">${esc(rawContent)}</pre>
+      <div style="margin-top:14px;padding:14px 16px;border-radius:12px;background:#F8FAFC;border:1px solid #CBD5E1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#0F172A;">Unlock Full Redlined IAB §7.1 / §9.3 / §11.0 Clauses, Dual-Track .EML &amp; All 109 Verified Buyer Rows</div>
+          <div style="font-size:12.5px;color:#475569;margin-top:2px;">One-time pass (never a recurring subscription) &bull; Instant download &bull; 30-day zero-bounce guarantee</div>
+        </div>
+        <div style="display:inline-flex;gap:8px;flex-wrap:wrap;">
+          <a href="/buy/creator_pass?target=${encT}" onclick="return window.__ebBuy('creator_pass');" style="padding:9px 15px;border-radius:999px;background:#C83E2B;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">Creator Pass ($19) &rarr;</a>
+          <a href="/buy/playbook_pass?target=${encT}" onclick="return window.__ebBuy('playbook_pass');" style="padding:9px 15px;border-radius:999px;background:#047857;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">Full 109-Row CSV Vault ($29) &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </main></body></html>`;
+}
+
 app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'], (req, res) => {
   const isPaidUnlock = Boolean(req.query.unlocked === '1' || req.query.session_id || String(req.headers.cookie || '').includes('eb_unlocked=1'));
   const hasEmailUnlock = hasRequestEmailUnlock(req, res);
@@ -232,8 +272,13 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
     '',
     ...clauses
   ].join('\r\n');
+  const fName = `${t.slugCand}-iab-sponsorship-io-redline-addendum.txt`;
+  if (req.query.download !== '1' && req.query.format !== 'raw' && String(req.headers.accept || '').includes('text/html')) {
+    const dlUrl = `${req.path}?target=${encT}&floor_cpm=${floorCpm}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
+    return res.status(200).type('html').send(renderDeliverablePreviewHtml(t, 'Redlined IAB Sponsorship IO Addendum (.TXT)', fName, rider, dlUrl, hasEmailUnlock, isPaidUnlock));
+  }
   res.status(200).type('text/plain; charset=utf-8')
-    .setHeader('Content-Disposition', `attachment; filename="${t.slugCand}-iab-sponsorship-io-redline-addendum.txt"`)
+    .setHeader('Content-Disposition', `attachment; filename="${fName}"`)
     .send(rider);
 });
 
@@ -283,8 +328,13 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
     'SponsorRadar Revenue Intelligence',
     'https://www.sponsorradar.io'
   ].join('\r\n');
+  const fName = `${t.slugCand}-outreach-pitch.eml`;
+  if (req.query.download !== '1' && req.query.format !== 'raw' && String(req.headers.accept || '').includes('text/html')) {
+    const dlUrl = `${req.path}?target=${encT}&floor_cpm=${floorCpm}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
+    return res.status(200).type('html').send(renderDeliverablePreviewHtml(t, 'Dual-Track Outreach & Counter-Offer Script (.EML)', fName, eml, dlUrl, hasEmailUnlock, isPaidUnlock));
+  }
   res.status(200).type('message/rfc822')
-    .setHeader('Content-Disposition', `attachment; filename="${t.slugCand}-outreach-pitch.eml"`)
+    .setHeader('Content-Disposition', `attachment; filename="${fName}"`)
     .send(eml);
 });
 
