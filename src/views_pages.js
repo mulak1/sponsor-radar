@@ -132,7 +132,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
 
         <!-- Zero-Match Custom Workbench Fallback -->
         <div id="sr-dir-empty-state" class="panel" style="display:none; margin-top:16px; padding:24px; text-align:center; background:var(--bg-surface);">
-          <div class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700; margin-bottom:6px;">CUSTOM ON-DEMAND AUDIT READY</div>
+          <div class="mono" style="font-size:13.5px; color:var(--text-muted); font-weight:700; margin-bottom:6px;">CUSTOM ON-DEMAND AUDIT READY</div>
           <h3 style="font-size:18px; margin:0 0 8px 0;">No pre-indexed report matched "<span id="sr-dir-empty-query"></span>" - Run a Live Custom Audit Instead</h3>
           <p style="font-size:14px; color:var(--text-secondary); max-width:60ch; margin:0 auto 14px;">Our live sponsorship engine can benchmark any custom brand domain, podcast, newsletter, or YouTube channel on the fly.</p>
           <a id="sr-dir-empty-cta" href="/#radar-tool" class="btn btn-emerald" style="padding:10px 18px; font-size:14px; text-decoration:none;">Audit This Target in Live Workbench ↗</a>
@@ -333,7 +333,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             var pills = document.querySelectorAll('#sr-dir-pill-bar button[data-dir-pill]');
             for (var i = 0; i < pills.length; i++) {
               var isAct = pills[i].getAttribute('data-dir-pill') === pillKey;
-              pills[i].style.background = isAct ? 'var(--vermilion)' : '';
+              pills[i].style.background = isAct ? 'var(--emerald-roi)' : '';
               pills[i].style.color = isAct ? '#FFFFFF' : '';
             }
           }
@@ -409,14 +409,17 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const showBookingEmail = maskSponsorEmail(unmaskedShowBookingEmail);
   const proven3xCount = placements.filter(p => p.flights >= 3).length;
 
+  const isRow1Page = String(exportTarget || '').toLowerCase().includes('shopify');
+  const flQueryParam = isRow1Page ? `&floor_cpm=${floorCpm}` : '';
+
   const faqItems = [
     {
       q: isShowPage
         ? `What are ${show.name}'s sponsorship rates, verified Ad Rate, and 3x-renewed sponsors in 2026?`
         : `How much does ${isBrandPage ? brand.name : page.category} spend on podcast and newsletter sponsorships in 2026?`,
       a: isShowPage
-        ? `${show.name} carries a $${showRackUsd.toLocaleString()} rack rate ($${page.avg_cpm} Ad Rate) and a -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor (~$${showFloorUsd.toLocaleString()}, $${floorCpm} Effective Ad Rate) across ${proven3xCount} 3x+ renewed sponsors.`
-        : `Verified placements average $${page.avg_cpm} rack Ad Rate ($${floorCpm} 3-flight floor Ad Rate) with ~$${page.est_monthly_spend.toLocaleString()}/month spend across ${proven3xCount} 3x+ repeat shows.`
+        ? `${show.name} carries a $${showRackUsd.toLocaleString()} rack rate ($${page.avg_cpm} Ad Rate) and a -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor (${isRow1Page ? `~$${showFloorUsd.toLocaleString()}, $${floorCpm} Effective Ad Rate` : '-18% 3-flight floor — unlock exact floor CPM via $0 work email'}) across ${proven3xCount} 3x+ renewed sponsors.`
+        : `Verified placements average $${page.avg_cpm} rack Ad Rate (${isRow1Page ? `$${floorCpm} 3-flight floor Ad Rate` : '-18% 3-flight floor Ad Rate — unlock exact floor CPM via $0 work email'}) with ~$${page.est_monthly_spend.toLocaleString()}/month spend across ${proven3xCount} 3x+ repeat shows.`
     },
     {
       q: `What is the 3x-Renewal Rule for evaluating ${isShowPage ? show.name : page.title}?`,
@@ -453,8 +456,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
     ]
   };
   const initCreator = !isShowPage;
-  const isRow1Page = String(exportTarget || '').toLowerCase().includes('shopify');
-  const flQueryParam = isRow1Page ? `&floor_cpm=${floorCpm}` : '';
 
   const bodyHtml = `
   <article style="padding:32px 0;">
@@ -500,7 +501,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           <div style="display:flex; justify-content:space-between;" class="mono"><span style="font-weight:700; color:var(--text-secondary);">RATE-CARD &amp; PEER ARBITRAGE METER</span><span style="color:var(--emerald-roi); font-weight:700;">Save $${(showRackUsd - showFloorUsd).toLocaleString()}/Read</span></div>
           <div><div style="display:flex; justify-content:space-between;" class="mono"><span>1-Off Published Rack</span><strong style="color:var(--text-primary);">$${page.avg_cpm} Ad Rate ($${showRackUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:100%; background:var(--text-muted); border-radius:99px;"></div></div></div>
           <div><div style="display:flex; justify-content:space-between;" class="mono"><span>3-Flight Agency Floor (-18%)</span><strong style="color:var(--emerald-roi);" data-free-credit-unmasked="$${floorCpm} Ad Rate ($${showFloorUsd.toLocaleString()}/slot)">${isRow1Page ? `$${floorCpm} Ad Rate ($${showFloorUsd.toLocaleString()}/slot)` : 'Locked ($0 Email ↑)'}</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:82%; background:var(--emerald-roi); border-radius:99px;"></div></div></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--text-secondary);" data-free-credit-unmasked="~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate">${isRow1Page ? `~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate` : 'Locked ($0 Email ↑)'}</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--cyan-info); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--text-secondary);" data-free-credit-unmasked="~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate">${isRow1Page ? `~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate` : 'Locked ($0 Email ↑)'}</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--text-secondary); border-radius:99px;"></div></div></div>
         </div>
       </div>
 
@@ -581,7 +582,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             <span class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Presets:</span>
             <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(2150, 56500, 'Newsletter Primary Block')">Newsletter Primary ($2,150 / 56.5K opens)</button>
             <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showRackUsd}, ${showReach}, '60s Mid-Roll Rack Quote')">Podcast Mid-Roll Rack ($${showRackUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
-            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showFloorUsd}, ${showReach}, '3-Flight Negotiated Floor')">3-Flight Floor ($${showFloorUsd.toLocaleString()} / ${Math.round(showReach / 1000)}K)</button>
+            <button type="button" class="preset-chip" style="padding:4px 10px; font-size:12px;" onclick="window.__srRunSeoQuoteAudit(${showFloorUsd}, ${showReach}, '3-Flight Negotiated Floor')">3-Flight Floor (${isRow1Page ? `$${showFloorUsd.toLocaleString()}` : `<span data-free-credit-unmasked="$${showFloorUsd.toLocaleString()}">-18% Floor</span>`} / ${Math.round(showReach / 1000)}K)</button>
           </div>
         </div>
         <div class="panel-body">
@@ -703,7 +704,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 <a id="btn-mailto-buyer-counter" href="${escapeHtml(counterMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_buyer_counter'});" style="background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;text-decoration:none;">Open Draft in Mail</a>
               </div>
             </div>
-            <pre id="sr-buyer-counter-pre" data-free-credit-unmasked="${escapeHtml(`To: ${unmaskedShowBookingEmail} (+ ${rawCsvAgencyEmail})\nSubject: ${counterSubject}\n\n${unmaskedCounterBody}`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml(`To: ${showBookingEmail}\nSubject: ${counterSubject}\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight counter-offer script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]`)}</pre>
+            <pre id="sr-buyer-counter-pre" data-free-credit-unmasked="${escapeHtml(`To: ${unmaskedShowBookingEmail} (+ ${rawCsvAgencyEmail})\nSubject: ${counterSubject}\n\n${unmaskedCounterBody}`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml(`To: ${showBookingEmail}\nSubject: ${isRow1Page ? counterSubject : counterSubject.replace(/\$\d[\d,]*\/flight Floor/, '-18% 3-Flight Floor')}\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight counter-offer script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]`)}</pre>
           </div>
         </div>
 
@@ -723,7 +724,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 <a href="${escapeHtml(sampleMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_pitch_1'});" style="background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;text-decoration:none;">Open Draft in Gmail</a>
               </div>
             </div>
-            <pre id="sr-free-pitch-pre" data-free-credit-unmasked="${escapeHtml(`# OUTBOUND 3-FLIGHT PILOT PITCH (TRACK A BUYER CONTACT UNMASKED — $0 SAMPLE)\nTo: ${rawCsvBuyerEmail} (+ ${rawCsvAgencyEmail} • ${outboundPitch.agency_desk})\nSubject: ${outboundPitch.subject}\n\n${samplePitchText.replace(/\S*\*\*\*\S*/g, rawCsvBuyerEmail)}\n\n• [LOCKED IN $19 CREATOR PASS / $29 VAULT]: Track B Rate-Card Counter-Offer Script, Redlined IAB §7.1/§9.3/§11.0 Make-Good Rider (.TXT) & Day-3/Day-7 Follow-Up Sequence`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml('To: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight pilot pitch script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]')}</pre>
+            <pre id="sr-free-pitch-pre" data-free-credit-unmasked="${escapeHtml(`# OUTBOUND 3-FLIGHT PILOT PITCH (TRACK A BUYER CONTACT UNMASKED — $0 SAMPLE)\nTo: ${rawCsvBuyerEmail} (+ ${rawCsvAgencyEmail} • ${outboundPitch.agency_desk})\nSubject: ${outboundPitch.subject}\n\n${samplePitchText.replace(/\S*\*\*\*\S*/g, rawCsvBuyerEmail)}\n\n• [LOCKED IN $19 CREATOR PASS / $29 VAULT]: Track B Rate-Card Counter-Offer Script, Redlined IAB §7.1/§9.3/§11.0 Make-Good Rider (.TXT) & Day-3/Day-7 Follow-Up Sequence`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml('To: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + (isRow1Page ? outboundPitch.subject : outboundPitch.subject.replace(/\$\d+\s+CPM\s+3-Flight\s+Pilot/i, '-18% 3-Flight Pilot')) + '\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight pilot pitch script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]')}</pre>
           </div>
         </div>
 
@@ -872,8 +873,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   </article>
   `;
 
-  const srTitle = isShowPage ? `${show.name} Sponsorship Rates, CPM ($${floorCpm} Floor) & ${placements.length} Verified Sponsors | SponsorRadar` : isBrandPage ? `${brand.name} Podcast & Newsletter Sponsors ($${Math.round(page.est_monthly_spend / 1000)}K/mo), CPM Rates & Buyer Email | SponsorRadar` : `${page.title} (${placements.length} Verified Sponsors, Rate Cards & $${page.avg_cpm} Avg CPM) | SponsorRadar`;
-  const srDesc = `2026 Verified Rate Card & Sponsor Ledger (${placements.length} placements, $${page.avg_cpm} rack CPM vs. $${floorCpm} 3-flight floor CPM, $${Math.round(page.est_monthly_spend / 1000)}K/mo spend, 3 free buyer emails ($0) or $29 109-row CSV vault): ${page.meta_description || page.summary}`;
+  const srTitle = isShowPage ? `${show.name} Sponsorship Rates, CPM (${isRow1Page ? `$${floorCpm} Floor` : '-18% Floor'}) & ${placements.length} Verified Sponsors | SponsorRadar` : isBrandPage ? `${brand.name} Podcast & Newsletter Sponsors ($${Math.round(page.est_monthly_spend / 1000)}K/mo), CPM Rates & Buyer Email | SponsorRadar` : `${page.title} (${placements.length} Verified Sponsors, Rate Cards & $${page.avg_cpm} Avg CPM) | SponsorRadar`;
+  const srDesc = `2026 Verified Rate Card & Sponsor Ledger (${placements.length} placements, $${page.avg_cpm} rack CPM vs. ${isRow1Page ? `$${floorCpm}` : '-18%'} 3-flight floor CPM, $${Math.round(page.est_monthly_spend / 1000)}K/mo spend, 3 free buyer emails ($0) or $29 109-row CSV vault): ${page.meta_description || page.summary}`;
   return renderShell({ title: srTitle, description: srDesc, canonicalPath: `/seo/${page.slug}`, ogSlug: page.slug, jsonLd, bodyHtml });
 }
 

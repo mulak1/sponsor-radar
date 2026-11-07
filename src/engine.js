@@ -146,7 +146,8 @@ function generateOutboundPitch({ brand, anchorPlacements, senderShowName, sender
   const package3FlightPrice = Math.round(proposedMidrollPrice * 3 * 0.88);
   const effectiveCpm = Math.max(18, Math.round((package3FlightPrice / 3) / (audience / 1000)));
   const maskedEmail = maskSponsorEmail(brand.sponsor_email, brand.category);
-  const unmaskedSample = String(brand.slug || '').toLowerCase() === 'shopify'
+  const isRow1Brand = String(brand.slug || '').toLowerCase() === 'shopify';
+  const unmaskedSample = isRow1Brand
     ? `${getUnmaskedNamedBuyerEmail(brand.sponsor_email)} (+ ${getAgencyBuyerEmail(brand.domain, brand.category)})`
     : maskedEmail;
   const encBrand = encodeURIComponent(brand.slug || brand.name);
@@ -189,7 +190,7 @@ I track verified sponsorship renewals across ${niche} via SponsorRadar, and noti
     agency_checkout_url: `https://www.sponsorradar.io/buy/agency_desk?brand=${encBrand}`,
     counterparty_pack_urls: {
       csv: `/api/github-upgrade/export.csv?target=${encTarget}`,
-      iab_rider_txt: `/api/github-upgrade/iab-io-addendum.txt?target=${encTarget}&floor_cpm=${effectiveCpm}&reach=${audience}`,
+      iab_rider_txt: `/api/github-upgrade/iab-io-addendum.txt?target=${encTarget}${isRow1Brand ? `&floor_cpm=${effectiveCpm}` : ''}&reach=${audience}`,
       pitch_eml: `/api/github-upgrade/pitch.eml?target=${encTarget}`
     },
     proposed_single_rate_usd: proposedMidrollPrice,
