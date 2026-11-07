@@ -13,7 +13,7 @@ const STUDIO_NODES = [
     subtitle: 'Verified 3x-Renewed Podcast, Newsletter & YouTube Sponsor Ledger',
     pillCls: 'pill-amber', badgeColor: 'linear-gradient(135deg,#D97706,#B45309)', sampleScan: 'HubSpot',
     iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>',
-    tiersText: '99¢ 1-Row Pass • $1.99 3-File Pack • $19 Creator Pass • $29 109-Row Vault • $149 Agency',
+    tiersText: '3 Free Credits ($0) • $19 Creator Pass • $29 109-Row Vault • $149 Agency',
     exp3h: { visit: 10, calculate: 4, lead: 1, intent: 1 }
   },
   {
@@ -35,7 +35,7 @@ const STUDIO_NODES = [
 ];
 const CNN_FLEET = [
   { id: 'cf-cnn', name: '1. CitationForge CNN & MCP Hub', domain: 'www.citationforge.io', desc: 'Visual DOM Entity Salience Scanner, /llms.txt Generator, Comparison Hub & MCP Server', scanPath: '/scan/Linear', toolPath: '/tools/llms-txt-generator', comparePath: '/compare/citationforge-vs-manual-schema', price: '$1.99 Express / $49 Pro' },
-  { id: 'sr-cnn', name: '2. SponsorRadar CNN & MCP Hub', domain: 'www.sponsorradar.io', desc: 'Audio Ad-Read Boundary & QR Frame Inspector, Podcast CPM Calculator & MCP Server', scanPath: '/scan/AG1', toolPath: '/tools/podcast-cpm-calculator', comparePath: '/compare/sponsorradar-vs-media-kits', price: '$1.99 Express / $49 Pro' },
+  { id: 'sr-cnn', name: '2. SponsorRadar CNN & MCP Hub', domain: 'www.sponsorradar.io', desc: 'Audio Ad-Read Boundary & QR Frame Inspector, Podcast CPM Calculator & MCP Server', scanPath: '/scan/AG1', toolPath: '/tools/podcast-cpm-calculator', comparePath: '/compare/sponsorradar-vs-media-kits', price: '$0 Sample / $19 Creator / $29 Vault' },
   { id: 'dl-cnn', name: '3. DermLogic CNN & MCP Hub', domain: 'www.dermlogic.io', desc: 'INCI Bottle Label OCR & CIELAB Erythema Zone Scanner, Conflict Checker & MCP Server', scanPath: '/scan/Copper-Peptides-x-Vitamin-C', toolPath: '/tools/retinol-vitamin-c-conflict-checker', comparePath: '/compare/dermlogic-vs-incidecoder', price: '$1.99 Express / $29 Pro' },
   { id: 'aa-cnn', name: '4. AbandonAlpha CNN & MCP Hub', domain: 'www.abandonalpha.com', desc: 'Checkout Screenshot Visual Friction & Saliency CNN, Decline Lookup & MCP Server', scanPath: '/scan/Stripe-Insufficient-Funds-Payday', toolPath: '/tools/stripe-decline-code-lookup', comparePath: '/compare/abandonalpha-vs-naive-cron-retries', price: '$1.99 Express / $49 Pro' }
 ];
