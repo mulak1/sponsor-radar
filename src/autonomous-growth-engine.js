@@ -253,7 +253,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
       { '@type': 'SoftwareApplication', name: item.title, applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: canonicalUrl, description: item.summary, offers: { '@type': 'AggregateOffer', lowPrice: '0.00', highPrice: '149.00', priceCurrency: 'USD', offerCount: 6 } },
       { '@type': 'FAQPage', mainEntity: [
         { '@type': 'Question', name: `How does ${item.title} verify sponsor CPMs and buyer contacts?`, acceptedAnswer: { '@type': 'Answer', text: `${cfg.brandName} tracks 3x+ renewed podcast, newsletter, and YouTube sponsorships across 109 verified placements, pairing named brand buyers with external agency desks and -18% 3-flight floor CPMs.` } },
-        { '@type': 'Question', name: 'What is included in the $0 sample vs. the paid 109-Row CSV Vault?', acceptedAnswer: { '@type': 'Answer', text: 'Entering a work email ($0) unlocks 3 free verified buyer contacts and the full 4-clause IAB Make-Good Rider (.TXT). One-time passes ($1.99 3-File Pack, $19 Creator Pass, $29 Full 109-Row CSV Vault, $149 Agency Desk) unlock the complete dataset with zero recurring subscription.' } }
+        { '@type': 'Question', name: 'What is included in the $0 sample vs. the paid 109-Row CSV Vault?', acceptedAnswer: { '@type': 'Answer', text: 'Entering a work email ($0) unlocks 3 free verified buyer contacts and the full 4-clause IAB Make-Good Rider (.TXT). One-time passes ($19 Creator Pass, $29 Full 109-Row CSV Vault, $149 Agency Desk) unlock the complete dataset with zero recurring subscription.' } }
       ] }
     ]
   };
@@ -261,8 +261,8 @@ function renderGrowthPageHtml(cfg, item, kind) {
   const allComps = g.comparisons.map((c) => ({ href: `/compare/${c.slug}`, tag: 'COMPARISON', title: c.title })).filter((x) => !canonicalUrl.endsWith(x.href));
   const crossItems = [
     { href: `/scan/${encodeURIComponent(item.target)}`, tag: 'VERIFIED SCORECARD', title: `${item.target} : Full Sponsorship Audit & Buyer Desk` },
-    ...allTools.slice(0, 3),
-    ...allComps.slice(0, 3),
+    ...allTools.slice(0, 1),
+    ...allComps.slice(0, 1),
     { href: '/directory', tag: '124 SPEND HUBS', title: 'Browse All 124 Brand, Show & Vertical Spend Directories' }
   ];
   const crossLinksHtml = crossItems.map((x) => `<a href="${escXml(x.href)}" style="padding:12px 14px;border-radius:10px;background:#FFFFFF;border:1px solid ${escXml(t.border)};text-decoration:none;display:block;"><div style="font-size:11.5px;font-weight:800;color:${escXml(g.badgeColor)};">${escXml(x.tag)}</div><div style="font-size:13.5px;font-weight:700;color:${escXml(t.textPrimary)};margin-top:3px;line-height:1.35;">${escXml(x.title)}</div></a>`).join('');
@@ -370,7 +370,6 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <div style="margin-top:12px;padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12.5px;">
         <div><strong style="color:#047857;">Counterparty-Ready Execution Files (${escXml(item.target)}):</strong> Preview the 3-Row Sample CSV, IAB §4.2/§7.1 Make-Good Rider (.TXT), and Dual-Track Pitch (.EML):</div>
         <div style="display:inline-flex;gap:10px;flex-wrap:wrap;align-items:center;">
-          <a id="eb-growth-sample-link" href="/dossier/sample?target=${escXml(encodeURIComponent(item.target))}" style="color:#047857;font-weight:800;text-decoration:underline;">$0 Sample Dossier ↗</a>
           <a id="eb-growth-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=${Math.round(initFlCpm)}&reach=${initReach}&quoted_usd=${initPrice}" target="_blank" style="color:#C83E2B;font-weight:800;text-decoration:underline;">IAB Make-Good Rider (.TXT) ↗</a>
           <a id="eb-growth-eml-link" href="/api/github-upgrade/pitch.eml?target=${escXml(encodeURIComponent(item.target))}&floor_cpm=${Math.round(initFlCpm)}&reach=${initReach}&quoted_usd=${initPrice}" style="color:#047857;font-weight:800;text-decoration:underline;">3-Flight Pitch &amp; Counter (.EML) ↓</a>
           <a id="eb-growth-csv-link" href="/api/github-upgrade/export.csv?target=${escXml(encodeURIComponent(item.target))}" style="color:#0F172A;font-weight:700;text-decoration:underline;">3-Row Preview (.CSV) ↓</a>
@@ -378,16 +377,12 @@ function renderGrowthPageHtml(cfg, item, kind) {
       </div>
       <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:14px 18px;border-radius:12px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
         <div>
-          <div style="font-size:14px;font-weight:800;color:${escXml(t.textPrimary)};">Row #1 Proof: <span style="color:#047857;">sarah.kaufman@shopify.com</span> • Rows #2–#3 (<span id="eb-growth-row2-preview" data-free-credit-unmasked="${escXml(row2Unmasked)}">${escXml(row2Masked)} [Enter $0 Email]</span>)</div>
+          <div style="font-size:14px;font-weight:800;color:${escXml(t.textPrimary)};">Row #1 Proof: <span style="color:#047857;">sarah.kaufman@shopify.com</span> • Rows #2–#3 (<span id="eb-growth-row2-preview" data-free-credit-unmasked="${escXml(row2Unmasked)}">${escXml(row2Masked)} [Enter $0 Email Above]</span>)</div>
           <div style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:2px;">Instant download · One-time payment (never a subscription) · 30-day guarantee</div>
         </div>
-        <div id="eb-growth-row4-msg" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <input id="eb-growth-row4-email" type="email" placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock Row 4" onblur="window.__ebCaptureGrowthEmail(this.value,'growth_tool_blur')" style="padding:7px 11px;border-radius:8px;border:1px solid #CBD5E1;font-size:13px;min-width:190px;" />
-          <button id="eb-growth-row4-btn" type="button" onclick="window.__ebCaptureGrowthEmail((document.getElementById('eb-growth-row4-email')||{}).value,'growth_tool_btn',this)" style="padding:7px 12px;border-radius:8px;border:1px solid #047857;background:#ECFDF5;color:#047857;font-size:12.5px;font-weight:800;cursor:pointer;">Unmask 3 Free ($0) →</button>
-        </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <a href="/buy/creator_pass?target=${escXml(encodeURIComponent(item.target))}" onclick="var t=(document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}',em=window.__ebSavedEmail||(document.getElementById('eb-growth-row4-email')||{}).value||(document.getElementById('eb-growth-step1-email')||{}).value||'';this.href='/buy/creator_pass?target='+encodeURIComponent(t)+(em?'&email='+encodeURIComponent(em):'');" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">Creator Pass ($19) →</a>
-          <a href="/buy/playbook_pass?target=${escXml(encodeURIComponent(item.target))}" onclick="var t=(document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}',em=window.__ebSavedEmail||(document.getElementById('eb-growth-row4-email')||{}).value||(document.getElementById('eb-growth-step1-email')||{}).value||'';this.href='/buy/playbook_pass?target='+encodeURIComponent(t)+(em?'&email='+encodeURIComponent(em):'');" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:#047857;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">109-Row Vault ($29) →</a>
+          <a href="/buy/creator_pass?target=${escXml(encodeURIComponent(item.target))}" onclick="var t=(document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}',em=window.__ebSavedEmail||(document.getElementById('eb-growth-step1-email')||{}).value||'';this.href='/buy/creator_pass?target='+encodeURIComponent(t)+(em?'&email='+encodeURIComponent(em):'');" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:${escXml(g.badgeColor)};color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">Creator Pass ($19) →</a>
+          <a href="/buy/playbook_pass?target=${escXml(encodeURIComponent(item.target))}" onclick="var t=(document.getElementById('eb-cnn-wb-input')||{}).value||'${escXml(item.target)}',em=window.__ebSavedEmail||(document.getElementById('eb-growth-step1-email')||{}).value||'';this.href='/buy/playbook_pass?target='+encodeURIComponent(t)+(em?'&email='+encodeURIComponent(em):'');" rel="nofollow" style="padding:8px 14px;border-radius:8px;background:#047857;color:#FFFFFF;font-size:13px;font-weight:800;text-decoration:none;">109-Row Vault ($29) →</a>
         </div>
       </div>
     </section>
