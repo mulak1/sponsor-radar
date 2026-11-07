@@ -137,7 +137,7 @@ const VERTICAL_CONFIGS = {
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
     corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 29, coreLabel: 'Full 109-Row Named-Buyer & Agency CSV + IO Rider Vault ($29 One-Time) →',
-    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 149, proLabel: 'B2B Agency & Talent Management Desk ($149 Multi-Seat + HubSpot/Clay CRM Export)',
+    proPriceEnv: 'STRIPE_PRICE_AGENCY_199', proPriceUsd: 149, proLabel: 'B2B Agency & Talent Management Desk ($149 One-Time) →',
     lockedTitle: 'Verified Sponsor & Show Rate-Card Contacts (109-Row Named-Buyer & Agency Ledger)',
     deliverableName: 'Full 109-Row Verified Named-Buyer & Agency Desk CSV Export + Redlined IAB IO Make-Good Rider (.TXT) + Cold Outreach Sequences (.EML) + 90-Day Renewal Alerts',
     freeDeliverableName: '109-Row Named-Buyer & Agency CSV + Redlined IO Make-Good Rider + Cold Outreach Sequences',
@@ -146,11 +146,11 @@ const VERTICAL_CONFIGS = {
     hudLabel: 'Media Buyer HUD', redditSub: 'podcasting',
     sliderLabel: 'Bookings', sliderMin: 1, sliderMax: 30, sliderVal: 14,
     searchPlaceholder: 'Search sponsor or show (e.g. HubSpot, Indie Hackers)...',
-    tier1Tag: '$0 3-CREDIT WORK EMAIL SAMPLE OR CREATOR PASS ($19) • SAVE $2,400 OVERPAY',
+    tier1Tag: '$0 3-CREDIT WORK EMAIL SAMPLE OR CREATOR PASS ($19 ONE-TIME) • SAVE $2,400 OVERPAY',
     tier1Desc: 'Unlocks target workflow pack: verified Named-Buyer + Agency Desk (.CSV), -18% floor CPM ledger (.CSV), Redlined IAB IO Make-Good Rider (.TXT), and 3-flight cold outreach sequences (.EML).',
-    tier2Tag: 'FULL 109-ROW NAMED-BUYER & AGENCY CSV + IO RIDER VAULT ($29 / $49 ONE-TIME)',
+    tier2Tag: 'FULL 109-ROW NAMED-BUYER & AGENCY CSV + IO RIDER VAULT ($29 ONE-TIME)',
     tier2Desc: 'Complete 109-row verified Named-Buyer + External Agency Desk CSV export, Redlined IO Make-Good Rider (.TXT), 15 cold outreach sequences (.EML), and 90-day renewal alerts.',
-    tier3Tag: 'B2B AGENCY & TALENT MANAGEMENT DESK ($149 / $199 MULTI-SEAT + CRM WEBHOOK)',
+    tier3Tag: 'B2B AGENCY & TALENT MANAGEMENT DESK ($149 ONE-TIME • 5 SEATS + CRM EXPORT)',
     tier3Desc: '5 team seats, bulk 109-row Named-Buyer & Agency CSV, HubSpot/Clay/CSV Outreach Sequence export, and White-Label Media Kit Rate Card generator.',
     battlecard: {
       heading: 'Why Media Buyers & Creators Choose SponsorRadar Over Ad Networks',
@@ -158,7 +158,7 @@ const VERTICAL_CONFIGS = {
       rows: [
         ['Proof That Ads Actually Convert', 'Tracks 109+ placements that renewed 3 to 18 times on the same show', 'Pushes untested 1-time ad slots (68% churn)', 'No way to know if a sponsor lost money'],
         ['Rate-Card Floor & Direct Contacts', '109 Verified Buyer & Agency Desk Rows + -18% 3-flight floor counter-offer script', 'Takes 20%–30% middleman commission cut', 'Paying inflated rack rates or cold-emailing info@'],
-        ['Simple Pricing & Expense Receipt', '$0 3-Credit Sample, $19 Creator Pass, or $29 Full 109-Row CSV Vault', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
+        ['Simple Pricing & Expense Receipt', '$0 3-Credit Sample • $19 Creator Pass • $29 109-Row Vault • $149 B2B Agency Desk (One-Time)', 'Takes thousands in agency retainer fees', 'Weeks of manual transcript & promo tracking']
       ]
     },
     exportActions: [
