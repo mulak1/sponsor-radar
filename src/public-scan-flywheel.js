@@ -537,7 +537,7 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
   const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
   const podium = ledger.slice(0, 3);
   const medals = ['#1 Hall of Fame Leader', '#2 Verified Runner-Up', '#3 Top Category Benchmark'];
-  const podiumHtml = podium.map((item, idx) => `<div style="background:#FFFFFF;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;">
+  const podiumHtml = podium.map((item, idx) => { const sb = lookupSampleBuyer(item.target); return `<div style="background:#FFFFFF;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;">
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
         <span style="font-size:13px;font-weight:800;color:${idx === 0 ? esc(badgeColor) : '#059669'};">${medals[idx]}</span>
@@ -546,13 +546,14 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
       <a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:18px;font-weight:800;color:${esc(t.textPrimary)};text-decoration:none;display:block;margin-bottom:4px;">${esc(item.target)} ↗</a>
       <div style="font-size:13.5px;font-weight:700;color:${esc(badgeColor)};margin-bottom:6px;">${esc(item.kpi1)} • ${esc(item.kpi2)}</div>
       <div style="width:100%;height:8px;border-radius:999px;background:#E2E8F0;overflow:hidden;margin-bottom:8px;"><div style="width:${item.score}%;height:100%;background:#10B981;border-radius:999px;"></div></div>
-      <p style="font-size:13.5px;color:${esc(t.textSecondary)};margin:0;line-height:1.45;">${esc(item.cnnReadout)}</p>
+      <p style="font-size:13.5px;color:${esc(t.textSecondary)};margin:0 0 6px 0;line-height:1.45;">${esc(item.cnnReadout)}</p>
+      <div data-free-credit-unmasked="✓ Verified Buyer #${idx + 1}: ${esc(sb.buyer)} (+ ${esc(sb.agency)})" style="font-size:12px;font-weight:700;color:${idx === 0 ? '#047857' : '#B45309'};">${idx === 0 ? `Row #1 Sample: ${esc(sb.buyer)} (+ ${esc(sb.agency)})` : `Buyer Desk: ${esc(sb.masked)} (+ ${esc(sb.agMasked)}) [$0 Email]`}</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid ${esc(t.border)};font-size:13px;gap:6px;flex-wrap:wrap;">
       <a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:${esc(badgeColor)};font-weight:700;text-decoration:none;">Open Report →</a>
       <a href="/dossier/sample?target=${esc(encodeURIComponent(item.target))}" target="_blank" style="color:#475569;font-weight:600;font-size:12.5px;text-decoration:underline;">Sample Dossier ↗</a>
     </div>
-  </div>`).join('');
+  </div>`; }).join('');
 
   const rowsHtml = ledger.map((item, idx) => {
     const isTop = item.score >= 86;
