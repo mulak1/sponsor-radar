@@ -653,32 +653,33 @@ function attachExactBaselinePack(app, options = {}) {
   attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, INDEXNOW_KEY, __dirname);
 
   app.get('/api/github-upgrade/export.csv', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/export.csv', isTest, isCrawler, meta: { export: 'sheetjs_csv' } });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/export.csv', isTest, isCrawler, isOwnerIp, clientIp, meta: { export: 'sheetjs_csv' } });
     const isUnlocked = Boolean(req.query?.unlock === '1' || req.query?.session_id);
     const rows = [['Scenario_Preset', cfg.kpis[0].label, cfg.kpis[1].label, cfg.kpis[2].label, cfg.kpis[3].label, 'Unlock_Full_Model_URL'], ...cfg.presets.map((p, idx) => (idx === 0 || isUnlocked) ? [p.label, ...(cfg.presetKpis[p.key] || cfg.kpis.map((k) => k.val)), `https://${cfg.domain}/buy/creator_pass`] : [p.label, '[LOCKED — Creator Pass ($19) or 109-Row Vault ($29)]', '[LOCKED]', '[LOCKED]', '[LOCKED]', `https://${cfg.domain}/buy/complete_dossier`])];
     res.status(200).type('text/csv; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-executive-model.csv"`).send(rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\r\n'));
   });
 
   app.get('/api/github-upgrade/skin-cycling.ics', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/skin-cycling.ics', isTest, isCrawler, meta: { export: 'ics_calendar' } });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/skin-cycling.ics', isTest, isCrawler, isOwnerIp, clientIp, meta: { export: 'ics_calendar' } });
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${cfg.brandName}//NONSGML v2.0//EN`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night1@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261015T210000Z', 'DTEND:20261015T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Night 1: Exfoliation & Active Window`, `DESCRIPTION:${cfg.explainerText} (Wait 60s before barrier moisturizer): https://${cfg.domain}`, 'END:VEVENT', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night2@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261016T210000Z', 'DTEND:20261016T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Night 2: Retinoid / Secondary Active Window`, `DESCRIPTION:Pea-sized retinoid on dry skin + ceramide buffer: https://${cfg.domain}`, 'END:VEVENT', 'BEGIN:VEVENT', `UID:${cfg.moduleId}-night3@${cfg.domain}`, 'DTSTAMP:20261015T080000Z', 'DTSTART:20261017T210000Z', 'DTEND:20261017T213000Z', 'RRULE:FREQ=DAILY;INTERVAL=4', `SUMMARY:${cfg.brandName} Nights 3-4: Barrier Recovery & Peptide Cushion`, `DESCRIPTION:Zero acids or retinoids; hydrate + seal moisture barrier: https://${cfg.domain}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
     res.status(200).type('text/calendar; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-schedule.ics"`).send(ics);
   });
 
   // 4B. Clean Markdown / Ritual Notes Bundle
   app.get('/api/github-upgrade/llms-bundle.txt', (req, res) => {
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/llms-bundle.txt', isTest, isCrawler, meta: { export: 'readability_llms_bundle' } });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    const hasSession = String(req.headers.cookie || '').includes('vs_vid=') || String(req.headers.referer || '').includes(cfg.domain.replace(/^www\./, '')) || Boolean(req.headers['x-playwright-test']);
+    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/llms-bundle.txt', isTest: isTest || (!hasSession ? 1 : 0), isCrawler: isCrawler || (!hasSession ? 1 : 0), isOwnerIp, clientIp, meta: { export: 'readability_llms_bundle', has_session: hasSession ? 1 : 0 } });
     const bundle = [`# ${cfg.brandName} (${cfg.domain}): Verified Protocol & Benchmark Summary`, `> ${cfg.explainerText}`, '', '## 1. Before / After Remediation Diff', cfg.remediationDiff.beforeLine, cfg.remediationDiff.afterLine, '', '## 2. Verified Scenario Presets', ...cfg.presets.map((p) => `- [${p.label}](https://${cfg.domain}/?preset=${encodeURIComponent(p.key)}): ${(cfg.presetKpis[p.key] || []).join(' | ')}`), '', '## 3. Counterparty Previews & 1-Click Stripe Checkout ($19 / $29 / $149)', `- Redlined IAB IO Rider (.TXT): https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt`, `- Dual-Track Outreach Pitch (.EML): https://${cfg.domain}/api/github-upgrade/pitch.eml`, `- 3-Row Buyer Sample (.CSV): https://${cfg.domain}/api/github-upgrade/export.csv`, `- Creator Pass ($19): https://${cfg.domain}/buy/creator_pass | Full 109-Row Vault ($${cfg.corePriceUsd}): https://${cfg.domain}/buy/complete_dossier | Agency Desk ($${cfg.proPriceUsd}): https://${cfg.domain}/buy/pro_b2b`].join('\n');
     res.status(200).type('text/plain; charset=utf-8').setHeader('Content-Disposition', `attachment; filename="${cfg.moduleId}-protocol-bundle.txt"`).send(bundle);
   });
 
   app.get('/api/github-upgrade/fuse-search', (req, res) => {
     const q = String(req.query.q || cfg.presets[0].key).replace(/[<>"'`]/g, '').trim().slice(0, 80);
-    const { isTest, isCrawler } = classifyTrafficRequest(req);
-    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/fuse-search', isTest, isCrawler, meta: { query: q, engine: 'fuse_bitap' } });
+    const { isTest, isCrawler, isOwnerIp, clientIp } = classifyTrafficRequest(req);
+    store.recordEvent({ eventType: 'calculate', pageUrl: '/api/github-upgrade/fuse-search', isTest, isCrawler, isOwnerIp, clientIp, meta: { query: q, engine: 'fuse_bitap' } });
     let hash = 0; for (let i = 0; i < q.length; i++) hash = (hash * 31 + q.charCodeAt(i)) % 1000;
     const matchedPreset = cfg.presets.find((p) => p.key.toLowerCase().includes(q.toLowerCase()) || p.label.toLowerCase().includes(q.toLowerCase()));
     const kpiVals = matchedPreset && cfg.presetKpis[matchedPreset.key] ? cfg.presetKpis[matchedPreset.key] : (verticalId === 'citation_forge' ? [`${(34 + (hash % 18)).toFixed(1)}%`, `${84 + (hash % 15)}/100`, `${82 + (hash % 16)}/100`, `${(41 + (hash % 16)).toFixed(1)}%`] : verticalId === 'sponsor_radar' ? [`${88 + (hash % 11)}/100`, `$${(120 + (hash % 680)).toLocaleString()},000`, `$${(34 + (hash % 16)).toFixed(2)}`, `${(1.32 + (hash % 18) / 100).toFixed(2)}x`] : verticalId === 'derm_logic' ? [`${52 + (hash % 44)}/100`, `${(0.7 + (hash % 22) / 10).toFixed(1)} pH`, `${78 + (hash % 19)}% Pass`, `${hash % 2} Triggers`] : [`$${(9 + (hash % 55)).toLocaleString()},400`, `$${(6 + (hash % 32)).toLocaleString()},200`, `$${(3 + (hash % 22)).toLocaleString()},200`, `< ${(9.5 + (hash % 40) / 10).toFixed(1)}s`]);
@@ -833,7 +834,7 @@ function attachExactBaselinePack(app, options = {}) {
     const tierName = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isCreator19 ? 'creator_pass' : (isUpgradeFlash ? 'upgrade_from_flash' : (isPlaybook ? 'playbook_pass' : (isVault49 ? 'vault_49' : (isAgency149 ? 'agency_desk' : (isPro ? 'pro_b2b' : 'complete_dossier')))))));
     const sku = String(req.body?.sku || `${cfg.moduleId}_${tierName}`);
     const priceId = (isMicro || isUpgradeFlash || isCreator19 || isVault49 || isAgency149) ? '' : (isFlash ? (process.env[cfg.flashPriceEnv] || cfg.flashPriceDefault) : (isPlaybook ? (process.env.STRIPE_PRICE_PLAYBOOK_29 || '') : (isPro ? process.env[cfg.proPriceEnv] : process.env[cfg.corePriceEnv])));
-    const isOneTime = isMicro || isFlash || isCreator19 || isUpgradeFlash || isPlaybook || isVault49 || (!isPro && !isAgency149 && (verticalId === 'citation_forge' || verticalId === 'derm_logic' || verticalId === 'sponsor_radar'));
+    const isOneTime = verticalId === 'sponsor_radar' || isMicro || isFlash || isCreator19 || isUpgradeFlash || isPlaybook || isVault49 || (!isPro && !isAgency149 && (verticalId === 'citation_forge' || verticalId === 'derm_logic'));
 
     let ckEmail = ''; try { ckEmail = decodeURIComponent(((String(req.headers.cookie || '').match(/eb_lead_email=([^;]+)/) || [])[1] || '')); } catch (_) {}
     const rawEmail = String(req.query?.email || req.query?.customer_email || req.body?.email || req.body?.customerEmail || req.body?.customer_email || ckEmail || '').trim();

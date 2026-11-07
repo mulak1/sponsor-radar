@@ -840,7 +840,7 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
         const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan_tier: planTier, amount_usd: amountUsd, customer_email: email, buyer_wedge: bw, website_url_hp: hpEl ? hpEl.value : '', ...getUtmParams() }) }), data = await res.json();
         fireMetaEvent('StartTrial', amountUsd, { plan_tier: planTier, buyer_wedge: bw });
         const banner = document.getElementById('checkout-status-banner'), txt = document.getElementById('checkout-status-text');
-        if (banner && txt) { banner.style.display = 'block'; txt.innerHTML = 'Stripe Session ' + escHtml(data.session_id) + ' ready for ' + escHtml(email) + ' (' + escHtml(String(planTier).toUpperCase()) + ' - $' + Number(amountUsd) + '/mo). <a href="' + escHtml(data.checkout_url || '/buy/complete_dossier') + '" style="color:var(--emerald-roi);text-decoration:underline;font-weight:700;margin-left:8px;">Proceed to Stripe Checkout ↗</a>'; }
+        if (banner && txt) { banner.style.display = 'block'; txt.innerHTML = 'Stripe Session ' + escHtml(data.session_id) + ' ready for ' + escHtml(email) + ' (' + escHtml(String(planTier).toUpperCase()) + ' - $' + Number(amountUsd) + ' one-time). <a href="' + escHtml(data.checkout_url || '/buy/complete_dossier') + '" style="color:var(--emerald-roi);text-decoration:underline;font-weight:700;margin-left:8px;">Proceed to Stripe Checkout ↗</a>'; }
       } catch (e) { console.error(e); }
     }
   </script>`;
