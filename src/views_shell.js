@@ -585,10 +585,8 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       font-weight: 800;
       font-family: var(--font-mono);
       color: var(--text-primary);
-      white-space: nowrap;
+      white-space: normal;
       word-break: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     /* Outbound Pitch Box */
