@@ -539,7 +539,7 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
       <div style="font-size:13.5px;font-weight:700;color:#D9482B;margin-bottom:8px;">${esc(item.kpi1)} • ${esc(item.kpi2)}</div>
       <div style="width:100%;height:7px;border-radius:999px;background:#E5DCCB;overflow:hidden;margin-bottom:8px;"><div style="width:${item.score}%;height:100%;background:#047857;border-radius:999px;"></div></div>
       <p style="font-size:13px;color:${esc(t.textSecondary)};margin:0 0 8px 0;line-height:1.45;">${esc(item.cnnReadout)}</p>
-      <div data-free-credit-unmasked="✓ Verified Buyer #${idx + 1}: ${esc(sb.buyer)} (+ ${esc(sb.agency)})" style="font-size:12px;font-weight:600;color:${isR1 ? '#047857' : '#6E6559'};">${isR1 ? `Row #1 Sample: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)` : `Buyer Desk: ${esc(sb.masked)} ($0 Email ↑)`}</div>
+      <div ${isR1 ? '' : `onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" title="Click to focus $0 work email input and unmask verified buyer &amp; agency desk emails"`} data-free-credit-unmasked="✓ Verified Buyer #${idx + 1}: ${esc(sb.buyer)} (+ ${esc(sb.agency)})" style="font-size:12px;font-weight:600;color:${isR1 ? '#047857' : '#6E6559'};${isR1 ? '' : 'cursor:pointer;text-decoration:underline;'}">${isR1 ? `Row #1 Sample: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)` : `Buyer Desk: ${esc(sb.masked)} ($0 Email ↑)`}</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid #E6DEC8;font-size:13px;gap:6px;flex-wrap:wrap;">
       <a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:#047857;font-weight:700;text-decoration:none;">Open Report →</a>
@@ -552,12 +552,17 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
     const barColor = isTop ? '#047857' : '#B45309';
     const rowTier = isTop ? 'fame' : 'fix';
     const av = (SR_SHELL && SR_SHELL.renderEntityAvatarSvg) ? SR_SHELL.renderEntityAvatarSvg(item.target, 'brand', 26) : '';
+    const sbRow = lookupSampleBuyer(item.target);
+    const isRowShopify = String(item.target || '').toLowerCase() === 'shopify';
+    const rowBuyerHtml = isRowShopify
+      ? `<div style="font-size:12px;color:#047857;font-weight:700;margin-top:2px;">✓ Sample Proof: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co) · $${sbRow.flCpm} Floor CPM (-18%)</div>`
+      : `<div onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" title="Click to focus $0 work email input and unmask verified buyer &amp; agency desk emails" data-free-credit-unmasked="✓ Unmasked: ${esc(sbRow.buyer)} (+ ${esc(sbRow.agency)}) · $${sbRow.flCpm} Floor CPM (-18%)" style="font-size:12px;color:#047857;font-weight:600;margin-top:2px;cursor:pointer;text-decoration:underline;">Buyer: ${esc(sbRow.masked)} · $${sbRow.qCpm} Rack → -18% Floor ($0 Email ↑)</div>`;
     return `<tr data-lb-tier="${rowTier}" data-lb-target="${esc(item.target)}" data-lb-text="${esc((item.target + ' ' + item.kpi1 + ' ' + item.kpi2 + ' ' + item.cnnReadout + ' ' + item.issue).toLowerCase())}">
     <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;">#${idx + 1}</td>
     <th scope="row" style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};text-align:left;font-size:14px;"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:#141210;font-weight:700;text-decoration:underline;display:inline-flex;align-items:center;gap:8px;">${av}<span>${esc(item.target)} ↗</span></a></th>
     <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};min-width:150px;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:${barColor};">${esc(item.grade)} (${item.score})</span><div style="flex:1;min-width:56px;height:7px;background:#E5DCCB;border-radius:999px;overflow:hidden;"><div style="width:${item.score}%;height:100%;background:${barColor};"></div></div></div></td>
     <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:600;">${esc(item.kpi1)} • ${esc(item.kpi2)}</td>
-    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-size:13.5px;color:${esc(t.textSecondary)};">${esc(item.cnnReadout)}</td>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-size:13.5px;color:${esc(t.textSecondary)};"><div>${esc(item.cnnReadout)}</div>${rowBuyerHtml}</td>
     <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:700;color:#047857;text-decoration:none;white-space:nowrap;">${isTop ? 'View Report' : 'View Fix Plan'} →</a></td>
   </tr>`;
   }).join('');

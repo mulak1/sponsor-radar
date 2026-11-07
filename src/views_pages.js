@@ -157,7 +157,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const nicheTarget = ['Ramp', 'Vanta', 'Deel', 'Datadog', 'AG1', 'Shopify', 'HubSpot', 'Linear', 'Fireship', 'TLDR'].find(k => p.title.toLowerCase().includes(k.toLowerCase())) || (isB2b ? 'Linear' : 'Shopify');
             const nicheFloorHtml = idx === 0
               ? `$${p.avg_cpm} Rack / $${floorCpm} Floor CPM`
-              : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpm} Floor CPM">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
+              : `<span onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" style="cursor:pointer;text-decoration:underline;" data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpm} Floor CPM">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
@@ -193,11 +193,11 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const agencyEmail = getAgencyBuyerEmail(b.domain || 'brand.io', b.category || p.category);
             const maskedEmail = maskSponsorEmail(b.sponsor_email || unmaskedEmail, b.category || p.category);
             const isRow1Brand = String(p.target_slug || p.slug || '').toLowerCase().includes('shopify');
-            const freeUnmaskAttr = (idx < 3 || isRow1Brand) ? ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"` : '';
+            const freeUnmaskAttr = ` data-free-credit-unmasked="${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (<strong style=&quot;color:var(--emerald-roi);&quot;>${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>)"`;
             const floorCpmVal = Math.round(p.avg_cpm * 0.82);
             const floorChipHtml = isRow1Brand
               ? `$${p.avg_cpm} Rack / $${floorCpmVal} Floor`
-              : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
+              : `<span onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" style="cursor:pointer;text-decoration:underline;" data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
@@ -206,7 +206,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
                   <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${floorChipHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:6px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${isRow1Brand ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
+                <div class="mono"${freeUnmaskAttr} ${isRow1Brand ? '' : `onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" title="Click to focus $0 work email input and unmask verified buyer &amp; agency desk emails"`} style="font-size:13px; color:var(--text-muted); margin-top:6px;${isRow1Brand ? '' : ' cursor:pointer; text-decoration:underline;'}">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${isRow1Brand ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : `${escapeHtml(maskedEmail)} · $0 Email ↑`})</div>
               </div>
               <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13.5px;">
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
@@ -232,7 +232,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || '') + ' ' + p.category + ' ' + p.title);
             const showFloorLine = idx === 0
               ? `Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong>`
-              : `<span data-free-credit-unmasked="Rack: $${rackUsd.toLocaleString()}/read → 3-Flight Floor: $${floorUsd.toLocaleString()} (-18%)">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> • 3x Floor: Locked ($0 Email ↑)</span>`;
+              : `<span onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" style="cursor:pointer;text-decoration:underline;" data-free-credit-unmasked="Rack: $${rackUsd.toLocaleString()}/read → 3-Flight Floor: $${floorUsd.toLocaleString()} (-18%)">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
             <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>

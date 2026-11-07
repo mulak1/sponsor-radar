@@ -712,10 +712,12 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
     { icon: '#2 RUNNER-UP', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' },
     { icon: '#3 TOP TIER', bg: '#F8FAFC', border: '#CBD5E1', text: '#334155' }
   ];
+  const PODIUM_BUYERS = { AG1: ['jordan.hollis@drinkag1.com · d.patel@oxfordroad.com', 'j***.h***@drinkag1.com · d.***@oxfordroad.com'], Ramp: ['calvin.tong@ramp.com · d.patel@oxfordroad.com', 'c***.t***@ramp.com · d.***@oxfordroad.com'], Shopify: ['sarah.kaufman@shopify.com · m.vance@rightsideup.co', 'sarah.kaufman@shopify.com · m.vance@rightsideup.co'] };
   const podiumCards = top3.map((s, i) => {
     const m = medals[i] || medals[2];
     const encT = escHtml(encodeURIComponent(s.target));
     const isRow1 = String(s.target || '').toLowerCase() === 'shopify';
+    const pb = PODIUM_BUYERS[s.target] || ['sarah.kaufman@shopify.com · m.vance@rightsideup.co', 's***.k***@shopify.com · m.***@rightsideup.co'];
     return `<div style="display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px;border-radius:${t.radiusCard};background:${t.subtleBg};color:${t.textPrimary};">
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
@@ -724,7 +726,7 @@ function buildTopLeaderboardPodiumShowcaseHtml(cfg) {
         </div>
         <a href="/scan/${encT}" onclick="if(window.__ebLogEvent)window.__ebLogEvent('calculate',{source:'podium_home_click',target:'${escHtml(s.target)}'})" style="display:block;font-size:17px;font-weight:800;color:${t.textPrimary};margin-bottom:4px;text-decoration:none;">${escHtml(s.target)}</a>
         <div style="font-size:14px;color:${t.textSecondary};margin-bottom:6px;">${escHtml(s.kpi1)} · ${escHtml(s.kpi2)}</div>
-        <div style="font-size:12px;color:${isRow1 ? t.safeColor : t.textMuted};font-weight:700;margin-bottom:10px;">${isRow1 ? 'Row #1 Buyer Proof: sarah.kaufman@shopify.com · m.vance@rightsideup.co' : 'Buyer &amp; Agency Email: Masked in Free Preview ($0 3-Credit Sample)'}</div>
+        <div ${isRow1 ? '' : `onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" title="Click to focus $0 work email input and unmask verified buyer &amp; agency desk emails" data-free-credit-unmasked="✓ Verified Buyer: ${escHtml(pb[0])}"`} style="font-size:12px;color:${isRow1 ? t.safeColor : t.textMuted};font-weight:700;margin-bottom:10px;${isRow1 ? '' : 'cursor:pointer;text-decoration:underline;'}">${isRow1 ? 'Row #1 Buyer Proof: sarah.kaufman@shopify.com · m.vance@rightsideup.co' : `Buyer Desk: ${escHtml(pb[1])} ($0 Email ↑)`}</div>
       </div>
       <div>
         <div style="width:100%;height:7px;background:#E2E8F0;border-radius:${t.radiusPill};overflow:hidden;margin-bottom:8px;"><div style="width:${s.score}%;height:100%;background:${t.safeColor};border-radius:${t.radiusPill};"></div></div>
