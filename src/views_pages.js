@@ -733,7 +733,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
                 <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option B • Lookalike Show #1 (86% Overlap)</div>
                 <div id="sr-seo-mb-card2" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</div>
-                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Rep: <strong>${escapeHtml(mb.lookalike_shows[0].booking_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Rep: <strong data-free-credit-unmasked="sponsors@${escapeHtml(String(mb.lookalike_shows[0].name || 'show').toLowerCase().replace(/[^a-z0-9]/g, ''))}.fm (+ a.patel@oxfordroad.com)">${escapeHtml(isRow1Page ? `sponsors@${String(mb.lookalike_shows[0].name || 'show').toLowerCase().replace(/[^a-z0-9]/g, '')}.fm (+ a.patel@oxfordroad.com)` : mb.lookalike_shows[0].booking_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
               </div>
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
                 <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option C • Peer Shows #2 to #10 Arbitrage</div>
