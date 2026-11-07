@@ -848,7 +848,7 @@ function renderLandingPage({ defaultAnalysis }) {
   const row1 = (defaultAnalysis.placements && defaultAnalysis.placements[0]) || {}, r1Buyer = row1.unmasked_buyer_email || 'sarah.kaufman@shopify.com', r1Agency = row1.unmasked_agency_email || 'm.vance@rightsideup.co', r1MaskB = String(row1.sponsor_email || 's***.k***@shopify.com').split(' (')[0], r1MaskA = r1Agency.slice(0, 3) + '***@' + (r1Agency.split('@')[1] || 'rightsideup.co');
   const r1Angle = row1.live_outreach_angle || 'Saw 4x peer renewal last 30d — anchor 3-flight pilot at -18% floor.', r1Rider = row1.iab_makegood_rider_preview || 'IAB §4.2 (-18% Floor) + §7.1 (1.5% CTR Make-Good)';
   const bodyHtml = `
-  <section style="padding:40px 0 60px;"><div class="container" style="max-width:1060px;">
+  <section style="padding:40px 0 60px;"><div class="container">
     <div style="text-align:center; max-width:820px; margin:0 auto 24px;">
       <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-secondary);">109 Verified Buyer &amp; Agency Desk Rows • Save $2,400 overpay</span>
       <h1 class="headline-xl" data-entity-name="${escapeHtml(lpName)}" style="margin-top:10px;">Pitch the Buyer, <span class="serif-italic" style="color:var(--emerald-roi);">Not Dead Inboxes.</span></h1>
