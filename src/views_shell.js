@@ -639,7 +639,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <div class="ticker-bar">
+  <div class="ticker-bar" style="display:none;">
     <div class="ticker-items">
       <span><span class="ticker-dot"></span>EDITORIAL AD-SPEND LEDGER: <strong>42 BRANDS</strong> • <strong>46 CREATOR SHOWS</strong> • <strong>109 VERIFIED BUYER &amp; AGENCY DESK ROWS</strong></span>
       <span>AG1 → Huberman Lab <span style="color:var(--emerald-roi); font-weight:700;">18x RENEWED</span> ($67.5K/flight)</span>
@@ -663,13 +663,11 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
         <a href="/leaderboard">Leaderboard</a>
         <a href="/directory">Spend Directory</a>
         <a href="/tools/podcast-sponsorship-cpm-roi-calculator">CPM Calculator</a>
+        <a href="/dossier/sample?target=Shopify">Sample Dossier</a>
         <a href="/#pricing">Pricing</a>
       </nav>
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <a href="/dossier/sample?target=Shopify" class="btn btn-ghost" style="padding:7px 11px; min-height:36px; font-size:12.5px; text-decoration:none; white-space:nowrap; border:1px solid var(--border-strong); font-weight:800;">
-          <span>$0 Sample Dossier</span>
-        </a>
-        <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-vermilion" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
+        <a href="/buy/playbook_pass?source=header_nav" rel="nofollow" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" class="btn btn-emerald" style="padding:8px 14px; min-height:38px; font-size:13px; text-decoration:none; white-space:nowrap;">
           <span>109-Row Buyer Vault ($29) →</span>
         </a>
       </div>
