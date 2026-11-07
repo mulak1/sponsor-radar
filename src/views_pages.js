@@ -412,7 +412,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
   const firstShowOnBrand = (!isShowPage && placements.length > 0 && placements[0].show_name) ? placements[0].show_name : (show ? show.name : 'The Diary Of A CEO');
   const targetShowForBuyer = show ? show.name : firstShowOnBrand;
   const unmaskedShowBookingEmail = show ? `sponsors@${show.slug.replace(/-/g, '')}.com` : `sponsors@${firstShowOnBrand.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
-  const showBookingEmail = maskSponsorEmail(unmaskedShowBookingEmail);
+  const showBookingEmail = maskSponsorEmail(unmaskedShowBookingEmail, page.category);
   const proven3xCount = placements.filter(p => p.flights >= 3).length;
   const topRawEmail = (placements[0] && placements[0].sponsor_email) || (brand && brand.sponsor_email) || 'sarah.kaufman@shopify.com';
   const topUnmaskedBuyer = getUnmaskedNamedBuyerEmail(topRawEmail), topMaskedBuyer = maskSponsorEmail(topUnmaskedBuyer).split(' (')[0];
@@ -563,7 +563,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 const agencyDesk = escapeHtml(getAgencyDesk(p.brand_slug || (brand && brand.slug), page.category));
                 const freshBadge = escapeHtml((p.fresh_budget_badge || getFreshBudgetStatus(`${p.brand_slug}:${p.show_slug}:${idx}`, p.flights).badge).replace(/🟢\s*/g, ''));
                 const rowFloorCpm = Math.round(p.cpm_usd * 0.82);
-                const uBuyer = getUnmaskedNamedBuyerEmail(rawEmail), maskedRowBuyer = maskSponsorEmail(uBuyer), uAgency = getAgencyBuyerEmail((brand && brand.domain) || rawEmail.split('@')[1] || 'brand.io', page.category);
+                const uBuyer = getUnmaskedNamedBuyerEmail(rawEmail), maskedRowBuyer = maskSponsorEmail(uBuyer, page.category), uAgency = getAgencyBuyerEmail((brand && brand.domain) || rawEmail.split('@')[1] || 'brand.io', page.category);
                 const liUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(uBuyer.split('@')[0].replace(/[._]/g, ' ') + ' ' + rawBName)}`;
                 const isRow4Target = idx === Math.min(3, placements.length - 1);
                 const rowLbl = isRow4Target ? 'ROW #4 UNMASKED FREE' : `ROW #${idx + 1} UNMASKED FREE`;
@@ -657,9 +657,9 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         const unmaskedCounterBody = counterBody.replace(showBookingEmail, unmaskedShowBookingEmail).replace('• [LOCKED IN PREVIEW]: Exact 1.5% CTR Make-Good Legal Clause, 30-Day Audience Guarantee & Unmasked Direct Booking Rep Email ($19 Creator Pass / $29 Complete 109-Row CSV Vault)', `• IAB v2.1 §4.2 Floor Rate Cap Unmasked ($0 Sample): $${showFloorUsd.toLocaleString()}/flight ($${floorCpm} Effective Rate)\n• [LOCKED IN $19 CREATOR PASS / $29 VAULT]: Exact IAB v2.1 §7.1 1.5% CTR Make-Good Legal Clause (${Math.round(showReach * 0.015).toLocaleString()} min clicks), §9.3 Category Exclusivity Rider & 3-Step Follow-Up Sequence`);
         const counterMailto = `mailto:?subject=${encodeURIComponent(counterSubject)}`;
         const rawCsvBuyerEmail = getUnmaskedNamedBuyerEmail(brand ? brand.sponsor_email : 'sarah.kaufman@shopify.com');
-        const maskedCsvBuyerEmail = maskSponsorEmail(rawCsvBuyerEmail);
+        const maskedCsvBuyerEmail = maskSponsorEmail(rawCsvBuyerEmail, page.category).split(' (')[0];
         const rawCsvAgencyEmail = getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', page.category);
-        const maskedCsvAgencyEmail = maskSponsorEmail(rawCsvAgencyEmail);
+        const maskedCsvAgencyEmail = `${rawCsvAgencyEmail.slice(0, 3)}***@${rawCsvAgencyEmail.split('@')[1] || 'rightsideup.co'}`;
         return outboundPitch ? `
       <div class="pitch-box" style="margin-bottom:28px; background:var(--bg-surface); color:var(--text-primary); padding:24px 26px; border-radius:14px; border:1px solid var(--border-subtle);">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
