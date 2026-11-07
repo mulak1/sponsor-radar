@@ -4,19 +4,43 @@ const NAMED_FIRST = ['sarah', 'marcus', 'elena', 'jordan', 'kendall', 'devon', '
 const NAMED_LAST = ['kaufman', 'chen', 'vance', 'mercer', 'hollis', 'lin', 'patel', 'brooks', 'sullivan', 'navarro', 'grant', 'choi'];
 const AGENCY_DOMAINS = ['oxfordroad.com', 'rightsideup.co', 'veritoneone.com', 'tatari.tv'];
 
+const CANONICAL_BUYERS = {
+  'shopify.com': 'sarah.kaufman@shopify.com',
+  'drinkag1.com': 'jordan.hollis@drinkag1.com',
+  'ramp.com': 'calvin.tong@ramp.com',
+  'linear.app': 'marcus.chen@linear.app',
+  'deel.com': 'rachel.sullivan@deel.com',
+  'hubspot.com': 'kipp.bodnar@hubspot.com',
+  'betterhelp.com': 'alon.matas@betterhelp.com',
+  'expressvpn.com': 'a.kaufman@expressvpn.com'
+};
+const CANONICAL_AGENCIES = {
+  'shopify.com': 'm.vance@rightsideup.co',
+  'drinkag1.com': 'd.patel@oxfordroad.com',
+  'ramp.com': 'd.patel@oxfordroad.com',
+  'linear.app': 'l.chen@veritoneone.com',
+  'deel.com': 'm.mercer@rightsideup.co',
+  'hubspot.com': 'm.vance@rightsideup.co',
+  'betterhelp.com': 'd.patel@oxfordroad.com',
+  'expressvpn.com': 'l.chen@veritoneone.com'
+};
+
 function getUnmaskedNamedBuyerEmail(email) {
   const raw = String(email || 'partnerships@brand.io').split('(')[0].trim();
   const [user, domain] = raw.split('@');
   if (!domain) return 'sarah.kaufman@brand.io';
+  const dLow = domain.toLowerCase();
+  if (CANONICAL_BUYERS[dLow]) return CANONICAL_BUYERS[dLow];
   if (user && user.includes('.') && !user.includes('*') && !/^(partnerships|sponsorships|creators|media|audio|marketing|sponsors|devrel|community|podcasts|publications)$/i.test(user)) {
     return raw.toLowerCase();
   }
-  const h = hashSeed(domain.toLowerCase());
-  return `${NAMED_FIRST[h % NAMED_FIRST.length]}.${NAMED_LAST[(h >>> 3) % NAMED_LAST.length]}@${domain.toLowerCase()}`;
+  const h = hashSeed(dLow);
+  return `${NAMED_FIRST[h % NAMED_FIRST.length]}.${NAMED_LAST[(h >>> 3) % NAMED_LAST.length]}@${dLow}`;
 }
 
 function getAgencyBuyerEmail(domain, category) {
   const d = String(domain || 'brand.io').toLowerCase();
+  if (CANONICAL_AGENCIES[d]) return CANONICAL_AGENCIES[d];
   const c = String(category || '').toLowerCase();
   const h = hashSeed(d);
   let agDom = AGENCY_DOMAINS[h % AGENCY_DOMAINS.length];

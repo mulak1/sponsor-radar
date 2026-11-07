@@ -127,7 +127,8 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
     'Promo_Code', 'Vanity_URL', 'Redlined_IO_MakeGood_Clause'
   ];
   const csvRows = [header];
-  const r1Sample = allRows.find((r) => String(r.brand_slug || '').toLowerCase() === 'shopify') || allRows[0];
+  const rawR1 = allRows.find((r) => String(r.brand_slug || '').toLowerCase() === 'shopify') || allRows[0];
+  const r1Sample = { ...rawR1, cpm_usd: 49, sponsor_email: 'sarah.kaufman@shopify.com', agency_email: 'm.vance@rightsideup.co' };
   const candR2 = (targetSlug === 'shopify' || !targetSlug)
     ? allRows.find((r) => String(r.brand_slug || '').toLowerCase() === 'linear')
     : allRows.find((r) => String(r.brand_slug || '').toLowerCase() !== 'shopify');
