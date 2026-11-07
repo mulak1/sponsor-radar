@@ -263,11 +263,17 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const bSeo = brandSlugMap.get(b.slug);
               const primaryHref = bSeo ? `/seo/${escapeHtml(bSeo)}` : `/?q=${encodeURIComponent(b.name)}#radar-tool`;
               const isB2b = /B2B|SaaS|DevTools|Fintech|Security/i.test(b.vertical + ' ' + b.category);
+              const isRow1Brand = String(b.slug || '').toLowerCase() === 'shopify';
+              const unmBuyer = getUnmaskedNamedBuyerEmail(b.sponsor_email || `partnerships@${b.domain}`);
+              const mskBuyer = maskSponsorEmail(unmBuyer, b.category).split(' (')[0];
+              const buyerChip = isRow1Brand
+                ? `<code style="color:var(--emerald-roi);font-weight:700;">${escapeHtml(unmBuyer)}</code>`
+                : `<code onclick="var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){i.focus();},250);}" title="Click to focus $0 work email input and unmask 3 free buyer credits" data-free-credit-unmasked="${escapeHtml(unmBuyer)}" style="cursor:pointer;color:var(--emerald-roi);font-weight:700;text-decoration:underline;">${escapeHtml(mskBuyer)} ($0 ↑)</code>`;
               return `
               <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--text-primary); text-decoration:underline;">${escapeHtml(b.name)}</a>
-                  <span style="color:var(--text-muted); font-size:13.5px;">(${escapeHtml(b.domain)} • ${escapeHtml(b.vertical || b.category)})</span>
+                  <span style="color:var(--text-muted); font-size:13px;">(${buyerChip} • ${escapeHtml(b.vertical || b.category)})</span>
                 </span>
                 <span style="display:inline-flex; align-items:center; gap:8px;">
                   <span class="mono" style="color:var(--text-secondary); font-weight:700; font-size:13.5px;">${fmtSpend(b.est_monthly_spend)} • ${b.renewal_rate_pct}% 3x • $${b.avg_cpm} Ad Rate</span>
@@ -290,7 +296,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const isB2b = /B2B|SaaS|DevTools|Founder|Tech|Finance|Business|AI|Developer|Engineering|Product|Startup/i.test((s.niche || s.category || '') + ' ' + s.name);
               const idxRateLine = idx === 0
                 ? `$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor`
-                : `<span data-free-credit-unmasked="$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor">$${s.midroll_rate_usd.toLocaleString()} Rack • 3x Floor Locked</span>`;
+                : `<span onclick="var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){i.focus();},250);}" title="Click to focus $0 work email input and unmask 3 free buyer credits" data-free-credit-unmasked="$${s.midroll_rate_usd.toLocaleString()} Rack / $${floorUsd.toLocaleString()} Floor" style="cursor:pointer;text-decoration:underline;">$${s.midroll_rate_usd.toLocaleString()} Rack • <strong style="color:var(--emerald-roi);">3x Floor Locked ($0 ↑)</strong></span>`;
               return `
               <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${s.base_cpm}" data-renewal="88" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
