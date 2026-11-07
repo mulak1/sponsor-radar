@@ -246,6 +246,13 @@ async function runAllJourneys() {
         assert.strictEqual(domDensity.podiumBuyLinks, 0, `${calmRoute} podium cards must have 0 /buy/ buttons`);
         assert.strictEqual(domDensity.rowBuyLinks, 0, `${calmRoute} leaderboard rows must have 0 /buy/ buttons`);
       }
+
+      // Verify /seo/:slug #sr-sweetspot-bridge-form onsubmit executes cleanly without unescaped attribute quotes
+      await mobilePage.goto(`${BASE_URL}/seo/ag1-podcast-sponsorship-spend-and-roi`, { waitUntil: 'networkidle' });
+      await mobilePage.fill('#sr-bridge-email', 'buyer@creatorstudio.fm');
+      await mobilePage.click('#btn-unlock-free-credits');
+      const btnTextAfterSubmit = await mobilePage.textContent('#btn-unlock-free-credits');
+      assert.ok(btnTextAfterSubmit.includes('3 Free Buyer Credits Unlocked'), `Expected #btn-unlock-free-credits to confirm unlock on /seo/:slug, got: ${btnTextAfterSubmit}`);
       await mobilePage.close();
 
       report.journeys['UJ-SR-005'] = 'PASS';
