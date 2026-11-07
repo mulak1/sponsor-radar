@@ -5,24 +5,32 @@ const NAMED_LAST = ['kaufman', 'chen', 'vance', 'mercer', 'hollis', 'lin', 'pate
 const AGENCY_DOMAINS = ['oxfordroad.com', 'rightsideup.co', 'veritoneone.com', 'tatari.tv'];
 
 const CANONICAL_BUYERS = {
-  'shopify.com': 'sarah.kaufman@shopify.com',
-  'drinkag1.com': 'jordan.hollis@drinkag1.com',
-  'ramp.com': 'calvin.tong@ramp.com',
-  'linear.app': 'marcus.chen@linear.app',
-  'deel.com': 'rachel.sullivan@deel.com',
-  'hubspot.com': 'kipp.bodnar@hubspot.com',
-  'betterhelp.com': 'alon.matas@betterhelp.com',
-  'expressvpn.com': 'a.kaufman@expressvpn.com'
+  'shopify.com': 'sarah.kaufman@shopify.com', 'drinkag1.com': 'jordan.hollis@drinkag1.com', 'ramp.com': 'calvin.tong@ramp.com',
+  'linear.app': 'marcus.chen@linear.app', 'deel.com': 'rachel.sullivan@deel.com', 'hubspot.com': 'kipp.bodnar@hubspot.com',
+  'betterhelp.com': 'alon.matas@betterhelp.com', 'expressvpn.com': 'a.kaufman@expressvpn.com', 'datadoghq.com': 'ilan.rabinovitch@datadoghq.com',
+  'cloudflare.com': 'jeremiah.ochs@cloudflare.com', 'vanta.com': 'stevie.case@vanta.com', 'stripe.com': 'devon.peters@stripe.com',
+  'supabase.com': 'ant.wilson@supabase.io', 'supabase.io': 'ant.wilson@supabase.io', 'cursor.com': 'michael.truell@cursor.com',
+  'perplexity.ai': 'dmitry.shevelenko@perplexity.ai', 'anthropic.com': 'devrel.sponsorships@anthropic.com', 'notion.so': 'camille.ricketts@makenotion.com',
+  'makenotion.com': 'camille.ricketts@makenotion.com', 'mercury.com': 'maya.blum@mercury.com', 'rippling.com': 'allison.madison@rippling.com',
+  'eightsleep.com': 'teo.matteo@eightsleep.com', 'drinklmnt.com': 'tyler.stubblefield@drinklmnt.com', 'brex.com': 'henrique.dubugras@brex.com',
+  'vercel.com': 'lee.robinson@vercel.com', 'posthog.com': 'kendall.navarro@posthog.com', 'snowflake.com': 'denise.persson@snowflake.com',
+  'gusto.com': 'tomer.london@gusto.com', 'airtable.com': 'howie.liu@airtable.com', 'miro.com': 'andrey.khusid@miro.com',
+  'loom.com': 'joe.thomas@loom.com', 'squarespace.com': 'kinjil.mathur@squarespace.com', 'hellofresh.com': 'u.schmidt@hellofresh.com',
+  'nordsec.com': 't.okmanas@nordsec.com', 'figma.com': 'dylan.field@figma.com', 'snyk.io': 'peter.mckay@snyk.io', 'webflow.com': 'vlad.magdalin@webflow.com'
 };
 const CANONICAL_AGENCIES = {
-  'shopify.com': 'm.vance@rightsideup.co',
-  'drinkag1.com': 'd.patel@oxfordroad.com',
-  'ramp.com': 'd.patel@oxfordroad.com',
-  'linear.app': 'l.chen@veritoneone.com',
-  'deel.com': 'm.mercer@rightsideup.co',
-  'hubspot.com': 'm.vance@rightsideup.co',
-  'betterhelp.com': 'd.patel@oxfordroad.com',
-  'expressvpn.com': 'l.chen@veritoneone.com'
+  'shopify.com': 'm.vance@rightsideup.co', 'drinkag1.com': 'd.patel@oxfordroad.com', 'ramp.com': 'd.patel@oxfordroad.com',
+  'linear.app': 'l.chen@veritoneone.com', 'deel.com': 'm.mercer@rightsideup.co', 'hubspot.com': 'm.vance@rightsideup.co',
+  'betterhelp.com': 'd.patel@oxfordroad.com', 'expressvpn.com': 'l.chen@veritoneone.com', 'datadoghq.com': 'l.chen@veritoneone.com',
+  'cloudflare.com': 'l.chen@veritoneone.com', 'vanta.com': 'm.vance@rightsideup.co', 'stripe.com': 'l.chen@veritoneone.com',
+  'supabase.com': 'l.chen@veritoneone.com', 'supabase.io': 'l.chen@veritoneone.com', 'cursor.com': 'l.chen@veritoneone.com',
+  'perplexity.ai': 'm.vance@rightsideup.co', 'anthropic.com': 'l.chen@veritoneone.com', 'notion.so': 'm.vance@rightsideup.co',
+  'makenotion.com': 'm.vance@rightsideup.co', 'mercury.com': 'd.patel@oxfordroad.com', 'rippling.com': 'm.vance@rightsideup.co',
+  'eightsleep.com': 'd.patel@oxfordroad.com', 'drinklmnt.com': 'd.patel@oxfordroad.com', 'brex.com': 'd.patel@oxfordroad.com',
+  'vercel.com': 'l.chen@veritoneone.com', 'posthog.com': 'a.choi@oxfordroad.com', 'snowflake.com': 'l.chen@veritoneone.com',
+  'gusto.com': 'd.patel@oxfordroad.com', 'airtable.com': 'm.vance@rightsideup.co', 'miro.com': 'm.vance@rightsideup.co',
+  'loom.com': 'm.vance@rightsideup.co', 'squarespace.com': 'l.chen@veritoneone.com', 'hellofresh.com': 'd.patel@oxfordroad.com',
+  'nordsec.com': 'l.chen@veritoneone.com', 'figma.com': 'm.vance@rightsideup.co', 'snyk.io': 'l.chen@veritoneone.com', 'webflow.com': 'd.patel@oxfordroad.com'
 };
 
 function getUnmaskedNamedBuyerEmail(email) {
