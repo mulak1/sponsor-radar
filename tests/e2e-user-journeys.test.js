@@ -220,7 +220,7 @@ async function runAllJourneys() {
       await mobilePage.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' });
       const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
       assert.strictEqual(overflow, false, 'Mobile viewport must have zero horizontal overflow');
-      for (const calmRoute of ['/leaderboard', '/directory', '/seo/ag1-podcast-sponsorship-spend-and-roi']) {
+      for (const calmRoute of ['/leaderboard', '/directory', '/seo/ag1-podcast-sponsorship-spend-and-roi', '/dossier/sample?target=Shopify']) {
         await mobilePage.goto(`${BASE_URL}${calmRoute}`, { waitUntil: 'networkidle' });
         const domDensity = await mobilePage.evaluate(() => {
           const form = document.getElementById('sr-sweetspot-bridge-form');
