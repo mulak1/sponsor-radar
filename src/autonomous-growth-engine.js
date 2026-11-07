@@ -298,18 +298,26 @@ function renderGrowthPageHtml(cfg, item, kind) {
     <nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:10px;">
       <a href="/" style="color:#047857;text-decoration:none;font-weight:600;">Home</a> / <a href="/directory" style="color:#047857;text-decoration:none;font-weight:600;">Directory</a> / <span>${escXml(item.slug)}</span>
     </nav>
-    <div style="display:flex;align-items:center;gap:14px;margin:0 0 10px 0;">
-      ${avatarSvg}
-      <h1 data-entity-name="${escXml(item.target)}" style="font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;margin:0;">${escXml(item.title)}</h1>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin:0 0 14px 0;">
+      <div style="flex:1;min-width:300px;">
+        <div style="display:flex;align-items:center;gap:14px;margin:0 0 8px 0;">
+          ${avatarSvg}
+          <h1 data-entity-name="${escXml(item.target)}" style="font-size:clamp(1.85rem,2.8vw,2.4rem);line-height:1.18;margin:0;">${escXml(item.title)}</h1>
+        </div>
+        <p class="pseo-lead" style="font-size:15.5px;color:${escXml(t.textSecondary)};margin:0;">${escXml(item.summary)}</p>
+      </div>
+      <div id="sr-growth-visual-card" style="width:276px;max-width:100%;border-radius:12px;overflow:hidden;border:1px solid ${escXml(t.border)};background:#FFFFFF;box-shadow:0 4px 14px rgba(20,18,16,0.06);flex-shrink:0;">
+        <img src="${kind === 'compare' ? '/assets/agency-rate-ledger.jpg' : '/assets/podcast-newsletter-hub.jpg'}" alt="Verified Sponsorship Rate Card &amp; Buyer Ledger" width="276" height="154" loading="eager" style="width:100%;height:auto;display:block;" />
+        <div style="padding:6px 11px;background:${escXml(t.canvasBg)};border-top:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;gap:6px;"><span style="font-size:11px;font-weight:700;color:#141210;">${kind === 'compare' ? 'Competitive Rate Audit' : 'Live Rate &amp; ROI Workbench'}</span><span style="font-size:10.5px;font-weight:800;color:#047857;background:#ECFDF5;padding:2px 7px;border-radius:999px;">-18% Floor</span></div>
+      </div>
     </div>
-    <p class="pseo-lead" style="font-size:16px;color:${escXml(t.textSecondary)};margin:0 0 16px 0;">${escXml(item.summary)}</p>
     <form id="sr-sweetspot-bridge-form" onsubmit="event.preventDefault();window.__ebCaptureGrowthEmail((document.getElementById('sr-bridge-email')||{}).value||'','growth_top_bridge',document.getElementById('btn-unlock-free-credits'));return false;" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;">
       <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#0F172A;">
         <span style="color:#64748B;font-weight:700;font-size:12px;">Row #1 Free Proof:</span>
         <span><strong>Shopify:</strong> <code style="font-weight:700;color:#047857;">sarah.kaufman@shopify.com</code> (+ <code style="font-weight:600;color:#475569;">m.vance@rightsideup.co</code>) &middot; <strong>${escXml(item.target)}:</strong> <span id="eb-growth-top-preview" data-free-credit-unmasked="${escXml(row2Unmasked)}" style="font-weight:700;color:${isRow1 ? '#047857' : '#475569'};">${isRow1 ? escXml(row2Unmasked) : `${escXml(row2Masked)} ($0 Email)`}</span> &middot; <a id="eb-growth-sample-link" href="/dossier/sample?target=${escXml(encodeURIComponent(item.target))}" style="color:#047857;font-weight:700;text-decoration:underline;">Sample Dossier &rarr;</a></span>
       </div>
       <div style="display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 ${escXml(item.target)} contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer contacts" onblur="window.__ebCaptureGrowthEmail(this.value,'growth_top_blur')" style="padding:7px 12px;border-radius:8px;border:1px solid ${escXml(t.border)};background:${escXml(t.canvasBg)};color:#141210;font-size:13px;min-width:265px;" />
+        <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 ${escXml(item.target)} contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer contacts" onblur="window.__ebCaptureGrowthEmail(this.value,'growth_top_blur')" style="padding:7px 12px;border-radius:8px;border:1px solid ${escXml(t.border)};background:${escXml(t.canvasBg)};color:#141210;font-size:13px;min-width:295px;" />
         <button id="btn-unlock-free-credits" type="submit" style="padding:7px 14px;border-radius:8px;border:none;background:#047857;color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Unlock 3 Free ($0) &rarr;</button>
       </div>
     </form>
