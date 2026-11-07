@@ -519,13 +519,10 @@ app.get('/api/checkout', (req, res) => {
   res.json({
     status: 'ok',
     plans: [
-      { id: 'micro_pass', name: '1-Row Named Buyer + Agency Pass', price_usd: 0.99, interval: 'one_time' },
-      { id: 'flash_pass', name: '3-File Counterparty Execution Pack (.CSV + .TXT + .EML)', price_usd: 1.99, interval: 'one_time' },
+      { id: 'sample_pass', name: '3-Credit Work Email Sample Unlock (.CSV + .TXT + .EML Preview)', price_usd: 0, interval: 'one_time' },
       { id: 'creator_pass', name: 'Creator Outbound Pass (109-Row CSV + IO Rider + Cold Sequences)', price_usd: 19, interval: 'one_time' },
       { id: 'ledger_pack_29', name: 'Full 109-Row Named-Buyer & Agency CSV Vault + Redlined IO Pack', price_usd: 29, interval: 'one_time' },
-      { id: 'agency_desk', name: 'Agency & Talent Management Desk (5 Seats + HubSpot/Clay CRM)', price_usd: 149, interval: 'one_time' },
-      { id: 'agency_feed_199', name: 'Media Buyer & Agency Intelligence Feed', price_usd: 199, interval: 'month' },
-      { id: 'dfy_media_plan_499', name: 'Done-For-You 10-Show Q4 Media Plan & Floor Negotiation', price_usd: 499, interval: 'one_time' }
+      { id: 'agency_desk', name: 'Agency & Talent Management Desk (5 Seats + HubSpot/Clay CRM)', price_usd: 149, interval: 'one_time' }
     ],
     recent_sessions: sessions
   });
@@ -539,7 +536,7 @@ app.get('/api/github-upgrade/agency-desk-pack.json', (req, res) => {
   res.json({
     ok: true,
     tier: 'agency_desk_b2b',
-    pricing_options: { micro_pass_usd: 0.99, flash_pass_usd: 1.99, creator_pass_usd: 19, full_vault_usd: 29, multi_seat_agency_desk_usd: 149, enterprise_b2b_feed_usd: 199 },
+    pricing_options: { sample_3credit_usd: 0, creator_pass_usd: 19, full_vault_usd: 29, multi_seat_agency_desk_usd: 149 },
     target_entity: target,
     deliverables: {
       sample_3credit_dossier_url: `/dossier/sample?target=${encodeURIComponent(target)}${qSuffix}`,
@@ -573,11 +570,11 @@ app.post('/api/checkout', async (req, res) => {
   const isCreator19 = rawPlan === 'creator_pass' || rawPlan === 'creator_19';
   const isDfy = rawPlan === 'dfy_media_plan_499';
   const isLedger29 = rawPlan === 'ledger_pack_29' || rawPlan === 'playbook_pass' || rawPlan === 'complete_dossier';
-  const isAgency149 = rawPlan === 'agency_desk' || rawPlan === 'agency_149';
-  const isAgency = rawPlan === 'agency_feed_199' || rawPlan === 'pro_b2b';
+  const isAgency149 = rawPlan === 'agency_desk' || rawPlan === 'agency_149' || rawPlan === 'pro_b2b';
+  const isAgency = rawPlan === 'agency_feed_199';
   const planTier = isMicro ? 'micro_pass' : (isFlash ? 'flash_pass' : (isCreator19 ? 'creator_pass' : (isDfy ? 'dfy_media_plan_499' : (isLedger29 ? 'ledger_pack_29' : (isAgency149 ? 'agency_desk' : (isAgency ? 'agency_feed_199' : 'creator_pro_49'))))));
   const amountUsd = isMicro ? 0.99 : (isFlash ? 1.99 : (isCreator19 ? 19 : (isDfy ? 499 : (isLedger29 ? 29 : (isAgency149 ? 149 : (isAgency ? 199 : 49))))));
-  const isOneTime = isMicro || isFlash || isCreator19 || isDfy || isLedger29 || isAgency149;
+  const isOneTime = true;
   const email = String(body.customer_email || body.email || body.customerEmail || 'founder@creatorstudio.io').trim().slice(0, 254);
   const validStripeEmail = (email && /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email) && !/^(founder@creatorstudio\.io|creator@sponsorradar\.io|agency@sponsorradar\.io|growth@agency\.io)$/i.test(email)) ? email : '';
   const buyerWedge = String(body.buyer_wedge || (planTier === 'creator_pro_49' || planTier === 'creator_pass' ? 'creator' : 'buyer')).toLowerCase() === 'creator' ? 'creator' : 'buyer';
