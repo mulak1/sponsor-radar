@@ -8,12 +8,15 @@ const assert = require('assert');
 const { chromium } = require('playwright');
 const { app } = require('../src/server');
 
-const TEST_PORT = Number(process.env.TEST_PORT) || 4412;
-const BASE_URL = `http://127.0.0.1:${TEST_PORT}`;
+const TEST_PORT = Number(process.env.TEST_PORT) || 0;
+let BASE_URL = `http://127.0.0.1:4412`;
 
 async function runAllJourneys() {
   const server = await new Promise((resolve) => {
-    const s = app.listen(TEST_PORT, '127.0.0.1', () => resolve(s));
+    const s = app.listen(TEST_PORT, '127.0.0.1', () => {
+      BASE_URL = `http://127.0.0.1:${s.address().port}`;
+      resolve(s);
+    });
   });
 
   const report = {
