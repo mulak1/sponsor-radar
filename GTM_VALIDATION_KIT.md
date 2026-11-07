@@ -1,9 +1,9 @@
 # SponsorRadar (#2) — Meta (FB/IG) Ads First-User Validation & Day-1 GSC Indexing Kit
 
 ## 1. Executive Summary & Conversion Architecture
-- **Dedicated Cold Traffic Destination**: `http://127.0.0.1:4102/lp?utm_source=meta&utm_medium=paid_social&utm_campaign=3x_renewal_radar`
-- **Core Value Proposition**: *"Stop Guessing Which Podcasts & Newsletters Actually Convert — See Every Brand That Renewed 3+ Times."*
-- **Zero-Friction Activation**: Visitors run a live Brand or Show lookup above the fold on `/lp` with 0 signup friction (`ViewContent` + `Lead` events deduplicated via `/api/meta-capi`), then unlock full contact & outbound pitch access (`Creator Pro $49/mo` or `Media Buyer & Agency Feed $199/mo`) backed by a 30-day 100% ROI guarantee.
+- **Dedicated Cold Traffic Destination**: `https://www.sponsorradar.io/lp?utm_source=meta&utm_medium=paid_social&utm_campaign=3x_renewal_radar`
+- **Core Value Proposition**: *"Pitch the Buyer, Not Dead Inboxes — 109 Verified Buyer & Agency Desk Rows • Save $2,400 Overpay."*
+- **Zero-Friction Activation**: Visitors verify the unmasked Row #1 sample proof (*Shopify*: `sarah.kaufman@shopify.com` + `m.vance@rightsideup.co`) and run a live Brand or Show lookup above the fold on `/lp` with 0 signup friction, unmask 3 free buyer contacts (`$0` via work email), or unlock one-time passes (`$19 Creator Outreach Pass`, `$29 Full 109-Row CSV Vault`, or `$149 B2B Agency Desk`) backed by a 30-day zero-bounce guarantee.
 
 ---
 
