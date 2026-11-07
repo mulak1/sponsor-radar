@@ -362,7 +362,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
       <div id="eb-growth-calc-strip" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
         <div style="padding:12px 14px;border-radius:10px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};">
           <div style="font-size:11.5px;font-weight:800;color:${escXml(t.textSecondary)};">QUOTED CPM VS. VERIFIED -18% 3-FLIGHT FLOOR</div>
-          <div id="eb-growth-cpm-out" data-free-credit-unmasked="$${initQCpm} Quoted CPM vs. $${initFlCpm.toFixed(2)} 3-Flight Floor" style="font-size:14.5px;font-weight:800;color:${isRow1 ? '#047857' : '#475569'};margin-top:4px;">${isRow1 ? `$${initQCpm} Quoted CPM vs. $${initFlCpm.toFixed(2)} 3-Flight Floor` : `$${initQCpm} Quoted CPM vs. 3-Flight Floor: Locked ($0 Email ↑)`}</div>
+          <div id="eb-growth-cpm-out" onclick="if(!window.__ebSavedEmail){var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});i.focus();}}" data-free-credit-unmasked="$${initQCpm} Quoted CPM vs. $${initFlCpm.toFixed(2)} 3-Flight Floor" style="font-size:14.5px;font-weight:800;cursor:pointer;text-decoration:${isRow1 ? 'none' : 'underline'};color:${isRow1 ? '#047857' : '#475569'};margin-top:4px;">${isRow1 ? `$${initQCpm} Quoted CPM vs. $${initFlCpm.toFixed(2)} 3-Flight Floor` : `$${initQCpm} Quoted CPM vs. 3-Flight Floor: Locked ($0 Email ↑)`}</div>
           <div id="eb-growth-verdict-out" style="font-size:13px;font-weight:700;color:#047857;margin-top:4px;">Save $${initSave3.toLocaleString()} on 3 flights (-18% Floor)</div>
           <div style="margin-top:7px;"><a id="eb-growth-calc-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${escXml(encodeURIComponent(item.target))}${initFlQP}" target="_blank" style="font-size:12px;font-weight:700;color:#475569;text-decoration:underline;">Preview Redlined IAB Rider (.TXT) ↗</a></div>
         </div>
@@ -379,7 +379,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
       </div>
       <div id="eb-growth-live-draft" style="margin-top:12px;padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1px solid #CBD5E1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12.5px;">
         <div style="flex:1;min-width:240px;">
-          <div id="eb-growth-draft-to" style="font-weight:700;color:${escXml(t.textPrimary)};">To: <span id="eb-growth-draft-to-span" data-free-credit-unmasked="${escXml(row2Unmasked)}" style="color:${isRow1 ? '#047857' : '#475569'};">${isRow1 ? escXml(row2Unmasked) : `${escXml(row2Masked)} ($0 Work Email Above)`}</span></div>
+          <div id="eb-growth-draft-to" style="font-weight:700;color:${escXml(t.textPrimary)};">To: <span id="eb-growth-draft-to-span" onclick="if(!window.__ebSavedEmail){var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});i.focus();}}" data-free-credit-unmasked="${escXml(row2Unmasked)}" style="cursor:pointer;text-decoration:${isRow1 ? 'none' : 'underline'};color:${isRow1 ? '#047857' : '#475569'};">${isRow1 ? escXml(row2Unmasked) : `${escXml(row2Masked)} ($0 Work Email Above ↑)`}</span></div>
           <div id="eb-growth-draft-subj" style="color:${escXml(t.textSecondary)};margin-top:2px;font-weight:600;">Subject: [3x-Renewal Verified] 3-Flight Floor Proposal &amp; 1.5% CTR Make-Good Rider — ${escXml(item.target)} (Saves $${initSave3.toLocaleString()} on 3 flights)</div>
           <div id="eb-growth-draft-clause" style="color:#64748B;margin-top:2px;font-size:12px;">§4.2 3-Flight Floor Preview ($0 Email Above) • Full IAB §7.1 Make-Good Clause &amp; Track B Counter-Offer in $19 Creator Pass / $29 Vault</div>
         </div>
@@ -405,7 +405,7 @@ function renderGrowthPageHtml(cfg, item, kind) {
       </div>
       <div id="eb-inline-row4-unlock" style="margin-top:12px;padding:14px 18px;border-radius:12px;background:${escXml(t.canvasBg)};border:1px solid ${escXml(t.border)};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
         <div>
-          <div style="font-size:14px;font-weight:700;color:${escXml(t.textPrimary)};">Row #1 Proof: <span style="color:#047857;">sarah.kaufman@shopify.com</span> • Rows #2–#3 (<span id="eb-growth-row2-preview" data-free-credit-unmasked="${escXml(row2Unmasked)}">${escXml(row2Masked)} — $0 Email Above</span>)</div>
+          <div style="font-size:14px;font-weight:700;color:${escXml(t.textPrimary)};">Row #1 Proof: <span style="color:#047857;">sarah.kaufman@shopify.com</span> • Rows #2–#3 (<span id="eb-growth-row2-preview" onclick="if(!window.__ebSavedEmail){var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});i.focus();}}" data-free-credit-unmasked="${escXml(row2Unmasked)}" style="cursor:pointer;text-decoration:underline;">${escXml(row2Masked)} — $0 Email Above ↑</span>)</div>
           <div style="font-size:13px;color:${escXml(t.textSecondary)};margin-top:2px;">Instant download · One-time payment (never a subscription) · 30-day guarantee</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
