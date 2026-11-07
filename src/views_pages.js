@@ -62,9 +62,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <strong>Row #1 Sample Proof (Shopify):</strong> <code style="color:var(--emerald-roi);font-weight:700;">sarah.kaufman@shopify.com</code> • <code style="color:var(--text-secondary);font-weight:600;">m.vance@rightsideup.co</code> ($49 Rack → $40 Floor) • <a id="eb-dir-sample-link" href="/dossier/sample?target=Shopify" target="_blank" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">Sample Dossier ↗</a>
           </div>
           <span class="pill-emerald" id="sr-free-credits-badge" style="display:none; font-size:11.5px;">✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn</span>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; flex:1; min-width:260px; justify-content:flex-end; align-items:center;">
-            <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'directory_sweetspot_blur');}" style="flex:1; min-width:190px; max-width:260px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13px;" />
-            <button id="btn-unlock-free-credits" type="submit" class="btn btn-emerald" style="padding:6px 12px; min-height:34px; font-size:12.5px; font-weight:800; white-space:nowrap;">Unlock 3 Free ($0) →</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; flex:1; min-width:280px; justify-content:flex-end; align-items:center;">
+            <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'directory_sweetspot_blur');}" style="flex:1; min-width:265px; max-width:310px; padding:7px 12px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-canvas); color:var(--text-primary); font-size:13px;" />
+            <button id="btn-unlock-free-credits" type="submit" class="btn btn-emerald" style="padding:7px 14px; min-height:36px; font-size:12.5px; font-weight:800; white-space:nowrap;">Unlock 3 Free ($0) →</button>
           </div>
         </form>
         <div id="sr-biz-model-proof-bar" style="padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; font-size:12px; color:var(--text-secondary); line-height:1.45; margin-bottom:14px;">
@@ -99,7 +99,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
         </div>
 
         <!-- Interactive Filter & Search Workbench -->
-        <div style="padding:16px 18px; border-radius:14px; background:var(--bg-surface); display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:16px 18px; border-radius:14px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
             <div style="display:flex; gap:8px; flex:1; min-width:260px; align-items:center;">
               <input id="sr-dir-search" type="search" class="input-field" style="flex:1; min-width:220px;" placeholder="Filter ${totalReports} reports, ${brands.length} brands, or ${shows.length} shows by name, B2B/DTC vertical, channel, or Ad Rate..." aria-label="Filter directory reports" oninput="window.__srFilterDirectory()" />
@@ -153,15 +153,15 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               ? `$${p.avg_cpm} Rack / $${floorCpm} Floor CPM`
               : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpm} Floor CPM">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
-            <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(p.category)}</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;">${renderEntityAvatarSvg(nicheTarget, 'brand', 28)}<span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(p.category)}</span></span>
                   <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${nicheFloorHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; flex-wrap:wrap; gap:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13.5px; flex-wrap:wrap; gap:6px;">
                 <span class="mono" style="color:var(--text-secondary);">Cat. Spend: <strong>${fmtSpend(p.est_monthly_spend)}</strong></span>
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">Open Hub →</a>
               </div>
