@@ -777,7 +777,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
         <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; font-size:12.5px; line-height:1.45;">
           <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Pay $1.99 to Save $2,400 Overpay (-18% 3-Flight Floor):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.</div>
-          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">✓ 100% One-Time Pass (No Subscription Trap):</strong> Pay once (<strong>99¢</strong> 1 Row • <strong>$1.99</strong> 3-File Target Pack • <strong>$19</strong> Creator Pass • <strong>$29</strong> 109-Row Vault). Never auto-renews.</div>
+          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">✓ 100% One-Time Pass (No Subscription Trap):</strong> Pay once (<strong>$1.99</strong> 3-File Target Pack • <strong>$29</strong> 109-Row Vault). Never auto-renews.</div>
           <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Weekly SMTP + Zero-Bounce SLA:</strong> Crawled every 24h from RSS &amp; YouTube ad reads. Free instant replacement if any email bounces + 30-day 100% money-back guarantee.</div>
           <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Tangible Files + Row #1 Sample Proof:</strong> <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_rate_usd</code>) + <code>iab-io-addendum.txt</code> + <code>3-flight-anchor-pitch.eml</code>.</div>
         </div>
@@ -853,7 +853,6 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
             ['eb-seo-sample-link', 'eb-seo-proof-sample-link'].forEach(function(id) { var el = document.getElementById(id); if (el) el.href = '/dossier/sample?target=' + encodeURIComponent(curT) + emP; });
             if (window.__ebLogEvent) window.__ebLogEvent('calculate', { source: 'seo_quote_auditor', price: price, reach: reach, fair_floor: fairFloorPrice });
           };
-          window.__srQuickDomain = function(dom) { var inp = document.getElementById('sr-bridge-email'); if (!inp) return; var v = (inp.value || '').trim().split('@')[0] || 'founder'; inp.value = v + dom; inp.focus(); };
           window.__srSendDesktopBridge = function(ev) {
             if (ev && ev.preventDefault) ev.preventDefault();
             var em = (document.getElementById('sr-bridge-email') || {}).value || ''; if (!em) return false;

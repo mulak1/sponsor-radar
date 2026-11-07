@@ -475,7 +475,6 @@ function renderHomePage({ brands, shows, placements, seoPages, sampleTranscripts
     window.__srCurrentRackRate = ${mb.published_rack_rate_usd}; window.__srCurrentAvgCpm = ${defaultAnalysis.metrics.avg_cpm_usd}; window.__srCurrentTargetName = ${JSON.stringify(mb.target_show)};
     window.__srCurrentLookalikes = ${JSON.stringify(mb.lookalike_shows || []).replace(/</g, '\\u003c')}; window.__srActiveWedge = 'creator';
     window.__ebActiveEntity = window.__ebSelectedTarget = ${JSON.stringify(displayEntity.name.split('(')[0].trim()).replace(/</g, '\\u003c')}; window.__srCurrentUnmaskedRep = ${JSON.stringify(row1BuyerUnmasked + ' (+ ' + row1AgencyUnmasked + ')').replace(/</g, '\\u003c')};
-    window.__srQuickDomain = function(dom) { var inp = document.getElementById('sr-bridge-email'); if (!inp) return; var v = (inp.value || '').trim().split('@')[0] || 'founder'; inp.value = v + dom; inp.focus(); };
     window.__srSwitchPersona = function(mode, source) {
       mode = mode === 'creator' ? 'creator' : 'buyer';
       window.__srActiveWedge = mode;

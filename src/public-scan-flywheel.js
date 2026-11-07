@@ -189,7 +189,7 @@ function evaluateScanTarget(cfg, rawTarget) {
   const kpi1 = cfg.moduleId === 'citation_forge' ? `${(18 + (abs % 24)).toFixed(1)}% AI Search Share` : (cfg.moduleId === 'sponsor_radar' ? `$${140 + (abs % 650)}K/mo Spend` : (cfg.moduleId === 'derm_logic' ? `${score}/100 Safety Score` : `+${34 + (abs % 29)}.4% Recovery Gain`));
   const kpi2 = cfg.moduleId === 'citation_forge' ? (score >= 85 ? 'llms.txt + Schema Ready' : 'Missing /llms-full.txt') : (cfg.moduleId === 'sponsor_radar' ? `${2 + (abs % 14)}x Renewal Signal` : (cfg.moduleId === 'derm_logic' ? `pH Gap ${(0.4 + ((abs % 22) / 10)).toFixed(1)}` : `${82 + (abs % 15)}% Checkout Clarity`));
   const cnnReadout = `${Math.min(99, score + 2)}.${abs % 9}% Quality Score • Verified in ${11 + (abs % 9)}ms`;
-  const issue = score >= 86 ? `Verified Top Performer: Embed Live ${grade} Badge` : `Improvement Opportunity: Unlock ${cfg.freeDeliverableName} (99¢ Pass)`;
+  const issue = score >= 86 ? `Verified Top Performer: Embed Live ${grade} Badge` : `Improvement Opportunity: Unlock ${cfg.freeDeliverableName} ($1.99 Pass)`;
   return { target, grade, score, status, kpi1, kpi2, cnnReadout, issue, cnnModel: cat.cnnModel, cnnSensorLabel: cat.cnnSensorLabel };
 }
 
@@ -464,7 +464,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
         <div style="flex:1;min-width:260px;">
           <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:2px;">
             <span style="padding:2px 9px;border-radius:999px;background:${esc(primaryBtnBg)};color:#FFFFFF;font-size:11px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Step 3 of 3</span>
-            <span style="font-size:12.5px;font-weight:700;color:#047857;">$0 3-Credit Sample &bull; 99¢ Single Row &bull; $1.99 3-File Pack &bull; $19 Creator Pass &bull; $29 109-Row Vault</span>
+            <span style="font-size:12.5px;font-weight:700;color:#047857;">$0 3-Credit Sample &bull; $1.99 3-File Pack &bull; $29 109-Row Vault</span>
           </div>
           <h2 id="eb-scan-step3-title" style="font-size:18px;font-weight:800;margin:0;color:${esc(t.textPrimary)};line-height:1.25;">Step 3 &middot; Download the Ready-to-Use Action Pack for ${esc(scan.target)}</h2>
         </div>
