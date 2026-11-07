@@ -146,9 +146,15 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
       `LOCKED — Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${tQuery} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery} | Agency Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${tQuery}`
     ]);
   }
+  const rawCsv = csvRows.map((row) => row.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  if (req.query.download !== '1' && req.query.format !== 'raw' && String(req.headers.accept || '').includes('text/html')) {
+    const t = resolveTargetIntel(rawTarget || 'Shopify');
+    const encT = encodeURIComponent(t.clean);
+    return res.status(200).type('text/html; charset=utf-8').send(renderDeliverablePreviewHtml(t, '3-Row Verified Buyer & Agency Desk Sample (.CSV)', `${targetSlug || 'shopify'}-sponsorradar-109-buyer-and-agency-floor-ledger.csv`, rawCsv, `/api/github-upgrade/export.csv?target=${encT}&download=1`, hasEmailUnlock, isPaidUnlock));
+  }
   res.status(200).type('text/csv; charset=utf-8')
     .setHeader('Content-Disposition', `attachment; filename="${targetSlug || 'shopify'}-sponsorradar-109-buyer-and-agency-floor-ledger.csv"`)
-    .send(csvRows.map((row) => row.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n'));
+    .send(rawCsv);
 });
 
 function resolveTargetIntel(rawTarget) {

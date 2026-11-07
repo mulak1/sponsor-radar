@@ -690,7 +690,7 @@ function attachUniversalSeoAndAiRoutes(app, cfg, store, classifyTrafficRequest, 
       'stripe/stripe-node (★ 4,100+): Dual-Pass Stripe Session Creation with Automatic Inline price_data Retry Fallback & HTTP 303 GET /buy/:tier Direct Payment Redirects',
       'sendgrid/sendgrid-nodejs (★ 4,050+) & resend/resend-node (★ 2,800+): Transactional HTML + Plain-Text Lead Follow-Up Dispatcher with 1-Click Direct /buy/:tier Checkout Links'
     ],
-    direct_buy_links: { micro_pass_99c: `https://${cfg.domain}/buy/micro_pass`, flash_pass_199: `https://${cfg.domain}/buy/flash_pass`, creator_pass_19: `https://${cfg.domain}/buy/creator_pass`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b` },
+    direct_buy_links: { creator_pass_19: `https://${cfg.domain}/buy/creator_pass`, complete_dossier: `https://${cfg.domain}/buy/complete_dossier`, pro_b2b: `https://${cfg.domain}/buy/pro_b2b` },
     critical_bugs_eliminated: { bug_1_pseo_express_checkout_and_stripe_price_fallback: true, bug_2_outbound_pitch_direct_stripe_links_zero_free_forever: true, bug_3_get_buy_tier_303_redirect_in_llms_and_md_twins: true, bug_4_transactional_lead_followup_with_direct_buy_links: true }
   }));
 }
@@ -869,12 +869,10 @@ function enhanceHtmlForSearchAndAiBots(html, cfg, reqPath) {
           lowPrice: '0.00',
           highPrice: '149.00',
           priceCurrency: 'USD',
-          offerCount: 6,
+          offerCount: 4,
           availability: 'https://schema.org/InStock',
           offers: [
             { '@type': 'Offer', name: '3-Credit Work Email Sample + IAB Rider Preview', price: '0.00', priceCurrency: 'USD', url: `${hostUrl}/dossier/sample${tq}` },
-            { '@type': 'Offer', name: 'Single-Row Verified Buyer + Agency Pass', price: '0.99', priceCurrency: 'USD', url: `${hostUrl}/buy/micro_pass${tq}` },
-            { '@type': 'Offer', name: 'Target 3-File Counterparty Pack', price: '1.99', priceCurrency: 'USD', url: `${hostUrl}/buy/flash_pass${tq}` },
             { '@type': 'Offer', name: 'Creator Outreach & 109-Row Buyer CSV Pass', price: '19.00', priceCurrency: 'USD', url: `${hostUrl}/buy/creator_pass${tq}` },
             { '@type': 'Offer', name: 'All 109 Buyers Vault Pass', price: String((cfg.corePriceUsd || 29).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/playbook_pass${tq}` },
             { '@type': 'Offer', name: 'B2B Agency & Talent Management Desk', price: String((cfg.proPriceUsd || 149).toFixed(2)), priceCurrency: 'USD', url: `${hostUrl}/buy/pro_b2b${tq}` }
