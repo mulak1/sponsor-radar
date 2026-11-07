@@ -206,7 +206,8 @@ function renderDynamicScorecardOgSvg(cfg, rawTarget) {
 
 function renderGrowthPageHtml(cfg, item, kind) {
   const g = getGrowthConfig(cfg.moduleId);
-  const t = cfg.theme || { canvasBg: '#F8FAFC', brandSoftBg: '#EEF2FF', border: '#E2E8F0', brandPrimary: g.badgeColor, textPrimary: '#0F172A', textSecondary: '#475569', safeColor: '#059669' };
+  const t = cfg.theme || { canvasBg: '#FAF6EE', brandSoftBg: '#ECFDF5', border: '#DFD5C3', brandPrimary: g.badgeColor, textPrimary: '#141210', textSecondary: '#4A433B', safeColor: '#047857' };
+  const avatarSvg = (SR_SHELL && typeof SR_SHELL.renderEntityAvatarSvg === 'function') ? SR_SHELL.renderEntityAvatarSvg(item.target, 'brand', 44) : '';
   const canonicalUrl = `https://${cfg.domain}/${kind}/${item.slug}`;
   const badgeSvgUrl = `https://${cfg.domain}/badge/${encodeURIComponent(item.target)}.svg`;
   const mdBadgeSnippet = `[![${cfg.brandName} Verified](${badgeSvgUrl})](${canonicalUrl})`;
@@ -297,9 +298,12 @@ function renderGrowthPageHtml(cfg, item, kind) {
     <nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:10px;">
       <a href="/" style="color:#047857;text-decoration:none;font-weight:600;">Home</a> / <a href="/directory" style="color:#047857;text-decoration:none;font-weight:600;">Directory</a> / <span>${escXml(item.slug)}</span>
     </nav>
-    <h1 data-entity-name="${escXml(item.target)}" style="font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;margin:0 0 8px 0;">${escXml(item.title)}</h1>
-    <p class="pseo-lead" style="font-size:16px;color:${escXml(t.textSecondary)};margin:0 0 12px 0;">${escXml(item.summary)}</p>
-    <form id="sr-sweetspot-bridge-form" onsubmit="event.preventDefault();window.__ebCaptureGrowthEmail((document.getElementById('sr-bridge-email')||{}).value||'','growth_top_bridge',document.getElementById('btn-unlock-free-credits'));return false;" style="background:#FFFFFF;border:1px solid #CBD5E1;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;">
+    <div style="display:flex;align-items:center;gap:14px;margin:0 0 10px 0;">
+      ${avatarSvg}
+      <h1 data-entity-name="${escXml(item.target)}" style="font-size:clamp(1.9rem,3vw,2.5rem);line-height:1.18;margin:0;">${escXml(item.title)}</h1>
+    </div>
+    <p class="pseo-lead" style="font-size:16px;color:${escXml(t.textSecondary)};margin:0 0 16px 0;">${escXml(item.summary)}</p>
+    <form id="sr-sweetspot-bridge-form" onsubmit="event.preventDefault();window.__ebCaptureGrowthEmail((document.getElementById('sr-bridge-email')||{}).value||'','growth_top_bridge',document.getElementById('btn-unlock-free-credits'));return false;" style="background:#FFFFFF;border:1px solid ${escXml(t.border)};border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;">
       <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#0F172A;">
         <span style="color:#64748B;font-weight:700;font-size:12px;">Row #1 Free Proof:</span>
         <span><strong>Shopify:</strong> <code style="font-weight:700;color:#047857;">sarah.kaufman@shopify.com</code> (+ <code style="font-weight:600;color:#475569;">m.vance@rightsideup.co</code>) &middot; <strong>${escXml(item.target)}:</strong> <span id="eb-growth-top-preview" data-free-credit-unmasked="${escXml(row2Unmasked)}" style="font-weight:700;color:${isRow1 ? '#047857' : '#475569'};">${isRow1 ? escXml(row2Unmasked) : `${escXml(row2Masked)} ($0 Email)`}</span> &middot; <a id="eb-growth-sample-link" href="/dossier/sample?target=${escXml(encodeURIComponent(item.target))}" style="color:#047857;font-weight:700;text-decoration:underline;">Sample Dossier &rarr;</a></span>

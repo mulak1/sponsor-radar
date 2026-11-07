@@ -1,4 +1,4 @@
-const { escapeHtml, renderShell } = require('./views_shell');
+const { escapeHtml, renderEntityAvatarSvg, renderShell } = require('./views_shell');
 const { maskSponsorEmail, getUnmaskedNamedBuyerEmail, getAgencyBuyerEmail, getAgencyDesk, getFreshBudgetStatus, generateMoneyballLookalikeBundle } = require('./engine');
 
 const SR_LOCK_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px;" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
@@ -193,16 +193,16 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               ? `$${p.avg_cpm} Rack / $${floorCpmVal} Floor`
               : `<span data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
-            <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;">${renderEntityAvatarSvg(b.name || p.target_slug, 'brand', 28)}<span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span></span>
                   <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">${floorChipHtml}</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${isRow1Brand ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
+                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:6px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${isRow1Brand ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
               </div>
-              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
+              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13.5px;">
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
               </div>
             </div>
@@ -228,16 +228,16 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               ? `Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong>`
               : `<span data-free-credit-unmasked="Rack: $${rackUsd.toLocaleString()}/read → 3-Flight Floor: $${floorUsd.toLocaleString()} (-18%)">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> • 3x Floor: Locked ($0 Email ↑)</span>`;
             return `
-            <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+                  <span style="display:inline-flex;align-items:center;gap:8px;">${renderEntityAvatarSvg(s.name || p.target_slug, 'show', 28)}<span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span></span>
                   <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${showFloorLine}</div>
+                <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:6px;">${showFloorLine}</div>
               </div>
-              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
+              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13.5px;">
                 <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
               </div>
             </div>
@@ -473,7 +473,10 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
       </div>
 
-      <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0 0 12px 0;">${initCreator ? 'Pitch the buyer, not dead inboxes' : 'Audit true Ad Rates, not rack rates'}: ${escapeHtml(workbenchQuery)}</h1>
+      <div style="display:flex; align-items:center; gap:14px; margin:0 0 14px 0;">
+        ${renderEntityAvatarSvg(exportTarget, isShowPage ? 'show' : 'brand', 44)}
+        <h1 id="sr-emotional-want-hook" class="headline-xl" data-entity-name="${escapeHtml(exportTarget)}" style="font-size:clamp(1.65rem, 2.5vw, 2.25rem);line-height:1.15;max-width:44ch;margin:0;">${initCreator ? 'Pitch the buyer, not dead inboxes' : 'Audit true Ad Rates, not rack rates'}: ${escapeHtml(workbenchQuery)}</h1>
+      </div>
       <p class="subhead" style="display:none;"><strong>96 verified buyers • Save $2,400 overpay:</strong> Audit ${escapeHtml(workbenchQuery)} -$${(showRackUsd - showFloorUsd).toLocaleString()} 3-flight floor Ad Rates and Row #1 sample proof.</p>
 
       <!-- Top-Fold $0 Email Unlock Bar (Visible Immediately Above the Fold on Mobile & Desktop) -->

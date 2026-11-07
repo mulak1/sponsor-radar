@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const crypto = require('crypto');
 const { db, SAMPLE_TRANSCRIPTS } = require('./db');
 const { analyzeSponsorLookup, analyzeTranscriptAdRead, generateOutboundPitch, maskSponsorEmail, getUnmaskedNamedBuyerEmail, getAgencyBuyerEmail, getAgencyDesk } = require('./engine');
@@ -12,6 +13,7 @@ const PORT = Number(process.env.PORT) || 4102;
 const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
 
+app.use('/assets', express.static(path.join(__dirname, '..', 'public', 'assets'), { maxAge: '1d' }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 

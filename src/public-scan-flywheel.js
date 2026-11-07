@@ -382,7 +382,10 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       <nav aria-label="Breadcrumb" style="font-size:13px;color:#64748B;margin-bottom:4px;">
         <a href="/" style="color:${esc(primaryBtnBg)};text-decoration:none;font-weight:700;">Home</a> / <a href="/leaderboard" style="color:${esc(primaryBtnBg)};text-decoration:none;font-weight:700;">Leaderboard</a> / <span id="eb-scan-bc-target">${esc(scan.target)}</span>
       </nav>
-      <h1 id="eb-scan-h1" data-entity-name="${esc(scan.target)}" style="margin:0 0 4px 0;font-size:clamp(1.65rem,2.4vw,2.1rem);line-height:1.15;color:${esc(t.textPrimary)};">${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard &amp; Action Report</h1>
+      <div style="display:flex;align-items:center;gap:12px;margin:0 0 6px 0;">
+        ${SR_SHELL && SR_SHELL.renderEntityAvatarSvg ? SR_SHELL.renderEntityAvatarSvg(scan.target, 'brand', 42) : ''}
+        <h1 id="eb-scan-h1" data-entity-name="${esc(scan.target)}" style="margin:0;font-size:clamp(1.65rem,2.4vw,2.1rem);line-height:1.15;color:${esc(t.textPrimary)};">${esc(scan.target)} : ${esc(cfg.brandName)} Scorecard &amp; Action Report</h1>
+      </div>
       <p class="pseo-lead" style="margin:0 0 8px 0;color:${esc(t.textSecondary)};font-size:14.5px;line-height:1.45;">
         <strong style="color:${esc(t.textPrimary)};">Why you are here (<span id="eb-scan-lead-target">${esc(scan.target)}</span> &bull; <span id="eb-scan-lead-grade">Grade ${esc(scan.grade)} ${scan.score}/100</span>):</strong> ${esc(vCopy.goalText)}
       </p>
@@ -513,40 +516,41 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
 }
 
 function renderLeaderboardPageHtml(cfg, badgeColor) {
-  const t = cfg.theme || { canvasBg: '#F8FAFC', brandSoftBg: '#EEF2FF', border: '#E2E8F0', textPrimary: '#0F172A', textSecondary: '#475569' };
+  const t = cfg.theme || { canvasBg: '#FAF6EE', brandSoftBg: '#F2EBE0', border: '#DFD5C3', textPrimary: '#141210', textSecondary: '#3D3831' };
   const cat = getFlywheelCatalog(cfg.moduleId);
   const ledger = loadPublicScanLedger(cfg).slice().sort((a, b) => b.score - a.score);
   const podium = ledger.slice(0, 3);
   const medals = ['#1 Hall of Fame Leader', '#2 Verified Runner-Up', '#3 Top Category Benchmark'];
-  const podiumHtml = podium.map((item, idx) => { const sb = lookupSampleBuyer(item.target), isR1 = String(item.target || '').toLowerCase() === 'shopify'; return `<div style="background:#FFFFFF;border-radius:12px;border:1px solid ${esc(t.border)};padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;">
+  const podiumHtml = podium.map((item, idx) => { const sb = lookupSampleBuyer(item.target), isR1 = String(item.target || '').toLowerCase() === 'shopify', av = (SR_SHELL && SR_SHELL.renderEntityAvatarSvg) ? SR_SHELL.renderEntityAvatarSvg(item.target, 'brand', 34) : ''; return `<div style="background:#FFFFFF;border-radius:14px;border:1px solid #DFD5C3;box-shadow:0 2px 6px rgba(20,18,16,0.04),0 12px 24px -6px rgba(20,18,16,0.06);padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;">
     <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
-        <span style="font-size:12.5px;font-weight:700;color:#64748B;">${medals[idx]}</span>
-        <span style="padding:2px 9px;border-radius:999px;background:#ECFDF5;color:#047857;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;">${esc(item.grade)} (${item.score}/100)</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="font-size:12.5px;font-weight:700;color:#6E6559;">${medals[idx]}</span>
+        <span style="padding:3px 10px;border-radius:999px;background:#ECFDF5;color:#047857;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;">${esc(item.grade)} (${item.score}/100)</span>
       </div>
-      <a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:18px;font-weight:800;color:${esc(t.textPrimary)};text-decoration:none;display:block;margin-bottom:4px;">${esc(item.target)} ↗</a>
-      <div style="font-size:13.5px;font-weight:700;color:#0F172A;margin-bottom:6px;">${esc(item.kpi1)} • ${esc(item.kpi2)}</div>
-      <div style="width:100%;height:7px;border-radius:999px;background:#E2E8F0;overflow:hidden;margin-bottom:8px;"><div style="width:${item.score}%;height:100%;background:#10B981;border-radius:999px;"></div></div>
-      <p style="font-size:13px;color:${esc(t.textSecondary)};margin:0 0 6px 0;line-height:1.45;">${esc(item.cnnReadout)}</p>
-      <div data-free-credit-unmasked="✓ Verified Buyer #${idx + 1}: ${esc(sb.buyer)} (+ ${esc(sb.agency)})" style="font-size:12px;font-weight:600;color:${isR1 ? '#047857' : '#64748B'};">${isR1 ? `Row #1 Sample: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)` : `Buyer Desk: ${esc(sb.masked)} ($0 Email ↑)`}</div>
+      <a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:18px;font-weight:800;color:${esc(t.textPrimary)};text-decoration:none;display:inline-flex;align-items:center;gap:10px;margin-bottom:6px;">${av}<span>${esc(item.target)} ↗</span></a>
+      <div style="font-size:13.5px;font-weight:700;color:#D9482B;margin-bottom:8px;">${esc(item.kpi1)} • ${esc(item.kpi2)}</div>
+      <div style="width:100%;height:7px;border-radius:999px;background:#E5DCCB;overflow:hidden;margin-bottom:8px;"><div style="width:${item.score}%;height:100%;background:#047857;border-radius:999px;"></div></div>
+      <p style="font-size:13px;color:${esc(t.textSecondary)};margin:0 0 8px 0;line-height:1.45;">${esc(item.cnnReadout)}</p>
+      <div data-free-credit-unmasked="✓ Verified Buyer #${idx + 1}: ${esc(sb.buyer)} (+ ${esc(sb.agency)})" style="font-size:12px;font-weight:600;color:${isR1 ? '#047857' : '#6E6559'};">${isR1 ? `Row #1 Sample: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)` : `Buyer Desk: ${esc(sb.masked)} ($0 Email ↑)`}</div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid ${esc(t.border)};font-size:13px;gap:6px;flex-wrap:wrap;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid #E6DEC8;font-size:13px;gap:6px;flex-wrap:wrap;">
       <a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:#047857;font-weight:700;text-decoration:none;">Open Report →</a>
-      <a href="/dossier/sample?target=${esc(encodeURIComponent(item.target))}" target="_blank" style="color:#64748B;font-weight:600;font-size:12.5px;text-decoration:underline;">Sample Dossier ↗</a>
+      <a href="/dossier/sample?target=${esc(encodeURIComponent(item.target))}" target="_blank" style="color:#6E6559;font-weight:600;font-size:12.5px;text-decoration:underline;">Sample Dossier ↗</a>
     </div>
   </div>`; }).join('');
 
   const rowsHtml = ledger.map((item, idx) => {
     const isTop = item.score >= 86;
-    const barColor = isTop ? '#047857' : '#475569';
+    const barColor = isTop ? '#047857' : '#B45309';
     const rowTier = isTop ? 'fame' : 'fix';
+    const av = (SR_SHELL && SR_SHELL.renderEntityAvatarSvg) ? SR_SHELL.renderEntityAvatarSvg(item.target, 'brand', 26) : '';
     return `<tr data-lb-tier="${rowTier}" data-lb-target="${esc(item.target)}" data-lb-text="${esc((item.target + ' ' + item.kpi1 + ' ' + item.kpi2 + ' ' + item.cnnReadout + ' ' + item.issue).toLowerCase())}">
-    <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;">#${idx + 1}</td>
-    <th scope="row" style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};text-align:left;font-size:14px;"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:#0F172A;font-weight:700;text-decoration:underline;">${esc(item.target)} ↗</a></th>
-    <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};min-width:150px;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:${barColor};">${esc(item.grade)} (${item.score})</span><div style="flex:1;min-width:56px;height:7px;background:#E2E8F0;border-radius:999px;overflow:hidden;"><div style="width:${item.score}%;height:100%;background:${barColor};"></div></div></div></td>
-    <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:600;">${esc(item.kpi1)} • ${esc(item.kpi2)}</td>
-    <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};font-size:13.5px;color:${esc(t.textSecondary)};">${esc(item.cnnReadout)}</td>
-    <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:700;color:#047857;text-decoration:none;white-space:nowrap;">${isTop ? 'View Report' : 'View Fix Plan'} →</a></td>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;">#${idx + 1}</td>
+    <th scope="row" style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};text-align:left;font-size:14px;"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="color:#141210;font-weight:700;text-decoration:underline;display:inline-flex;align-items:center;gap:8px;">${av}<span>${esc(item.target)} ↗</span></a></th>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};min-width:150px;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:${barColor};">${esc(item.grade)} (${item.score})</span><div style="flex:1;min-width:56px;height:7px;background:#E5DCCB;border-radius:999px;overflow:hidden;"><div style="width:${item.score}%;height:100%;background:${barColor};"></div></div></div></td>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:600;">${esc(item.kpi1)} • ${esc(item.kpi2)}</td>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};font-size:13.5px;color:${esc(t.textSecondary)};">${esc(item.cnnReadout)}</td>
+    <td style="padding:14px 16px;border-bottom:1px solid ${esc(t.border)};"><a href="/scan/${esc(encodeURIComponent(item.target))}" style="font-size:13px;font-weight:700;color:#047857;text-decoration:none;white-space:nowrap;">${isTop ? 'View Report' : 'View Fix Plan'} →</a></td>
   </tr>`;
   }).join('');
 

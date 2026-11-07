@@ -47,6 +47,48 @@ function renderBrandLogoSvg(size = 38) {
   </svg>`;
 }
 
+const ENTITY_PALETTES = {
+  shopify: ['#008060', '#004C3F', '#E3FCEF', 'SH'],
+  ag1: ['#0B3B2D', '#047857', '#D1FAE5', 'AG1'],
+  ramp: ['#111827', '#1F2937', '#E2F163', 'RP'],
+  deel: ['#1E1B4B', '#4338CA', '#E0E7FF', 'DL'],
+  linear: ['#18181B', '#4F46E5', '#EEF2FF', 'LN'],
+  notion: ['#171717', '#404040', '#F5F5F4', 'NT'],
+  vanta: ['#2E1065', '#6D28D9', '#F3E8FF', 'VN'],
+  hubspot: ['#9A3412', '#EA580C', '#FFEDD5', 'HS'],
+  huberman: ['#0F172A', '#B45309', '#FEF3C7', 'HL'],
+  million: ['#1C1917', '#D97706', '#FEF3C7', 'MFM'],
+  lenny: ['#7C2D12', '#C2410C', '#FFEDD5', 'LP'],
+  diary: ['#18181B', '#BE123C', '#FFE4E6', 'CEO'],
+  acquired: ['#0F172A', '#0369A1', '#E0F2FE', 'ACQ'],
+  pragmatic: ['#1E293B', '#0F766E', '#CCFBF1', 'PE'],
+  morning: ['#0C4A6E', '#0284C7', '#E0F2FE', 'MB']
+};
+const FALLBACK_PALETTES = [
+  ['#064E3B', '#047857', '#D1FAE5'],
+  ['#1E1B4B', '#4338CA', '#E0E7FF'],
+  ['#7C2D12', '#C2410C', '#FFEDD5'],
+  ['#0F172A', '#0369A1', '#E0F2FE'],
+  ['#3B0764', '#7E22CE', '#F3E8FF'],
+  ['#1C1917', '#B45309', '#FEF3C7']
+];
+
+function renderEntityAvatarSvg(name = 'Shopify', kind = 'brand', size = 34) {
+  const clean = String(name || 'Brand').replace(/\(.*\)/, '').trim();
+  const low = clean.toLowerCase();
+  const key = Object.keys(ENTITY_PALETTES).find(k => low.includes(k));
+  const hash = Array.from(low).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const pal = key ? ENTITY_PALETTES[key] : FALLBACK_PALETTES[hash % FALLBACK_PALETTES.length];
+  const words = clean.split(/[\s&-]+/).filter(Boolean);
+  const initials = (pal[3] || (words.length >= 2 ? (words[0][0] + words[1][0]) : clean.slice(0, 2))).toUpperCase();
+  const isShow = kind === 'show' || /podcast|lab|million|brew|diary|acquired|newsletter|engineer|tldr|syntax|fridman/i.test(low);
+  const rx = isShow ? 9 : 10;
+  const waveBars = isShow
+    ? `<rect x="7" y="29" width="2.2" height="5" rx="1" fill="${pal[2]}" opacity="0.85"/><rect x="11" y="26" width="2.2" height="8" rx="1" fill="${pal[2]}"/><rect x="15" y="28" width="2.2" height="6" rx="1" fill="${pal[2]}" opacity="0.8"/><rect x="33" y="27" width="2.2" height="7" rx="1" fill="${pal[2]}" opacity="0.85"/>`
+    : `<circle cx="34" cy="10" r="3.2" fill="#10B981" stroke="${pal[0]}" stroke-width="1.2"/>`;
+  return `<svg class="entity-avatar-svg" width="${size}" height="${size}" viewBox="0 0 42 42" role="img" aria-label="${escapeHtml(clean)} ${isShow ? 'show artwork' : 'brand emblem'}" style="flex-shrink:0;border-radius:${rx}px;box-shadow:0 2px 5px rgba(20,18,16,0.12);display:inline-block;vertical-align:middle;"><rect width="42" height="42" rx="${rx}" fill="${pal[0]}"/><rect x="1.5" y="1.5" width="39" height="39" rx="${rx - 1}" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1"/><circle cx="34" cy="34" r="16" fill="${pal[1]}" opacity="0.55"/>${waveBars}<text x="21" y="${isShow ? '21' : '24'}" text-anchor="middle" fill="${pal[2]}" font-family="Plus Jakarta Sans,-apple-system,sans-serif" font-weight="800" font-size="${initials.length > 2 ? '11.5' : '13.5'}" letter-spacing="-0.03em">${escapeHtml(initials)}</text></svg>`;
+}
+
 function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHtml }) {
   const baseUrl = (process.env.PUBLIC_URL || process.env.BASE_URL || 'https://www.sponsorradar.io').replace(/\/$/, '');
   const canonicalUrl = `${baseUrl}${canonicalPath || '/'}`;
@@ -80,30 +122,32 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>` : ''}
   <style>
     :root {
-      --bg-canvas: #F8F9FA;
-      --bg-parchment: #F1F3F5;
-      --bg-bezel: #E9ECEF;
+      --bg-canvas: #FAF6EE;
+      --bg-parchment: #F2EBE0;
+      --bg-bezel: #E5DCCB;
       --bg-surface: #FFFFFF;
-      --bg-elevated: #F1F3F5;
+      --bg-elevated: #F7F2E8;
+      --bg-obsidian: #141210;
       --bg-input: #FFFFFF;
-      --border-hairline: #DEE2E6;
-      --border-strong: #CED4DA;
-      --text-primary: #14171A;
-      --text-secondary: #212529;
-      --text-muted: #495057;
-      --vermilion: #C23B22;
-      --vermilion-hover: #9B2C18;
-      --vermilion-soft: #FFF1EE;
-      --vermilion-border: #FFD5CC;
-      --emerald-roi: #0F766E;
+      --border-subtle: #DFD5C3;
+      --border-hairline: #E6DEC8;
+      --border-strong: #C9B99F;
+      --text-primary: #141210;
+      --text-secondary: #3D3831;
+      --text-muted: #6E6559;
+      --vermilion: #D9482B;
+      --vermilion-hover: #B8371D;
+      --vermilion-soft: #FFF2EE;
+      --vermilion-border: #FBC9BC;
+      --emerald-roi: #047857;
       --emerald-soft: #ECFDF5;
-      --emerald-border: #A7F3D0;
-      --amber-gold: #92400E;
+      --emerald-border: #6EE7B7;
+      --amber-gold: #B45309;
       --amber-soft: #FEF3C7;
-      --amber-border: #FDE68A;
+      --amber-border: #FCD34D;
       --cyan-info: #0369A1;
-      --shadow-editorial: none;
-      --shadow-subtle: none;
+      --shadow-editorial: 0 2px 6px rgba(20, 18, 16, 0.04), 0 14px 32px -8px rgba(20, 18, 16, 0.07);
+      --shadow-subtle: 0 1px 3px rgba(20, 18, 16, 0.05), 0 4px 12px -2px rgba(20, 18, 16, 0.04);
       --font-serif: 'Newsreader', Georgia, serif;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -169,8 +213,10 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 
     /* Sticky Editorial Header Navigation */
     .top-nav {
-      background: #FBF8F3;
-      border-bottom: none;
+      background: rgba(250, 246, 238, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 0 rgba(20, 18, 16, 0.03);
       position: sticky;
       top: 0;
       z-index: 40;
@@ -313,18 +359,22 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     /* Double-Bezel Porcelain Bento Panels */
     .panel {
       background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
       border-radius: 16px;
-      box-shadow: none;
+      box-shadow: var(--shadow-subtle);
       max-width: 100%;
     }
     .double-bezel {
-      background: var(--bg-bezel);
+      background: linear-gradient(180deg, #EFE7D8 0%, #E3D8C4 100%);
+      border: 1px solid var(--border-strong);
       padding: 6px;
-      border-radius: 20px;
+      border-radius: 22px;
+      box-shadow: var(--shadow-editorial);
     }
     .panel-header {
-      padding: 14px 20px;
+      padding: 16px 22px;
       background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-hairline);
       border-top-left-radius: 15px;
       border-top-right-radius: 15px;
       display: flex;
@@ -333,7 +383,7 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
       gap: 12px;
       flex-wrap: wrap;
     }
-    .panel-body { padding: 20px; }
+    .panel-body { padding: 22px; }
 
     /* Responsive Form Grids */
     .lookup-form-grid {
@@ -513,14 +563,16 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     /* KPI Strip */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
     }
     .kpi-box {
       background: var(--bg-elevated);
-      border-radius: 10px;
-      padding: 12px 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
     }
     .kpi-label {
       font-size: 14px;
@@ -691,58 +743,17 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
     </div>
   </aside>
 
-  <footer style="background:var(--bg-parchment); padding:48px 0; color:var(--text-secondary); font-size:16px;">
+  <footer style="background:var(--bg-parchment); border-top:1px solid var(--border-subtle); padding:48px 0; color:var(--text-secondary); font-size:15.5px;">
     <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:28px;">
       <div>
-        <a href="/" class="brand-logo" style="margin-bottom:10px;">
-          ${renderBrandLogoSvg(34)}
-          <div>
-            <span class="brand-wordmark" style="font-size:20px;">SponsorRadar</span>
-            <span class="brand-subtag">Creator &amp; Brand Media Intelligence</span>
-          </div>
-        </a>
-        <p style="max-width:430px; color:var(--text-secondary); margin-top:8px;">
-          Built for DTC &amp; B2B brand partnership managers, growth buyers, and newsletter/podcast operators. Track verified 3x+ sponsor renewals, negotiated CPM rates, and promo-code attribution.
-        </p>
+        <a href="/" class="brand-logo" style="margin-bottom:10px;">${renderBrandLogoSvg(34)}<div><span class="brand-wordmark" style="font-size:20px;">SponsorRadar</span><span class="brand-subtag">Creator &amp; Brand Media Intelligence</span></div></a>
+        <p style="max-width:430px; color:var(--text-secondary); margin-top:8px;">Built for DTC &amp; B2B brand partnership managers, growth buyers, and newsletter/podcast operators. Track verified 3x+ sponsor renewals, negotiated CPM rates, and promo-code attribution.</p>
       </div>
       <div style="display:flex; gap:36px; flex-wrap:wrap;">
-        <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Platform</div>
-          <div style="display:flex; flex-direction:column; gap:7px;">
-            <a href="/#radar-tool">Interactive Spend Radar</a>
-            <a href="/leaderboard">Industry Leaderboard</a>
-            <a href="/directory">124+ pSEO Spend Dossiers</a>
-            <a href="/scan/Shopify">Verified Brand Scans</a>
-            <a href="/sitemap.xml">XML Sitemap (161+ URLs)</a>
-          </div>
-        </div>
-        <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Free Tools &amp; Comparisons</div>
-          <div style="display:flex; flex-direction:column; gap:7px;">
-            <a href="/tools/podcast-sponsorship-cpm-roi-calculator">Podcast CPM Calculator</a>
-            <a href="/tools/newsletter-ad-spend-renewal-estimator">Newsletter Pricing Calculator</a>
-            <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database">vs. Who Sponsors Stuff</a>
-            <a href="/compare/paved-vs-passionfroot-vs-sponsorradar-direct-sponsor-outreach">vs. Passionfroot</a>
-          </div>
-        </div>
-        <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Verified Spend Ledgers</div>
-          <div style="display:flex; flex-direction:column; gap:7px;">
-            <a href="/seo/ag1-podcast-sponsorship-spend-and-roi">AG1 Spend &amp; 3x ROI</a>
-            <a href="/seo/deel-newsletter-and-podcast-ad-spend">Deel B2B Ad Ledger</a>
-            <a href="/seo/ramp-b2b-podcast-sponsorship-strategy">Ramp Podcast Strategy</a>
-            <a href="/seo/lennys-podcast-sponsors-and-ad-rates">Lenny's Podcast CPMs</a>
-          </div>
-        </div>
-        <div>
-          <div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Legal &amp; AI Protocols</div>
-          <div style="display:flex; flex-direction:column; gap:7px;">
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Service</a>
-            <a href="/llms.txt">llms.txt (Agent Index)</a>
-            <a href="/robots.txt">robots.txt</a>
-          </div>
-        </div>
+        <div><div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Platform</div><div style="display:flex; flex-direction:column; gap:7px;"><a href="/#radar-tool">Interactive Spend Radar</a><a href="/leaderboard">Industry Leaderboard</a><a href="/directory">124+ pSEO Spend Dossiers</a><a href="/scan/Shopify">Verified Brand Scans</a><a href="/sitemap.xml">XML Sitemap (161+ URLs)</a></div></div>
+        <div><div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Free Tools &amp; Comparisons</div><div style="display:flex; flex-direction:column; gap:7px;"><a href="/tools/podcast-sponsorship-cpm-roi-calculator">Podcast CPM Calculator</a><a href="/tools/newsletter-ad-spend-renewal-estimator">Newsletter Pricing Calculator</a><a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database">vs. Who Sponsors Stuff</a><a href="/compare/paved-vs-passionfroot-vs-sponsorradar-direct-sponsor-outreach">vs. Passionfroot</a></div></div>
+        <div><div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Verified Spend Ledgers</div><div style="display:flex; flex-direction:column; gap:7px;"><a href="/seo/ag1-podcast-sponsorship-spend-and-roi">AG1 Spend &amp; 3x ROI</a><a href="/seo/deel-newsletter-and-podcast-ad-spend">Deel B2B Ad Ledger</a><a href="/seo/ramp-b2b-podcast-sponsorship-strategy">Ramp Podcast Strategy</a><a href="/seo/lennys-podcast-sponsors-and-ad-rates">Lenny's Podcast CPMs</a></div></div>
+        <div><div class="mono" style="color:var(--text-primary); font-weight:700; font-size:14px; margin-bottom:10px;">Legal &amp; AI Protocols</div><div style="display:flex; flex-direction:column; gap:7px;"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Service</a><a href="/llms.txt">llms.txt (Agent Index)</a><a href="/robots.txt">robots.txt</a></div></div>
       </div>
     </div>
   </footer>
@@ -750,31 +761,12 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
   <script>
     function getUtmParams() {
       const p = new URLSearchParams(window.location.search);
-      return {
-        utm_source: p.get('utm_source') || 'direct',
-        utm_medium: p.get('utm_medium') || 'organic',
-        utm_campaign: p.get('utm_campaign') || 'sponsor_radar_editorial',
-        utm_content: p.get('utm_content') || '',
-        utm_term: p.get('utm_term') || ''
-      };
+      return { utm_source: p.get('utm_source') || 'direct', utm_medium: p.get('utm_medium') || 'organic', utm_campaign: p.get('utm_campaign') || 'sponsor_radar_editorial', utm_content: p.get('utm_content') || '', utm_term: p.get('utm_term') || '' };
     }
-
     async function fireMetaEvent(eventName, valueUsd, extraData) {
       try {
-        const utms = getUtmParams();
-        const eventId = 'sr_' + eventName.toLowerCase() + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-        await fetch('/api/meta-capi', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            event_id: eventId,
-            event_name: eventName,
-            page_url: window.location.href,
-            value_usd: valueUsd || 0,
-            ...utms,
-            extra: extraData || {}
-          })
-        });
+        const utms = getUtmParams(), eventId = 'sr_' + eventName.toLowerCase() + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+        await fetch('/api/meta-capi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event_id: eventId, event_name: eventName, page_url: window.location.href, value_usd: valueUsd || 0, ...utms, extra: extraData || {} }) });
       } catch (_) {}
     }
 
@@ -898,5 +890,6 @@ function renderShell({ title, description, canonicalPath, ogSlug, jsonLd, bodyHt
 module.exports = {
   escapeHtml,
   renderBrandLogoSvg,
+  renderEntityAvatarSvg,
   renderShell
 };
