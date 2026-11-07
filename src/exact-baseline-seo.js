@@ -234,16 +234,20 @@ function buildLlmsFullTxtContent(cfg, seoEntries) {
     ...loadPublicScanLedger(cfg).slice(0, 32).map((s) => `- [${s.target}: Grade ${s.grade} (${s.score}/100)](${host}/scan/${encodeURIComponent(s.target)}) ([.md](${host}/scan/${encodeURIComponent(s.target)}.md)): ${s.kpi1} • ${s.cnnReadout}`),
     '',
     `## 3. Complete ${seoEntries.length}-Page Programmatic Benchmark Encyclopedia`,
-    ...seoEntries.map((item, idx) => [
-      `### ${idx + 1}. ${item.title}`,
-      `- **Canonical URL**: ${host}/seo/${item.slug}`,
-      `- **Clean Markdown Twin**: ${host}/seo/${item.slug}.md`,
-      `- **Category**: ${item.category}${item.avg_cpm ? ` • $${item.avg_cpm} Rack CPM → $${item.floor_cpm} 3-Flight Floor CPM (-18%) • ~$${(item.est_monthly_spend || 85000).toLocaleString()}/mo Verified Spend` : ''}`,
-      `- **Answer-First Executive Summary**: ${item.summary}`,
-      `- **Counterparty Execution Files**: [IAB Rider (.TXT)](${host}/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(item.target_slug || item.slug)}&floor_cpm=${item.floor_cpm || 38}) | [Pitch (.EML)](${host}/api/github-upgrade/pitch.eml?target=${encodeURIComponent(item.target_slug || item.slug)}&floor_cpm=${item.floor_cpm || 38}) | [3-Row Sample (.CSV)](${host}/api/github-upgrade/export.csv?target=${encodeURIComponent(item.target_slug || item.slug)})`,
-      `- **Interactive Calculator**: [Run live ${item.title} audit on ${cfg.brandName}](${host}/seo/${item.slug})`,
-      ''
-    ].join('\n'))
+    ...seoEntries.map((item, idx) => {
+      const isRow1 = idx === 0 || String(item.target_slug || item.slug || '').includes('shopify');
+      const flParam = (isRow1 && item.floor_cpm) ? `&floor_cpm=${item.floor_cpm}` : '';
+      return [
+        `### ${idx + 1}. ${item.title}`,
+        `- **Canonical URL**: ${host}/seo/${item.slug}`,
+        `- **Clean Markdown Twin**: ${host}/seo/${item.slug}.md`,
+        `- **Category**: ${item.category}${item.avg_cpm ? ` • $${item.avg_cpm} Rack CPM → ${isRow1 ? `$${item.floor_cpm} 3-Flight Floor CPM (-18%)` : '3-Flight Floor CPM: Locked ($0 Email)'} • ~$${(item.est_monthly_spend || 85000).toLocaleString()}/mo Verified Spend` : ''}`,
+        `- **Answer-First Executive Summary**: ${item.summary}`,
+        `- **Counterparty Execution Files**: [IAB Rider (.TXT)](${host}/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(item.target_slug || item.slug)}${flParam}) | [Pitch (.EML)](${host}/api/github-upgrade/pitch.eml?target=${encodeURIComponent(item.target_slug || item.slug)}${flParam}) | [3-Row Sample (.CSV)](${host}/api/github-upgrade/export.csv?target=${encodeURIComponent(item.target_slug || item.slug)})`,
+        `- **Interactive Calculator**: [Run live ${item.title} audit on ${cfg.brandName}](${host}/seo/${item.slug})`,
+        ''
+      ].join('\n');
+    })
   ];
   return lines.join('\n');
 }

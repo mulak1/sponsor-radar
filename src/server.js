@@ -294,7 +294,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
   ].join('\r\n');
   const fName = `${t.slugCand}-iab-sponsorship-io-redline-addendum.txt`;
   if (req.query.download !== '1' && req.query.format !== 'raw' && String(req.headers.accept || '').includes('text/html')) {
-    const dlUrl = `${req.path}?target=${encT}&floor_cpm=${floorCpm}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
+    const dlUrl = `${req.path}?target=${encT}${showFloor ? `&floor_cpm=${floorCpm}` : ''}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
     return res.status(200).type('html').send(renderDeliverablePreviewHtml(t, 'Redlined IAB Sponsorship IO Addendum (.TXT)', fName, rider, dlUrl, hasEmailUnlock, isPaidUnlock));
   }
   res.status(200).type('text/plain; charset=utf-8')
@@ -351,7 +351,7 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
   ].join('\r\n');
   const fName = `${t.slugCand}-outreach-pitch.eml`;
   if (req.query.download !== '1' && req.query.format !== 'raw' && String(req.headers.accept || '').includes('text/html')) {
-    const dlUrl = `${req.path}?target=${encT}&floor_cpm=${floorCpm}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
+    const dlUrl = `${req.path}?target=${encT}${showFloor ? `&floor_cpm=${floorCpm}` : ''}&reach=${reach}&quoted_usd=${rackSlotUsd}&download=1`;
     return res.status(200).type('html').send(renderDeliverablePreviewHtml(t, 'Dual-Track Outreach & Counter-Offer Script (.EML)', fName, eml, dlUrl, hasEmailUnlock, isPaidUnlock));
   }
   res.status(200).type('message/rfc822')
