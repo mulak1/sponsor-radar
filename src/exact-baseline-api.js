@@ -128,12 +128,12 @@ const VERTICAL_CONFIGS = {
   sponsor_radar: {
     moduleId: 'sponsor_radar', brandName: 'SponsorRadar', domain: 'www.sponsorradar.io', accentColor: '#047857',
     theme: {
-      canvasBg: '#F8F9FA', cardBg: '#FFFFFF', subtleBg: '#F1F3F5', dockBg: 'rgba(248, 249, 250, 0.96)',
-      border: '#DEE2E6', accentBorder: '#CBD5E1', textPrimary: '#14171A', textSecondary: '#212529', textMuted: '#495057',
-      brandPrimary: '#047857', brandSoftBg: '#F1F5F9', brandText: '#0F172A',
-      safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#475569',
+      canvasBg: '#FAF6EE', cardBg: '#FFFFFF', subtleBg: '#F2EBE0', dockBg: 'rgba(250, 246, 238, 0.96)',
+      border: '#DFD5C3', accentBorder: '#C9B99F', textPrimary: '#141210', textSecondary: '#4A433B', textMuted: '#6E655A',
+      brandPrimary: '#047857', brandSoftBg: '#ECFDF5', brandText: '#141210',
+      safeColor: '#047857', safeSoftBg: '#ECFDF5', safeBorder: '#A7F3D0', warnColor: '#B45309',
       fontDisplay: "'Newsreader', Georgia, serif", fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      radiusCard: '8px', radiusPill: '8px', shadow: 'none'
+      radiusCard: '14px', radiusPill: '999px', shadow: '0 2px 6px rgba(20, 18, 16, 0.04), 0 14px 32px -8px rgba(20, 18, 16, 0.07)'
     },
     flashPriceEnv: 'STRIPE_PRICE_FLASH_199', flashPriceDefault: 'price_1UQjMrIaoGnkXxS82T5cPcjM',
     corePriceEnv: 'STRIPE_PRICE_CREATOR_49', corePriceUsd: 29, coreLabel: 'Full 109-Row Named-Buyer & Agency CSV + IO Rider Vault ($29 One-Time) →',
