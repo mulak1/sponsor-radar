@@ -143,7 +143,7 @@ app.get(['/api/github-upgrade/export.csv', '/api/export-full-ledger.csv'], (req,
       'Podcast / Newsletter / YouTube', 'LOCKED', '3x+ Renewed', `LOCKED — Enter $0 Email at https://www.sponsorradar.io/dossier/sample?target=${tQuery} or https://www.sponsorradar.io/?q=${tQuery}`, 'LOCKED',
       'VP Growth / Media Buying Desk', 'Oxford Road / Right Side Up / Veritone One', '250_2.1.5_OK_MX_VERIFIED_<48H',
       'LOCKED', 'LOCKED (-18% 3-Flight Floor)', 'Save $2,400 Overpay', 'LOCKED', `https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`,
-      `LOCKED — 1-Row ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${tQuery} | 3-File Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${tQuery} | Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${tQuery} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery}`
+      `LOCKED — Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${tQuery} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${tQuery} | Agency Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${tQuery}`
     ]);
   }
   res.status(200).type('text/csv; charset=utf-8')
@@ -218,7 +218,7 @@ app.get(['/api/github-upgrade/iab-io-addendum.txt', '/api/iab-io-addendum.txt'],
     `  [LOCKED IN FREE PREVIEW — Unmask Free ($0 Work Email): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}]`,
     '',
     '§ 9.3 — 90-DAY POST-LISTEN ATTRIBUTION DECAY WINDOW & § 11.0 — SUB-50K NICHE SHOW PILOT CLAUSE:',
-    `  [LOCKED IN FREE PREVIEW — 1-Row ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${encT} | 3-File Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT} | Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}]`
+    `  [LOCKED IN FREE PREVIEW — Creator Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT} | Full 109-Row Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT} | Agency Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${encT}]`
   ];
   const rider = [
     `IAB PODCAST & NEWSLETTER SPONSORSHIP INSERTION ORDER (IO) REDLINE ADDENDUM — ${t.clean.toUpperCase()}`,
@@ -259,10 +259,9 @@ app.get(['/api/github-upgrade/pitch.eml', '/api/pitch.eml'], (req, res) => {
     `[PREVIEW — 3-FLIGHT ANCHOR & IAB MAKE-GOOD SCRIPTS LOCKED FOR ${t.clean.toUpperCase()}]`,
     `We tracked ${t.clean}'s ${t.peerFlights}x renewed host-read flights on ${t.peerShow} (code: ${t.peerCode} • $${rackCpm} Rack CPM -> $${floorCpm} 3-Flight Floor CPM • $${floorSlotUsd.toLocaleString()}/flight on ${reach.toLocaleString()} Reach) via ${t.agencyDesk}.`,
     `• Enter your $0 work email to unmask ${t.maskedBuyer} (+ ${t.maskedAgency}): https://www.sponsorradar.io/dossier/sample?target=${encT} or https://www.sponsorradar.io/?q=${encT}`,
-    `• 1-Row Buyer Contact ($0.99): https://www.sponsorradar.io/buy/micro_pass?target=${encT}`,
-    `• 3-File Counterparty Pack ($1.99): https://www.sponsorradar.io/buy/flash_pass?target=${encT}`,
     `• Creator Outreach Pass ($19): https://www.sponsorradar.io/buy/creator_pass?target=${encT}`,
-    `• Full 109-Row Buyer & Agency CSV Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}`
+    `• Full 109-Row Buyer & Agency CSV Vault ($29): https://www.sponsorradar.io/buy/playbook_pass?target=${encT}`,
+    `• B2B Agency & Talent Desk ($149): https://www.sponsorradar.io/buy/agency_desk?target=${encT}`
   ];
   const eml = [
     'From: SponsorRadar Desk <partnerships@sponsorradar.io>',
