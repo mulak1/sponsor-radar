@@ -159,7 +159,7 @@ Saw ${brand.name} renewed ${topAnchor.flights}x on ${topAnchor.show_name} (${top
 
 We have 1 mid-roll / primary slot open next month and can offer a 3-flight pilot at $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM - 15% below the $${brand.avg_cpm} category rack rate).
 
-[LOCKED IN FREE PREVIEW: Exact 1.5% CTR Make-Good Guarantee Clause, IAB 30-Day Attribution SLA & Direct Buyer Email (${maskedEmail}) - Unlock 3-File Execution Pack ($1.99), Creator Pass ($19), or Full 109-Row CSV Vault ($29)]`;
+[LOCKED IN FREE PREVIEW: Exact 1.5% CTR Make-Good Guarantee Clause, IAB 30-Day Attribution SLA & Direct Buyer Email (${maskedEmail}) - Unlock 3-Credit Sample ($0 Work Email), Creator Pass ($19), or Full 109-Row CSV Vault ($29)]`;
 
   const body = `Hi ${brand.name} Partnerships Team (${brand.decision_maker_role}),
 
@@ -169,7 +169,7 @@ I track verified sponsorship renewals across ${niche} via SponsorRadar, and noti
 • Recommended 3-Episode Pilot Quote: $${package3FlightPrice.toLocaleString()} total ($${effectiveCpm} effective CPM - 15% below $${brand.avg_cpm} category benchmark)
 • Single Insertion Rate Floor: $${proposedMidrollPrice.toLocaleString()}/episode
 • Target Buyer Contact (Domain Verified): ${maskedEmail} (${getAgencyDesk(brand.slug, brand.category)})
-• Unmasked Buyer Email, Redlined IO Clause & 109-Row CSV Vault: [UNLOCK 3-FILE EXECUTION PACK ($1.99), CREATOR PASS ($19), OR FULL 109-ROW CSV VAULT ($29)]`;
+• Unmasked Buyer Email, Redlined IO Clause & 109-Row CSV Vault: [UNLOCK 3-CREDIT SAMPLE ($0 WORK EMAIL), CREATOR PASS ($19), OR FULL 109-ROW CSV VAULT ($29)]`;
 
   const mailtoHref = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(freePitchScript)}`;
 
@@ -182,8 +182,8 @@ I track verified sponsorship renewals across ${niche} via SponsorRadar, and noti
     free_pitch_script: freePitchScript,
     mailto_href: mailtoHref,
     body,
-    direct_checkout_url: `https://www.sponsorradar.io/buy/micro_pass?brand=${encBrand}`,
-    flash_checkout_url: `https://www.sponsorradar.io/buy/flash_pass?brand=${encBrand}`,
+    direct_checkout_url: `https://www.sponsorradar.io/buy/creator_pass?brand=${encBrand}`,
+    flash_checkout_url: `https://www.sponsorradar.io/buy/playbook_pass?brand=${encBrand}`,
     creator_checkout_url: `https://www.sponsorradar.io/buy/creator_pass?brand=${encBrand}`,
     vault_checkout_url: `https://www.sponsorradar.io/buy/playbook_pass?brand=${encBrand}`,
     agency_checkout_url: `https://www.sponsorradar.io/buy/agency_desk?brand=${encBrand}`,
