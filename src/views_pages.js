@@ -134,6 +134,16 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               <a href="/dossier/sample?target=Shopify" style="color:var(--emerald-roi); font-weight:700; text-decoration:underline;">View Sample Dossier ($0) ↗</a>
             </div>
           </div>
+          <div id="sr-raw-csv-proof-box" style="padding:10px 14px; border-radius:10px; background:var(--bg-canvas); border:1px solid var(--border-subtle); font-size:12px; max-width:100%; box-sizing:border-box;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
+              <strong style="color:var(--text-secondary);">CSV Specimen Proof: Row #1 <span style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</span> (+ m.vance@rightsideup.co) · Row #2 (<span id="eb-dir-csv-hdr-tgt">AG1</span>): <span id="eb-dir-csv-hdr-preview" onclick="var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){i.focus();},250);}" data-free-credit-unmasked="jordan.hollis@drinkag1.com (+ d.patel@oxfordroad.com)" style="cursor:pointer;text-decoration:underline;color:var(--emerald-roi);">j***.h***@drinkag1.com (+ d.***@oxfordroad.com) ($0 Email ↑)</span></strong>
+              <span style="color:var(--text-secondary);"><a id="eb-dir-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=AG1" target="_blank" style="color:var(--text-secondary);font-weight:700;text-decoration:underline;">IAB Make-Good Rider (.TXT) ↗</a> • <a id="eb-dir-eml-link" href="/api/github-upgrade/pitch.eml?target=AG1" target="_blank" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">3-Flight Pitch (.EML) ↗</a> • <a id="eb-dir-csv-link" href="/api/github-upgrade/export.csv?target=AG1" target="_blank" style="color:var(--text-primary);font-weight:700;text-decoration:underline;">3-Row Sample (.CSV) ↗</a></span>
+            </div>
+            <div onclick="var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){i.focus();},250);}" title="Click to focus $0 work email input and unmask 3 free buyer credits" style="cursor:pointer;font-family:var(--font-mono);padding:6px 10px;border-radius:6px;background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-primary);overflow-x:hidden;white-space:normal;word-break:break-all;font-size:11.5px;max-width:100%;box-sizing:border-box;">
+              <div>1,Shopify,VP Growth &amp; Creator Partnerships,<strong style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</strong>,<strong style="color:var(--text-secondary);">m.vance@rightsideup.co</strong>,RENEWED_4X_PEER_SHOWS,$49_RACK,<strong style="color:var(--emerald-roi);">$40_FLOOR_CPM_(-18%)</strong>,SAVE_$2400_OVERPAY</div>
+              <div style="margin-top:4px;padding-top:4px;border-top:1px dashed var(--border-subtle);">2,<span id="eb-dir-csv-tgt">AG1</span>,VP Growth &amp; Creator Partnerships,<strong id="eb-dir-csv-buyer" data-free-credit-unmasked="jordan.hollis@drinkag1.com" style="color:var(--emerald-roi);text-decoration:underline;">j***.h***@drinkag1.com</strong>,<strong id="eb-dir-csv-agency" data-free-credit-unmasked="d.patel@oxfordroad.com" style="color:var(--text-secondary);">d.***@oxfordroad.com</strong>,VERIFIED_PEER_SHOWS,<span id="eb-dir-csv-rack">$42_RACK</span>,<strong id="eb-dir-csv-floor" data-free-credit-unmasked="$34_FLOOR_CPM_(-18%)" style="color:var(--emerald-roi);text-decoration:underline;">3-FLIGHT_FLOOR_LOCKED_($0_EMAIL_↑)</strong>,"[HOLD BACK: Full Redlined IAB §7.1 Make-Good Clause &amp; Rows #4–#109 in $19 Creator Pass / $29 109-Row Vault]"</div>
+            </div>
+          </div>
         </div>
 
         <!-- Zero-Match Custom Workbench Fallback -->
@@ -198,8 +208,10 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             const floorChipHtml = isRow1Brand
               ? `$${p.avg_cpm} Rack / $${floorCpmVal} Floor`
               : `<span onclick="var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){b.focus();},250);}" style="cursor:pointer;text-decoration:underline;" data-free-credit-unmasked="$${p.avg_cpm} Rack / $${floorCpmVal} Floor">$${p.avg_cpm} Rack • 3x Floor: Locked ($0 Email ↑)</span>`;
+            const mskShort = maskedEmail.split(' (')[0];
+            const agMaskShort = `${agencyEmail[0]}.***@${agencyEmail.split('@')[1] || 'oxfordroad.com'}`;
             return `
-            <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
+            <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-dir-buyer="${escapeHtml(unmaskedEmail)}" data-dir-agency="${escapeHtml(agencyEmail)}" data-dir-masked="${escapeHtml(mskShort)}" data-dir-ag-masked="${escapeHtml(agMaskShort)}" data-dir-flcpm="${floorCpmVal}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:16px 18px; border-radius:12px; border:1px solid var(--border-subtle); background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
                   <span style="display:inline-flex;align-items:center;gap:8px;">${renderEntityAvatarSvg(b.name || p.target_slug, 'brand', 28)}<span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span></span>
@@ -265,12 +277,15 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
               const isB2b = /B2B|SaaS|DevTools|Fintech|Security/i.test(b.vertical + ' ' + b.category);
               const isRow1Brand = String(b.slug || '').toLowerCase() === 'shopify';
               const unmBuyer = getUnmaskedNamedBuyerEmail(b.sponsor_email || `partnerships@${b.domain}`);
+              const agEmail = getAgencyBuyerEmail(b.domain || 'brand.io', b.category);
               const mskBuyer = maskSponsorEmail(unmBuyer, b.category).split(' (')[0];
+              const agMsk = `${agEmail[0]}.***@${agEmail.split('@')[1] || 'oxfordroad.com'}`;
+              const flCpm = Math.round((b.avg_cpm || 45) * 0.82);
               const buyerChip = isRow1Brand
                 ? `<code style="color:var(--emerald-roi);font-weight:700;">${escapeHtml(unmBuyer)}</code>`
                 : `<code onclick="var i=document.getElementById('sr-bridge-email');if(i){i.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){i.focus();},250);}" title="Click to focus $0 work email input and unmask 3 free buyer credits" data-free-credit-unmasked="${escapeHtml(unmBuyer)}" style="cursor:pointer;color:var(--emerald-roi);font-weight:700;text-decoration:underline;">${escapeHtml(mskBuyer)} ($0 ↑)</code>`;
               return `
-              <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
+              <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name)}" data-dir-buyer="${escapeHtml(unmBuyer)}" data-dir-agency="${escapeHtml(agEmail)}" data-dir-masked="${escapeHtml(mskBuyer)}" data-dir-ag-masked="${escapeHtml(agMsk)}" data-dir-flcpm="${flCpm}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${b.avg_cpm}" data-renewal="${b.renewal_rate_pct}" style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; margin-bottom:6px; border-radius:8px; background:var(--bg-elevated); font-size:13.5px; gap:8px; flex-wrap:wrap;">
                 <span>
                   <a href="${primaryHref}" style="font-weight:700; color:var(--text-primary); text-decoration:underline;">${escapeHtml(b.name)}</a>
                   <span style="color:var(--text-muted); font-size:13px;">(${buyerChip} • ${escapeHtml(b.vertical || b.category)})</span>
@@ -352,7 +367,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           var p = window.__srActiveDirPill || 'all';
           var q = ((document.getElementById('sr-dir-search') || {}).value || '').trim().toLowerCase().replace(/[_.-]+/g, ' ');
           var qTokens = q ? q.split(/\\s+/).filter(Boolean) : [];
-          var items = document.querySelectorAll('.sr-dir-item'), visibleCount = 0, firstT = '';
+          var items = document.querySelectorAll('.sr-dir-item'), visibleCount = 0, firstT = '', csvEl = null;
           for (var j = 0; j < items.length; j++) {
             var el = items[j], t = el.getAttribute('data-type') || '', v = el.getAttribute('data-vertical') || '';
             var cpm = Number(el.getAttribute('data-cpm') || 50), ren = Number(el.getAttribute('data-renewal') || 80);
@@ -361,15 +376,28 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             var textMatch = !qTokens.length || qTokens.every(function(tok) { return hay.indexOf(tok) !== -1; });
             var show = pillMatch && textMatch;
             el.style.display = show ? '' : 'none';
-            if (show) { visibleCount++; if (!firstT) firstT = el.getAttribute('data-dir-target') || ''; }
+            var dTgt = el.getAttribute('data-dir-target') || '';
+            if (show) { visibleCount++; if (!firstT) firstT = dTgt; if (!csvEl && el.getAttribute('data-dir-buyer') && dTgt.toLowerCase() !== 'shopify') csvEl = el; }
           }
-          if (firstT && (q || p !== 'all')) {
-            window.__ebSelectedTarget = window.__ebActiveEntity = firstT;
+          if (firstT) {
+            var actT = (csvEl && csvEl.getAttribute('data-dir-target')) || firstT;
+            window.__ebSelectedTarget = window.__ebActiveEntity = actT;
             var sl = document.getElementById('eb-dir-sample-link'), rl = document.getElementById('eb-dir-rider-link'), el2 = document.getElementById('eb-dir-eml-link'), cl = document.getElementById('eb-dir-csv-link'), em = window.__ebSavedEmail ? '&email=' + encodeURIComponent(window.__ebSavedEmail) : '';
-            if (sl) sl.href = '/dossier/sample?target=' + encodeURIComponent(firstT) + em;
-            if (rl) rl.href = '/api/github-upgrade/iab-io-addendum.txt?target=' + encodeURIComponent(firstT) + em;
-            if (el2) el2.href = '/api/github-upgrade/pitch.eml?target=' + encodeURIComponent(firstT) + em;
-            if (cl) cl.href = '/api/github-upgrade/export.csv?target=' + encodeURIComponent(firstT) + em;
+            if (sl) sl.href = '/dossier/sample?target=' + encodeURIComponent(actT) + em;
+            if (rl) rl.href = '/api/github-upgrade/iab-io-addendum.txt?target=' + encodeURIComponent(actT) + em;
+            if (el2) el2.href = '/api/github-upgrade/pitch.eml?target=' + encodeURIComponent(actT) + em;
+            if (cl) cl.href = '/api/github-upgrade/export.csv?target=' + encodeURIComponent(actT) + em;
+          }
+          if (csvEl) {
+            var cTgt = csvEl.getAttribute('data-dir-target') || 'AG1', cBuy = csvEl.getAttribute('data-dir-buyer') || 'jordan.hollis@drinkag1.com', cAg = csvEl.getAttribute('data-dir-agency') || 'd.patel@oxfordroad.com', cMask = csvEl.getAttribute('data-dir-masked') || 'j***.h***@drinkag1.com', cAgMask = csvEl.getAttribute('data-dir-ag-masked') || 'd.***@oxfordroad.com', cQ = csvEl.getAttribute('data-cpm') || '42', cFl = csvEl.getAttribute('data-dir-flcpm') || '34', unl = Boolean(window.__ebSavedEmail);
+            var hT = document.getElementById('eb-dir-csv-hdr-tgt'), hP = document.getElementById('eb-dir-csv-hdr-preview'), rT = document.getElementById('eb-dir-csv-tgt'), rB = document.getElementById('eb-dir-csv-buyer'), rA = document.getElementById('eb-dir-csv-agency'), rRk = document.getElementById('eb-dir-csv-rack'), rFl = document.getElementById('eb-dir-csv-floor');
+            if (hT) hT.textContent = cTgt;
+            if (hP) { hP.setAttribute('data-free-credit-unmasked', cBuy + ' (+ ' + cAg + ')'); hP.textContent = unl ? (cBuy + ' (+ ' + cAg + ')') : (cMask + ' (+ ' + cAgMask + ') ($0 Email ↑)'); }
+            if (rT) rT.textContent = cTgt;
+            if (rB) { rB.setAttribute('data-free-credit-unmasked', cBuy); rB.textContent = unl ? cBuy : cMask; }
+            if (rA) { rA.setAttribute('data-free-credit-unmasked', cAg); rA.textContent = unl ? cAg : cAgMask; }
+            if (rRk) rRk.textContent = '$' + cQ + '_RACK';
+            if (rFl) { rFl.setAttribute('data-free-credit-unmasked', '$' + cFl + '_FLOOR_CPM_(-18%)'); rFl.textContent = unl ? ('$' + cFl + '_FLOOR_CPM_(-18%)') : '3-FLIGHT_FLOOR_LOCKED_($0_EMAIL_↑)'; }
           }
           var sections = document.querySelectorAll('.sr-dir-section');
           for (var k = 0; k < sections.length; k++) {
