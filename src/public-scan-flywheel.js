@@ -283,8 +283,8 @@ function getVerticalScanCopy(cfg, scan) {
 
 function renderScanSummaryCardsHtml(cfg, scan, badgeColor) {
   const isHigh = scan.score >= 86;
-  const strokeCol = isHigh ? '#047857' : '#BE123C';
-  const softBg = isHigh ? '#ECFDF5' : '#FFF1F2';
+  const strokeCol = isHigh ? '#047857' : '#334155';
+  const softBg = isHigh ? '#ECFDF5' : '#F1F5F9';
   const statusLabel = isHigh ? 'Top Performer' : (scan.score >= 75 ? 'Moderate Opportunity' : 'Action Needed');
   const vCopy = getVerticalScanCopy(cfg, scan);
   return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px;">
@@ -332,7 +332,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
   const badgeUrl = `https://${cfg.domain}/badge/${encodeURIComponent(scan.target)}.svg`;
   const mdSnippet = `[![${cfg.brandName} ${scan.grade}](${badgeUrl})](${canonicalUrl})`;
   const ledger = loadPublicScanLedger(cfg).slice(0, 4);
-  const recentLinks = ledger.map((item) => `<a href="/scan/${esc(encodeURIComponent(item.target))}" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:13px;font-weight:600;color:${esc(t.textPrimary)};text-decoration:none;border:1px solid #E2E8F0;"><span>${esc(item.target)}</span><span style="color:${item.score >= 86 ? '#059669' : '#E11D48'};font-weight:800;">${esc(item.grade)}</span></a>`).join(' ');
+  const recentLinks = ledger.map((item) => `<a href="/scan/${esc(encodeURIComponent(item.target))}" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#FFFFFF;font-size:13px;font-weight:600;color:${esc(t.textPrimary)};text-decoration:none;border:1px solid #E2E8F0;"><span>${esc(item.target)}</span><span style="color:${item.score >= 86 ? '#059669' : '#475569'};font-weight:800;">${esc(item.grade)}</span></a>`).join(' ');
   const filesList = (cfg.deliverableFiles && cfg.deliverableFiles.length) ? cfg.deliverableFiles : [
     { label: 'Primary Configuration & Rules', schema: 'Ready-to-use configuration tailored to this benchmark' },
     { label: 'Verified Benchmark Dataset (.CSV)', schema: 'Full comparison metrics and benchmark rows' },
@@ -433,7 +433,7 @@ function renderPublicScanPageHtml(cfg, scan, badgeColor) {
       <table aria-label="${esc(scan.target)} Public Scan Matrix" style="width:100%;border-collapse:collapse;font-size:13.5px;">
         <thead><tr style="background:${esc(t.canvasBg)};text-align:left;border-bottom:2px solid #E2E8F0;"><th scope="col" style="padding:8px 12px;">Check Category</th><th scope="col" style="padding:8px 12px;">Measured Result</th><th scope="col" style="padding:8px 12px;">How You Can Use This</th><th scope="col" style="padding:8px 12px;">Status</th></tr></thead>
         <tbody id="prompt-matrix-tbody">
-          <tr style="border-bottom:1px solid #E2E8F0;"><th scope="row" style="padding:9px 12px;text-align:left;">1. Overall Grade</th><td id="eb-scan-r1-val" style="padding:9px 12px;font-variant-numeric:tabular-nums;font-weight:700;">${esc(scan.grade)} (${scan.score}/100)</td><td id="eb-scan-r1-act" style="padding:9px 12px;">${esc(scan.issue)}</td><td id="eb-scan-r1-st" style="padding:9px 12px;font-weight:700;color:${scan.score >= 86 ? '#047857' : '#BE123C'};">${scan.score >= 86 ? 'Verified Leader' : 'Action Recommended'}</td></tr>
+          <tr style="border-bottom:1px solid #E2E8F0;"><th scope="row" style="padding:9px 12px;text-align:left;">1. Overall Grade</th><td id="eb-scan-r1-val" style="padding:9px 12px;font-variant-numeric:tabular-nums;font-weight:700;">${esc(scan.grade)} (${scan.score}/100)</td><td id="eb-scan-r1-act" style="padding:9px 12px;">${esc(scan.issue)}</td><td id="eb-scan-r1-st" style="padding:9px 12px;font-weight:700;color:${scan.score >= 86 ? '#047857' : '#475569'};">${scan.score >= 86 ? 'Verified Leader' : 'Action Recommended'}</td></tr>
           <tr style="background:${esc(t.canvasBg)};border-bottom:1px solid #E2E8F0;"><th scope="row" style="padding:9px 12px;text-align:left;">2. ${esc(vCopy.card2Title)}</th><td id="eb-scan-r2-val" style="padding:9px 12px;font-variant-numeric:tabular-nums;font-weight:700;">${esc(scan.kpi1)} • ${esc(scan.kpi2)}</td><td style="padding:9px 12px;">Compare against category peers on the <a href="/leaderboard" style="color:#047857;font-weight:700;text-decoration:underline;">Public Leaderboard</a></td><td style="padding:9px 12px;font-weight:700;color:#047857;">Verified</td></tr>
           <tr style="border-bottom:1px solid #E2E8F0;"><th scope="row" style="padding:9px 12px;text-align:left;">3. ${esc(scan.cnnSensorLabel || 'Quality Audit')}</th><td id="eb-scan-r3-val" style="padding:9px 12px;font-variant-numeric:tabular-nums;font-weight:700;">${esc(scan.cnnReadout)}</td><td style="padding:9px 12px;">${esc(vCopy.row3Action)}</td><td style="padding:9px 12px;font-weight:700;color:#047857;">Verified</td></tr>
           <tr id="eb-scan-row4-tr" style="background:${esc(t.canvasBg)};"><th scope="row" style="padding:9px 12px;text-align:left;">4. ${esc(vCopy.row4Title)}</th><td id="eb-scan-row4-val" style="padding:9px 12px;font-variant-numeric:tabular-nums;font-weight:700;">${esc(vCopy.row4Val)}</td><td style="padding:9px 12px;">${esc(vCopy.row4Action)} (Step 3 below)</td><td id="eb-scan-row4-status" style="padding:9px 12px;font-weight:700;color:#047857;">Ready</td></tr>
@@ -539,7 +539,7 @@ function renderLeaderboardPageHtml(cfg, badgeColor) {
 
   const rowsHtml = ledger.map((item, idx) => {
     const isTop = item.score >= 86;
-    const barColor = isTop ? '#059669' : (item.score >= 75 ? '#D97706' : '#E11D48');
+    const barColor = isTop ? '#047857' : '#475569';
     const rowTier = isTop ? 'fame' : 'fix';
     return `<tr data-lb-tier="${rowTier}" data-lb-target="${esc(item.target)}" data-lb-text="${esc((item.target + ' ' + item.kpi1 + ' ' + item.kpi2 + ' ' + item.cnnReadout + ' ' + item.issue).toLowerCase())}">
     <td style="padding:12px 14px;border-bottom:1px solid ${esc(t.border)};font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;">#${idx + 1}</td>
@@ -658,10 +658,10 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
     const accept = String(req.headers['accept'] || '');
     if (req.query.format === 'json') return res.json({ ok: true, scan, permalink: `https://${cfg.domain}/scan/${encodeURIComponent(scan.target)}` });
     if (isMd) {
-      const encT = encodeURIComponent(scan.target), sb = lookupSampleBuyer(scan.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
+      const encT = encodeURIComponent(scan.target), sb = lookupSampleBuyer(scan.target), isRow1 = String(scan.target || '').toLowerCase() === 'shopify', qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
       res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
       res.setHeader('Link', `<https://${cfg.domain}/scan/${encT}>; rel="canonical"`);
-      return res.status(200).send(`# ${scan.target} : ${cfg.brandName} Public Audit (${scan.grade} • ${scan.score}/100)\n\n- **Primary KPI**: ${scan.kpi1} (${scan.kpi2})\n- **CNN Model**: ${scan.cnnModel}\n- **CNN Sensor Readout**: ${scan.cnnReadout}\n- **Diagnostic Verdict**: ${scan.issue}\n- **Masked Buyer & Agency Desk Preview ($0 Unlock)**: \`${sb.masked}\` (+ \`${sb.agMasked}\`) • $${sb.qCpm} Rack → **$${sb.flCpm} Floor CPM (-18% · Saves $${sb.save3.toLocaleString()})**\n- **Canonical Permalink**: https://${cfg.domain}/scan/${encT}\n- **Live SVG Badge**: ![${scan.target}](https://${cfg.domain}/badge/${encT}.svg)\n- **$0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Redlined IAB IO Rider Preview (.TXT — §4.2 Preview $0; §7.1–§11.0 Make-Good in $19/$29)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}\n- **Dual-Track Outreach Preview (.EML — Track A Preview $0; Track B in $19/$29)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}\n- **3-Row Buyer Contact Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **$19 Creator Outreach Pass (One-Time)**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **$29 Full 109-Row CSV Vault (One-Time)**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **$149 B2B Agency Desk (One-Time)**: https://${cfg.domain}/buy/agency_desk?target=${encT}\n`);
+      return res.status(200).send(`# ${scan.target} : ${cfg.brandName} Public Audit (${scan.grade} • ${scan.score}/100)\n\n- **Primary KPI**: ${scan.kpi1} (${scan.kpi2})\n- **CNN Model**: ${scan.cnnModel}\n- **CNN Sensor Readout**: ${scan.cnnReadout}\n- **Diagnostic Verdict**: ${scan.issue}\n- **Masked Buyer & Agency Desk Preview ($0 Unlock)**: \`${sb.masked}\` (+ \`${sb.agMasked}\`) • $${sb.qCpm} Rack → **${isRow1 ? `$${sb.flCpm} Floor CPM (-18% · Saves $${sb.save3.toLocaleString()})` : '3-Flight Floor CPM: Locked ($0 Email)'}**\n- **Canonical Permalink**: https://${cfg.domain}/scan/${encT}\n- **Live SVG Badge**: ![${scan.target}](https://${cfg.domain}/badge/${encT}.svg)\n- **$0 3-Credit Sample Dossier**: https://${cfg.domain}/dossier/sample?target=${encT}\n- **Redlined IAB IO Rider Preview (.TXT — §4.2 Preview $0; §7.1–§11.0 Make-Good in $19/$29)**: https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}\n- **Dual-Track Outreach Preview (.EML — Track A Preview $0; Track B in $19/$29)**: https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}\n- **3-Row Buyer Contact Sample (.CSV)**: https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}\n- **$19 Creator Outreach Pass (One-Time)**: https://${cfg.domain}/buy/creator_pass?target=${encT}\n- **$29 Full 109-Row CSV Vault (One-Time)**: https://${cfg.domain}/buy/playbook_pass?target=${encT}\n- **$149 B2B Agency Desk (One-Time)**: https://${cfg.domain}/buy/agency_desk?target=${encT}\n`);
     }
     if (/^(curl|httpie|wget)/i.test(ua) || accept.includes('text/plain')) {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -685,7 +685,7 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
 
   app.all('/api/cnn/inspect', (req, res) => {
     const raw = req.body?.target || req.body?.query || req.query?.target || req.query?.q || cat.entities[0].target;
-    const scan = evaluateScanTarget(cfg, raw), sb = lookupSampleBuyer(scan.target), encT = encodeURIComponent(scan.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
+    const scan = evaluateScanTarget(cfg, raw), sb = lookupSampleBuyer(scan.target), isRow1 = String(scan.target || '').toLowerCase() === 'shopify', encT = encodeURIComponent(scan.target), qP = `&floor_cpm=${Math.round(sb.flCpm)}&reach=${sb.reach}&quoted_usd=${sb.price}`;
     const cls = classifyFn ? classifyFn(req) : { isTest: 0, isCrawler: 0, isOwnerIp: false };
     if (!cls.isTest && !cls.isCrawler && !cls.isOwnerIp) savePublicScanEntry(cfg, scan);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -695,7 +695,7 @@ function attachPublicScanFlywheel(app, cfg, badgeColor, renderHtmlFn, classifyFn
       cnn_architecture: cat.cnnModel,
       sensor_label: cat.cnnSensorLabel,
       scan,
-      masked_buyer_preview: { buyer_masked: sb.masked, agency_masked: sb.agMasked, quoted_usd: sb.price, reach: sb.reach, rack_cpm_usd: Number(sb.qCpm), floor_3flight_cpm_usd: sb.flCpm, save_3flight_usd: sb.save3 },
+      masked_buyer_preview: { buyer_masked: sb.masked, agency_masked: sb.agMasked, quoted_usd: sb.price, reach: sb.reach, rack_cpm_usd: Number(sb.qCpm), floor_3flight_cpm_usd: isRow1 ? sb.flCpm : 'LOCKED ($0 Email)', save_3flight_usd: sb.save3 },
       sample_dossier_url: `https://${cfg.domain}/dossier/sample?target=${encT}`,
       counterparty_previews: { iab_rider_txt: `https://${cfg.domain}/api/github-upgrade/iab-io-addendum.txt?target=${encT}${qP}`, pitch_eml: `https://${cfg.domain}/api/github-upgrade/pitch.eml?target=${encT}${qP}`, sample_csv: `https://${cfg.domain}/api/github-upgrade/export.csv?target=${encT}` },
       permalink_url: `https://${cfg.domain}/scan/${encT}`,
