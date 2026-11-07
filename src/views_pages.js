@@ -114,13 +114,9 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div id="sr-dir-pill-bar" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;" role="tablist" aria-label="Directory Category Filters">
             <span class="mono" style="font-size:13.5px; font-weight:700; color:var(--text-muted);">Quick Filter:</span>
             <button type="button" data-dir-pill="all" onclick="window.__srFilterDirectory('all', this)" class="preset-chip" style="background:var(--vermilion); color:#FFFFFF; font-weight:700;">All Dossiers (${totalReports})</button>
-            <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">For Ad Buyers: Show Rate Cards (${showPages.length} Shows)</button>
-            <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">For Buyers &amp; Creators: Brand Spend Ledgers (${brandPages.length} Brands)</button>
+            <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Show Rate Cards (${showPages.length} Shows)</button>
+            <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Brand Spend Ledgers (${brandPages.length} Brands)</button>
             <button type="button" data-dir-pill="niche" onclick="window.__srFilterDirectory('niche', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Niche Ad Rate Hubs (${nichePages.length} Hubs)</button>
-            <button type="button" data-dir-pill="b2b" onclick="window.__srFilterDirectory('b2b', this)" class="preset-chip">B2B SaaS &amp; DevTools</button>
-            <button type="button" data-dir-pill="dtc" onclick="window.__srFilterDirectory('dtc', this)" class="preset-chip">DTC &amp; Consumer</button>
-            <button type="button" data-dir-pill="lowcpm" onclick="window.__srFilterDirectory('lowcpm', this)" class="preset-chip">Under $45 Ad Rate</button>
-            <button type="button" data-dir-pill="highroi" onclick="window.__srFilterDirectory('highroi', this)" class="preset-chip">85%+ 3x Renewal</button>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13px;">
             <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
@@ -311,28 +307,16 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             </p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('flash_pass',true)" class="btn btn-vermilion" style="padding:10px 15px; font-size:13.5px;">3-File Pack ($1.99) →</button>
+            <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true)" class="btn btn-vermilion" style="padding:10px 15px; font-size:13.5px;">Creator Pass ($19) →</button>
             <button type="button" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true)" class="btn btn-emerald" style="padding:10px 16px; font-size:13.5px;">109-Row Buyer Vault ($29) →</button>
           </div>
         </div>
         <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-hairline); display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:12.5px;">
           <span class="mono" style="font-weight:700; color:var(--text-muted);">Category Comparisons, Calculators &amp; Live Scorecards:</span>
           <a href="/compare/who-sponsors-stuff-vs-sponsorradar-newsletter-and-podcast-database" class="pill-slate" style="text-decoration:none;">Who Sponsors Stuff vs SponsorRadar →</a>
-          <a href="/compare/store-leads-vs-charm-io-vs-sponsorradar-dtc-brand-ad-spend" class="pill-slate" style="text-decoration:none;">Store Leads &amp; Charm.io vs SponsorRadar →</a>
-          <a href="/compare/podchaser-pro-vs-sponsorradar-podcast-sponsor-contacts" class="pill-slate" style="text-decoration:none;">Podchaser Pro vs SponsorRadar →</a>
-          <a href="/compare/paved-vs-passionfroot-vs-sponsorradar-direct-sponsor-outreach" class="pill-slate" style="text-decoration:none;">Paved vs Passionfroot vs SponsorRadar →</a>
-          <a href="/compare/swapstack-vs-beehiiv-ad-network-vs-direct-newsletter-sponsors" class="pill-slate" style="text-decoration:none;">Beehiiv &amp; Swapstack vs Direct Sponsors →</a>
-          <a href="/compare/right-side-up-vs-oxford-road-vs-veritone-one-podcast-agency-benchmarks" class="pill-slate" style="text-decoration:none;">Right Side Up vs Oxford Road vs Veritone →</a>
           <a href="/tools/podcast-cpm-fair-rate-calculator" class="pill-slate" style="text-decoration:none;">Podcast CPM Fair Rate Calculator →</a>
-          <a href="/tools/substack-beehiiv-newsletter-sponsorship-pricing-calculator" class="pill-slate" style="text-decoration:none;">Substack &amp; Beehiiv Pricing Calculator →</a>
-          <a href="/tools/youtube-integration-sponsorship-rate-card-calculator" class="pill-slate" style="text-decoration:none;">YouTube 60s Rate Card Calculator →</a>
-          <a href="/tools/sponsor-agency-media-buyer-email-verifier" class="pill-slate" style="text-decoration:none;">Agency Buyer Email Verifier →</a>
           <a href="/tools/sponsorship-insertion-order-make-good-clause-generator" class="pill-slate" style="text-decoration:none;">IAB Make-Good Clause Generator →</a>
-          <a href="/scan/Shopify" class="pill-emerald" style="text-decoration:none;">Shopify Scan (A+) →</a>
-          <a href="/scan/AG1" class="pill-emerald" style="text-decoration:none;">AG1 Scan (A+) →</a>
-          <a href="/scan/Huberman-Lab" class="pill-emerald" style="text-decoration:none;">Huberman Lab Scan (A+) →</a>
-          <a href="/scan/Acquired" class="pill-emerald" style="text-decoration:none;">Acquired Scan (A+) →</a>
-          <a href="/leaderboard" class="pill-amber" style="text-decoration:none;">Full 21-Target Leaderboard →</a>
+          <a href="/leaderboard" class="pill-amber" style="text-decoration:none;">Full 30-Target Leaderboard →</a>
         </div>
       </div>
 

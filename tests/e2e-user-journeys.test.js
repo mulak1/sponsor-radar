@@ -221,6 +221,8 @@ async function runAllJourneys() {
       const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
       assert.strictEqual(overflow, false, 'Mobile viewport must have zero horizontal overflow');
       for (const calmRoute of [
+        '/',
+        '/lp',
         '/leaderboard',
         '/directory',
         '/seo/ag1-podcast-sponsorship-spend-and-roi',
@@ -238,13 +240,25 @@ async function runAllJourneys() {
           const domainChips = Array.from(document.querySelectorAll('button')).filter(b => /^@(gmail|outlook)$/i.test((b.textContent || '').trim())).length;
           const podiumBuyLinks = document.querySelectorAll('#leaderboard-podium-grid a[href^="/buy/"]').length;
           const rowBuyLinks = document.querySelectorAll('#prompt-matrix-tbody a[href^="/buy/"]').length;
-          return { formBuyLinks, draftBuyLinks, domainChips, podiumBuyLinks, rowBuyLinks };
+          const headerFlashLinks = document.querySelectorAll('header.top-nav a[href*="/buy/flash_pass"], header.top-nav a[href*="/buy/micro_pass"]').length;
+          const actionStripBtns = document.querySelectorAll('#prog-instant-action-strip button, #prog-instant-action-strip a').length;
+          const shareBarBtns = document.querySelectorAll('#prog-share-toolbar button, #prog-share-toolbar a').length;
+          const ledgerFilterBtns = document.querySelectorAll('#ledger-filter-bar button').length;
+          const dirPillBtns = document.querySelectorAll('#sr-dir-pill-bar button').length;
+          const pricingBtns = document.querySelectorAll('#pricing button').length;
+          return { formBuyLinks, draftBuyLinks, domainChips, podiumBuyLinks, rowBuyLinks, headerFlashLinks, actionStripBtns, shareBarBtns, ledgerFilterBtns, dirPillBtns, pricingBtns };
         });
         assert.strictEqual(domDensity.domainChips, 0, `${calmRoute} must have 0 @gmail/@outlook domain chip buttons`);
         assert.strictEqual(domDensity.formBuyLinks, 0, `${calmRoute} #sr-sweetspot-bridge-form must have 0 /buy/ buttons`);
         assert.strictEqual(domDensity.draftBuyLinks, 0, `${calmRoute} #eb-growth-live-draft must have 0 /buy/ buttons`);
         assert.strictEqual(domDensity.podiumBuyLinks, 0, `${calmRoute} podium cards must have 0 /buy/ buttons`);
         assert.strictEqual(domDensity.rowBuyLinks, 0, `${calmRoute} leaderboard rows must have 0 /buy/ buttons`);
+        assert.strictEqual(domDensity.headerFlashLinks, 0, `${calmRoute} header.top-nav must have 0 /buy/flash_pass or /buy/micro_pass links`);
+        assert.ok(domDensity.actionStripBtns <= 3, `${calmRoute} #prog-instant-action-strip must have <=3 buttons, got ${domDensity.actionStripBtns}`);
+        assert.ok(domDensity.shareBarBtns <= 2, `${calmRoute} #prog-share-toolbar must have <=2 buttons, got ${domDensity.shareBarBtns}`);
+        assert.ok(domDensity.ledgerFilterBtns <= 4, `${calmRoute} #ledger-filter-bar must have <=4 buttons, got ${domDensity.ledgerFilterBtns}`);
+        assert.ok(domDensity.dirPillBtns <= 4, `${calmRoute} #sr-dir-pill-bar must have <=4 buttons, got ${domDensity.dirPillBtns}`);
+        assert.ok(domDensity.pricingBtns <= 3, `${calmRoute} #pricing must have <=3 buttons, got ${domDensity.pricingBtns}`);
       }
 
       // Verify /seo/:slug #sr-sweetspot-bridge-form onsubmit executes cleanly without unescaped attribute quotes
