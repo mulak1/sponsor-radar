@@ -413,7 +413,7 @@ function classifyTrafficRequest(req, extraEmail = '') {
   const isQueryTest = req.query && (req.query.test === '1' || req.query.is_test === '1' || isMirofish);
   const isPrefetch = /prefetch|preview/i.test(String(req.headers['sec-purpose'] || req.headers['purpose'] || req.headers['x-purpose'] || ''));
   let isBurstScrape = false;
-  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/'))));
+  const isHtmlRoute = req.method === 'GET' && !isPlaywrightHeader && (req.path === '/' || req.path === '/lp' || req.path === '/directory' || req.path === '/leaderboard' || req.path === '/dossier/sample' || (req.path && (req.path.startsWith('/seo/') || req.path.startsWith('/tools/') || req.path.startsWith('/compare/') || req.path.startsWith('/scan/') || req.path.startsWith('/api/github-upgrade/'))));
   if (isHtmlRoute && !req.headers['accept-language']) isBurstScrape = true;
   if (isHtmlRoute && clientIp && !isOwnerIp && !String(req.headers.cookie || '').includes('vs_vid=')) {
     const now = Date.now(), recent = (ipBurstWindow.get(clientIp) || []).filter((x) => now - x.ts < 10000);
@@ -445,6 +445,10 @@ function createTelemetryStore(dataDir, moduleId) {
       e.is_test = 1; e.is_owner = 1; sanitized = true;
     } else if (Number(e.is_test) === 0 && e.event_type === 'checkout_intent' && e.meta && e.meta.method === 'GET' && !e.meta.has_referer) {
       e.is_test = 1; e.is_crawler = 1; sanitized = true;
+    } else if (Number(e.is_test) === 0 && e.meta && e.meta.export && !e.meta.has_session && !e.meta.vid) {
+      const t0 = new Date(e.created_at).getTime(), win = state.events.slice(Math.max(0, i - 10), Math.min(state.events.length, i + 11));
+      const hasJs = win.some((x) => x.client_ip === e.client_ip && x.meta && (x.meta.js_hydrated || x.meta.vid) && Math.abs(new Date(x.created_at).getTime() - t0) <= 300000);
+      if (!hasJs) { e.is_test = 1; e.is_crawler = 1; sanitized = true; }
     } else if (Number(e.is_test) === 0 && e.event_type === 'visit') {
       const t0 = new Date(e.created_at).getTime(), win = state.events.slice(Math.max(0, i - 8), Math.min(state.events.length, i + 9));
       const sameIpVisits = win.filter((x) => x.event_type === 'visit' && x.client_ip === e.client_ip && Math.abs(new Date(x.created_at).getTime() - t0) <= 90000).length;

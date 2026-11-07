@@ -28,11 +28,21 @@ def iso_to_pst(iso_str: str) -> str:
 
 
 def is_human(row: dict) -> bool:
-    return (
-        int(row.get("is_test") or 0) == 0
-        and int(row.get("is_owner") or 0) == 0
-        and int(row.get("is_crawler") or 0) == 0
-    )
+    if (
+        int(row.get("is_test") or 0) != 0
+        or int(row.get("is_owner") or 0) != 0
+        or int(row.get("is_crawler") or 0) != 0
+    ):
+        return False
+    meta = row.get("meta") or {}
+    if isinstance(meta, str):
+        try:
+            meta = json.loads(meta)
+        except Exception:
+            meta = {}
+    if meta.get("export") and not meta.get("has_session") and not meta.get("vid"):
+        return False
+    return True
 
 
 def main():
