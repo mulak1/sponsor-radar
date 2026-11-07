@@ -51,35 +51,33 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div style="margin-bottom:22px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:14px;">
           <div>
-            <div style="display:inline-flex;gap:8px;align-items:center;margin-bottom:6px;"><span class="pill-emerald" style="font-weight:800;">${totalContacts} verified buyers &amp; agency desks • Save $2,400 overpay</span><span class="pill-slate">Pitch the buyer, not dead inboxes</span></div>
             <h1 class="headline-xl" style="font-size:clamp(1.95rem, 3vw, 2.55rem);line-height:1.15;margin:0 0 8px 0;">Pitch the buyer, not dead inboxes.</h1>
             <p class="subhead" style="margin:0; font-size:16px; color:var(--text-secondary); max-width:78ch;">
               Browse <strong>${totalReports} verified sponsorship dossiers</strong>, <strong>${totalContacts} verified buyer &amp; agency rows</strong>, and <strong>-18% 3-flight floor Ad Rates</strong> (save $2,400 overpay).
             </p>
           </div>
-          <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:#FFFFFF; padding:10px 14px; border-radius:12px; border:1px solid var(--emerald-border);">
-            <div style="font-size:12.5px; color:var(--text-secondary); margin-right:4px;">
-              <span class="pill-emerald" style="font-size:11px; font-weight:800; margin-bottom:3px; display:inline-block;">Row #1 Free Sample: Renewed 4x on Peer Shows (Last 30d)</span>
-              <strong style="color:var(--text-primary); display:block;">Sample Proof (Shopify): <code style="color:var(--emerald-roi);font-weight:800;">sarah.kaufman@shopify.com</code> (+ <code style="color:var(--amber-gold);font-weight:800;">m.vance@rightsideup.co</code>)</strong>
-              <span class="sr-locked-spec-badge" data-free-credit-unmasked="✓ 3 FREE CREDITS UNMASKED: sarah.kaufman@shopify.com, e.rodriguez@deel.com, k.patel@ramp.com" style="display:inline-block;margin-top:3px;padding:2px 8px;border-radius:999px;background:#FFFBEB;border:1px solid #F59E0B;color:#92400E;font-size:11.5px;font-weight:800;">${SR_LOCK_SVG} Rows #2–#3 Locked (e.***@deel.com + k.***@ramp.com) — Enter Email Below ($0) ↓</span>
+          <div id="sr-live-deal-card-row1" data-active-wedge="creator" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:var(--bg-surface); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle);">
+            <div style="font-size:12.5px; color:var(--text-secondary);">
+              <span class="mono" style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:2px;">Row #1 Free Sample Proof</span>
+              <strong style="color:var(--text-primary); display:block;">Shopify: <code style="color:var(--emerald-roi);font-weight:700;">sarah.kaufman@shopify.com</code> • <code style="color:var(--text-secondary);font-weight:600;">m.vance@rightsideup.co</code></strong>
             </div>
           </div>
         </div>
 
         <!-- Top-Fold $0 Email Unlock Bar -->
-        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim(),t=window.__ebSelectedTarget||window.__ebActiveEntity||'Shopify';window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,target:t,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var sl=document.getElementById('eb-dir-sample-link');if(sl)sl.href='/dossier/sample?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);document.querySelectorAll('a[href*=&quot;/api/github-upgrade/&quot;],a[href^=&quot;/dossier/sample&quot;]').forEach(function(a){var h=a.getAttribute('href')||'';if(h.indexOf('email=')===-1)a.setAttribute('href',h+(h.indexOf('?')===-1?'?':'&')+'email='+encodeURIComponent(v));});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Buyer Credits Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:12px; border:1px solid var(--border-strong); background:var(--bg-surface); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Try-Before-You-Buy: Unlock 3 Free Verified Buyer Emails ($0) • <a id="eb-dir-sample-link" href="/dossier/sample?target=Shopify" target="_blank" style="color:var(--emerald-roi);text-decoration:underline;">Sample Dossier ↗</a></span>
+        <form id="sr-sweetspot-bridge-form" onsubmit="var e=document.getElementById('sr-bridge-email');if(e&&e.value&&e.value.indexOf('@')>0){var v=e.value.trim(),t=window.__ebSelectedTarget||window.__ebActiveEntity||'Shopify';window.__ebSavedEmail=v;if(window.__ebCaptureEmailLead){window.__ebCaptureEmailLead(v,'directory_sweetspot_submit');}else{fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v,target:t,source:'directory_sweetspot_submit',path:window.location.pathname})}).catch(function(){});}if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'directory_free_3_credits_unmasked',email:v});document.querySelectorAll('[data-free-credit-unmasked]').forEach(function(el){el.innerHTML=el.getAttribute('data-free-credit-unmasked');});var sl=document.getElementById('eb-dir-sample-link');if(sl)sl.href='/dossier/sample?target='+encodeURIComponent(t)+'&email='+encodeURIComponent(v);document.querySelectorAll('a[href*=&quot;/api/github-upgrade/&quot;],a[href^=&quot;/dossier/sample&quot;]').forEach(function(a){var h=a.getAttribute('href')||'';if(h.indexOf('email=')===-1)a.setAttribute('href',h+(h.indexOf('?')===-1?'?':'&')+'email='+encodeURIComponent(v));});var b=this.querySelector('#btn-unlock-free-credits');if(b)b.textContent='✓ 3 Free Buyer Credits Unlocked';var badge=document.getElementById('sr-free-credits-badge');if(badge)badge.style.display='inline-flex';}return false;" style="padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); background:var(--bg-surface); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+          <span id="sr-sweetspot-bridge-copy" style="font-size:13px; color:var(--text-primary); font-weight:700;">Unlock 3 Free Verified Buyer Emails ($0) • <a id="eb-dir-sample-link" href="/dossier/sample?target=Shopify" target="_blank" style="color:var(--emerald-roi);text-decoration:underline;">Sample Dossier ↗</a></span>
           <span class="pill-emerald" id="sr-free-credits-badge" style="display:none; font-size:11.5px;">✓ 3 of 3 Free Buyer Credits Unlocked — Verify on LinkedIn</span>
           <div style="display:flex; gap:8px; flex-wrap:wrap; flex:1; min-width:260px; justify-content:flex-end; align-items:center;">
             <input id="sr-bridge-email" type="email" required placeholder="Work email for 3 free buyer contacts ($0)..." aria-label="Work email to unlock 3 free verified buyer emails ($0)" onblur="if(this.value&&this.value.indexOf('@')>0){window.__ebSavedEmail=this.value.trim();if(window.__ebCaptureEmailLead)window.__ebCaptureEmailLead(this.value.trim(),'directory_sweetspot_blur');}" style="flex:1; min-width:190px; max-width:260px; padding:6px 10px; border-radius:8px; border:1px solid var(--border-strong); background:var(--bg-surface); color:var(--text-primary); font-size:13px;" />
             <button id="btn-unlock-free-credits" type="submit" class="btn btn-emerald" style="padding:6px 12px; min-height:34px; font-size:12.5px; font-weight:800; white-space:nowrap;">Unlock 3 Free ($0) →</button>
           </div>
         </form>
-        <div id="sr-biz-model-proof-bar" style="padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; font-size:12px; line-height:1.45; margin-bottom:14px;">
-          <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Save $2,400 Overpay (-18% 3-Flight Floor):</strong> Counter 1-off rack quotes at the verified 3-flight floor.</div>
-          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">✓ 100% One-Time Pass (No Subscription):</strong> $0 3-Credit Sample • $19 Creator Pass • $29 109-Row Vault • $149 Agency Desk.</div>
-          <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Weekly SMTP + Zero-Bounce SLA:</strong> Free replacement if any email bounces + 30-day 100% money-back guarantee.</div>
-          <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 109 Verified Buyer &amp; Agency Rows:</strong> Named brand buyers + Right Side Up / Oxford Road / Veritone One desks.</div>
+        <div id="sr-biz-model-proof-bar" style="padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; font-size:12px; color:var(--text-secondary); line-height:1.45; margin-bottom:14px;">
+          <div data-biz-criterion="roi_math"><strong style="color:var(--text-primary);">Save $2,400 Overpay (-18% Floor):</strong> Counter 1-off rack quotes at the verified 3-flight floor.</div>
+          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">100% One-Time Pass:</strong> $0 3-Credit Sample • $19 Creator Pass • $29 109-Row Vault • $149 Agency Desk.</div>
+          <div data-biz-criterion="smtp_sla"><strong style="color:var(--text-primary);">Weekly SMTP + Zero-Bounce SLA:</strong> Free replacement if any email bounces + 30-day money-back guarantee.</div>
+          <div data-biz-criterion="tangible_schema"><strong style="color:var(--text-primary);">109 Verified Buyer &amp; Agency Rows:</strong> Named brand buyers + Right Side Up / Oxford Road / Veritone One desks.</div>
         </div>
 
         <!-- 4-Card Executive KPI Strip -->
@@ -87,22 +85,22 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">INDEXED RESEARCH DOSSIERS</div>
             <div class="kpi-val" style="color:var(--text-primary);">${totalReports} Verified Reports</div>
-            <div class="mono" style="font-size:13.5px; color:var(--emerald-roi); margin-top:2px;">${nichePages.length} Niche Hubs • ${brandPages.length} Brands • ${showPages.length} Shows</div>
+            <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">${nichePages.length} Niche Hubs • ${brandPages.length} Brands • ${showPages.length} Shows</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">TRACKED SPONSOR BRANDS</div>
-            <div class="kpi-val" style="color:var(--amber-gold);">${brands.length} Active Spenders</div>
-            <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">$18.4M+/mo Tracked • 3x+ Renewal Proof</div>
+            <div class="kpi-val" style="color:var(--text-primary);">${brands.length} Active Spenders</div>
+            <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">$18.4M+/mo Tracked • 3x+ Renewal Proof</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">SHOW RATE CARDS &amp; FLOORS</div>
-            <div class="kpi-val" style="color:var(--emerald-roi);">${shows.length} Flagship Shows</div>
-            <div class="mono" style="font-size:13.5px; color:var(--emerald-roi); margin-top:2px;">Avg -18% Negotiated 3-Flight Floor Ad Rate</div>
+            <div class="kpi-val" style="color:var(--text-primary);">${shows.length} Flagship Shows</div>
+            <div class="mono" style="font-size:13px; color:var(--emerald-roi); margin-top:2px;">Avg -18% Negotiated 3-Flight Floor Ad Rate</div>
           </div>
           <div class="kpi-box" style="background:var(--bg-surface);">
             <div class="kpi-label">VERIFIED DECISION MAKERS</div>
-            <div class="kpi-val" style="color:var(--vermilion);">${totalContacts} Direct Emails</div>
-            <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:2px;">${brands.length} Brand Buyers + ${shows.length} Show Booking Reps</div>
+            <div class="kpi-val" style="color:var(--text-primary);">${totalContacts} Direct Emails</div>
+            <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:2px;">${brands.length} Brand Buyers + ${shows.length} Show Booking Reps</div>
           </div>
         </div>
 
@@ -119,7 +117,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           </div>
           <div id="sr-dir-pill-bar" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;" role="tablist" aria-label="Directory Category Filters">
             <span class="mono" style="font-size:13.5px; font-weight:700; color:var(--text-muted);">Quick Filter:</span>
-            <button type="button" data-dir-pill="all" onclick="window.__srFilterDirectory('all', this)" class="preset-chip" style="background:var(--vermilion); color:#FFFFFF; font-weight:700;">All Dossiers (${totalReports})</button>
+            <button type="button" data-dir-pill="all" onclick="window.__srFilterDirectory('all', this)" class="preset-chip" style="background:var(--emerald-roi); color:#FFFFFF; font-weight:700;">All Dossiers (${totalReports})</button>
             <button type="button" data-dir-pill="show" onclick="window.__srFilterDirectory('show', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Show Rate Cards (${showPages.length} Shows)</button>
             <button type="button" data-dir-pill="brand" onclick="window.__srFilterDirectory('brand', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Brand Spend Ledgers (${brandPages.length} Brands)</button>
             <button type="button" data-dir-pill="niche" onclick="window.__srFilterDirectory('niche', this)" class="preset-chip" style="display:inline-flex;align-items:center;gap:6px;">Niche Ad Rate Hubs (${nichePages.length} Hubs)</button>
@@ -127,10 +125,10 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-top:8px; border-top:1px solid var(--border-hairline); font-size:13px;">
             <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
               <span class="mono" style="font-weight:700; color:var(--text-muted);">Jump to Section:</span>
-              <a href="#dir-sec-shows" style="color:var(--emerald-roi); font-weight:700; text-decoration:underline;">Show Rate Cards (${showPages.length}) ↓</a>
-              <a href="#dir-sec-brands" style="color:var(--vermilion); font-weight:700; text-decoration:underline;">Brand Spend Ledgers (${brandPages.length}) ↓</a>
-              <a href="#dir-sec-niche" style="color:var(--text-secondary); font-weight:700; text-decoration:underline;">Category Ad Rate Hubs (${nichePages.length}) ↓</a>
-              <a href="#dir-sec-index" style="color:var(--text-secondary); font-weight:700; text-decoration:underline;">A-Z Index (${totalContacts}) ↓</a>
+              <a href="#dir-sec-shows" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Show Rate Cards (${showPages.length}) ↓</a>
+              <a href="#dir-sec-brands" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Brand Spend Ledgers (${brandPages.length}) ↓</a>
+              <a href="#dir-sec-niche" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">Category Ad Rate Hubs (${nichePages.length}) ↓</a>
+              <a href="#dir-sec-index" style="color:var(--text-secondary); font-weight:600; text-decoration:underline;">A-Z Index (${totalContacts}) ↓</a>
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
               <a href="/dossier/sample?target=Shopify" style="color:var(--emerald-roi); font-weight:700; text-decoration:underline;">View Sample Dossier ($0) ↗</a>
@@ -143,7 +141,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           <div class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700; margin-bottom:6px;">CUSTOM ON-DEMAND AUDIT READY</div>
           <h3 style="font-size:18px; margin:0 0 8px 0;">No pre-indexed report matched "<span id="sr-dir-empty-query"></span>" - Run a Live Custom Audit Instead</h3>
           <p style="font-size:14px; color:var(--text-secondary); max-width:60ch; margin:0 auto 14px;">Our live sponsorship engine can benchmark any custom brand domain, podcast, newsletter, or YouTube channel on the fly.</p>
-          <a id="sr-dir-empty-cta" href="/#radar-tool" class="btn btn-vermilion" style="padding:10px 18px; font-size:14px; text-decoration:none;">Audit This Target in Live Workbench ↗</a>
+          <a id="sr-dir-empty-cta" href="/#radar-tool" class="btn btn-emerald" style="padding:10px 18px; font-size:14px; text-decoration:none;">Audit This Target in Live Workbench ↗</a>
         </div>
       </div>
 
@@ -151,7 +149,6 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div id="dir-sec-niche" class="panel sr-dir-section" style="margin-bottom:28px;">
         <div class="panel-header">
           <span style="font-weight:800;">1. High-Intent Niche &amp; Category Ad Rate Benchmark Directories (${nichePages.length} Reports)</span>
-          <span class="pill-emerald">3x+ RENEWED CATEGORY RANKINGS</span>
         </div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${nichePages.map(p => {
@@ -162,14 +159,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-dir-target="${escapeHtml(nicheTarget)}" data-type="niche" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">${escapeHtml(p.category)}</span>
-                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
+                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(p.category)}</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${floorCpm} Floor CPM</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; flex-wrap:wrap; gap:6px;">
                 <span class="mono" style="color:var(--text-secondary);">Cat. Spend: <strong>${fmtSpend(p.est_monthly_spend)}</strong></span>
-                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Open Hub →</a>
+                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">Open Hub →</a>
               </div>
             </div>
           `;
@@ -181,7 +178,6 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div id="dir-sec-brands" class="panel sr-dir-section" style="margin-bottom:28px;">
         <div class="panel-header">
           <span style="font-weight:800;">2. Brand Sponsorship Spend, Buyer Contacts &amp; 3x-Renewal Ledgers (${brandPages.length} Reports)</span>
-          <span class="pill-amber">FOR COMPETITOR BUYERS &amp; CREATORS</span>
         </div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${brandPages.map((p, idx) => {
@@ -198,15 +194,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-dir-target="${escapeHtml(b.name || p.target_slug)}" data-type="brand" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="${renewalPct}" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
-                  <span class="mono" style="font-size:13.5px; color:var(--amber-gold); font-weight:700;">$${p.avg_cpm} Rack / $${Math.round(p.avg_cpm * 0.82)} Floor</span>
+                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${fmtSpend(p.est_monthly_spend)} • ${renewalPct}% 3x Renewal</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Rack / $${Math.round(p.avg_cpm * 0.82)} Floor</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono"${freeUnmaskAttr} style="font-size:13.5px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${idx === 0 ? `<strong style="color:var(--emerald-roi);">✓ Row #1 Sample: ${escapeHtml(unmaskedEmail)} + ${escapeHtml(agencyEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
+                <div class="mono"${freeUnmaskAttr} style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(vertical)} • ${escapeHtml(dmRole)} (${idx === 0 ? `<strong style="color:var(--emerald-roi);">Row #1 Sample: ${escapeHtml(unmaskedEmail)}</strong>` : escapeHtml(maskedEmail)})</div>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
-                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((b.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'brand', ${p.avg_cpm}, ${p.est_monthly_spend || 12000}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
-                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
+              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
+                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">View Spend Ledger →</a>
               </div>
             </div>
           `;
@@ -218,7 +213,6 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
       <div id="dir-sec-shows" class="panel sr-dir-section" style="margin-bottom:28px;">
         <div class="panel-header">
           <span style="font-weight:800;">3. Creator Show Media-Kits, Rack vs. Floor Rates &amp; Ad Rate Benchmarks (${showPages.length} Reports)</span>
-          <span class="pill-slate">FOR AD BUYERS &amp; RATE AUDITING</span>
         </div>
         <div class="panel-body" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap:12px;">
           ${showPages.map(p => {
@@ -232,15 +226,14 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
             <div class="sr-dir-item" data-dir-target="${escapeHtml(s.name || p.target_slug)}" data-type="show" data-vertical="${isB2b ? 'b2b' : 'dtc'}" data-cpm="${p.avg_cpm}" data-renewal="88" style="padding:14px 16px; border-radius:10px; background:var(--bg-elevated); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:4px;">
-                  <span class="mono" style="font-size:13.5px; color:var(--cyan-info); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
-                  <span class="mono" style="font-size:13.5px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
+                  <span class="mono" style="font-size:13px; color:var(--text-secondary); font-weight:700;">${escapeHtml(chType)} • ${reachK}K Reach</span>
+                  <span class="mono" style="font-size:13px; color:var(--emerald-roi); font-weight:700;">$${p.avg_cpm} Ad Rate ($${Math.round(p.avg_cpm * 0.82)} Floor)</span>
                 </div>
                 <a href="/seo/${escapeHtml(p.slug)}" style="font-weight:700; font-size:15px; color:var(--text-primary); text-decoration:none; display:block; line-height:1.35;">${escapeHtml(p.title)}</a>
-                <div class="mono" style="font-size:13.5px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
+                <div class="mono" style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Rack: <strong>$${rackUsd.toLocaleString()}/read</strong> → 3-Flight Floor: <strong style="color:var(--emerald-roi);">$${floorUsd.toLocaleString()} (-18%)</strong></div>
               </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; font-size:13.5px; gap:6px; flex-wrap:wrap;">
-                <button type="button" onclick="window.__srAddToPlan('${escapeHtml((s.name || p.title.split(' ')[0]).replace(/'/g, "\\'"))}', 'show', ${p.avg_cpm}, ${rackUsd}, 3);this.textContent='✓ In Q4 Plan';" class="pill-emerald" style="border:none; cursor:pointer; font-size:13px; padding:4px 10px;">+ Add to Q4 Plan</button>
-                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--vermilion); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
+              <div style="display:flex; justify-content:flex-end; align-items:center; padding-top:8px; font-size:13.5px;">
+                <a href="/seo/${escapeHtml(p.slug)}" style="color:var(--emerald-roi); font-weight:700; text-decoration:none;">Rate Card &amp; Sponsors →</a>
               </div>
             </div>
           `;
@@ -486,24 +479,20 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       </form>
 
       <!-- Above-the-Fold Editorial & Visual Ad Rate Curve -->
-      <div id="sr-seo-buyer-verdict" style="padding:14px 18px; border-radius:14px; background:var(--bg-parchment); color:var(--text-primary); border:1.5px solid var(--border-strong); margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; align-items:center;">
+      <div id="sr-seo-buyer-verdict" style="padding:14px 18px; border-radius:12px; background:var(--bg-surface); color:var(--text-primary); border:1px solid var(--border-subtle); margin-bottom:14px; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; align-items:center;">
         <div id="sr-live-deal-card-row1" data-active-wedge="creator">
-          <div class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-transform:uppercase;">
-            <span id="sr-row1-peer-30d-badge" class="pill-emerald" style="font-size:11px;padding:2px 7px;font-weight:800;margin-right:6px;">1. ROW #1 SAMPLE PROOF</span>${isShowPage ? `-18% 3-Flight Floor` : `${proven3xCount}/${placements.length} Renewed 3x+`} • <span style="color:var(--emerald-roi);">109 Verified Buyer &amp; Agency Rows</span>
+          <div class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">
+            <span id="sr-row1-peer-30d-badge" style="font-weight:700;margin-right:6px;">1. Row #1 Sample Proof</span>${isShowPage ? `-18% 3-Flight Floor` : `${proven3xCount}/${placements.length} Renewed 3x+`} • <span>109 Verified Buyer &amp; Agency Rows</span>
           </div>
           <div style="font-size:13.5px; color:var(--text-primary); font-weight:500; margin-top:5px; line-height:1.45;">
-            <span id="sr-row1-outreach-angle"><strong>Sample Proof (Shopify):</strong> <strong class="mono" style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</strong> (+ <span class="mono">m.vance@rightsideup.co</span>) • <strong>${escapeHtml(workbenchQuery)}:</strong> $${floorCpm} Floor CPM (-18% floor, save $2,400 overpay)</span> • <code id="sr-row1-iab-rider-preview" style="color:var(--emerald-roi);font-weight:800;">Audience Guarantee Clause</code> (<a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" style="color:var(--vermilion);font-weight:800;text-decoration:underline;">Rider ↗</a>).
-          </div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;">
-            <a href="#res-placements-tbody" onclick="var t=document.getElementById('res-placements-tbody');if(t){t.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--emerald-roi); text-decoration:underline;">1. View ${placements.length} Verified Rows ↓</a>
-            <a href="#sr-seo-quote-auditor" onclick="var q=document.getElementById('sr-seo-quote-auditor');if(q){q.scrollIntoView({behavior:'smooth'});return false;}" class="mono" style="font-size:12.5px; font-weight:800; color:var(--vermilion); text-decoration:underline;">2. Audit Quote vs. Floor ↓</a>
+            <span id="sr-row1-outreach-angle"><strong>Sample Proof (Shopify):</strong> <strong class="mono" style="color:var(--emerald-roi);">sarah.kaufman@shopify.com</strong> (+ <span class="mono">m.vance@rightsideup.co</span>) • <strong>${escapeHtml(workbenchQuery)}:</strong> $${floorCpm} Floor CPM (-18% floor, save $2,400 overpay)</span> • <code id="sr-row1-iab-rider-preview" style="color:var(--text-secondary);font-weight:700;">Audience Guarantee Clause</code> (<a href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">Rider ↗</a>).
           </div>
         </div>
-        <div id="sr-visual-cpm-curve" style="background:var(--bg-surface); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:5px; font-size:12px;">
-          <div style="display:flex; justify-content:space-between;" class="mono"><span style="font-weight:800; color:var(--text-secondary);">RATE-CARD &amp; PEER ARBITRAGE METER</span><span style="color:var(--emerald-roi); font-weight:800;">Save $${(showRackUsd - showFloorUsd).toLocaleString()}/Read</span></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>1-Off Published Rack (High Churn)</span><strong style="color:var(--vermilion);">$${page.avg_cpm} Ad Rate ($${showRackUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:100%; background:var(--vermilion); border-radius:99px;"></div></div></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>3-Flight Agency Floor (-18% • 2.4x Lift)</span><strong style="color:var(--emerald-roi);">$${floorCpm} Ad Rate ($${showFloorUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:82%; background:var(--emerald-roi); border-radius:99px;"></div></div></div>
-          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--cyan-info);">~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate (3.1x Clicks)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--cyan-info); border-radius:99px;"></div></div></div>
+        <div id="sr-visual-cpm-curve" style="background:var(--bg-parchment); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:5px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between;" class="mono"><span style="font-weight:700; color:var(--text-secondary);">RATE-CARD &amp; PEER ARBITRAGE METER</span><span style="color:var(--emerald-roi); font-weight:700;">Save $${(showRackUsd - showFloorUsd).toLocaleString()}/Read</span></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>1-Off Published Rack</span><strong style="color:var(--text-primary);">$${page.avg_cpm} Ad Rate ($${showRackUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:100%; background:var(--text-muted); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>3-Flight Agency Floor (-18%)</span><strong style="color:var(--emerald-roi);">$${floorCpm} Ad Rate ($${showFloorUsd.toLocaleString()}/slot)</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:82%; background:var(--emerald-roi); border-radius:99px;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between;" class="mono"><span>Category Peer Split (4 Niche Shows)</span><strong style="color:var(--text-secondary);">~$${Math.max(18, Math.round(floorCpm * 0.78))} Effective Rate</strong></div><div style="height:6px; width:100%; background:#E5E0D8; border-radius:99px; overflow:hidden; margin-top:2px;"><div style="height:100%; width:64%; background:var(--cyan-info); border-radius:99px;"></div></div></div>
         </div>
       </div>
 
@@ -511,8 +500,8 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div id="sr-seo-kpi-strip" class="kpi-grid" style="margin-bottom:16px;">
         <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">${isShowPage ? 'RACK RATE VS. 3-FLIGHT FLOOR' : 'ESTIMATED MONTHLY SPEND'}</div>
-          <div class="kpi-val" style="color:var(--amber-gold); font-size:20px;">${isShowPage ? '$' + showRackUsd.toLocaleString() + '/read' : '$' + page.est_monthly_spend.toLocaleString()}</div>
-          <div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:2px;">${isShowPage ? `3-Flight Floor: ~$${showFloorUsd.toLocaleString()} (-18%)` : 'Verified Multi-Quarter Budget'}</div>
+          <div class="kpi-val" style="color:var(--text-primary); font-size:20px;">${isShowPage ? '$' + showRackUsd.toLocaleString() + '/read' : '$' + page.est_monthly_spend.toLocaleString()}</div>
+          <div class="mono" style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">${isShowPage ? `3-Flight Floor: ~$${showFloorUsd.toLocaleString()} (-18%)` : 'Verified Multi-Quarter Budget'}</div>
         </div>
         <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">RACK VS. 3-FLIGHT FLOOR AD RATE</div>
@@ -521,12 +510,12 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         </div>
         <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">VERIFIED REPEAT PLACEMENTS</div>
-          <div class="kpi-val" style="font-size:20px;">${placements.length} Verified Rows</div>
-          <div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:2px;">${proven3xCount} Renewed 3x+ • Row #1 Sample Proof Below</div>
+          <div class="kpi-val" style="color:var(--text-primary); font-size:20px;">${placements.length} Verified Rows</div>
+          <div class="mono" style="font-size:12.5px; color:var(--text-secondary); margin-top:2px;">${proven3xCount} Renewed 3x+ • Row #1 Sample Proof Below</div>
         </div>
         <div class="kpi-box" style="background:var(--bg-surface); border:1px solid var(--border-hairline); padding:12px 14px;">
           <div class="kpi-label">${isShowPage ? 'SHOW BOOKING DESK & CONTACTS' : 'PARTNERSHIP & AGENCY DESK'}</div>
-          <div class="kpi-val mono" style="font-size:13.5px; color:var(--emerald-roi);">${escapeHtml(brand ? getAgencyDesk(brand.slug, page.category) : 'Verified Agency & Direct Desk')}</div>
+          <div class="kpi-val mono" style="font-size:13.5px; color:var(--text-primary);">${escapeHtml(brand ? getAgencyDesk(brand.slug, page.category) : 'Verified Agency & Direct Desk')}</div>
           <div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:2px;">${isShowPage ? `Rep: ${escapeHtml(showBookingEmail)} ($0 Sample)` : `Lead: ${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth')} ($0 Sample)`}</div>
         </div>
       </div>
@@ -535,10 +524,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
       <div class="panel" style="margin-bottom:22px;">
         <div class="panel-header">
           <span style="font-weight:800;">Verified Ad-Read Timestamps, Promo Codes &amp; 3x-Renewal Velocity (${placements.length} Placements)</span>
-          <a href="/?q=${encodeURIComponent(exportTarget)}#radar-tool" class="btn btn-vermilion" style="padding:7px 14px; min-height:36px; font-size:13px;">
-            <span>Open ${escapeHtml(workbenchQuery)} in Full Workbench</span>
-            <span class="btn-icon-circle" aria-hidden="true">↗</span>
-          </a>
+          <a href="/?q=${encodeURIComponent(exportTarget)}#radar-tool" class="btn btn-ghost" style="padding:6px 12px; min-height:34px; font-size:12.5px;">Open in Workbench ↗</a>
         </div>
         <div class="table-wrap" style="border:none;">
           <table class="ledger-table">
@@ -550,7 +536,7 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 const dmRole = escapeHtml(p.decision_maker_role || (brand && brand.decision_maker_role) || 'VP Growth & Creator Partnerships');
                 const agencyDesk = escapeHtml(getAgencyDesk(p.brand_slug || (brand && brand.slug), page.category));
                 const freshBadge = escapeHtml((p.fresh_budget_badge || getFreshBudgetStatus(`${p.brand_slug}:${p.show_slug}:${idx}`, p.flights).badge).replace(/🟢\s*/g, ''));
-                const rowFloorCpm = Math.round(p.cpm_usd * 0.82), estCpc = (rowFloorCpm / 18).toFixed(2);
+                const rowFloorCpm = Math.round(p.cpm_usd * 0.82);
                 const uBuyer = getUnmaskedNamedBuyerEmail(rawEmail), maskedRowBuyer = maskSponsorEmail(uBuyer), uAgency = getAgencyBuyerEmail((brand && brand.domain) || rawEmail.split('@')[1] || 'brand.io', page.category);
                 const liUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(uBuyer.split('@')[0].replace(/[._]/g, ' ') + ' ' + rawBName)}`;
                 const isRow4Target = idx === Math.min(3, placements.length - 1);
@@ -558,30 +544,30 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
                 const unmaskedHtml = `<div class=&quot;mono&quot; style=&quot;font-size:12.5px;color:var(--emerald-roi);font-weight:800;&quot;>✓ FREE CREDIT #${Math.min(3, idx + 1)} OF 3 (${rowLbl}): ${escapeHtml(uBuyer)} (+ ${escapeHtml(uAgency)})</div><div style=&quot;font-size:12px;color:var(--text-primary);font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;&quot;><span>${dmRole} • ${agencyDesk}</span><a class=&quot;sr-linkedin-verify-link&quot; href=&quot;${escapeHtml(liUrl)}&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot; style=&quot;color:var(--emerald-roi);font-weight:700;text-decoration:underline;&quot;>Verify on LinkedIn ↗</a><button type=&quot;button&quot; class=&quot;sr-row-copy-btn&quot; data-unmasked-copy=&quot;${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}&quot; onclick=&quot;return window.__srCopyFreeCreditRow(this.getAttribute('data-unmasked-copy'),${idx + 1},this);&quot; style=&quot;padding:2px 8px;border-radius:6px;border:1px solid var(--emerald-roi);background:var(--bg-surface);color:var(--emerald-roi);font-size:11.5px;font-weight:700;cursor:pointer;&quot;>Copy Buyer</button></div>`;
                 const r4Attr = (idx <= 3) ? ` data-free-credit-unmasked="${unmaskedHtml}"${isRow4Target ? ` data-row4-unmasked="${unmaskedHtml}"` : ''}` : '';
                 const contactCell = idx === 0
-                  ? `<div${r4Attr}><div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:800;">✓ ROW #1 FREE SAMPLE PROOF: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co) • ${dmRole} (${agencyDesk})</div><div class="mono" style="font-size:11.5px;color:var(--vermilion);font-weight:700;margin:3px 0;">Peer-Referenced Pitch: Saw ${bName} renewed ${p.flights || 4}x on ${sName} (code: ${escapeHtml(p.promo_code)}) last 30d — anchor 3-flight pilot at $${rowFloorCpm} Floor CPM (-18%) • <code>Audience Guarantee Clause</code></div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(1,this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:#FFFFFF;color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email (${escapeHtml(maskedRowBuyer)}) — Enter Email Above ($0) ↑</button></div>`
-                  : `<div${r4Attr}><div style="font-size:12.5px;color:var(--text-secondary);font-weight:600;margin-bottom:4px;">${dmRole} • ${agencyDesk}</div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(${idx + 1},this);" style="padding:3px 9px;border-radius:999px;border:1px solid var(--emerald-roi);background:var(--emerald-soft);color:var(--emerald-roi);font-size:12px;font-weight:700;cursor:pointer;filter:none;">${SR_LOCK_SVG} Verified Buyer Email Hidden (${Math.min(3, Math.max(1, idx + 1))} of 3 Free Credits) — Tap to Reveal ($0) ↑</button></div>`;
-                return `<tr${(idx <= 3) ? ' data-free-credit-row="1"' : ''} onclick="window.__ebSelectedTarget='${escapeHtml((rawBName || sName).replace(/'/g, "\\'"))}';window.__ebActiveEntity=window.__ebSelectedTarget;if(window.__ebSyncEmailPreviewLinks)window.__ebSyncEmailPreviewLinks(window.__ebSavedEmail||'');" style="${idx === 0 ? 'background:var(--emerald-soft);' : ''}">
-                  <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--vermilion); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:12px;padding:2px 6px;">Category Peer</span>` : ''}</td>
+                  ? `<div${r4Attr}><div class="mono" style="font-size:12.5px;color:var(--emerald-roi);font-weight:700;">✓ Sample Proof: sarah.kaufman@shopify.com (+ m.vance@rightsideup.co)</div><div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${dmRole} • ${agencyDesk} (${escapeHtml(maskedRowBuyer)}) — <button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(1,this);" style="border:none;background:none;padding:0;color:var(--emerald-roi);font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;">Reveal Buyer Email ↑</button></div></div>`
+                  : `<div${r4Attr}><div style="font-size:12.5px;color:var(--text-secondary);font-weight:600;">${dmRole} • ${agencyDesk}</div><button type="button" class="sr-row-copy-btn sr-locked-spec-badge" data-unmasked-copy="${escapeHtml(uBuyer + ' (+ ' + uAgency + ')')}" onclick="return window.__srFocusFreeCreditBar(${idx + 1},this);" style="border:none;background:none;padding:0;margin-top:2px;color:var(--emerald-roi);font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;">Reveal Buyer Email ↑</button></div>`;
+                return `<tr${(idx <= 3) ? ' data-free-credit-row="1"' : ''} onclick="window.__ebSelectedTarget='${escapeHtml((rawBName || sName).replace(/'/g, "\\'"))}';window.__ebActiveEntity=window.__ebSelectedTarget;if(window.__ebSyncEmailPreviewLinks)window.__ebSyncEmailPreviewLinks(window.__ebSavedEmail||'');">
+                  <td style="font-weight:700;">${p.brand_seo_slug ? `<a href="/seo/${escapeHtml(p.brand_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-underline-offset:3px;">${bName}</a>` : bName}${p.is_lookalike ? ` <span class="pill-slate" style="font-size:12px;padding:2px 6px;">Category Peer</span>` : ''}</td>
                   <td><div style="font-weight:700;">${p.show_seo_slug ? `<a href="/seo/${escapeHtml(p.show_seo_slug)}" style="color:var(--text-primary); text-decoration:underline; text-decoration-color:var(--border-strong); text-underline-offset:3px;">${sName}</a>` : sName}</div><div class="mono" style="font-size:13px; color:var(--text-muted);">${escapeHtml(p.channel_type || 'Podcast & Newsletter')}</div></td>
-                  <td><div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div><div class="mono" style="font-size:12.5px; color:var(--emerald-roi); margin-top:4px; font-weight:800;">✓ ${freshBadge}</div></td>
+                  <td><div><span class="${p.flights >= 3 ? 'pill-emerald' : 'pill-amber'}">${escapeHtml(p.renewal_badge)}</span></div><div class="mono" style="font-size:12px; color:var(--text-secondary); margin-top:4px;">${freshBadge}</div></td>
                   <td>${contactCell}</td>
                   <td class="mono" style="font-size:13px;">${escapeHtml(p.slot_type)} (${escapeHtml(p.timestamp_range)})</td>
-                  <td class="mono" style="font-size:13px;"><span style="color:var(--cyan-info);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--amber-gold);">${escapeHtml(p.promo_code)}</strong></td>
-                  <td class="mono" style="font-weight:700; color:var(--amber-gold);">$${Math.round(p.est_spend_usd / Math.max(1, p.flights)).toLocaleString()}/slot ($${p.cpm_usd} CPM)<div style="font-size:12px; color:var(--emerald-roi); font-weight:600;">3x Floor: $${rowFloorCpm} CPM • $${p.est_spend_usd.toLocaleString()} (${p.flights}x total)</div></td>
+                  <td class="mono" style="font-size:13px;"><span style="color:var(--text-secondary);">${escapeHtml(p.vanity_url)}</span> • Code: <strong style="color:var(--text-primary);">${escapeHtml(p.promo_code)}</strong></td>
+                  <td class="mono" style="font-weight:700; color:var(--text-primary);">$${Math.round(p.est_spend_usd / Math.max(1, p.flights)).toLocaleString()}/slot ($${p.cpm_usd} CPM)<div style="font-size:12px; color:var(--emerald-roi); font-weight:600;">${idx === 0 ? `3x Floor: $${rowFloorCpm} CPM • $${p.est_spend_usd.toLocaleString()} (${p.flights}x total)` : `<span data-free-credit-unmasked="3x Floor: $${rowFloorCpm} CPM • $${p.est_spend_usd.toLocaleString()} (${p.flights}x total)" style="color:var(--text-muted);">3x Floor: Locked ($0 Email ↑)</span>`}</div></td>
                 </tr>`;
               }).join('')}
-              <tr id="sr-locked-95-summary-row" style="background:#FFFBEB;"><td colspan="7" class="mono" style="font-size:13px;font-weight:800;color:#92400E;">${SR_LOCK_SVG} +105 More Verified Named-Buyer &amp; Agency Desk Rows + Redlined Booking Addendum + Cold Sequences — <a href="#sr-sweetspot-bridge-form" onclick="if(window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(4,this);var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});b.focus();}return false;" style="color:var(--emerald-roi);text-decoration:underline;">Unlock 3 Free ($0) ↑</a> • <a href="/buy/playbook_pass?target=${encodeURIComponent(exportTarget)}" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" style="color:var(--text-primary);text-decoration:underline;">Full 109-Row Vault ($29) →</a></td></tr>
+              <tr id="sr-locked-95-summary-row" style="background:var(--bg-parchment);"><td colspan="7" class="mono" style="font-size:13px;font-weight:700;color:var(--text-secondary);">${SR_LOCK_SVG} +105 More Verified Named-Buyer &amp; Agency Desk Rows + Redlined Booking Addendum + Cold Sequences — <a href="#sr-sweetspot-bridge-form" onclick="if(window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(4,this);var b=document.getElementById('sr-bridge-email');if(b){b.scrollIntoView({behavior:'smooth',block:'center'});b.focus();}return false;" style="color:var(--emerald-roi);text-decoration:underline;">Unlock 3 Free ($0) ↑</a> • <a href="/buy/playbook_pass?target=${encodeURIComponent(exportTarget)}" onclick="if(window.__ebCheckout){window.__ebCheckout('playbook_pass',true);return false;}" style="color:var(--text-primary);text-decoration:underline;">Full 109-Row Vault ($29) →</a></td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
       <!-- 2. In-Page Interactive Show Quote Auditor & ROI/CAC Simulator (Below Verified Placements Table) -->
-      <div id="sr-seo-quote-auditor" class="panel" style="margin-bottom:26px; background:var(--bg-surface); border:1px solid var(--border-strong);">
+      <div id="sr-seo-quote-auditor" class="panel" style="margin-bottom:26px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
         <div class="panel-header" style="background:var(--bg-parchment);">
           <div>
-            <span class="pill-vermilion">INTERACTIVE RATE-CARD AUDITOR</span>
-            <strong style="margin-left:8px; font-size:15px;">Audit Any Quoted Price vs. Verified 3-Flight Floor &amp; Project Customer CAC / ROAS</strong>
+            <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted);">Rate-Card Auditor</span>
+            <strong style="margin-left:8px; font-size:15px;">Audit Quoted Price vs. Verified 3-Flight Floor &amp; Project Customer CAC / ROAS</strong>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
             <span class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Presets:</span>
@@ -608,9 +594,9 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
           <div id="sr-unit-econ-strip" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:12px;">
             <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
               <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">QUOTED EFFECTIVE RATE VS. VERIFIED FLOOR</div>
-              <div id="sr-qa-cpm-out" class="mono" style="font-size:16px; font-weight:800; color:var(--amber-gold); margin-top:4px;">$${page.avg_cpm}.00 Quoted vs. $${floorCpm}.00 Floor</div>
+              <div id="sr-qa-cpm-out" class="mono" style="font-size:16px; font-weight:800; color:var(--text-primary); margin-top:4px;">$${page.avg_cpm}.00 Quoted vs. $${floorCpm}.00 Floor</div>
               <div id="sr-qa-verdict-out" style="font-size:13px; color:var(--emerald-roi); font-weight:700; margin-top:4px;">Counter at $${showFloorUsd.toLocaleString()}/slot (-18% 3-Flight Floor) to save $${(showRackUsd - showFloorUsd).toLocaleString()}/read</div>
-              <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><a id="sr-qa-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" class="mono" style="font-size:11.5px; font-weight:800; color:var(--vermilion); text-decoration:none; border-bottom:1px dashed var(--vermilion);">Redlined IAB Rider (.TXT) ↗</a> <a id="sr-qa-eml-link" href="/api/github-upgrade/pitch.eml?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" class="mono" style="font-size:11.5px; font-weight:800; color:var(--emerald-roi); text-decoration:none; border-bottom:1px dashed var(--emerald-roi);">Dual-Track Pitch (.EML) ↗</a></div>
+              <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;"><a id="sr-qa-rider-link" href="/api/github-upgrade/iab-io-addendum.txt?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" class="mono" style="font-size:11.5px; font-weight:700; color:var(--text-secondary); text-decoration:underline;">Redlined IAB Rider (.TXT) ↗</a> <a id="sr-qa-eml-link" href="/api/github-upgrade/pitch.eml?target=${encodeURIComponent(exportTarget)}&floor_cpm=${floorCpm}&reach=${showReach}&quoted_usd=${showRackUsd}" target="_blank" class="mono" style="font-size:11.5px; font-weight:700; color:var(--emerald-roi); text-decoration:underline;">Dual-Track Pitch (.EML) ↗</a></div>
             </div>
             <div style="padding:12px 14px; border-radius:10px; background:var(--bg-elevated);">
               <div class="mono" style="font-size:12px; color:var(--text-secondary); font-weight:700;">EST. CLICKS &amp; IMPLIED CPC (1.8% CTR)</div>
@@ -649,122 +635,115 @@ function renderSeoPage({ page, brand, show, placements, relatedPages, outboundPi
         const rawCsvAgencyEmail = getAgencyBuyerEmail(brand ? brand.domain : 'shopify.com', page.category);
         const maskedCsvAgencyEmail = maskSponsorEmail(rawCsvAgencyEmail);
         return outboundPitch ? `
-      <div class="pitch-box" style="margin-bottom:28px; background:var(--bg-surface); color:var(--text-primary); padding:26px 28px; border-radius:18px; border:1px solid var(--border-subtle); box-shadow:0 8px 28px rgba(24,24,27,0.04);">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:22px; padding-bottom:16px; border-bottom:1px solid var(--border-subtle);">
+      <div class="pitch-box" style="margin-bottom:28px; background:var(--bg-surface); color:var(--text-primary); padding:24px 26px; border-radius:14px; border:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border-subtle);">
           <div>
-            <div class="mono" style="font-size:12px; font-weight:800; color:var(--vermilion); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">STEP-BY-STEP NEGOTIATION &amp; PITCH WORKBENCH</div>
-            <h2 style="font-family:var(--font-serif); font-size:21px; font-weight:700; margin:0 0 10px 0; color:var(--text-primary);">Simulate Your Budget, Compare Lookalike Shows &amp; Copy Your Offer</h2>
-            <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:5px; border-radius:999px;">
-              <button type="button" id="btn-sr-persona-creator" data-wedge="creator" onclick="window.__srSwitchPersona('creator','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:${initCreator ? 'var(--emerald-soft)' : 'transparent'}; color:${initCreator ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">${SR_MIC_SVG} I want sponsors for my show</button>
-              <button type="button" id="btn-sr-persona-buyer" data-wedge="buyer" onclick="window.__srSwitchPersona('buyer','seo_workbench_toggle')" style="padding:7px 15px; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:8px; background:${initCreator ? 'transparent' : 'var(--emerald-soft)'}; color:${initCreator ? 'var(--text-secondary)' : 'var(--emerald-roi)'};">${SR_CHART_SVG} I'm buying ads &amp; checking Ad Rates</button>
+            <div class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Negotiation &amp; Outbound Pitch Workbench</div>
+            <h2 style="font-family:var(--font-serif); font-size:20px; font-weight:700; margin:0 0 10px 0; color:var(--text-primary);">Simulate Your Budget, Compare Lookalike Shows &amp; Copy Your Offer</h2>
+            <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center; background:var(--bg-parchment); padding:4px; border-radius:999px;">
+              <button type="button" id="btn-sr-persona-creator" data-wedge="creator" onclick="window.__srSwitchPersona('creator','seo_workbench_toggle')" style="padding:6px 14px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:6px; background:${initCreator ? 'var(--emerald-soft)' : 'transparent'}; color:${initCreator ? 'var(--emerald-roi)' : 'var(--text-secondary)'};">${SR_MIC_SVG} I want sponsors</button>
+              <button type="button" id="btn-sr-persona-buyer" data-wedge="buyer" onclick="window.__srSwitchPersona('buyer','seo_workbench_toggle')" style="padding:6px 14px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:6px; background:${initCreator ? 'transparent' : 'var(--emerald-soft)'}; color:${initCreator ? 'var(--text-secondary)' : 'var(--emerald-roi)'};">${SR_CHART_SVG} I'm buying ads</button>
             </div>
-          </div>
-          <div style="display:inline-flex; gap:8px; flex-wrap:wrap; align-items:center;">
-            <button type="button" onclick="window.__srAddToPlan('${escapeHtml(workbenchQuery.replace(/'/g, "\\'"))}', '${isShowPage ? 'show' : 'brand'}', ${page.avg_cpm}, ${showRackUsd}, 3)" class="btn btn-ghost" style="padding:8px 13px; min-height:38px; font-size:13px;">+ Add to Q4 Plan</button>
-            <a href="#sr-sweetspot-bridge-form" onclick="var f=document.getElementById('sr-bridge-email');if(f){f.scrollIntoView({behavior:'smooth',block:'center'});f.focus();return false;}" class="pill-emerald" style="padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center;">✓ Free Simulator • Reveal 3 Buyer Emails Above ↑</a>
           </div>
         </div>
 
         <!-- PANE 1: BRAND MEDIA BUYER 2-STEP WORKFLOW -->
         <div id="sr-pane-buyer" style="display:${initCreator ? 'none' : 'flex'}; flex-direction:column; gap:18px;">
           <!-- STEP 1: Budget Slider & Lookalike Arbitrage Cards -->
-          <div style="padding:20px 22px; border-radius:14px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
+          <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
               <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; background:var(--vermilion); color:#FFFFFF; font-family:var(--font-mono); font-size:12px; font-weight:800;">STEP 1 OF 2</span>
-                <label for="sr-moneyball-slider" style="font-size:16px; color:var(--text-primary); font-weight:700; cursor:pointer;">Slide Your Campaign Budget &amp; Compare Lookalike Shows</label>
+                <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted);">Step 1</span>
+                <label for="sr-moneyball-slider" style="font-size:15px; color:var(--text-primary); font-weight:700; cursor:pointer;">Slide Your Campaign Budget &amp; Compare Lookalike Shows</label>
               </div>
-              <div id="sr-moneyball-readout" class="mono" style="font-size:13.5px; font-weight:800; color:var(--text-primary); background:var(--bg-surface); padding:8px 14px; border-radius:8px; border:1px solid var(--border-subtle);">
-                $15,000 Budget → <span style="color:var(--amber-gold);">${Math.max(1, Math.round(15000 / Math.max(800, mb.negotiated_floor_rate_usd)))} Target Flight(s)</span> vs. <span style="color:var(--emerald-roi);">5 Lookalike Flights (~2,450 Clicks)</span>
+              <div id="sr-moneyball-readout" class="mono" style="font-size:13px; font-weight:700; color:var(--text-primary); background:var(--bg-surface); padding:6px 12px; border-radius:8px; border:1px solid var(--border-subtle);">
+                $15,000 Budget → <span>${Math.max(1, Math.round(15000 / Math.max(800, mb.negotiated_floor_rate_usd)))} Target Flight(s)</span> vs. <span style="color:var(--emerald-roi);">5 Lookalike Flights (~2,450 Clicks)</span>
               </div>
             </div>
-            <div style="margin-bottom:16px; background:var(--bg-surface); padding:12px 16px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <div style="margin-bottom:16px; background:var(--bg-surface); padding:10px 14px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
               <span class="mono" style="font-size:13px; font-weight:700; color:var(--text-secondary);">Test Budget ($5K - $50K):</span>
               <input id="sr-moneyball-slider" type="range" min="5000" max="50000" step="2500" value="15000" oninput="window.__srUpdateMoneyball(this.value, ${mb.published_rack_rate_usd}, ${page.avg_cpm})" style="flex:1; min-width:200px; accent-color:var(--emerald-roi); cursor:pointer;" />
             </div>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:14px;">
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
-                <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Option A • Target Show 3-Flight Floor</div>
-                <div id="sr-seo-mb-card1" class="mono" style="font-size:15.5px; font-weight:800; color:var(--text-primary); margin-top:6px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></div>
-                <div id="sr-seo-mb-card1-sub" style="font-size:13.5px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot w/ 3-flight commitment + 1.5% CTR make-good</div>
+                <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option A • Target Show 3-Flight Floor</div>
+                <div id="sr-seo-mb-card1" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">$${mb.published_rack_rate_usd.toLocaleString()} Rack → <span style="color:var(--emerald-roi);">$${mb.negotiated_floor_rate_usd.toLocaleString()} Floor (-18%)</span></div>
+                <div id="sr-seo-mb-card1-sub" style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Save $${mb.savings_per_slot_usd.toLocaleString()}/slot w/ 3-flight commitment + 1.5% CTR make-good</div>
               </div>
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
-                <div class="mono" style="font-size:12px; color:var(--emerald-roi); font-weight:800; text-transform:uppercase;">Option B • Lookalike Show #1 (86% Overlap)</div>
-                <div id="sr-seo-mb-card2" class="mono" style="font-size:15.5px; font-weight:800; color:var(--emerald-roi); margin-top:6px;">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</div>
-                <div style="font-size:13.5px; color:var(--text-primary); margin-top:4px; line-height:1.45;">Rep: <strong>${escapeHtml(mb.lookalike_shows[0].booking_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
+                <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option B • Lookalike Show #1 (86% Overlap)</div>
+                <div id="sr-seo-mb-card2" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">${escapeHtml(mb.lookalike_shows[0].name)} ($${mb.lookalike_shows[0].slot_usd.toLocaleString()}/slot)</div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Rep: <strong>${escapeHtml(mb.lookalike_shows[0].booking_rep)}</strong> (${mb.lookalike_shows[0].overlap})</div>
               </div>
               <div style="padding:14px 16px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle);">
-                <div class="mono" style="font-size:12px; color:var(--amber-gold); font-weight:800; text-transform:uppercase;">Option C • Peer Shows #2 to #10 Arbitrage</div>
-                <div id="sr-seo-mb-card3" class="mono" style="font-size:15px; font-weight:800; color:var(--amber-gold); margin-top:6px;">9 Peer Shows @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} Ad Rate ($19 Creator / $29 Vault)</div>
-                <div style="font-size:13.5px; color:var(--text-primary); margin-top:4px; line-height:1.45;">Agency Desk: ${escapeHtml(getAgencyDesk(brand && brand.slug, page.category))}</div>
+                <div class="mono" style="font-size:12px; color:var(--text-muted); font-weight:700;">Option C • Peer Shows #2 to #10 Arbitrage</div>
+                <div id="sr-seo-mb-card3" class="mono" style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:6px;">9 Peer Shows @ $${mb.lookalike_shows[3].cpm_usd}–$${mb.lookalike_shows[0].cpm_usd} Ad Rate ($19 Creator / $29 Vault)</div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.45;">Agency Desk: ${escapeHtml(getAgencyDesk(brand && brand.slug, page.category))}</div>
               </div>
             </div>
           </div>
 
           <!-- STEP 2: Copyable Media Buyer Rate-Card Counter-Offer Script -->
-          <div style="padding:20px 22px; border-radius:14px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
+          <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
               <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; background:var(--emerald-roi); color:#FFFFFF; font-family:var(--font-mono); font-size:12px; font-weight:800;">STEP 2 OF 2</span>
-                <strong style="font-size:16px; color:var(--text-primary);">Send Your Redlined 3-Flight Counter-Offer (-18% Floor)</strong>
+                <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted);">Step 2</span>
+                <strong style="font-size:15px; color:var(--text-primary);">Send Your Redlined 3-Flight Counter-Offer (-18% Floor)</strong>
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button type="button" id="btn-copy-buyer-counter" onclick="window.__srCopyBuyerCounter(this)" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer;">Unmask 3 Buyer Emails ($0) + Copy Counter-Offer</button>
-                <a id="btn-mailto-buyer-counter" href="${escapeHtml(counterMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_buyer_counter'});" style="background:var(--bg-surface);color:var(--cyan-info);border:1px solid var(--border-subtle);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;text-decoration:none;">1-Click Open Draft in Mail</a>
+                <button type="button" id="btn-copy-buyer-counter" onclick="window.__srCopyBuyerCounter(this)" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;">Unmask 3 Buyer Emails ($0) + Copy Counter-Offer</button>
+                <a id="btn-mailto-buyer-counter" href="${escapeHtml(counterMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_buyer_counter'});" style="background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;text-decoration:none;">Open Draft in Mail</a>
               </div>
             </div>
-            <pre id="sr-buyer-counter-pre" data-free-credit-unmasked="${escapeHtml(`To: ${unmaskedShowBookingEmail} (+ ${rawCsvAgencyEmail})\nSubject: ${counterSubject}\n\n${unmaskedCounterBody}`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14.5px; line-height:1.65; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:16px 20px; margin:0;">${escapeHtml(`To: ${showBookingEmail}\nSubject: ${counterSubject}\n\n[DIRECT REP EMAIL & REDLINED COUNTER-OFFER GATED — Enter your work email in the "Unlock 3 Free Buyer Emails ($0)" bar above to reveal & copy]\n\n${counterBody}`)}</pre>
+            <pre id="sr-buyer-counter-pre" data-free-credit-unmasked="${escapeHtml(`To: ${unmaskedShowBookingEmail} (+ ${rawCsvAgencyEmail})\nSubject: ${counterSubject}\n\n${unmaskedCounterBody}`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml(`To: ${showBookingEmail}\nSubject: ${counterSubject}\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight counter-offer script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]`)}</pre>
           </div>
         </div>
 
         <!-- PANE 2: CREATOR OUTBOUND 2-STEP PITCH & 1-CLICK MAILTO GENERATOR -->
         <div id="sr-pane-creator" style="display:${initCreator ? 'block' : 'none'};">
-          <div style="padding:20px 22px; border-radius:14px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
+          <div style="padding:18px 20px; border-radius:12px; background:var(--bg-parchment); border:1px solid var(--border-subtle);">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px 0;padding-bottom:12px;border-bottom:1px solid var(--border-subtle);">
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; background:var(--vermilion); color:#FFFFFF; font-family:var(--font-mono); font-size:12px; font-weight:800;">STEP 1 OF 2</span>
-                <strong style="font-size:15px;color:var(--text-primary);">Select Your Reach:</strong>
-                <button type="button" data-r="10000" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">10K</button>
-                <button type="button" data-r="25000" onclick="window.__srCalcPseoReach(25000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">25K</button>
-                <button type="button" data-r="75000" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">75K</button>
-                <button type="button" data-r="250000" onclick="window.__srCalcPseoReach(250000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;">250K</button>
-                <span id="sr-pseo-quote-readout" class="mono" style="font-size:13.5px;font-weight:800;color:var(--emerald-roi);margin-left:4px;">3-Flight Pilot: $${Math.round(35 * (brand ? brand.avg_cpm : 38) * 3 * 0.88).toLocaleString()}</span>
+                <span class="mono" style="font-size:12px; font-weight:700; color:var(--text-muted);">Reach:</span>
+                <button type="button" data-r="10000" onclick="window.__srCalcPseoReach(10000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:4px 9px;font-size:12.5px;font-weight:600;cursor:pointer;">10K</button>
+                <button type="button" data-r="75000" onclick="window.__srCalcPseoReach(75000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:4px 9px;font-size:12.5px;font-weight:600;cursor:pointer;">75K</button>
+                <button type="button" data-r="250000" onclick="window.__srCalcPseoReach(250000, ${brand ? brand.avg_cpm : 38})" style="background:var(--bg-surface);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:4px 9px;font-size:12.5px;font-weight:600;cursor:pointer;">250K</button>
+                <span id="sr-pseo-quote-readout" class="mono" style="font-size:13px;font-weight:700;color:var(--emerald-roi);margin-left:4px;">3-Flight Pilot: $${Math.round(35 * (brand ? brand.avg_cpm : 38) * 3 * 0.88).toLocaleString()}</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px; background:var(--emerald-roi); color:#FFFFFF; font-family:var(--font-mono); font-size:12px; font-weight:800;">STEP 2 OF 2</span>
-                <button type="button" id="btn-copy-free-pitch1" onclick="window.__srCopySeoPitch(this)" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:800;cursor:pointer;">Unmask 3 Buyer Emails ($0) + Copy 3-Flight Pitch</button>
-                <a href="${escapeHtml(sampleMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_pitch_1'});" style="background:var(--bg-surface);color:var(--cyan-info);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;text-decoration:none;">1-Click Open Draft in Gmail</a>
+                <button type="button" id="btn-copy-free-pitch1" onclick="window.__srCopySeoPitch(this)" style="background:var(--emerald-roi);color:#FFFFFF;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;">Unmask 3 Buyer Emails ($0) + Copy 3-Flight Pitch</button>
+                <a href="${escapeHtml(sampleMailto)}" onclick="if(!window.__ebSavedEmail&&!window.__ebIsUnlocked&&window.__srFocusFreeCreditBar)return window.__srFocusFreeCreditBar(1,this);if(window.__ebLogEvent)window.__ebLogEvent('copy_summary',{type:'mailto_pitch_1'});" style="background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;text-decoration:none;">Open Draft in Gmail</a>
               </div>
             </div>
-            <pre id="sr-free-pitch-pre" data-free-credit-unmasked="${escapeHtml(`# OUTBOUND 3-FLIGHT PILOT PITCH (TRACK A BUYER CONTACT UNMASKED — $0 SAMPLE)\nTo: ${rawCsvBuyerEmail} (+ ${rawCsvAgencyEmail} • ${outboundPitch.agency_desk})\nSubject: ${outboundPitch.subject}\n\n${samplePitchText.replace(/\S*\*\*\*\S*/g, rawCsvBuyerEmail)}\n\n• [LOCKED IN $19 CREATOR PASS / $29 VAULT]: Track B Rate-Card Counter-Offer Script, Redlined IAB §7.1/§9.3/§11.0 Make-Good Rider (.TXT) & Day-3/Day-7 Follow-Up Sequence`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14.5px; line-height:1.65; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:16px 20px; margin:0;">${escapeHtml('# OUTBOUND 3-FLIGHT PILOT PITCH PREVIEW (DOMAIN VERIFIED)\nTo: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n[DIRECT BUYER & AGENCY EMAILS + 3-FLIGHT PITCH COPY GATED — Enter your work email in the "Unlock 3 Free Buyer Emails ($0)" bar above to reveal & copy]\n\n' + samplePitchText)}</pre>
+            <pre id="sr-free-pitch-pre" data-free-credit-unmasked="${escapeHtml(`# OUTBOUND 3-FLIGHT PILOT PITCH (TRACK A BUYER CONTACT UNMASKED — $0 SAMPLE)\nTo: ${rawCsvBuyerEmail} (+ ${rawCsvAgencyEmail} • ${outboundPitch.agency_desk})\nSubject: ${outboundPitch.subject}\n\n${samplePitchText.replace(/\S*\*\*\*\S*/g, rawCsvBuyerEmail)}\n\n• [LOCKED IN $19 CREATOR PASS / $29 VAULT]: Track B Rate-Card Counter-Offer Script, Redlined IAB §7.1/§9.3/§11.0 Make-Good Rider (.TXT) & Day-3/Day-7 Follow-Up Sequence`)}" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-sans); font-size:14px; line-height:1.6; color:var(--text-primary); background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:14px 18px; margin:0;">${escapeHtml('To: ' + sampleBuyerEmail + ' (' + outboundPitch.agency_desk + ')\nSubject: ' + outboundPitch.subject + '\n\n[HOLD BACK: Enter your work email in the "$0 Sample" bar above to unmask 3 Verified Buyer & Agency Desk Emails + full 3-flight pilot pitch script, or unlock all 109 rows + Redlined IAB §7.1 Make-Good Rider in $19 Creator Pass / $29 Vault]')}</pre>
           </div>
         </div>
 
-        <div id="sr-copy-zeigarnik-nudge" data-post-copy-nudge="true" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; background:#FFFBEB; border:1.5px solid var(--amber-gold); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:13px;">
+        <div id="sr-copy-zeigarnik-nudge" data-post-copy-nudge="true" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-strong); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:13px;">
           <span style="color:var(--text-primary);"><strong>✓ Copied to your clipboard!</strong> Want all 109 Verified Buyer &amp; Agency Desk Rows + Redlined IO Make-Good Rider (.TXT) + Cold Outreach Sequences?</span>
-          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-vermilion" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Creator Pass ($19) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 109 Buyers Vault ($29) ↗</button></div>
+          <div style="display:inline-flex; gap:8px; flex-wrap:wrap;"><button type="button" id="btn-zeigarnik-unmask-flash" onclick="if(window.__ebCheckout)window.__ebCheckout('creator_pass',true);" class="btn btn-ghost" style="padding:6px 13px; min-height:34px; font-size:12.5px;">Creator Pass ($19) ↗</button><button type="button" id="btn-zeigarnik-unmask-vault" onclick="if(window.__ebCheckout)window.__ebCheckout('playbook_pass',true);" class="btn btn-emerald" style="padding:6px 13px; min-height:34px; font-size:12.5px;">All 109 Buyers Vault ($29) ↗</button></div>
         </div>
 
-        <div id="sr-raw-csv-proof-box" style="margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-strong); font-size:12px;">
+        <div id="sr-raw-csv-proof-box" style="margin-top:12px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-subtle); font-size:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:5px;">
-            <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:800; color:var(--emerald-roi);">${SR_SEARCH_SVG} ROW #1 LIVE CSV PROOF • Renewed on Peer Shows (Last 30 Days) (1 OF 109 — 105 LOCKED BELOW)</span>
-            <span class="mono" style="color:var(--text-secondary);">SMTP: <code>250 2.1.5 OK mx1.google.com</code> • Niche Pilot: <code>$950-$2400_NICHE_OK</code> • <a id="eb-seo-proof-sample-link" href="/dossier/sample?target=${encodeURIComponent(exportTarget)}" target="_blank" style="color:var(--emerald-roi);font-weight:800;text-decoration:underline;">Sample Dossier ↗</a> • <a id="eb-seo-proof-csv-link" href="/api/github-upgrade/export.csv?target=${encodeURIComponent(exportTarget)}" target="_blank" style="color:var(--text-primary);font-weight:800;text-decoration:underline;">3-Row Sample (.CSV) ↗</a></span>
+            <span id="sr-csv-proof-header-lbl" class="mono" style="font-weight:700; color:var(--text-secondary);">Row #1 CSV Sample (1 of 109 — 105 Locked)</span>
+            <span class="mono" style="color:var(--text-secondary);"><a id="eb-seo-proof-sample-link" href="/dossier/sample?target=${encodeURIComponent(exportTarget)}" target="_blank" style="color:var(--emerald-roi);font-weight:700;text-decoration:underline;">Sample Dossier ↗</a> • <a id="eb-seo-proof-csv-link" href="/api/github-upgrade/export.csv?target=${encodeURIComponent(exportTarget)}" target="_blank" style="color:var(--text-primary);font-weight:700;text-decoration:underline;">3-Row Sample (.CSV) ↗</a></span>
           </div>
           <div class="mono" style="padding:7px 10px; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); overflow-x:auto; white-space:nowrap; font-size:11.5px;">
             <span style="color:var(--text-muted);">row,entity,decision_maker_role,named_buyer_email,external_agency_desk,peer_renewal_30d,rack_ad_rate,floor_3flight_rate,niche_pilot_budget,live_outreach_angle,audience_guarantee_rider</span><br/>
-            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span id="sr-csv-row1-buyer" data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)} (Sample Proof: sarah.kaufman@shopify.com)</span>,<span id="sr-csv-row1-agency" data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)" style="color:var(--amber-gold);">${escapeHtml(maskedCsvAgencyEmail)} (Sample Proof: m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","[HOLD BACK: Full Redlined IAB §7.1 Make-Good Clause &amp; Rows #4–#109 in $19 Creator Pass / $29 109-Row Vault]"</strong>
+            <strong>1,${escapeHtml(workbenchQuery)},${escapeHtml(brand ? brand.decision_maker_role : 'VP Growth & Creator Partnerships')},<span id="sr-csv-row1-buyer" data-free-credit-unmasked="${escapeHtml(rawCsvBuyerEmail)} (sarah.kaufman@shopify.com)" style="color:var(--emerald-roi);">${escapeHtml(maskedCsvBuyerEmail)} (Sample Proof: sarah.kaufman@shopify.com)</span>,<span id="sr-csv-row1-agency" data-free-credit-unmasked="${escapeHtml(rawCsvAgencyEmail)} (m.vance@rightsideup.co)" style="color:var(--text-secondary);">${escapeHtml(maskedCsvAgencyEmail)} (Sample Proof: m.vance@rightsideup.co)</span>,RENEWED_PEER_SHOWS_LAST_30D,$${page.avg_cpm},$${floorCpm},$950-$2400_NICHE_OK,"Peer-Referenced Pitch: Saw 4x peer renewal last 30d — anchor 3-flight pilot at $${floorCpm} Floor CPM (-18%)","[HOLD BACK: Full Redlined IAB §7.1 Make-Good Clause &amp; Rows #4–#109 in $19 Creator Pass / $29 109-Row Vault]"</strong>
           </div>
         </div>
 
-        <div id="sr-click-trigger-assurance" class="mono" style="margin-top:6px; font-size:11.5px; color:var(--text-secondary); display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; padding:0 4px;">
+        <div id="sr-click-trigger-assurance" class="mono" style="display:none;">
           <span>${SR_LOCK_SVG} <strong>1-Click Checkout:</strong> Opens official Stripe Checkout (Apple Pay / Card) → Instant in-browser unmask + .CSV/.EML download in 4s</span>
           <span style="color:var(--emerald-roi); font-weight:700;">✓ Zero Account/Password Required • One-Time Charge • 30-Day Zero-Bounce Refund</span>
         </div>
-        <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-surface); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; font-size:12.5px; line-height:1.45;">
-          <div data-biz-criterion="roi_math"><strong style="color:var(--emerald-roi);">✓ Unlock 3 Free Credits ($0) to Save $2,400 Overpay (-18% 3-Flight Floor):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.</div>
-          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">✓ 100% One-Time Pass (No Subscription Trap):</strong> Pay once (<strong>$19</strong> Creator Pass • <strong>$29</strong> 109-Row Vault • <strong>$149</strong> Agency Desk). Never auto-renews.</div>
-          <div data-biz-criterion="smtp_sla"><strong style="color:var(--amber-gold);">✓ Weekly SMTP + Zero-Bounce SLA:</strong> Crawled every 24h from RSS &amp; YouTube ad reads. Free instant replacement if any email bounces + 30-day 100% money-back guarantee.</div>
-          <div data-biz-criterion="tangible_schema"><strong style="color:var(--cyan-info);">✓ 3 Tangible Files + Row #1 Sample Proof:</strong> <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_rate_usd</code>) + <code>iab-io-addendum.txt</code> + <code>3-flight-anchor-pitch.eml</code>.</div>
+        <div id="sr-biz-model-proof-bar" style="margin-top:8px; padding:10px 14px; border-radius:10px; background:var(--bg-parchment); border:1px solid var(--border-subtle); display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; font-size:12px; color:var(--text-secondary); line-height:1.45;">
+          <div data-biz-criterion="roi_math"><strong style="color:var(--text-primary);">Unlock 3 Free Credits ($0) to Save $2,400 Overpay (-18% Floor):</strong> Counter 1-off rack quotes at the -18% 3-flight floor to save <strong>$2,400 overpay</strong> on a single pilot.</div>
+          <div data-biz-criterion="no_sub_trap"><strong style="color:var(--text-primary);">100% One-Time Pass (No Subscription Trap):</strong> Pay once (<strong>$19</strong> Creator Pass • <strong>$29</strong> 109-Row Vault • <strong>$149</strong> Agency Desk). Never auto-renews.</div>
+          <div data-biz-criterion="smtp_sla"><strong style="color:var(--text-primary);">Weekly SMTP + Zero-Bounce SLA:</strong> Crawled every 24h from RSS &amp; YouTube ad reads. Free instant replacement if any email bounces + 30-day 100% money-back guarantee.</div>
+          <div data-biz-criterion="tangible_schema"><strong style="color:var(--text-primary);">3 Tangible Files + Row #1 Sample Proof:</strong> <code>verified-buyer-contacts.csv</code> (<code>decision_maker_email, smtp_verified_date, agency_desk, floor_3flight_rate_usd</code>) + <code>iab-io-addendum.txt</code> + <code>3-flight-anchor-pitch.eml</code>.</div>
         </div>
 
         <script>
