@@ -381,7 +381,7 @@ function renderDirectoryPage({ brands, shows, seoPages }) {
           }
           if (firstT) {
             var actT = (csvEl && csvEl.getAttribute('data-dir-target')) || firstT;
-            window.__ebSelectedTarget = window.__ebActiveEntity = actT;
+            window.__ebSelectedTarget = window.__ebActiveEntity = actT; var bt = document.getElementById('sr-post-email-bridge-tgt'); if (bt) bt.textContent = actT;
             var sl = document.getElementById('eb-dir-sample-link'), rl = document.getElementById('eb-dir-rider-link'), el2 = document.getElementById('eb-dir-eml-link'), cl = document.getElementById('eb-dir-csv-link'), em = window.__ebSavedEmail ? '&email=' + encodeURIComponent(window.__ebSavedEmail) : '';
             if (sl) sl.href = '/dossier/sample?target=' + encodeURIComponent(actT) + em;
             if (rl) rl.href = '/api/github-upgrade/iab-io-addendum.txt?target=' + encodeURIComponent(actT) + em;
