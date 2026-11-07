@@ -168,7 +168,7 @@ async function runAllJourneys() {
       assert.strictEqual(leadRes.status, 200);
       const leadJson = await leadRes.json();
       assert.strictEqual(leadJson.ok, true);
-      assert.strictEqual(leadJson.tripwire_offer.price_usd, 0.99);
+      assert.strictEqual(leadJson.tripwire_offer.price_usd, 19);
 
       // Unhappy Path 1: Missing or invalid email rejected with HTTP 400
       const badLeadRes = await fetch(`${BASE_URL}/api/leads/capture`, {
